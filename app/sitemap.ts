@@ -1,0 +1,103 @@
+import { MetadataRoute } from 'next'
+import { readFile } from 'fs/promises'
+import { join } from 'path'
+import { parsePropertiesFile } from '@/lib/parseProperties'
+
+// Use env or localhost so site works before domain is connected
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+
+const propertyTypes = ['rent', 'sale', 'land', 'business'] as const
+const mainAreas = ['ubud', 'canggu', 'sanur', 'seminyak', 'tanah_lot'] as const
+const guideCategories = ['rent', 'buy', 'land', 'legal', 'ubud', 'areas', 'risks']
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const staticPages: MetadataRoute.Sitemap = [
+    {
+      url: baseUrl,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 1,
+    },
+    {
+      url: `${baseUrl}/properties`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/guides`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/site-map`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
+    {
+      url: `${baseUrl}/qa`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/about`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/request`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+  ]
+
+  const propertyPages: MetadataRoute.Sitemap = propertyTypes.flatMap((type) => [
+    {
+      url: `${baseUrl}/properties/${type}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.85,
+    },
+    ...mainAreas.map((area) => ({
+      url: `${baseUrl}/properties/${type}/${area}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.85,
+    })),
+  ])
+
+  const guideCategoryPages: MetadataRoute.Sitemap = guideCategories.map((slug) => ({
+    url: `${baseUrl}/guides/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
+  }))
+
+  // Add individual property pages (villas)
+  let propertyDetailPages: MetadataRoute.Sitemap = []
+  try {
+    const filePath = join(process.cwd(), 'data', 'properties.ts')
+    const fileContent = await readFile(filePath, 'utf-8')
+    const properties = parsePropertiesFile(fileContent)
+    
+    // Only include non-archived properties
+    propertyDetailPages = properties
+      .filter((p) => !p.archived && p.id)
+      .map((property) => ({
+        url: `${baseUrl}/properties/view/${property.id}`,
+        lastModified: property.updatedAt ? new Date(property.updatedAt) : new Date(property.createdAt),
+        changeFrequency: 'weekly' as const,
+        priority: 0.8, // High priority for individual properties
+      }))
+  } catch (error) {
+    console.error('Error loading properties for sitemap:', error)
+    // Continue without property pages if file can't be read
+  }
+
+  return [...staticPages, ...propertyPages, ...guideCategoryPages, ...propertyDetailPages]
+}

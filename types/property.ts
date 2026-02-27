@@ -1,0 +1,84 @@
+export type PropertyType = 'rent' | 'sale' | 'land' | 'business';
+export type SubArea =
+  | 'gentong'
+  | 'kedewatan'
+  | 'keliki'
+  | 'kemenuh'
+  | 'lodtunduh'
+  | 'penestanan'
+  | 'petulu'
+  | 'sayan'
+  | 'sukawati'
+  | 'tegallalang';
+export type MainArea = 'ubud' | 'canggu' | 'sanur' | 'seminyak' | 'tanah_lot';
+
+export interface Property {
+  id: string;
+  /** Optional. If empty, site shows auto-generated title from villaNumber + bedrooms + subArea. */
+  title?: string;
+  /** Villa number (e.g. "50") — used in auto-title like "Villa #50 · 2 bed · Lodtunduh". */
+  villaNumber?: string;
+  /** Internal name — shown only in admin, never on the public site. */
+  internalName?: string;
+  description?: string;
+  types: PropertyType[]; // Property can be available for multiple types (rent AND sale)
+  mainArea: MainArea; // Main area (ubud, canggu, sanur)
+  /** Sub-area/neighborhood. Optional when main area has no sub-areas (e.g. Seminyak). */
+  subArea?: SubArea;
+  /** Google Maps or other link — admin only, not shown on site. */
+  exactLocation?: string;
+  /** Latitude,longitude for map (e.g. "-8.5068,115.2624"). Optional. */
+  displayLocation?: string;
+  bedrooms: number;
+  bathrooms?: number;
+  price: {
+    currency: 'IDR' | 'USD';
+    /** Legacy / fallback: single price (e.g. for sale). For rent, prefer monthly + yearly. */
+    min?: number;
+    /** Monthly price (rent). When set with yearly, discount % is shown. */
+    monthly?: number;
+    /** Yearly price (rent). When set with monthly, discount % is calculated. */
+    yearly?: number;
+    /** Price for sale (full payment). Shown when types includes 'sale'. */
+    forSale?: number;
+  };
+  duration?: {
+    min: number; // months
+    max?: number;
+  };
+  features: {
+    bathtub: boolean;
+    carPark: boolean;
+    closedKitchen?: boolean;
+    desk: boolean;
+    enclosedLivingArea?: boolean;
+    garage?: boolean;
+    highSpeedWifi?: boolean;
+    natureView: boolean;
+    petFriendly?: boolean;
+    pool: boolean;
+    washingMachine?: boolean;
+  };
+  images: string[];
+  order?: number; // For sorting - lower number = appears first
+  /** When true, hidden from catalog and admin main list; direct URL still works; show "not available" + notify form */
+  archived?: boolean;
+  /** When set (ISO date YYYY-MM-DD), villa is available from this date. When null/undefined = available now. */
+  availableFrom?: string | null;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface PropertyFilters {
+  mainArea?: MainArea[];
+  subArea?: SubArea[];
+  bedrooms?: number[];
+  type?: PropertyType[];
+  hasBathtub?: boolean;
+  hasCarPark?: boolean;
+  hasDesk?: boolean;
+  hasNatureView?: boolean;
+  hasPool?: boolean;
+  minDuration?: number;
+  maxPrice?: number;
+}
