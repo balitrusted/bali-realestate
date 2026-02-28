@@ -21,7 +21,17 @@ export default function AdminLogin() {
         body: JSON.stringify({ password }),
       });
 
-      const data = await response.json();
+      const text = await response.text();
+      let data: { success?: boolean; error?: string } = {};
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch {
+          setError("Server returned invalid response. Try again.");
+          setLoading(false);
+          return;
+        }
+      }
 
       if (response.ok && data.success) {
         // Wait a bit for cookie to be set
@@ -29,7 +39,7 @@ export default function AdminLogin() {
         // Force navigation
         window.location.href = "/admin/properties";
       } else {
-        setError(data.error || "Incorrect password. Try: admin123");
+        setError(data.error || (response.ok ? "Incorrect password." : `Server error (${response.status}). Try again.`));
       }
     } catch (err: any) {
       console.error("Login error:", err);
