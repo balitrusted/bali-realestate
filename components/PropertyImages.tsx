@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import PropertyImageWithFallback from "@/components/PropertyImageWithFallback";
 import type { Property } from "@/types/property";
 import { getPropertyImageAlt } from "@/lib/imageSeo";
 
@@ -27,62 +27,41 @@ export default function PropertyImages({ images, title, property }: PropertyImag
   }
 
   const mainImage = images[selectedImageIndex];
-  const isMainLocal = mainImage.startsWith("/uploads");
 
   return (
     <div className="space-y-4">
       <div className="relative w-full h-96 rounded-lg overflow-hidden bg-gray-100">
-        {isMainLocal ? (
-          <img
-            src={mainImage}
-            alt={getAlt(selectedImageIndex)}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <Image
-            src={mainImage}
-            alt={getAlt(selectedImageIndex)}
-            fill
-            className="object-cover"
-            priority={selectedImageIndex === 0}
-            sizes="(max-width: 1024px) 100vw, 50vw"
-          />
-        )}
+        <PropertyImageWithFallback
+          src={mainImage}
+          alt={getAlt(selectedImageIndex)}
+          fill
+          className="object-cover"
+          sizes="(max-width: 1024px) 100vw, 50vw"
+        />
       </div>
 
       {images.length > 1 && (
         <div className="grid grid-cols-4 gap-2">
-          {images.map((image, idx) => {
-            const isLocal = image.startsWith("/uploads");
-            return (
-              <button
-                key={idx}
-                onClick={() => setSelectedImageIndex(idx)}
-                className={`relative w-full h-24 rounded overflow-hidden border-2 transition-all bg-gray-100 ${
-                  selectedImageIndex === idx
-                    ? "border-gray-900 ring-2 ring-gray-900 ring-offset-2"
-                    : "border-gray-200 hover:border-gray-400"
-                }`}
-                aria-label={getAlt(idx)}
-              >
-                {isLocal ? (
-                  <img
-                    src={image}
-                    alt={getAlt(idx)}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <Image
-                    src={image}
-                    alt={getAlt(idx)}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 25vw, 12.5vw"
-                  />
-                )}
-              </button>
-            );
-          })}
+          {images.map((image, idx) => (
+            <button
+              key={idx}
+              onClick={() => setSelectedImageIndex(idx)}
+              className={`relative w-full h-24 rounded overflow-hidden border-2 transition-all bg-gray-100 ${
+                selectedImageIndex === idx
+                  ? "border-gray-900 ring-2 ring-gray-900 ring-offset-2"
+                  : "border-gray-200 hover:border-gray-400"
+              }`}
+              aria-label={getAlt(idx)}
+            >
+              <PropertyImageWithFallback
+                src={image}
+                alt={getAlt(idx)}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 25vw, 12.5vw"
+              />
+            </button>
+          ))}
         </div>
       )}
     </div>

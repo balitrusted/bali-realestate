@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import PropertyImageWithFallback from "@/components/PropertyImageWithFallback";
 import { Property } from "@/types/property";
 import { areas, subAreaNames, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
 import { getPropertyDisplayTitle, fixDescriptionDisplay } from "@/lib/propertyUtils";
@@ -55,7 +55,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       {/* Image */}
       {mainImage ? (
         <div className="w-full h-48 relative overflow-hidden flex-shrink-0">
-          <Image
+          <PropertyImageWithFallback
             src={mainImage}
             alt={getPropertyImageAlt(property, 0)}
             fill

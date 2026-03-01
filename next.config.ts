@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Serve /uploads/properties/* from Vercel Blob (no filesystem on serverless)
+  rewrites: async () => [
+    { source: "/uploads/properties/:path*", destination: "/api/serve-image/properties/:path*" },
+  ],
   // Minimal output for Vercel (helps stay under 250 MB limit)
   output: "standalone",
   // Reduce serverless function size (Vercel 250 MB limit)

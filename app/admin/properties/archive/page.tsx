@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import PropertyImageWithFallback from "@/components/PropertyImageWithFallback";
 import { Property } from "@/types/property";
 import { getPropertyDisplayTitle } from "@/lib/propertyUtils";
 
@@ -94,12 +94,13 @@ export default function AdminArchivePage() {
               >
                 {mainImage ? (
                   <div className="w-24 h-24 relative rounded overflow-hidden flex-shrink-0">
-                    <Image
+                    <PropertyImageWithFallback
                       src={mainImage}
                       alt={getPropertyDisplayTitle(property)}
                       fill
                       className="object-cover"
                       sizes="96px"
+                      placeholderText="No image"
                     />
                   </div>
                 ) : (

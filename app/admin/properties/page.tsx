@@ -21,7 +21,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Property } from "@/types/property";
-import Image from "next/image";
+import PropertyImageWithFallback from "@/components/PropertyImageWithFallback";
 import { getPropertyDisplayTitle, fixDescriptionDisplay } from "@/lib/propertyUtils";
 import { subAreaNames, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
 
@@ -83,12 +83,13 @@ function SortablePropertyItem({ property }: { property: Property }) {
 
       {mainImage ? (
         <div className="w-24 h-24 relative rounded overflow-hidden flex-shrink-0">
-          <Image
+          <PropertyImageWithFallback
             src={mainImage}
             alt={getPropertyDisplayTitle(property)}
             fill
             className="object-cover"
             sizes="96px"
+            placeholderText="No image"
           />
         </div>
       ) : (
