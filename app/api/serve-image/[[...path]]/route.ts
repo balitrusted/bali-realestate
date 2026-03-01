@@ -14,10 +14,13 @@ const CONTENT_TYPES: Record<string, string> = {
   gif: "image/gif",
 };
 
-// Cache the Blob store base URL (e.g. https://xxx.public.blob.vercel-storage.com)
+// Base URL of the Blob store (no trailing slash). Set BLOB_STORE_URL in Vercel to avoid list().
+// Example: https://xxxxx.public.blob.vercel-storage.com (from Storage → open any blob → copy base)
 let cachedBlobBaseUrl: string | null = null;
 
 async function getBlobBaseUrl(): Promise<string | null> {
+  const envUrl = process.env.BLOB_STORE_URL?.trim();
+  if (envUrl) return envUrl.replace(/\/$/, "");
   if (cachedBlobBaseUrl) return cachedBlobBaseUrl;
   try {
     const { blobs } = await list({ prefix: "properties/", limit: 1 });

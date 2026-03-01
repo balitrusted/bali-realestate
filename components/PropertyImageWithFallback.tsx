@@ -27,6 +27,13 @@ export default function PropertyImageWithFallback({
 }: PropertyImageWithFallbackProps) {
   const [failed, setFailed] = useState(false);
   const isUploadPath = typeof src === "string" && src.startsWith("/uploads/");
+  // Direct Blob URL: no API, browser loads from Vercel Blob (set NEXT_PUBLIC_BLOB_STORE_URL in Vercel)
+  const blobBase = (typeof process !== "undefined" && process.env.NEXT_PUBLIC_BLOB_STORE_URL)
+    ? String(process.env.NEXT_PUBLIC_BLOB_STORE_URL).trim().replace(/\/$/, "")
+    : "";
+  const imageSrc = isUploadPath && blobBase && src.startsWith("/uploads/properties/")
+    ? `${blobBase}/properties/${src.replace(/^\/uploads\/properties\//, "")}`
+    : src;
 
   if (failed) {
     return (
@@ -47,12 +54,12 @@ export default function PropertyImageWithFallback({
     );
   }
 
-  // Use plain <img> for /uploads/ so the request hits our API directly (no Next Image Optimizer)
-  if (isUploadPath) {
+  // Use plain <img> for /uploads/ (or direct Blob URL when NEXT_PUBLIC_BLOB_STORE_URL is set)
+  if (isUploadPath || (blobBase && imageSrc !== src)) {
     const style = fill ? { position: "absolute" as const, inset: 0, width: "100%", height: "100%", objectFit: "cover" as const } : undefined;
     return (
       <img
-        src={src}
+        src={imageSrc}
         alt={alt}
         className={className}
         style={style}
