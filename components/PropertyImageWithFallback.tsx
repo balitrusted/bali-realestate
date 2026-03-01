@@ -26,6 +26,7 @@ export default function PropertyImageWithFallback({
   placeholderText = "No photo",
 }: PropertyImageWithFallbackProps) {
   const [failed, setFailed] = useState(false);
+  const isUploadPath = typeof src === "string" && src.startsWith("/uploads/");
 
   if (failed) {
     return (
@@ -43,6 +44,20 @@ export default function PropertyImageWithFallback({
           <span className="text-gray-400 text-sm">{placeholderText}</span>
         </div>
       </div>
+    );
+  }
+
+  // Use plain <img> for /uploads/ so the request hits our API directly (no Next Image Optimizer)
+  if (isUploadPath) {
+    const style = fill ? { position: "absolute" as const, inset: 0, width: "100%", height: "100%", objectFit: "cover" } : undefined;
+    return (
+      <img
+        src={src}
+        alt={alt}
+        className={className}
+        style={style}
+        onError={() => setFailed(true)}
+      />
     );
   }
 

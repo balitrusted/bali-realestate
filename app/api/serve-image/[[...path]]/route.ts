@@ -20,7 +20,7 @@ const CONTENT_TYPES: Record<string, string> = {
  * In v0.25 there is no get(); we use list(prefix) and redirect to the blob's public URL.
  */
 export async function GET(
-  _request: Request,
+  request: Request,
   context: { params: Promise<{ path?: string[] }> }
 ) {
   const { path: pathSegments } = await context.params;
@@ -28,19 +28,29 @@ export async function GET(
     return NextResponse.json({ error: "Path required" }, { status: 400 });
   }
 
-  const blobPath = pathSegments.join("/");
+  // Join path and strip query (Image Optimizer may add ?w=800&q=75)
+  let blobPath = pathSegments.join("/");
+  const q = blobPath.indexOf("?");
+  if (q !== -1) blobPath = blobPath.slice(0, q);
   const filename = pathSegments[pathSegments.length - 1] ?? "";
-  const ext = filename.split(".").pop()?.toLowerCase() ?? "jpg";
+  const baseFilename = filename.includes("?") ? filename.slice(0, filename.indexOf("?")) : filename;
+  const ext = baseFilename.split(".").pop()?.toLowerCase() ?? "jpg";
   const contentType = CONTENT_TYPES[ext] ?? "image/jpeg";
 
   // Production: find blob by pathname, fetch it and stream the body (200 OK).
-  // We don't redirect — Next.js Image optimizer doesn't follow redirects, so images would show as broken.
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     try {
-      const { blobs } = await list({ prefix: blobPath, limit: 1 });
-      const match = blobs?.find((b) => b.pathname === blobPath);
+      const { blobs } = await list({ prefix: blobPath, limit: 5 });
+      // Match by pathname (exact or normalized); fallback to first blob when prefix is exact
+      const match =
+        blobs?.find(
+          (b) =>
+            b.pathname === blobPath ||
+            b.pathname === `/${blobPath}` ||
+            b.pathname.endsWith(baseFilename)
+        ) ?? blobs?.[0];
       if (match?.url) {
-        const res = await fetch(match.url);
+        const res = await fetch(match.url, { cache: "force-cache" });
         if (!res.ok) return new NextResponse(null, { status: 404 });
         const body = res.body;
         if (!body) return new NextResponse(null, { status: 404 });
