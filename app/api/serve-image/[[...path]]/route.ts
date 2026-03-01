@@ -33,13 +33,23 @@ export async function GET(
   const ext = filename.split(".").pop()?.toLowerCase() ?? "jpg";
   const contentType = CONTENT_TYPES[ext] ?? "image/jpeg";
 
-  // Production: find blob by pathname and redirect to its public URL
+  // Production: find blob by pathname, fetch it and stream the body (200 OK).
+  // We don't redirect — Next.js Image optimizer doesn't follow redirects, so images would show as broken.
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     try {
       const { blobs } = await list({ prefix: blobPath, limit: 1 });
       const match = blobs?.find((b) => b.pathname === blobPath);
       if (match?.url) {
-        return NextResponse.redirect(match.url, 302);
+        const res = await fetch(match.url);
+        if (!res.ok) return new NextResponse(null, { status: 404 });
+        const body = res.body;
+        if (!body) return new NextResponse(null, { status: 404 });
+        return new NextResponse(body, {
+          headers: {
+            "Content-Type": res.headers.get("content-type") ?? contentType,
+            "Cache-Control": "public, max-age=31536000, immutable",
+          },
+        });
       }
     } catch {
       // Fall through to local or 404
