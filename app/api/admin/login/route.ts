@@ -1,6 +1,16 @@
 import { NextResponse } from "next/server";
 import { checkAuth } from "@/lib/auth";
 
+// Ensure this route runs as serverless on Vercel (avoids 405 for POST)
+export const dynamic = "force-dynamic";
+
+export async function GET() {
+  return NextResponse.json(
+    { error: "Method not allowed. Use POST." },
+    { status: 405, headers: { Allow: "POST" } }
+  );
+}
+
 export async function POST(request: Request) {
   try {
     let body: { password?: string };

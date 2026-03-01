@@ -24,8 +24,16 @@ export default function AdminLayout({
     const checkAuth = async () => {
       try {
         const response = await fetch("/api/admin/check");
-        const data = await response.json();
-        
+        const text = await response.text();
+        let data = { authenticated: false };
+        if (text) {
+          try {
+            data = JSON.parse(text);
+          } catch {
+            router.push("/admin/login");
+            return;
+          }
+        }
         if (data.authenticated) {
           setAuthenticated(true);
         } else {

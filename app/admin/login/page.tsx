@@ -15,7 +15,8 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/admin/login", {
+      const url = `${typeof window !== "undefined" ? window.location.origin : ""}/api/admin/login`;
+      const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
