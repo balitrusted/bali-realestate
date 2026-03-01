@@ -14,13 +14,29 @@ const CONTENT_TYPES: Record<string, string> = {
   gif: "image/gif",
 };
 
+// Cache the Blob store base URL (e.g. https://xxx.public.blob.vercel-storage.com)
+let cachedBlobBaseUrl: string | null = null;
+
+async function getBlobBaseUrl(): Promise<string | null> {
+  if (cachedBlobBaseUrl) return cachedBlobBaseUrl;
+  try {
+    const { blobs } = await list({ prefix: "properties/", limit: 1 });
+    const first = blobs?.[0];
+    if (!first?.url) return null;
+    const match = first.url.match(/^(https:\/\/[^/]+)/);
+    cachedBlobBaseUrl = match ? match[1] : null;
+  } catch {
+    cachedBlobBaseUrl = null;
+  }
+  return cachedBlobBaseUrl;
+}
+
 /**
  * Serves property images from Vercel Blob (production) or from public/uploads (development).
  * Rewrite: /uploads/properties/* -> /api/serve-image/properties/*
- * In v0.25 there is no get(); we use list(prefix) and redirect to the blob's public URL.
  */
 export async function GET(
-  request: Request,
+  _request: Request,
   context: { params: Promise<{ path?: string[] }> }
 ) {
   const { path: pathSegments } = await context.params;
@@ -28,7 +44,6 @@ export async function GET(
     return NextResponse.json({ error: "Path required" }, { status: 400 });
   }
 
-  // Join path and strip query (Image Optimizer may add ?w=800&q=75)
   let blobPath = pathSegments.join("/");
   const q = blobPath.indexOf("?");
   if (q !== -1) blobPath = blobPath.slice(0, q);
@@ -37,29 +52,21 @@ export async function GET(
   const ext = baseFilename.split(".").pop()?.toLowerCase() ?? "jpg";
   const contentType = CONTENT_TYPES[ext] ?? "image/jpeg";
 
-  // Production: find blob by pathname, fetch it and stream the body (200 OK).
+  // Production: get store base URL once, then fetch image by path
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     try {
-      const { blobs } = await list({ prefix: blobPath, limit: 5 });
-      // Match by pathname (exact or normalized); fallback to first blob when prefix is exact
-      const match =
-        blobs?.find(
-          (b) =>
-            b.pathname === blobPath ||
-            b.pathname === `/${blobPath}` ||
-            b.pathname.endsWith(baseFilename)
-        ) ?? blobs?.[0];
-      if (match?.url) {
-        const res = await fetch(match.url, { cache: "force-cache" });
-        if (!res.ok) return new NextResponse(null, { status: 404 });
-        const body = res.body;
-        if (!body) return new NextResponse(null, { status: 404 });
-        return new NextResponse(body, {
-          headers: {
-            "Content-Type": res.headers.get("content-type") ?? contentType,
-            "Cache-Control": "public, max-age=31536000, immutable",
-          },
-        });
+      const baseUrl = await getBlobBaseUrl();
+      if (baseUrl) {
+        const imageUrl = `${baseUrl}/${blobPath}`;
+        const res = await fetch(imageUrl, { cache: "force-cache" });
+        if (res.ok && res.body) {
+          return new NextResponse(res.body, {
+            headers: {
+              "Content-Type": res.headers.get("content-type") ?? contentType,
+              "Cache-Control": "public, max-age=31536000, immutable",
+            },
+          });
+        }
       }
     } catch {
       // Fall through to local or 404
