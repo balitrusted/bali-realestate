@@ -49,7 +49,7 @@ export default function PropertyImageWithFallback({
 
   // Use plain <img> for /uploads/ so the request hits our API directly (no Next Image Optimizer)
   if (isUploadPath) {
-    const style = fill ? { position: "absolute" as const, inset: 0, width: "100%", height: "100%", objectFit: "cover" } : undefined;
+    const style = fill ? { position: "absolute" as const, inset: 0, width: "100%", height: "100%", objectFit: "cover" as const } : undefined;
     return (
       <img
         src={src}
