@@ -19,8 +19,7 @@ const nextConfig: NextConfig = {
     "*": [
       ".next/cache/**",
       "node_modules/@swc/**",
-      "node_modules/next/dist/compiled/**",
-      "node_modules/next/dist/server/**/compiled/**",
+      // Do NOT exclude next/dist/compiled/** — runtime needs source-map etc.
       "node_modules/**/*.md",
       "node_modules/**/README*",
       "node_modules/**/LICENSE*",
