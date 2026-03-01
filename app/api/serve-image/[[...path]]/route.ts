@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { get } from "@vercel/blob";
+import { list } from "@vercel/blob";
 import { readFile } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
@@ -17,6 +17,7 @@ const CONTENT_TYPES: Record<string, string> = {
 /**
  * Serves property images from Vercel Blob (production) or from public/uploads (development).
  * Rewrite: /uploads/properties/* -> /api/serve-image/properties/*
+ * In v0.25 there is no get(); we use list(prefix) and redirect to the blob's public URL.
  */
 export async function GET(
   _request: Request,
@@ -32,17 +33,13 @@ export async function GET(
   const ext = filename.split(".").pop()?.toLowerCase() ?? "jpg";
   const contentType = CONTENT_TYPES[ext] ?? "image/jpeg";
 
-  // Production: try Vercel Blob first
+  // Production: find blob by pathname and redirect to its public URL
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     try {
-      const result = await get(blobPath, { access: "public" });
-      if (result?.statusCode === 200 && result.stream) {
-        return new NextResponse(result.stream, {
-          headers: {
-            "Content-Type": result.blob?.contentType ?? contentType,
-            "Cache-Control": "public, max-age=31536000, immutable",
-          },
-        });
+      const { blobs } = await list({ prefix: blobPath, limit: 1 });
+      const match = blobs?.find((b) => b.pathname === blobPath);
+      if (match?.url) {
+        return NextResponse.redirect(match.url, 302);
       }
     } catch {
       // Fall through to local or 404
