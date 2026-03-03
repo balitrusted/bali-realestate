@@ -3,7 +3,7 @@ import { areas } from "@/types/areas";
 
 export const metadata = {
   title: "Sitemap",
-  description: "Full sitemap of Balitrusted — property catalog, knowledge base, Q&A, and more.",
+  description: "Full sitemap of Balitrusted: property catalog, villas for rent and sale, knowledge base, Q&A, and main pages.",
 };
 
 const propertyTypes = [

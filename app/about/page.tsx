@@ -1,6 +1,6 @@
 export const metadata = {
   title: "About",
-  description: "Philosophy and approach of the Balitrusted project",
+  description: "Philosophy and approach of the Balitrusted project. Transparent Bali real estate for long-term living and investments.",
 };
 
 export default function AboutPage() {

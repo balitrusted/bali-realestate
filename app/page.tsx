@@ -1,5 +1,10 @@
 import Link from "next/link";
 
+export const metadata = {
+  title: "Real Estate in Bali — Long-term Rentals and Investments",
+  description: "Platform for real estate in Bali for long-term living and investments. Villas for rent and sale in Ubud, Canggu, Sanur. No noise. No spam. No tourist approach.",
+};
+
 export default function Home() {
   return (
     <div className="bg-white">

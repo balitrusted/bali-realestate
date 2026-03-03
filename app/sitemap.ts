@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 import { parsePropertiesFile } from '@/lib/parseProperties'
+import { getArticles } from '@/lib/articlesData'
 
 // Use env or localhost so site works before domain is connected
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
@@ -99,5 +100,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Continue without property pages if file can't be read
   }
 
-  return [...staticPages, ...propertyPages, ...guideCategoryPages, ...propertyDetailPages]
+  // Add individual article pages (Knowledge Base)
+  let articlePages: MetadataRoute.Sitemap = []
+  try {
+    const articles = await getArticles()
+    articlePages = articles
+      .filter((a) => a.published && a.slug && a.category)
+      .map((article) => ({
+        url: `${baseUrl}/guides/${article.category}/${article.slug}`,
+        lastModified: article.updatedAt ? new Date(article.updatedAt) : new Date(article.createdAt),
+        changeFrequency: 'weekly' as const,
+        priority: 0.7,
+      }))
+  } catch (error) {
+    console.error('Error loading articles for sitemap:', error)
+  }
+
+  return [...staticPages, ...propertyPages, ...guideCategoryPages, ...propertyDetailPages, ...articlePages]
 }
