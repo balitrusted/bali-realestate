@@ -88,7 +88,7 @@ async function main() {
         { jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp", gif: "image/gif" }[
           ext
         ] ?? "image/jpeg";
-      await put(`properties/${filename}`, buffer, { access: "public", contentType });
+      await put(`properties/${filename}`, buffer, { access: "public", contentType, addRandomSuffix: false });
       ok++;
       console.log(`[${i + 1}/${total}] ${filename}`);
     } catch (e) {

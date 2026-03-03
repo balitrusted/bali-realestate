@@ -55,14 +55,24 @@ export async function GET(
   const ext = baseFilename.split(".").pop()?.toLowerCase() ?? "jpg";
   const contentType = CONTENT_TYPES[ext] ?? "image/jpeg";
 
-  // Production: get store base URL once, then fetch image by path
+  // Production: try direct URL first; if 404, find blob by prefix (files may have random suffix from put())
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     try {
       const baseUrl = await getBlobBaseUrl();
       if (baseUrl) {
-        const imageUrl = `${baseUrl}/${blobPath}`;
-        const res = await fetch(imageUrl, { cache: "force-cache" });
-        if (res.ok && res.body) {
+        let imageUrl = `${baseUrl}/${blobPath}`;
+        let res = await fetch(imageUrl, { cache: "force-cache" });
+        if (!res.ok && res.status === 404) {
+          // Blob SDK adds random suffix by default → pathname is e.g. properties/villa-xxx-ABC123.jpg
+          const prefix = blobPath.replace(/\.[^.]+$/, "");
+          const { blobs } = await list({ prefix, limit: 1 });
+          const match = blobs?.[0];
+          if (match?.url) {
+            imageUrl = match.url;
+            res = await fetch(imageUrl, { cache: "force-cache" });
+          }
+        }
+        if (res?.ok && res.body) {
           return new NextResponse(res.body, {
             headers: {
               "Content-Type": res.headers.get("content-type") ?? contentType,
