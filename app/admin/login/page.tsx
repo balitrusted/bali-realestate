@@ -82,10 +82,6 @@ export default function AdminLogin() {
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-        <div className="mt-4 text-xs text-gray-500 text-center space-y-1">
-          <p>Default password: <strong>admin123</strong></p>
-          <p>Change it in .env.local file</p>
-        </div>
       </div>
     </div>
   );
