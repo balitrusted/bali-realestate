@@ -11,6 +11,7 @@ import { join } from "path";
 import { existsSync, readFileSync } from "fs";
 
 const DATA_FILE = join(process.cwd(), "data", "properties.ts");
+const ARTICLES_FILE = join(process.cwd(), "data", "articles.ts");
 const ENV_LOCAL = join(process.cwd(), ".env.local");
 
 function loadEnvLocal() {
@@ -60,26 +61,60 @@ async function main() {
     console.log("  Listed", result.blobs.length, "blobs, total keys:", Object.keys(pathnameToUrl).length);
   } while (cursor);
 
+  const blobUrlsByPrefix = Object.entries(pathnameToUrl);
+
+  function resolveUrl(path: string): string | null {
+    const filename = path.replace(/^\/uploads\/properties\//, "");
+    const exact = pathnameToUrl[filename] ?? pathnameToUrl[filename.toLowerCase()];
+    if (exact) return exact;
+    const base = filename.replace(/\.[^.]+$/, "");
+    const byPrefix = blobUrlsByPrefix.find(([k]) => k.startsWith(base) || k.toLowerCase().startsWith(base.toLowerCase()));
+    return byPrefix ? byPrefix[1] : null;
+  }
+
+  let totalReplaced = 0;
+
   const dataContent = await readFile(DATA_FILE, "utf-8");
   const pathRegex = /"(\/uploads\/properties\/[^"]+)"/g;
-  let replaced = 0;
-  const newContent = dataContent.replace(pathRegex, (match, path) => {
-    const filename = path.replace(/^\/uploads\/properties\//, "");
-    const url = pathnameToUrl[filename] ?? pathnameToUrl[path.replace(/^\/uploads\/properties\//, "")];
+  const newDataContent = dataContent.replace(pathRegex, (match, path) => {
+    const url = resolveUrl(path);
     if (url) {
-      replaced++;
+      totalReplaced++;
       return `"${url}"`;
     }
     return match;
   });
+  if (totalReplaced > 0) await writeFile(DATA_FILE, newDataContent);
+  console.log("Replaced", totalReplaced, "paths in data/properties.ts");
 
-  if (replaced === 0) {
-    console.log("No /uploads/properties/ paths found or no matching blob URLs. Data unchanged.");
-    process.exit(0);
+  if (existsSync(ARTICLES_FILE)) {
+    const articlesContent = await readFile(ARTICLES_FILE, "utf-8");
+    let articleReplaced = 0;
+    let newArticlesContent = articlesContent;
+    for (const re of [
+      /src=\\"(\/uploads\/properties\/[^"\\]+)\\"/g,
+      /src="(\/uploads\/properties\/[^"]+)"/g,
+    ]) {
+      newArticlesContent = newArticlesContent.replace(re, (match, path) => {
+        const url = resolveUrl(path);
+        if (url) {
+          articleReplaced++;
+          return match.startsWith('src=\\"') ? `src=\\"${url}\\"` : `src="${url}"`;
+        }
+        return match;
+      });
+    }
+    if (articleReplaced > 0) {
+      await writeFile(ARTICLES_FILE, newArticlesContent);
+      console.log("Replaced", articleReplaced, "image paths in data/articles.ts");
+      totalReplaced += articleReplaced;
+    } else {
+      const hasUploadPath = /\/uploads\/properties\//.test(articlesContent);
+      if (hasUploadPath) console.log("Article image path found but no matching blob (upload image via admin to Blob?).");
+    }
   }
 
-  await writeFile(DATA_FILE, newContent);
-  console.log("Done. Replaced", replaced, "paths with Blob URLs in data/properties.ts");
+  console.log("Done. Total replaced:", totalReplaced);
   console.log("Commit and push, then redeploy. Images will load directly from Blob.");
 }
 

@@ -140,14 +140,25 @@ export default function ArticleForm({ article, onSave }: ArticleFormProps) {
         body: uploadFormData,
       });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Upload failed");
+      const text = await response.text();
+      let data: { url?: string; error?: string } = {};
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch {
+          throw new Error(response.ok ? "Invalid server response" : `Upload failed (${response.status})`);
+        }
       }
 
-      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || `Upload failed (${response.status})`);
+      }
+
+      if (!data.url) {
+        throw new Error("Server did not return image URL");
+      }
       
-      // Insert image into editor
+      // Insert image into editor (data.url is the full Blob URL or /uploads/ path)
       editor?.chain().focus().setImage({ src: data.url }).run();
     } catch (error) {
       console.error("Upload error:", error);

@@ -13,6 +13,8 @@ async function checkAuth() {
   return cookieStore.get("admin-auth")?.value === "true";
 }
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   if (!(await checkAuth())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -101,10 +103,11 @@ export async function POST(request: Request) {
 
     let publicUrl: string;
     if (useBlob) {
-      // Upload to Vercel Blob Storage
+      // Upload to Vercel Blob Storage (addRandomSuffix: false for predictable URLs)
       const blob = await put(`properties/${filename}`, buffer, {
         access: "public",
         contentType: file.type,
+        addRandomSuffix: false,
       });
       publicUrl = blob.url;
     } else {
@@ -125,8 +128,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ url: publicUrl, filename });
   } catch (error) {
     console.error("Error uploading file:", error);
+    const message = error instanceof Error ? error.message : "Failed to upload file";
     return NextResponse.json(
-      { error: "Failed to upload file" },
+      { error: message },
       { status: 500 }
     );
   }
