@@ -38,12 +38,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "File size must be less than 10MB" }, { status: 400 });
     }
 
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = join(process.cwd(), "public", "uploads", "properties");
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true });
-    }
-
     const extension = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/i, "") || "jpg";
 
     // Optional: SEO filename from property context (from property edit form)
@@ -111,7 +105,8 @@ export async function POST(request: Request) {
       });
       publicUrl = blob.url;
     } else {
-      // Local filesystem (development)
+      // Local filesystem (development only; on Vercel we use Blob above)
+      const uploadsDir = join(process.cwd(), "public", "uploads", "properties");
       if (!existsSync(uploadsDir)) {
         await mkdir(uploadsDir, { recursive: true });
       }
