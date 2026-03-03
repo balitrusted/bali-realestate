@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Article } from "@/types/article";
-import { readFile } from "fs/promises";
-import { join } from "path";
+import { getArticles } from "@/lib/articlesData";
 import Image from "next/image";
 import ArticleComments from "@/components/ArticleComments";
 import ArticleContent from "@/components/ArticleContent";
@@ -13,7 +12,7 @@ export const revalidate = 0;
 
 async function getArticle(category: string, slug: string): Promise<Article | null> {
   try {
-    const { articles } = await import("@/data/articles");
+    const articles = await getArticles();
     return articles.find(a => a.category === category && a.slug === slug && a.published) || null;
   } catch (error) {
     console.error("Error loading article:", error);

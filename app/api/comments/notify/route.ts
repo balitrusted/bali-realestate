@@ -12,7 +12,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Get article title for email
-    const { articles } = await import("@/data/articles");
+    const { getArticles } = await import("@/lib/articlesData");
+    const articles = await getArticles();
     const article = articles.find(a => a.id === parentComment.articleId);
 
     // Email content

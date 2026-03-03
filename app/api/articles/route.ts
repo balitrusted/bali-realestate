@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { readFile, writeFile } from "fs/promises";
+import { writeFile } from "fs/promises";
 import { join } from "path";
 import { Article } from "@/types/article";
+import { getArticles, saveArticlesToBlob } from "@/lib/articlesData";
 
 const DATA_FILE = join(process.cwd(), "data", "articles.ts");
 
@@ -10,22 +11,6 @@ const DATA_FILE = join(process.cwd(), "data", "articles.ts");
 async function checkAuth() {
   const cookieStore = await cookies();
   return cookieStore.get("admin-auth")?.value === "true";
-}
-
-// Parse articles from TypeScript file
-function parseArticlesFile(content: string): Article[] {
-  try {
-    const match = content.match(/export const articles: Article\[\] = (\[[\s\S]*?\]);/);
-    if (!match) {
-      return [];
-    }
-    // For now, return empty array - we'll implement proper parsing if needed
-    // For MVP, we can use a simpler approach
-    return [];
-  } catch (error) {
-    console.error("Error parsing articles file:", error);
-    return [];
-  }
 }
 
 // Generate articles file content
@@ -89,13 +74,8 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category");
     const published = searchParams.get("published");
-    
-    const fileContent = await readFile(DATA_FILE, "utf-8");
-    const articles = parseArticlesFile(fileContent);
-    
-    // For MVP, import directly
-    const { articles: importedArticles } = await import("@/data/articles");
-    
+
+    const importedArticles = await getArticles();
     let filtered = [...importedArticles];
     
     // Filter by category
@@ -124,9 +104,7 @@ export async function POST(request: Request) {
 
   try {
     const articleData: any = await request.json();
-    
-    const fileContent = await readFile(DATA_FILE, "utf-8");
-    const { articles: existingArticles } = await import("@/data/articles");
+    const existingArticles = await getArticles();
     
     // Generate slug from title if not provided
     const slug = articleData.slug || articleData.title
@@ -165,9 +143,12 @@ export async function POST(request: Request) {
     };
     
     const updatedArticles = [...existingArticles, newArticle];
-    const newContent = generateArticlesFile(updatedArticles);
-    await writeFile(DATA_FILE, newContent, "utf-8");
-    
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      await saveArticlesToBlob(updatedArticles);
+    } else {
+      const newContent = generateArticlesFile(updatedArticles);
+      await writeFile(DATA_FILE, newContent, "utf-8");
+    }
     return NextResponse.json({ article: newArticle });
   } catch (error) {
     console.error("Error creating article:", error);
@@ -186,24 +167,26 @@ export async function PUT(request: Request) {
 
   try {
     const articleData: any = await request.json();
-    const { articles: existingArticles } = await import("@/data/articles");
-    
-    const index = existingArticles.findIndex(a => a.id === articleData.id);
+    const existingArticles = await getArticles();
+
+    const index = existingArticles.findIndex((a) => a.id === articleData.id);
     if (index === -1) {
       return NextResponse.json({ error: "Article not found" }, { status: 404 });
     }
-    
-    // Update article
+
     const updatedArticle: Article = {
       ...existingArticles[index],
       ...articleData,
       updatedAt: new Date().toISOString(),
     };
-    
+
     existingArticles[index] = updatedArticle;
-    const newContent = generateArticlesFile(existingArticles);
-    await writeFile(DATA_FILE, newContent, "utf-8");
-    
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      await saveArticlesToBlob(existingArticles);
+    } else {
+      const newContent = generateArticlesFile(existingArticles);
+      await writeFile(DATA_FILE, newContent, "utf-8");
+    }
     return NextResponse.json({ article: updatedArticle });
   } catch (error) {
     console.error("Error updating article:", error);
@@ -223,17 +206,20 @@ export async function DELETE(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    
+
     if (!id) {
       return NextResponse.json({ error: "ID required" }, { status: 400 });
     }
-    
-    const { articles: existingArticles } = await import("@/data/articles");
-    const filtered = existingArticles.filter(a => a.id !== id);
-    
-    const newContent = generateArticlesFile(filtered);
-    await writeFile(DATA_FILE, newContent, "utf-8");
-    
+
+    const existingArticles = await getArticles();
+    const filtered = existingArticles.filter((a) => a.id !== id);
+
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      await saveArticlesToBlob(filtered);
+    } else {
+      const newContent = generateArticlesFile(filtered);
+      await writeFile(DATA_FILE, newContent, "utf-8");
+    }
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting article:", error);

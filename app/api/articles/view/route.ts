@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFile, writeFile } from "fs/promises";
+import { writeFile } from "fs/promises";
 import { join } from "path";
 import { Article } from "@/types/article";
+import { getArticles, saveArticlesToBlob } from "@/lib/articlesData";
 
 const DATA_FILE = join(process.cwd(), "data", "articles.ts");
 
@@ -66,22 +67,25 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "articleId required" }, { status: 400 });
     }
 
-    const { articles: allArticles } = await import("@/data/articles");
+    const allArticles = await getArticles();
     const articleIndex = allArticles.findIndex(a => a.id === articleId);
 
     if (articleIndex === -1) {
       return NextResponse.json({ error: "Article not found" }, { status: 404 });
     }
 
-    // Increment views
     const currentViews = allArticles[articleIndex].views || 0;
     allArticles[articleIndex] = {
       ...allArticles[articleIndex],
       views: currentViews + 1,
     };
 
-    const newContent = generateArticlesFile(allArticles);
-    await writeFile(DATA_FILE, newContent, "utf-8");
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      await saveArticlesToBlob(allArticles);
+    } else {
+      const newContent = generateArticlesFile(allArticles);
+      await writeFile(DATA_FILE, newContent, "utf-8");
+    }
 
     return NextResponse.json({
       success: true,

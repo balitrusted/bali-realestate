@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Article } from "@/types/article";
-import { readFile } from "fs/promises";
-import { join } from "path";
+import { getArticles } from "@/lib/articlesData";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -159,11 +158,7 @@ async function getCommentCount(articleId: string): Promise<number> {
 
 async function getArticlesByCategory(category: string): Promise<Article[]> {
   try {
-    // Read articles directly from file
-    const filePath = join(process.cwd(), 'data', 'articles.ts');
-    const fileContent = await readFile(filePath, 'utf-8');
-    const { articles } = await import("@/data/articles");
-    
+    const articles = await getArticles();
     return articles.filter(a => a.category === category && a.published);
   } catch (error) {
     console.error("Error fetching articles:", error);

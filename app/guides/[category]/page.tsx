@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Article } from "@/types/article";
-import { readFile } from "fs/promises";
-import { join } from "path";
+import { getArticles } from "@/lib/articlesData";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -48,7 +47,7 @@ const guideCategories = [
 
 async function getArticlesByCategory(category: string): Promise<Article[]> {
   try {
-    const { articles } = await import("@/data/articles");
+    const articles = await getArticles();
     return articles.filter(a => a.category === category && a.published);
   } catch (error) {
     console.error("Error fetching articles:", error);
