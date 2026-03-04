@@ -1,0 +1,48 @@
+// Backup of app/page.tsx BEFORE SEO refactor (2025-02). To restore: copy this file to app/page.tsx
+import Link from "next/link";
+
+export const metadata = {
+  title: "Real Estate in Bali — Long-term Rentals and Investments",
+  description: "Platform for real estate in Bali for long-term living and investments. Villas for rent and sale in Ubud, Canggu, Sanur. No noise. No spam. No tourist approach.",
+};
+
+export default function Home() {
+  return (
+    <div className="bg-white">
+      {/* Hero Section */}
+      <section className="container mx-auto px-4 py-16 md:py-24">
+        <div className="max-w-3xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            Real Estate in Bali for Long-term Living and Investments
+          </h1>
+          <p className="text-xl text-gray-600 mb-8">
+            No noise. No spam. No tourist approach.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/properties"
+              className="px-6 py-3 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
+            >
+              View Properties
+            </Link>
+            <Link
+              href="/qa"
+              className="px-6 py-3 border border-gray-300 text-gray-900 rounded-md hover:bg-gray-50 transition-colors"
+            >
+              Ask a Question
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* For Whom Section */}
+      <section className="bg-gray-50 py-16">
+        ...
+      </section>
+      {/* How We Work Section */}
+      ...
+      {/* Quick Links - Start Here */}
+      ...
+    </div>
+  );
+}
