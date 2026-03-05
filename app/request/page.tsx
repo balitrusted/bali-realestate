@@ -11,6 +11,9 @@ function RequestForm() {
   const propertyId = searchParams.get("property");
   
   const [requestType, setRequestType] = useState<RequestType | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -60,26 +63,46 @@ function RequestForm() {
     }
   }, [propertyId, requestType]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here will be the logic for submitting the form
-    alert("Request submitted. We will contact you shortly.");
-    // Reset form
-    setRequestType(null);
-    setFormData({
-      name: "",
-      email: "",
-      whatsapp: "",
-      preferredContact: formData.whatsapp ? "whatsapp" : "email",
-      propertyType: "",
-      area: "",
-      bedrooms: "",
-      budget: "",
-      budgetPeriod: "month",
-      budgetCurrency: "IDR",
-      duration: [],
-      message: ""
-    });
+    setSubmitError(null);
+    setSubmitSuccess(false);
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          requestType,
+          ...formData,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setSubmitError(data.error || "Failed to send. Please try again.");
+        return;
+      }
+      setSubmitSuccess(true);
+      setRequestType(null);
+      setFormData({
+        name: "",
+        email: "",
+        whatsapp: "",
+        preferredContact: formData.whatsapp ? "whatsapp" : "email",
+        propertyType: "",
+        area: "",
+        bedrooms: "",
+        budget: "",
+        budgetPeriod: "month",
+        budgetCurrency: "IDR",
+        duration: [],
+        message: "",
+      });
+    } catch {
+      setSubmitError("Network error. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const toggleDuration = (value: string) => {
@@ -130,15 +153,36 @@ function RequestForm() {
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Send Request
-          </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            Choose how we can help you and fill out the form.
-          </p>
+          {submitSuccess ? (
+            <div className="rounded-xl border-2 border-emerald-200 bg-emerald-50 p-8 text-center">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100">
+                <svg className="h-8 w-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Request sent</h2>
+              <p className="text-gray-700 mb-6">
+                We have received your request and will contact you shortly.
+              </p>
+              <button
+                type="button"
+                onClick={() => setSubmitSuccess(false)}
+                className="px-5 py-2.5 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
+              >
+                Submit another request
+              </button>
+            </div>
+          ) : (
+            <>
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                Send Request
+              </h1>
+              <p className="text-xl text-gray-600 mb-8">
+                Choose how we can help you and fill out the form.
+              </p>
 
-          {/* Request Type Selection */}
-          {!requestType ? (
+              {/* Request Type Selection */}
+              {!requestType ? (
             <div className="grid md:grid-cols-2 gap-4 mb-12">
               {requestTypeOptions.map((option) => (
                 <button
@@ -489,13 +533,20 @@ function RequestForm() {
                   />
                 </div>
 
+                {submitError && (
+                  <p className="text-red-600 text-sm mt-2">{submitError}</p>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full px-4 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-md hover:bg-gray-800 transition-colors mt-4"
+                  disabled={submitting}
+                  className="w-full px-4 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-md hover:bg-gray-800 transition-colors mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Submit Request
+                  {submitting ? "Sending…" : "Submit Request"}
                 </button>
               </form>
+            </>
+          )}
             </>
           )}
         </div>

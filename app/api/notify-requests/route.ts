@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { readFile, writeFile } from "fs/promises";
 import { join } from "path";
 import { cookies } from "next/headers";
+import { sendToAdmin } from "@/lib/email";
 
 const DATA_FILE = join(process.cwd(), "data", "notify-requests.json");
 
@@ -65,7 +66,27 @@ export async function POST(request: Request) {
       createdAt: new Date().toISOString(),
     };
     requests.push(newRequest);
-    await writeRequests(requests);
+
+    // Email admin about new "notify when available" request
+    const subject = `[Balitrusted] Notify when available: ${newRequest.propertyTitle || newRequest.propertyId}`;
+    const html = `
+      <p><strong>New request: notify when villa is available</strong></p>
+      <ul>
+        <li>Property: ${newRequest.propertyTitle || newRequest.propertyId} (ID: ${newRequest.propertyId})</li>
+        <li>Name: ${newRequest.name}</li>
+        <li>Email: <a href="mailto:${newRequest.email}">${newRequest.email}</a></li>
+        ${newRequest.dateFrom ? `<li>Needed from: ${newRequest.dateFrom}</li>` : ""}
+      </ul>
+      <p><em>Balitrusted</em></p>
+    `;
+    sendToAdmin(subject, html).catch((err) => console.error("Notify-request email failed:", err));
+
+    try {
+      await writeRequests(requests);
+    } catch (writeErr) {
+      console.error("Could not save notify-requests (e.g. on Vercel):", writeErr);
+      // Still return success – admin got the email
+    }
     return NextResponse.json({ success: true, id: newRequest.id });
   } catch (error) {
     console.error("Notify request error:", error);

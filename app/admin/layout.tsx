@@ -107,6 +107,12 @@ export default function AdminLayout({
                 Archive
               </Link>
               <Link
+                href="/admin/requests"
+                className="text-gray-700 hover:text-gray-900"
+              >
+                Requests
+              </Link>
+              <Link
                 href="/admin/notify-requests"
                 className="text-gray-700 hover:text-gray-900"
               >

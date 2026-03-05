@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { readFile, writeFile } from "fs/promises";
 import { join } from "path";
 import { Comment } from "@/types/article";
+import { sendToAdmin } from "@/lib/email";
+import { getArticles } from "@/lib/articlesData";
 
 const DATA_FILE = join(process.cwd(), "data", "comments.ts");
 
@@ -158,12 +160,11 @@ export async function POST(request: Request) {
     const newContent = generateCommentsFile(updatedComments);
     await writeFile(DATA_FILE, newContent, "utf-8");
     
-    // Send email notification if this is a reply
+    // Send email notification if this is a reply (to the comment author)
     if (commentData.parentId) {
       try {
         const parentComment = existingComments.find(c => c.id === commentData.parentId);
         if (parentComment && parentComment.authorEmail) {
-          // Send email notification (async, don't wait)
           fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/comments/notify`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -171,13 +172,36 @@ export async function POST(request: Request) {
               parentComment,
               replyComment: newComment,
             }),
-          }).catch(err => console.error('Failed to send email notification:', err));
+          }).catch(err => console.error('Failed to send reply notification:', err));
         }
       } catch (err) {
-        console.error('Error sending email notification:', err);
+        console.error('Error sending reply notification:', err);
       }
     }
-    
+
+    // Notify admin about new comment (for moderation)
+    (async () => {
+      try {
+        const articles = await getArticles();
+        const article = articles.find(a => a.id === newComment.articleId);
+        const articleTitle = article?.title || "Article";
+        const articleUrl = `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/guides/${article?.category || ""}/${article?.slug || ""}`;
+        const subject = `[Balitrusted] New comment to moderate: "${articleTitle}"`;
+        const html = `
+          <p><strong>New comment (awaiting moderation)</strong></p>
+          <p><strong>Article:</strong> ${articleTitle}</p>
+          <p><strong>Author:</strong> ${newComment.authorName} &lt;${newComment.authorEmail}&gt;</p>
+          <p><strong>Content:</strong></p>
+          <p>${newComment.content.replace(/\n/g, "<br>")}</p>
+          <p><a href="${articleUrl}">View article</a></p>
+          <p><em>Balitrusted</em></p>
+        `;
+        await sendToAdmin(subject, html);
+      } catch (err) {
+        console.error('Failed to send admin comment notification:', err);
+      }
+    })();
+
     return NextResponse.json({ 
       comment: newComment,
       message: "Comment submitted. It will be visible after moderation."
