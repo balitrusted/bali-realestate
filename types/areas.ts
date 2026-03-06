@@ -1,5 +1,5 @@
 // Main areas (regions) for SEO and navigation
-export type MainArea = 'ubud' | 'canggu' | 'sanur' | 'seminyak' | 'tanah_lot';
+export type MainArea = 'ubud' | 'canggu' | 'sanur' | 'seminyak' | 'tanah-lot';
 
 // Sub-areas (neighborhoods) within main areas
 export type SubArea =
@@ -59,8 +59,8 @@ export const areas: Record<MainArea, AreaInfo> = {
     seoTitle: 'Seminyak - Villa Rentals and Sales',
     seoDescription: 'Find villas for rent and sale in Seminyak. Beachside and central options with modern amenities.',
   },
-  tanah_lot: {
-    id: 'tanah_lot',
+  'tanah-lot': {
+    id: 'tanah-lot',
     name: 'Tanah Lot',
     nameEn: 'Tanah Lot',
     description: 'Area near the iconic Tanah Lot temple. Quieter coastal setting with ocean views and nature.',

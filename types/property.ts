@@ -10,7 +10,7 @@ export type SubArea =
   | 'sayan'
   | 'sukawati'
   | 'tegallalang';
-export type MainArea = 'ubud' | 'canggu' | 'sanur' | 'seminyak' | 'tanah_lot';
+export type MainArea = 'ubud' | 'canggu' | 'sanur' | 'seminyak' | 'tanah-lot';
 
 export interface Property {
   id: string;

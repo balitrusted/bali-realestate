@@ -80,16 +80,17 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
     if (newFilters.maxPrice) params.set('maxPrice', newFilters.maxPrice.toString());
 
     const currentPath = window.location.pathname;
-    const match = currentPath.match(/\/properties\/([^\/]+)\/([^\/]+)/);
+    const match = currentPath.match(/\/properties\/([^\/]+)\/([^\/]+)(?:\/([^\/]+))?/);
     const pathType = match?.[1];
     const pathArea = match?.[2];
+    const pathSegment = match?.[3];
 
     if (match && pathType && pathArea) {
-      // On [type]/[area] page: only change path when area or type actually changed
       const newArea = newFilters.mainArea || pathArea;
       const newType = newFilters.type || pathType;
+      const segmentPart = pathSegment ? `/${pathSegment}` : "";
       if (newArea !== pathArea || newType !== pathType) {
-        router.push(`/properties/${newType}/${newArea}?${params.toString()}`, { scroll: false });
+        router.push(`/properties/${newType}/${newArea}${segmentPart}?${params.toString()}`, { scroll: false });
       } else {
         router.push(`${currentPath}?${params.toString()}`, { scroll: false });
       }

@@ -330,7 +330,7 @@ export const properties: Property[] = [
     internalName: "2 bdr Tanah Lot 180",
     description: "2 bedroom villa in the Tanah Lot area, close to Cemagi and approximately 20-25 minutes to Canggu. \nLocation reference on Google Maps: Combat & Coffee, Tabanan.\n\nTwo storey minimalist villa with a private pool and open views of the fields and nature. Located in a quiet and green area, ideal for comfortable living or long term rental.\nThe villa features a raw concrete design both outside and inside, with a consistent grey tone that creates a modern industrial look. Wooden elements in warm brown tones balance the darker concrete and add character to the interior.\n\nOn the ground floor there is a cozy open living room combined with a kitchen area. The space includes two sofas and follows a dark concrete and wood color palette. A black ceiling fan completes the aesthetic.\n\nA large double door refrigerator and a TV are located on the ground floor.\nUpstairs, a stylish staircase leads to the second floor with two bedrooms. Each bedroom is furnished and equipped with air conditioning.\nThe property includes a private swimming pool and a gated parking area for secure access.\n\nFeatures:\n• 2 bedrooms\n• 2 floors\n• Swimming pool\n• Rice field and nature views\n• Raw concrete minimalist style\n• Furnished bedrooms with air conditioning\n• Cozy living room with kitchen\n• Large refrigerator and TV\n• Gated parking\n• Stylish staircase.",
     types: ["rent"],
-    mainArea: "tanah_lot",
+    mainArea: "tanah-lot",
     exactLocation: "https://maps.app.goo.gl/HVPfAmLfDrqa9grC9",
     displayLocation: "-8.611345987478337, 115.10981445895688",
     bedrooms: 2,
