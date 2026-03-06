@@ -25,15 +25,20 @@ const STATUS_CLASSES: Record<RequestStatus, string> = {
 
 function RequestCard({
   r,
-  onUpdate,
+  onRequestUpdated,
 }: {
   r: SiteRequest;
-  onUpdate: () => void;
+  onRequestUpdated: (updated: SiteRequest) => void;
 }) {
   const status = r.status || "new";
   const [comment, setComment] = useState(r.comment ?? "");
   const [savingComment, setSavingComment] = useState(false);
   const [savingStatus, setSavingStatus] = useState(false);
+
+  // Sync comment when r changes (e.g. from parent update)
+  useEffect(() => {
+    setComment(r.comment ?? "");
+  }, [r.comment]);
 
   const saveComment = async () => {
     if (comment === (r.comment ?? "")) return;
@@ -44,7 +49,8 @@ function RequestCard({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: r.id, comment }),
       });
-      if (res.ok) onUpdate();
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.request) onRequestUpdated(data.request);
     } finally {
       setSavingComment(false);
     }
@@ -58,7 +64,8 @@ function RequestCard({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: r.id, status: newStatus }),
       });
-      if (res.ok) onUpdate();
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.request) onRequestUpdated(data.request);
     } finally {
       setSavingStatus(false);
     }
@@ -165,6 +172,11 @@ export default function AdminRequestsPage() {
   const active = [...normalized].reverse().filter((r) => r.status !== "done");
   const completed = [...normalized].reverse().filter((r) => r.status === "done");
 
+  const handleRequestUpdated = (updated: SiteRequest) => {
+    const withStatus = { ...updated, status: (updated.status || "new") as RequestStatus };
+    setRequests((prev) => prev.map((r) => (r.id === updated.id ? withStatus : r)));
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -186,7 +198,7 @@ export default function AdminRequestsPage() {
             <div className="space-y-4 mb-8">
               <h2 className="text-lg font-semibold text-gray-900">Active</h2>
               {active.map((r) => (
-                <RequestCard key={r.id} r={r} onUpdate={fetchList} />
+                <RequestCard key={r.id} r={r} onRequestUpdated={handleRequestUpdated} />
               ))}
             </div>
           )}
@@ -194,7 +206,7 @@ export default function AdminRequestsPage() {
             <div className="space-y-4 pt-6 border-t border-gray-200">
               <h2 className="text-lg font-semibold text-gray-600">Completed</h2>
               {completed.map((r) => (
-                <RequestCard key={r.id} r={r} onUpdate={fetchList} />
+                <RequestCard key={r.id} r={r} onRequestUpdated={handleRequestUpdated} />
               ))}
             </div>
           )}
