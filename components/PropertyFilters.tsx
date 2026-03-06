@@ -179,8 +179,8 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
   };
 
   const handleSubjectChange = (newSubject: Subject) => {
-    if (!action) return;
-    const newType = typeFromActionSubject(action, newSubject);
+    const effectiveAction = action ?? "Buy";
+    const newType = typeFromActionSubject(effectiveAction, newSubject);
     const newFilters = {
       ...filters,
       type: newType,
@@ -320,12 +320,16 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
     amenitiesUnselected.length > 0 ? `(or ${amenitiesUnselected.join(", ")})` : "";
 
   const isRent = action === "Rent";
-  const paymentDisplay = isRent
-    ? (filters.minDuration === 12 ? "pay yearly" : "pay monthly")
-    : "full payment";
-  const paymentHint = isRent
-    ? (filters.minDuration === 12 ? "(or pay monthly)" : "(or pay yearly)")
-    : "";
+  const paymentDisplay = !action
+    ? "any payment"
+    : isRent
+      ? (filters.minDuration === 12 ? "pay yearly" : filters.minDuration === 1 ? "pay monthly" : "any payment")
+      : "full payment";
+  const paymentHint = !action
+    ? "(pay monthly or yearly)"
+    : isRent
+      ? (filters.minDuration === 12 ? "(or pay monthly)" : filters.minDuration === 1 ? "(or pay yearly)" : "(or pay monthly, or pay yearly)")
+      : "";
 
   const subjectHint =
     subject === "Villas"
@@ -349,7 +353,7 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
           >
             <span className="min-w-0 overflow-hidden whitespace-nowrap">
               <span className="border-b border-dashed border-gray-500 font-semibold">
-                {action ? action.toLowerCase() : "—"}
+                {action ? action.toLowerCase() : "rent or buy"}
               </span>
               <span className="ml-1.5 text-xs font-normal text-gray-500">
                 ({action === "Rent" ? "or buy" : action === "Buy" ? "or rent" : "rent or buy"})
@@ -366,6 +370,18 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
           </button>
           {open.action && (
             <div className="border-t border-gray-200 bg-white px-2 py-2 space-y-0.5">
+              <button
+                type="button"
+                onClick={() => {
+                  const newFilters = { ...filters, type: undefined, minDuration: undefined };
+                  setFilters(newFilters);
+                  updateURL(newFilters);
+                  setOpen((o) => ({ ...o, action: false }));
+                }}
+                className={`w-full text-left px-2 py-1.5 text-sm rounded hover:bg-gray-100 ${!action ? "font-semibold text-gray-900 bg-gray-50" : "text-gray-700"}`}
+              >
+                rent or buy
+              </button>
               {(["Rent", "Buy"] as const).map((a) => (
                 <button
                   key={a}
@@ -412,6 +428,18 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
               <button
                 type="button"
                 onClick={() => {
+                  const newFilters = { ...filters, minDuration: undefined };
+                  setFilters(newFilters);
+                  updateURL(newFilters);
+                  setOpen((o) => ({ ...o, duration: false }));
+                }}
+                className={`w-full text-left px-2 py-1.5 text-sm rounded hover:bg-gray-100 ${!filters.minDuration || (filters.minDuration !== 1 && filters.minDuration !== 12) ? "font-semibold text-gray-900 bg-gray-50" : "text-gray-700"}`}
+              >
+                any payment
+              </button>
+              <button
+                type="button"
+                onClick={() => {
                   const newFilters = { ...filters, minDuration: 1 };
                   setFilters(newFilters);
                   updateURL(newFilters);
@@ -446,7 +474,7 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
           >
             <span className="min-w-0 overflow-hidden whitespace-nowrap">
               <span className="border-b border-dashed border-gray-500 font-semibold">
-                {subject ? subject.toLowerCase() : "—"}
+                {subject ? subject.toLowerCase() : "all types"}
               </span>
               <span className="ml-1.5 text-xs font-normal text-gray-500">{subjectHint}</span>
             </span>
@@ -461,6 +489,18 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
           </button>
           {open.subject && (
             <div className="border-t border-gray-200 bg-white px-2 py-2 space-y-0.5">
+              <button
+                type="button"
+                onClick={() => {
+                  const newFilters = { ...filters, type: undefined };
+                  setFilters(newFilters);
+                  updateURL(newFilters);
+                  setOpen((o) => ({ ...o, subject: false }));
+                }}
+                className={`w-full text-left px-2 py-1.5 text-sm rounded hover:bg-gray-100 ${!subject ? "font-semibold text-gray-900 bg-gray-50" : "text-gray-700"}`}
+              >
+                all types
+              </button>
               {subjectOptions.map((s) => (
                 <button
                   key={s}
@@ -487,7 +527,7 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
           >
             <span className="min-w-0 overflow-hidden whitespace-nowrap">
               <span className="border-b border-dashed border-gray-500 font-semibold">
-                {filters.mainArea ? areas[filters.mainArea].nameEn.toLowerCase() : "—"}
+                {filters.mainArea ? areas[filters.mainArea].nameEn.toLowerCase() : "all areas"}
               </span>
               {areaHint && <span className="ml-1.5 text-xs font-normal text-gray-500">{areaHint}</span>}
             </span>
@@ -502,6 +542,18 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
           </button>
           {open.area && (
             <div className="border-t border-gray-200 bg-white px-2 py-2 space-y-0.5">
+              <button
+                type="button"
+                onClick={() => {
+                  const newFilters = { ...filters, mainArea: undefined, subArea: [] };
+                  setFilters(newFilters);
+                  updateURL(newFilters);
+                  setOpen((o) => ({ ...o, area: false }));
+                }}
+                className={`w-full text-left px-2 py-1.5 text-sm rounded hover:bg-gray-100 ${!filters.mainArea ? "font-semibold text-gray-900 bg-gray-50" : "text-gray-700"}`}
+              >
+                all areas
+              </button>
               {areaList.map((area) => (
                 <button
                   key={area.id}
