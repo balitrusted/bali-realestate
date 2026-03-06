@@ -146,7 +146,7 @@ export function filterProperties(
   return result.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
 }
 
-export function paginate<T>(items: T[], page: number): { items: T[]; total: number; totalPages: number; page } {
+export function paginate<T>(items: T[], page: number): { items: T[]; total: number; totalPages: number; page: number } {
   const total = items.length;
   const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
   const p = Math.max(1, Math.min(page, totalPages));
