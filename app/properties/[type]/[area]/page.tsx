@@ -186,7 +186,6 @@ export default async function PropertiesByTypeAndAreaPage({
   if (filters.hasWashingMachine) searchParamsForPagination.hasWashingMachine = "true";
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://balitrusted.com";
-  const basePath = `/properties/${propertyType}/${mainArea}`;
 
   return (
     <div className="bg-white min-h-screen">
