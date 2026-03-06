@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { sendToAdmin } from "@/lib/email";
-import { getRequests, addRequest, type SiteRequest } from "@/lib/requestsData";
+import { getRequests, addRequest, updateRequest, type SiteRequest } from "@/lib/requestsData";
 
 const REQUEST_TYPE_LABELS: Record<string, string> = {
   "client-rent": "Client – help me find property",
@@ -22,6 +22,28 @@ export async function GET() {
   }
   const requests = await getRequests();
   return NextResponse.json({ requests });
+}
+
+/** PATCH – update request status/comment (admin only) */
+export async function PATCH(request: NextRequest) {
+  if (!(await checkAuth())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  try {
+    const body = await request.json();
+    const { id, status, comment } = body;
+    if (!id || typeof id !== "string") {
+      return NextResponse.json({ error: "id required" }, { status: 400 });
+    }
+    const updated = await updateRequest(id, { status, comment });
+    if (!updated) {
+      return NextResponse.json({ error: "Request not found" }, { status: 404 });
+    }
+    return NextResponse.json({ request: updated });
+  } catch (error) {
+    console.error("Request PATCH error:", error);
+    return NextResponse.json({ error: "Update failed" }, { status: 500 });
+  }
 }
 
 /** POST – create request (public). Saves to storage and sends email to admin. */
