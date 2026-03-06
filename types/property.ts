@@ -76,9 +76,15 @@ export interface PropertyFilters {
   type?: PropertyType[];
   hasBathtub?: boolean;
   hasCarPark?: boolean;
+  hasClosedKitchen?: boolean;
   hasDesk?: boolean;
+  hasEnclosedLiving?: boolean;
+  hasGarage?: boolean;
+  hasHighSpeedWifi?: boolean;
   hasNatureView?: boolean;
+  hasPetFriendly?: boolean;
   hasPool?: boolean;
+  hasWashingMachine?: boolean;
   minDuration?: number;
   maxPrice?: number;
 }

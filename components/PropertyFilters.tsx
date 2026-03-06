@@ -20,9 +20,15 @@ export default function PropertyFilters({ defaultType, defaultMainArea }: Proper
     type?: PropertyType;
     hasBathtub: boolean;
     hasCarPark: boolean;
+    hasClosedKitchen: boolean;
     hasDesk: boolean;
+    hasEnclosedLiving: boolean;
+    hasGarage: boolean;
+    hasHighSpeedWifi: boolean;
     hasNatureView: boolean;
+    hasPetFriendly: boolean;
     hasPool: boolean;
+    hasWashingMachine: boolean;
     minDuration?: number;
     maxPrice?: number;
   }>({
@@ -32,9 +38,15 @@ export default function PropertyFilters({ defaultType, defaultMainArea }: Proper
     type: defaultType || (searchParams.get('type') as PropertyType) || undefined,
     hasBathtub: searchParams.get('hasBathtub') === 'true',
     hasCarPark: searchParams.get('hasCarPark') === 'true',
+    hasClosedKitchen: searchParams.get('hasClosedKitchen') === 'true',
     hasDesk: searchParams.get('hasDesk') === 'true',
+    hasEnclosedLiving: searchParams.get('hasEnclosedLiving') === 'true',
+    hasGarage: searchParams.get('hasGarage') === 'true',
+    hasHighSpeedWifi: searchParams.get('hasHighSpeedWifi') === 'true',
     hasNatureView: searchParams.get('hasNatureView') === 'true',
+    hasPetFriendly: searchParams.get('hasPetFriendly') === 'true',
     hasPool: searchParams.get('hasPool') === 'true',
+    hasWashingMachine: searchParams.get('hasWashingMachine') === 'true',
     minDuration: searchParams.get('minDuration') ? Number(searchParams.get('minDuration')) : undefined,
     maxPrice: searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : undefined,
   });
@@ -53,9 +65,15 @@ export default function PropertyFilters({ defaultType, defaultMainArea }: Proper
     if (newFilters.type) params.set('type', newFilters.type);
     if (newFilters.hasBathtub) params.set('hasBathtub', 'true');
     if (newFilters.hasCarPark) params.set('hasCarPark', 'true');
+    if (newFilters.hasClosedKitchen) params.set('hasClosedKitchen', 'true');
     if (newFilters.hasDesk) params.set('hasDesk', 'true');
+    if (newFilters.hasEnclosedLiving) params.set('hasEnclosedLiving', 'true');
+    if (newFilters.hasGarage) params.set('hasGarage', 'true');
+    if (newFilters.hasHighSpeedWifi) params.set('hasHighSpeedWifi', 'true');
     if (newFilters.hasNatureView) params.set('hasNatureView', 'true');
+    if (newFilters.hasPetFriendly) params.set('hasPetFriendly', 'true');
     if (newFilters.hasPool) params.set('hasPool', 'true');
+    if (newFilters.hasWashingMachine) params.set('hasWashingMachine', 'true');
     if (newFilters.minDuration) params.set('minDuration', newFilters.minDuration.toString());
     if (newFilters.maxPrice) params.set('maxPrice', newFilters.maxPrice.toString());
 
@@ -275,9 +293,15 @@ export default function PropertyFilters({ defaultType, defaultMainArea }: Proper
   const FEATURES_OPTIONS: { key: keyof typeof filters; label: string }[] = [
     { key: "hasBathtub", label: "bathtub" },
     { key: "hasCarPark", label: "car park" },
+    { key: "hasClosedKitchen", label: "closed kitchen" },
     { key: "hasDesk", label: "desk" },
+    { key: "hasEnclosedLiving", label: "enclosed living" },
+    { key: "hasGarage", label: "garage" },
+    { key: "hasHighSpeedWifi", label: "high-speed WiFi" },
     { key: "hasNatureView", label: "nature view" },
+    { key: "hasPetFriendly", label: "pet friendly" },
     { key: "hasPool", label: "pool" },
+    { key: "hasWashingMachine", label: "washing machine" },
   ];
   const hasAnyFeature = FEATURES_OPTIONS.some((f) => filters[f.key]);
   const amenitiesDisplay = hasAnyFeature
@@ -614,11 +638,17 @@ export default function PropertyFilters({ defaultType, defaultMainArea }: Proper
               subArea: [],
               bedrooms: [],
               type: undefined,
-              hasBathtub: false,
-              hasCarPark: false,
-              hasDesk: false,
-              hasNatureView: false,
-              hasPool: false,
+      hasBathtub: false,
+      hasCarPark: false,
+      hasClosedKitchen: false,
+      hasDesk: false,
+      hasEnclosedLiving: false,
+      hasGarage: false,
+      hasHighSpeedWifi: false,
+      hasNatureView: false,
+      hasPetFriendly: false,
+      hasPool: false,
+      hasWashingMachine: false,
               minDuration: undefined,
               maxPrice: undefined,
             };

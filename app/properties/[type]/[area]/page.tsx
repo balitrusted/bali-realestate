@@ -118,14 +118,32 @@ export default async function PropertiesByTypeAndAreaPage({
   if (queryParams.hasCarPark === 'true') {
     properties = properties.filter(p => p.features.carPark);
   }
+  if (queryParams.hasClosedKitchen === 'true') {
+    properties = properties.filter(p => p.features.closedKitchen);
+  }
   if (queryParams.hasDesk === 'true') {
     properties = properties.filter(p => p.features.desk);
+  }
+  if (queryParams.hasEnclosedLiving === 'true') {
+    properties = properties.filter(p => p.features.enclosedLivingArea);
+  }
+  if (queryParams.hasGarage === 'true') {
+    properties = properties.filter(p => p.features.garage);
+  }
+  if (queryParams.hasHighSpeedWifi === 'true') {
+    properties = properties.filter(p => p.features.highSpeedWifi);
   }
   if (queryParams.hasNatureView === 'true') {
     properties = properties.filter(p => p.features.natureView);
   }
+  if (queryParams.hasPetFriendly === 'true') {
+    properties = properties.filter(p => p.features.petFriendly);
+  }
   if (queryParams.hasPool === 'true') {
     properties = properties.filter(p => p.features.pool);
+  }
+  if (queryParams.hasWashingMachine === 'true') {
+    properties = properties.filter(p => p.features.washingMachine);
   }
   
   // Sort by order
@@ -142,9 +160,15 @@ export default async function PropertiesByTypeAndAreaPage({
   const featureTexts: string[] = [];
   if (queryParams.hasBathtub === 'true') featureTexts.push('with bathtub');
   if (queryParams.hasCarPark === 'true') featureTexts.push('with car park');
+  if (queryParams.hasClosedKitchen === 'true') featureTexts.push('with closed kitchen');
   if (queryParams.hasDesk === 'true') featureTexts.push('with desk');
+  if (queryParams.hasEnclosedLiving === 'true') featureTexts.push('with enclosed living');
+  if (queryParams.hasGarage === 'true') featureTexts.push('with garage');
+  if (queryParams.hasHighSpeedWifi === 'true') featureTexts.push('with high-speed WiFi');
   if (queryParams.hasNatureView === 'true') featureTexts.push('with nature view');
+  if (queryParams.hasPetFriendly === 'true') featureTexts.push('with pet friendly');
   if (queryParams.hasPool === 'true') featureTexts.push('with pool');
+  if (queryParams.hasWashingMachine === 'true') featureTexts.push('with washing machine');
   
   const featureText = featureTexts.length > 0 ? ` ${featureTexts.join(', ')}` : '';
 
