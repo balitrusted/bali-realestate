@@ -46,7 +46,6 @@ async function writeToBlob(requests: SiteRequest[]): Promise<void> {
     access: "public",
     contentType: "application/json",
     addRandomSuffix: false,
-    allowOverwrite: true,
   });
 }
 
