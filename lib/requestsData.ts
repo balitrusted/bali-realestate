@@ -27,10 +27,11 @@ export interface SiteRequest {
 async function readFromBlob(): Promise<SiteRequest[]> {
   if (!process.env.BLOB_READ_WRITE_TOKEN) return [];
   try {
-    const { blobs } = await list({ prefix: BLOB_KEY, limit: 1 });
+    const { blobs } = await list({ prefix: "data/", limit: 100 });
     const match = blobs?.find((b) => b.pathname === BLOB_KEY);
     if (!match?.url) return [];
-    const res = await fetch(match.url, { cache: "no-store" });
+    const urlWithCacheBust = `${match.url}${match.url.includes("?") ? "&" : "?"}t=${Date.now()}`;
+    const res = await fetch(urlWithCacheBust, { cache: "no-store", headers: { Pragma: "no-cache", "Cache-Control": "no-cache" } });
     if (!res.ok) return [];
     const data = await res.json();
     return Array.isArray(data) ? data : [];
@@ -45,6 +46,7 @@ async function writeToBlob(requests: SiteRequest[]): Promise<void> {
     access: "public",
     contentType: "application/json",
     addRandomSuffix: false,
+    allowOverwrite: true,
   });
 }
 

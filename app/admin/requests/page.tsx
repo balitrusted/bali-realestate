@@ -145,10 +145,11 @@ function RequestCard({
 export default function AdminRequestsPage() {
   const [requests, setRequests] = useState<SiteRequest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchList = async () => {
     try {
-      const res = await fetch("/api/request");
+      const res = await fetch("/api/request", { cache: "no-store" });
       if (!res.ok) throw new Error("Failed to load");
       const data = await res.json();
       setRequests(data.requests || []);
@@ -181,9 +182,23 @@ export default function AdminRequestsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Requests</h1>
-        <Link href="/admin/properties" className="text-gray-700 hover:text-gray-900">
-          Back to Properties
-        </Link>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={async () => {
+              setRefreshing(true);
+              await fetchList();
+              setRefreshing(false);
+            }}
+            disabled={refreshing}
+            className="px-3 py-1.5 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
+          >
+            {refreshing ? "Refreshing…" : "Refresh"}
+          </button>
+          <Link href="/admin/properties" className="text-gray-700 hover:text-gray-900">
+            Back to Properties
+          </Link>
+        </div>
       </div>
       <p className="text-gray-600 mb-6">
         Requests from the main form (Send Request). Change status and add comments. Completed requests are listed below.

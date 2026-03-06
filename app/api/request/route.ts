@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import { sendToAdmin } from "@/lib/email";
 import { getRequests, addRequest, updateRequest, type SiteRequest } from "@/lib/requestsData";
 
+export const dynamic = "force-dynamic";
+
 const REQUEST_TYPE_LABELS: Record<string, string> = {
   "client-rent": "Client – help me find property",
   "client-other": "Client – other questions",
