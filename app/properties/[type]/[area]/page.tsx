@@ -96,6 +96,37 @@ export default async function PropertiesByTypeAndAreaPage({
   const areaInfo = areas[mainArea];
   let properties = await getProperties(propertyType, mainArea);
   
+  // After type+area+subArea+bedrooms (no feature filters): which amenities have at least one property
+  const featureKeyToProp: Record<string, keyof Property['features']> = {
+    hasBathtub: 'bathtub',
+    hasCarPark: 'carPark',
+    hasClosedKitchen: 'closedKitchen',
+    hasDesk: 'desk',
+    hasEnclosedLiving: 'enclosedLivingArea',
+    hasGarage: 'garage',
+    hasHighSpeedWifi: 'highSpeedWifi',
+    hasNatureView: 'natureView',
+    hasPetFriendly: 'petFriendly',
+    hasPool: 'pool',
+    hasWashingMachine: 'washingMachine',
+  };
+  let propertiesForAmenities = [...properties];
+  if (queryParams.bedrooms) {
+    const bedrooms = Array.isArray(queryParams.bedrooms)
+      ? queryParams.bedrooms.map(Number)
+      : [Number(queryParams.bedrooms)];
+    propertiesForAmenities = propertiesForAmenities.filter(p => bedrooms.includes(p.bedrooms));
+  }
+  if (queryParams.subArea) {
+    const subAreas = Array.isArray(queryParams.subArea)
+      ? queryParams.subArea
+      : [queryParams.subArea];
+    propertiesForAmenities = propertiesForAmenities.filter(p => p.subArea != null && subAreas.includes(p.subArea));
+  }
+  const availableAmenityFilterKeys = (Object.keys(featureKeyToProp) as string[]).filter((filterKey) =>
+    propertiesForAmenities.some((p) => p.features[featureKeyToProp[filterKey]] === true)
+  );
+  
   // Apply additional filters from query params
   if (queryParams.bedrooms) {
     const bedrooms = Array.isArray(queryParams.bedrooms) 
@@ -223,6 +254,7 @@ export default async function PropertiesByTypeAndAreaPage({
             <PropertyFilters 
               defaultType={propertyType}
               defaultMainArea={mainArea}
+              availableAmenityKeys={availableAmenityFilterKeys}
             />
           </aside>
 

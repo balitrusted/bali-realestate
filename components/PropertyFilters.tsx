@@ -8,9 +8,11 @@ import { areas, subAreaNames } from "@/types/areas";
 interface PropertyFiltersProps {
   defaultType?: PropertyType;
   defaultMainArea?: MainArea;
+  /** Only show these amenity checkboxes (filter keys like "hasPool"). If empty/undefined, show all. */
+  availableAmenityKeys?: string[];
 }
 
-export default function PropertyFilters({ defaultType, defaultMainArea }: PropertyFiltersProps = {}) {
+export default function PropertyFilters({ defaultType, defaultMainArea, availableAmenityKeys }: PropertyFiltersProps = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<{
@@ -303,13 +305,16 @@ export default function PropertyFilters({ defaultType, defaultMainArea }: Proper
     { key: "hasPool", label: "pool" },
     { key: "hasWashingMachine", label: "washing machine" },
   ];
+  const visibleFeatureOptions = availableAmenityKeys?.length
+    ? FEATURES_OPTIONS.filter((f) => availableAmenityKeys.includes(f.key))
+    : FEATURES_OPTIONS;
   const hasAnyFeature = FEATURES_OPTIONS.some((f) => filters[f.key]);
   const amenitiesDisplay = hasAnyFeature
     ? FEATURES_OPTIONS.filter((f) => filters[f.key]).map((f) => f.label).join(", ")
     : "any amenities";
   const amenitiesUnselected = hasAnyFeature
-    ? FEATURES_OPTIONS.filter((f) => !filters[f.key]).map((f) => f.label)
-    : FEATURES_OPTIONS.map((f) => f.label);
+    ? visibleFeatureOptions.filter((f) => !filters[f.key]).map((f) => f.label)
+    : visibleFeatureOptions.map((f) => f.label);
   const amenitiesHint =
     amenitiesUnselected.length > 0 ? `(or ${amenitiesUnselected.join(", ")})` : "";
 
@@ -616,7 +621,7 @@ export default function PropertyFilters({ defaultType, defaultMainArea }: Proper
           </button>
           {open.features && (
             <div className="border-t border-gray-200 bg-white px-2 py-2 space-y-0.5">
-              {FEATURES_OPTIONS.map(({ key, label }) => (
+              {visibleFeatureOptions.map(({ key, label }) => (
                 <label key={key} className="flex items-center cursor-pointer px-2 py-1.5 rounded hover:bg-gray-50">
                   <input
                     type="checkbox"
