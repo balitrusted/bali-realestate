@@ -119,6 +119,14 @@ export function buildDescription(
   return "Explore a curated selection of Bali properties including villas for rent, land plots, and investment opportunities. Discover homes across Ubud, Canggu, Seminyak and other Bali locations.";
 }
 
+/** Unique SEO texts for level-1 type-only pages (e.g. /properties/rent, /properties/sale). */
+const seoTextByType: Record<PropertyType, string> = {
+  rent: `Looking for a villa to rent in Bali? This page lists private villas available for long-term rental across the island — from Ubud and the central highlands to coastal areas like Canggu, Seminyak and Sanur. All listings are verified and suitable for stays of one month or more. You can filter by area, number of bedrooms, payment terms (monthly or yearly) and amenities such as private pool, enclosed kitchen, bathtub or nature view. Whether you need a one-bedroom for remote work or a family villa with several bedrooms, our catalog helps you find a rental that fits your budget and lifestyle.`,
+  sale: `Interested in buying a villa or house in Bali? Here you can browse villas for sale across the island. Our listings include freehold and leasehold options in popular areas like Ubud, Canggu, Seminyak and Tanah Lot. Use the filters to narrow by location, size and features. Buying property in Bali involves specific legal and permit requirements; we recommend consulting our guides and specialists before making a decision.`,
+  land: `Searching for land for sale in Bali? This page shows land plots available for purchase in different areas of the island. Land listings may be suitable for building a villa, developing a small project or long-term investment. Locations range from the green hills of Ubud to coastal zones. Always verify zoning, permits and ownership structure with a qualified professional before committing.`,
+  business: `Exploring business property or commercial opportunities in Bali? This section lists properties that can be used for business — guesthouses, small hotels, cafes or other ventures. Listings may include villas with tourist accommodation permits or land suitable for commercial use. Check each listing and local regulations to ensure the property fits your business plan.`,
+};
+
 export function buildSeoText(
   type: PropertyType,
   area?: MainArea,
@@ -147,7 +155,7 @@ export function buildSeoText(
     return `${areaName(area)} is one of Bali's most sought-after areas. ${base}`;
   }
   if (type) {
-    return base;
+    return seoTextByType[type];
   }
   return base;
 }
