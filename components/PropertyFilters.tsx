@@ -59,47 +59,66 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
     : [];
 
   const updateURL = (newFilters: typeof filters) => {
-    const params = new URLSearchParams();
-    
-    if (newFilters.mainArea) params.set('mainArea', newFilters.mainArea);
-    if (newFilters.subArea.length > 0) params.set('subArea', newFilters.subArea.join(','));
-    if (newFilters.bedrooms.length > 0) params.set('bedrooms', newFilters.bedrooms.join(','));
-    if (newFilters.type) params.set('type', newFilters.type);
-    if (newFilters.hasBathtub) params.set('hasBathtub', 'true');
-    if (newFilters.hasCarPark) params.set('hasCarPark', 'true');
-    if (newFilters.hasClosedKitchen) params.set('hasClosedKitchen', 'true');
-    if (newFilters.hasDesk) params.set('hasDesk', 'true');
-    if (newFilters.hasEnclosedLiving) params.set('hasEnclosedLiving', 'true');
-    if (newFilters.hasGarage) params.set('hasGarage', 'true');
-    if (newFilters.hasHighSpeedWifi) params.set('hasHighSpeedWifi', 'true');
-    if (newFilters.hasNatureView) params.set('hasNatureView', 'true');
-    if (newFilters.hasPetFriendly) params.set('hasPetFriendly', 'true');
-    if (newFilters.hasPool) params.set('hasPool', 'true');
-    if (newFilters.hasWashingMachine) params.set('hasWashingMachine', 'true');
-    if (newFilters.minDuration) params.set('minDuration', newFilters.minDuration.toString());
-    if (newFilters.maxPrice) params.set('maxPrice', newFilters.maxPrice.toString());
-
     const currentPath = window.location.pathname;
-    const match = currentPath.match(/\/properties\/([^\/]+)\/([^\/]+)(?:\/([^\/]+))?/);
-    const pathType = match?.[1];
-    const pathArea = match?.[2];
-    const pathSegment = match?.[3];
+    const matchSegment = currentPath.match(/\/properties\/([^\/]+)\/([^\/]+)(?:\/([^\/]+))?/);
+    const pathType = matchSegment?.[1];
+    const pathArea = matchSegment?.[2];
+    const pathSegment = matchSegment?.[3];
+    const matchTypeOnly = currentPath.match(/^\/properties\/(rent|sale|land|business)$/);
+    const isTypeOnlyPath = !!matchTypeOnly;
 
-    if (match && pathType && pathArea) {
+    const queryParams = new URLSearchParams();
+    if (newFilters.mainArea) queryParams.set('mainArea', newFilters.mainArea);
+    if (newFilters.subArea.length > 0) queryParams.set('subArea', newFilters.subArea.join(','));
+    if (newFilters.bedrooms.length > 0) queryParams.set('bedrooms', newFilters.bedrooms.join(','));
+    if (newFilters.hasBathtub) queryParams.set('hasBathtub', 'true');
+    if (newFilters.hasCarPark) queryParams.set('hasCarPark', 'true');
+    if (newFilters.hasClosedKitchen) queryParams.set('hasClosedKitchen', 'true');
+    if (newFilters.hasDesk) queryParams.set('hasDesk', 'true');
+    if (newFilters.hasEnclosedLiving) queryParams.set('hasEnclosedLiving', 'true');
+    if (newFilters.hasGarage) queryParams.set('hasGarage', 'true');
+    if (newFilters.hasHighSpeedWifi) queryParams.set('hasHighSpeedWifi', 'true');
+    if (newFilters.hasNatureView) queryParams.set('hasNatureView', 'true');
+    if (newFilters.hasPetFriendly) queryParams.set('hasPetFriendly', 'true');
+    if (newFilters.hasPool) queryParams.set('hasPool', 'true');
+    if (newFilters.hasWashingMachine) queryParams.set('hasWashingMachine', 'true');
+    if (newFilters.minDuration) queryParams.set('minDuration', newFilters.minDuration.toString());
+    if (newFilters.maxPrice) queryParams.set('maxPrice', newFilters.maxPrice.toString());
+
+    const queryString = queryParams.toString();
+
+    if (pathType && pathArea) {
       const newArea = newFilters.mainArea || pathArea;
       const newType = newFilters.type || pathType;
       const segmentPart = pathSegment ? `/${pathSegment}` : "";
       if (newArea !== pathArea || newType !== pathType) {
-        router.push(`/properties/${newType}/${newArea}${segmentPart}?${params.toString()}`, { scroll: false });
+        router.push(`/properties/${newType}/${newArea}${segmentPart}${queryString ? `?${queryString}` : ""}`, { scroll: false });
       } else {
-        router.push(`${currentPath}?${params.toString()}`, { scroll: false });
+        router.push(`${currentPath}${queryString ? `?${queryString}` : ""}`, { scroll: false });
       }
+      return;
+    }
+
+    if (isTypeOnlyPath || (pathType && !pathArea)) {
+      const newType = newFilters.type || pathType;
+      if (!newType) {
+        router.push(`/properties${queryString ? `?${queryString}` : ""}`, { scroll: false });
+        return;
+      }
+      if (newFilters.mainArea) {
+        router.push(`/properties/${newType}/${newFilters.mainArea}${queryString ? `?${queryString}` : ""}`, { scroll: false });
+      } else {
+        router.push(`/properties/${newType}${queryString ? `?${queryString}` : ""}`, { scroll: false });
+      }
+      return;
+    }
+
+    if (newFilters.type && newFilters.mainArea) {
+      router.push(`/properties/${newFilters.type}/${newFilters.mainArea}${queryString ? `?${queryString}` : ""}`);
+    } else if (newFilters.type) {
+      router.push(`/properties/${newFilters.type}${queryString ? `?${queryString}` : ""}`);
     } else {
-      if (newFilters.type && newFilters.mainArea) {
-        router.push(`/properties/${newFilters.type}/${newFilters.mainArea}?${params.toString()}`);
-      } else {
-        router.push(`/properties?${params.toString()}`);
-      }
+      router.push(`/properties${queryString ? `?${queryString}` : ""}`);
     }
   };
 
@@ -171,7 +190,7 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
     const newFilters = {
       ...filters,
       type: newType,
-      minDuration: newAction === "Buy" ? undefined : (filters.minDuration ?? 1),
+      minDuration: newAction === "Buy" ? undefined : (filters.mainArea ? (filters.minDuration ?? 1) : undefined),
     };
     setFilters(newFilters);
     if (filters.mainArea) router.push(`/properties/${newType}/${filters.mainArea}`);
@@ -184,7 +203,7 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
     const newFilters = {
       ...filters,
       type: newType,
-      minDuration: newType === "rent" ? (filters.minDuration ?? 1) : undefined,
+      minDuration: newType === "rent" ? (filters.mainArea ? (filters.minDuration ?? 1) : undefined) : undefined,
     };
     setFilters(newFilters);
     if (filters.mainArea) router.push(`/properties/${newType}/${filters.mainArea}`);
