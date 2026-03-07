@@ -47,7 +47,7 @@ export async function generateMetadata({
   const subArea = parsed.kind === "subArea" ? (parsed.value as SubArea) : undefined;
   const all = await loadAllProperties();
   const filtered = filterProperties(all, { type: propertyType, mainArea }, parsed);
-  const noIndex = filtered.length === 0;
+  const noIndex = filtered.length === 0 || mainArea !== "ubud";
 
   return {
     title: buildTitle(propertyType, mainArea, subArea, parsed),

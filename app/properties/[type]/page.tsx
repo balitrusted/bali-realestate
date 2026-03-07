@@ -34,9 +34,13 @@ export async function generateMetadata({ params }: { params: Promise<{ type: str
   if (!propertyTypeNames[propertyType]) {
     return { title: "Properties Not Found" };
   }
+  const all = await loadAllProperties();
+  const filtered = filterProperties(all, { type: propertyType });
+  const noIndex = filtered.length === 0;
   return {
     title: buildTitle(propertyType),
     description: buildDescription(propertyType),
+    robots: noIndex ? { index: false, follow: true } : { index: true, follow: true },
   };
 }
 

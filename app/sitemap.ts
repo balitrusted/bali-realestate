@@ -70,14 +70,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const all = await loadAllProperties()
     propertyPages = propertyTypes.flatMap((type) => {
-      const typePages: MetadataRoute.Sitemap = [
-        {
+      const typePages: MetadataRoute.Sitemap = []
+      const typeFiltered = filterProperties(all, { type: type as PropertyType })
+      if (typeFiltered.length > 0) {
+        typePages.push({
           url: `${baseUrl}/properties/${type}`,
           lastModified: new Date(),
           changeFrequency: 'daily' as const,
           priority: 0.85,
-        },
-      ]
+        })
+      }
       for (const area of mainAreas) {
         const filtered = filterProperties(all, { type: type as PropertyType, mainArea: area as MainArea })
         if (filtered.length > 0) {
@@ -87,17 +89,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             changeFrequency: 'daily' as const,
             priority: 0.85,
           })
-          for (const segSlug of segmentSlugs) {
-            const parsed = parseSegment(segSlug, area as MainArea, type as PropertyType)
-            if (parsed) {
-              const segFiltered = filterProperties(all, { type: type as PropertyType, mainArea: area as MainArea }, parsed)
-              if (segFiltered.length > 0) {
-                typePages.push({
-                  url: `${baseUrl}/properties/${type}/${area}/${segSlug}`,
-                  lastModified: new Date(),
-                  changeFrequency: 'daily' as const,
-                  priority: 0.8,
-                })
+          if (area === 'ubud') {
+            for (const segSlug of segmentSlugs) {
+              const parsed = parseSegment(segSlug, area as MainArea, type as PropertyType)
+              if (parsed) {
+                const segFiltered = filterProperties(all, { type: type as PropertyType, mainArea: area as MainArea }, parsed)
+                if (segFiltered.length > 0) {
+                  typePages.push({
+                    url: `${baseUrl}/properties/${type}/${area}/${segSlug}`,
+                    lastModified: new Date(),
+                    changeFrequency: 'daily' as const,
+                    priority: 0.8,
+                  })
+                }
               }
             }
           }

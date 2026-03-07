@@ -1,5 +1,35 @@
 # Подготовка к деплою
 
+## Команды для деплоя (PowerShell)
+
+После любых изменений в коде — выполни в PowerShell из корня проекта:
+
+```powershell
+cd C:\Users\Professional\bali-realestate
+npm run build
+```
+
+Если деплой идёт через **Git + Vercel** (автодеплой при пуше):
+
+```powershell
+cd C:\Users\Professional\bali-realestate
+git add -A
+git status
+git commit -m "SEO: level 1-3, noindex empty, Ubud-only segments"
+git push
+```
+
+Если деплой через **Vercel CLI** вручную:
+
+```powershell
+cd C:\Users\Professional\bali-realestate
+npx vercel --prod
+```
+
+Если хостинг свой (VPS и т.п.) — на сервере после `git pull` обычно: `npm install`, `npm run build`, перезапуск процесса (pm2/systemd).
+
+---
+
 ## 1. Пароль админки
 
 Пароль задаётся переменной окружения **`ADMIN_PASSWORD`**.
