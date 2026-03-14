@@ -5,17 +5,17 @@
   --foreground: #171717;
 }
 
+/* Typography V2: --font-sans (IBM Plex Sans). V1 used --font-inter (Inter). See docs/TYPOGRAPHY-VERSIONS.md */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-sans);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  /* Emoji fonts so smilies and symbols render (e.g. in property descriptions) */
-  font-family: var(--font-inter), "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans), "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", system-ui, -apple-system, sans-serif;
 }
 
 /* Prose styles for article content */
