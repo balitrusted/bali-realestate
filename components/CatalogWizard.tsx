@@ -235,7 +235,7 @@ export default function CatalogWizard() {
             <button
               key={b}
               type="button"
-              onClick={() => setFilter("bedrooms", [b])}
+              onClick={() => setFilter("bedrooms", [String(b)])}
               className="px-4 py-2.5 rounded-lg border-2 border-gray-200 bg-white text-gray-800 font-medium hover:border-emerald-400 hover:bg-emerald-50/50 transition-colors"
             >
               {b} {b === 1 ? "bed" : "beds"}
