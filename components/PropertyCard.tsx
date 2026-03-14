@@ -1,5 +1,6 @@
 import Link from "next/link";
 import PropertyImageWithFallback from "@/components/PropertyImageWithFallback";
+import PropertyCardActions from "@/components/PropertyCardActions";
 import { Property } from "@/types/property";
 import { areas, subAreaNames, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
 import { getPropertyDisplayTitle, fixDescriptionDisplay } from "@/lib/propertyUtils";
@@ -62,10 +63,12 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             className="object-cover"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
+          <PropertyCardActions propertyId={String(property.id)} />
         </div>
       ) : (
-        <div className="w-full h-48 bg-gray-200 flex items-center justify-center flex-shrink-0">
+        <div className="w-full h-48 relative bg-gray-200 flex items-center justify-center flex-shrink-0">
           <span className="text-gray-400">Property Photo</span>
+          <PropertyCardActions propertyId={String(property.id)} />
         </div>
       )}
 

@@ -19,6 +19,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const archiveFilter = searchParams.get("archived"); // "true" | "false" | null (all for admin)
+    const idsParam = searchParams.get("ids"); // "1,2,3" for saved/compare lists
 
     const fileContent = await readFile(DATA_FILE, "utf-8");
     const properties = parsePropertiesFile(fileContent);
@@ -38,6 +39,12 @@ export async function GET(request: Request) {
       validProperties = validProperties.filter((p) => p.archived === true);
     } else if (archiveFilter === "false" || !archiveFilter) {
       validProperties = validProperties.filter((p) => p.archived !== true);
+    }
+
+    if (idsParam?.trim()) {
+      const ids = idsParam.split(",").map((s) => s.trim()).filter(Boolean);
+      const idSet = new Set(ids);
+      validProperties = validProperties.filter((p) => p.id != null && idSet.has(String(p.id)));
     }
 
     // Sort by order field

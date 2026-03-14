@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import PropertyCardActions from "@/components/PropertyCardActions";
 import { Property } from "@/types/property";
 import { areas } from "@/types/areas";
 import { getPropertyDisplayTitle } from "@/lib/propertyUtils";
@@ -46,6 +47,7 @@ export default function HomePropertyCard({ property }: HomePropertyCardProps) {
             No photo
           </div>
         )}
+        <PropertyCardActions propertyId={String(property.id)} />
       </div>
       <div className="p-3 flex flex-col flex-1 min-h-0">
         <p className="font-medium text-gray-900 text-sm line-clamp-2 mb-0.5">

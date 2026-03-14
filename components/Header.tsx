@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HeaderSavedLink from "@/components/HeaderSavedLink";
 
 export default function Header() {
   return (
@@ -25,6 +26,7 @@ export default function Header() {
             <Link href="/about" className="text-gray-700 hover:text-gray-900">
               About
             </Link>
+            <HeaderSavedLink />
             <Link 
               href="/request" 
               className="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"

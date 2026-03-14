@@ -9,6 +9,7 @@ type RequestType = "client-rent" | "client-other" | "owner" | "specialist";
 function RequestForm() {
   const searchParams = useSearchParams();
   const propertyId = searchParams.get("property");
+  const idsParam = searchParams.get("ids"); // comma-separated, from Saved page
   
   const [requestType, setRequestType] = useState<RequestType | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -52,16 +53,25 @@ function RequestForm() {
     setFormData({ ...formData, whatsapp: formatted });
   };
 
-  // Pre-fill form if property ID is provided
+  // Pre-fill form if property ID or ids (saved list) are provided
   useEffect(() => {
-    if (propertyId && !requestType) {
+    if (idsParam && !requestType) {
+      const ids = idsParam.split(",").map((s) => s.trim()).filter(Boolean);
+      setRequestType("client-rent");
+      setFormData(prev => ({
+        ...prev,
+        message: ids.length > 0
+          ? `I'm interested in the following propert${ids.length === 1 ? "y" : "ies"} (from my saved list): ${ids.join(", ")}. Please provide more information or arrange a viewing.`
+          : prev.message,
+      }));
+    } else if (propertyId && !requestType) {
       setRequestType("client-rent");
       setFormData(prev => ({
         ...prev,
         message: `I'm interested in property ${propertyId}. Please provide more information.`
       }));
     }
-  }, [propertyId, requestType]);
+  }, [propertyId, idsParam, requestType]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
