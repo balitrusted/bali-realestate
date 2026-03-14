@@ -1,7 +1,11 @@
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
 import PropertyCard from "@/components/PropertyCard";
 import PropertyFilters from "@/components/PropertyFilters";
 import Pagination from "@/components/Pagination";
+import CatalogWizard from "@/components/CatalogWizard";
+import CatalogFiltersToggle from "@/components/CatalogFiltersToggle";
+import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
 import {
   loadAllProperties,
   filterProperties,
@@ -56,16 +60,39 @@ export default async function PropertiesCatalogPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const query = await searchParams;
+  // Canonical URL for "both" (rent + sale): use path /properties/villas instead of ?both=1
+  const onlyBoth =
+    query.both === "1" &&
+    !query.type &&
+    !query.mainArea &&
+    !query.subArea &&
+    !query.bedrooms &&
+    !query.minDuration &&
+    !query.maxPrice &&
+    ["hasBathtub", "hasCarPark", "hasClosedKitchen", "hasDesk", "hasEnclosedLiving", "hasGarage", "hasHighSpeedWifi", "hasNatureView", "hasPetFriendly", "hasPool", "hasWashingMachine"].every(
+      (k) => query[k] !== "true"
+    );
+  if (onlyBoth) {
+    const page = String(query.page || "1");
+    redirect(`/properties/villas${page !== "1" ? `?page=${page}` : ""}`);
+  }
+
   const filters = parseQueryFilters(query);
   const page = Math.max(1, parseInt(String(query.page || "1"), 10) || 1);
+  const hasBoth = query.both === "1";
 
   const all = await loadAllProperties();
-  const filtered = filterProperties(all, filters);
+  const effectiveFilters = hasBoth ? { ...filters, type: "villas" } : filters;
+  const filtered = filterProperties(all, effectiveFilters);
   const { items, total, totalPages, page: currentPage } = paginate(filtered, page);
 
   const searchParamsForPagination: Record<string, string> = {};
   if (filters.type) searchParamsForPagination.type = filters.type;
+  if (query.both === "1") searchParamsForPagination.both = "1";
   if (filters.mainArea) searchParamsForPagination.mainArea = filters.mainArea;
+  if (query.areaDone === "1") searchParamsForPagination.areaDone = "1";
+  if (query.bedroomsDone === "1") searchParamsForPagination.bedroomsDone = "1";
+  if (query.amenitiesDone === "1") searchParamsForPagination.amenitiesDone = "1";
   if (filters.subArea?.length) searchParamsForPagination.subArea = filters.subArea.join(",");
   if (filters.bedrooms?.length) searchParamsForPagination.bedrooms = filters.bedrooms.join(",");
   if (filters.minDuration) searchParamsForPagination.minDuration = String(filters.minDuration);
@@ -95,15 +122,17 @@ export default async function PropertiesCatalogPage({
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          <aside className="lg:w-64 flex-shrink-0">
+          <CatalogFiltersToggle>
             <PropertyFilters />
-          </aside>
+          </CatalogFiltersToggle>
 
           <div className="flex-1">
+            <CatalogWizard />
+
             {items.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-600 mb-4">No properties found.</p>
-                <p className="text-sm text-gray-500">Try adjusting your filters.</p>
+              <div className="space-y-6">
+                <p className="text-sm text-gray-500">No properties match your criteria.</p>
+                <CatalogFeedbackForm total={total} />
               </div>
             ) : (
               <>
@@ -122,6 +151,11 @@ export default async function PropertiesCatalogPage({
                   totalPages={totalPages}
                   searchParams={searchParamsForPagination}
                 />
+                {(total < 5 || total === 0) && (
+                  <div className="mt-8">
+                    <CatalogFeedbackForm total={total} />
+                  </div>
+                )}
               </>
             )}
           </div>

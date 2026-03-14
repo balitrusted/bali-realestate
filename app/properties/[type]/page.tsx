@@ -2,6 +2,9 @@ import { notFound } from "next/navigation";
 import PropertyCard from "@/components/PropertyCard";
 import PropertyFilters from "@/components/PropertyFilters";
 import Pagination from "@/components/Pagination";
+import CatalogWizard from "@/components/CatalogWizard";
+import CatalogFiltersToggle from "@/components/CatalogFiltersToggle";
+import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
 import {
   loadAllProperties,
   filterProperties,
@@ -9,44 +12,50 @@ import {
   CatalogFilters,
 } from "@/lib/propertiesCatalog";
 import { buildTitle, buildH1, buildDescription, buildSeoText } from "@/lib/seoTemplates";
+import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const propertyTypeNames: Record<PropertyType, string> = {
+const VALID_TYPE_SLUGS = ["rent", "sale", "villas", "land", "business"] as const;
+export type CatalogTypeSlug = (typeof VALID_TYPE_SLUGS)[number];
+
+const propertyTypeNames: Record<string, string> = {
   rent: "Rent",
   sale: "Buy",
   land: "Land",
   business: "Business",
+  villas: "Villas (Rent or Buy)",
 };
 
-const propertyTypeVerbs: Record<PropertyType, string> = {
+const propertyTypeVerbs: Record<string, string> = {
   rent: "Rent",
   sale: "Buy",
   land: "Buy",
   business: "Buy",
+  villas: "Rent or Buy",
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ type: string }> }) {
   const { type } = await params;
-  const propertyType = type as PropertyType;
-  if (!propertyTypeNames[propertyType]) {
+  if (!VALID_TYPE_SLUGS.includes(type as CatalogTypeSlug)) {
     return { title: "Properties Not Found" };
   }
+  const catalogType = type as CatalogTypeForSeo;
   const all = await loadAllProperties();
-  const filtered = filterProperties(all, { type: propertyType });
+  const filtered = filterProperties(all, { type: catalogType });
   const noIndex = filtered.length === 0;
   return {
-    title: buildTitle(propertyType),
-    description: buildDescription(propertyType),
+    title: buildTitle(catalogType),
+    description: buildDescription(catalogType),
     robots: noIndex ? { index: false, follow: true } : { index: true, follow: true },
   };
 }
 
 function parseQueryFilters(
   query: Record<string, string | string[] | undefined>,
-  type: PropertyType
+  type: CatalogTypeForSeo
 ): CatalogFilters {
   const filters: CatalogFilters = { type };
   if (query.mainArea && typeof query.mainArea === "string") filters.mainArea = query.mainArea as MainArea;
@@ -86,13 +95,12 @@ export default async function PropertiesByTypePage({
 }) {
   const { type } = await params;
   const query = await searchParams;
-  const propertyType = type as PropertyType;
-
-  if (!propertyTypeNames[propertyType]) {
+  if (!VALID_TYPE_SLUGS.includes(type as CatalogTypeSlug)) {
     notFound();
   }
+  const catalogType = type as CatalogTypeForSeo;
 
-  const filters = parseQueryFilters(query, propertyType);
+  const filters = parseQueryFilters(query, catalogType);
   const page = Math.max(1, parseInt(String(query.page || "1"), 10) || 1);
 
   const all = await loadAllProperties();
@@ -117,31 +125,32 @@ export default async function PropertiesByTypePage({
   if (filters.hasPool) searchParamsForPagination.hasPool = "true";
   if (filters.hasWashingMachine) searchParamsForPagination.hasWashingMachine = "true";
 
-  const verb = propertyTypeVerbs[propertyType];
-  const subject = propertyType === "rent" ? "Villas" : propertyType === "sale" ? "Villas" : propertyType === "land" ? "Land" : "Business";
-
   return (
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-            {buildH1(propertyType)}
+            {buildH1(catalogType)}
           </h1>
           <p className="text-gray-600">
-            Browse {subject.toLowerCase()} for {verb.toLowerCase()} across Bali.
+            {catalogType === "villas"
+              ? "Browse villas for rent and sale across Bali."
+              : `Browse ${(propertyTypeNames[catalogType] ?? "").toLowerCase()} for ${(propertyTypeVerbs[catalogType] ?? "").toLowerCase()} across Bali.`}
           </p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          <aside className="lg:w-64 flex-shrink-0">
-            <PropertyFilters defaultType={propertyType} />
-          </aside>
+          <CatalogFiltersToggle>
+            <PropertyFilters defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)} />
+          </CatalogFiltersToggle>
 
           <div className="flex-1">
+            <CatalogWizard />
+
             {items.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-600 mb-4">No properties found in this category.</p>
-                <p className="text-sm text-gray-500">Try other areas or filters.</p>
+              <div className="space-y-6">
+                <p className="text-sm text-gray-500">No properties match your criteria.</p>
+                <CatalogFeedbackForm total={total} />
               </div>
             ) : (
               <>
@@ -155,18 +164,23 @@ export default async function PropertiesByTypePage({
                   ))}
                 </div>
                 <Pagination
-                  basePath={`/properties/${propertyType}`}
+                  basePath={`/properties/${catalogType}`}
                   page={currentPage}
                   totalPages={totalPages}
                   searchParams={searchParamsForPagination}
                 />
+                {total < 5 && (
+                  <div className="mt-8">
+                    <CatalogFeedbackForm total={total} />
+                  </div>
+                )}
               </>
             )}
           </div>
         </div>
 
         <div className="mt-16 max-w-3xl text-gray-600 text-sm leading-relaxed">
-          {buildSeoText(propertyType)}
+          {buildSeoText(catalogType)}
         </div>
       </div>
     </div>

@@ -10,6 +10,7 @@ const REQUEST_TYPE_LABELS: Record<string, string> = {
   "client-other": "Client – other questions",
   owner: "Owner/agent – want to list property",
   specialist: "Specialist – legal, etc.",
+  "catalog-feedback": "Catalog – no/few results feedback",
 };
 
 async function checkAuth(): Promise<boolean> {
@@ -68,9 +69,16 @@ export async function POST(request: NextRequest) {
       message,
     } = body;
 
-    if (!name?.trim() || !email?.trim()) {
+    const isCatalogFeedback = requestType === "catalog-feedback";
+    if (!name?.trim()) {
       return NextResponse.json(
-        { error: "Name and email are required" },
+        { error: "Name is required" },
+        { status: 400 }
+      );
+    }
+    if (!isCatalogFeedback && !email?.trim()) {
+      return NextResponse.json(
+        { error: "Email is required" },
         { status: 400 }
       );
     }
@@ -80,7 +88,7 @@ export async function POST(request: NextRequest) {
       id,
       requestType: requestType || "",
       name: String(name).trim(),
-      email: String(email).trim(),
+      email: isCatalogFeedback && !email?.trim() ? "—" : String(email).trim(),
       whatsapp: whatsapp?.trim() || undefined,
       preferredContact: preferredContact || undefined,
       propertyType: propertyType || undefined,

@@ -6,25 +6,29 @@ import { PropertyType, MainArea } from "@/types/property";
 import { areas } from "@/types/areas";
 
 // Action: what we do. Subject: the thing. URL type = action + subject.
-type Action = "Rent" | "Buy";
+type Action = "Rent" | "Buy" | "Rent or Buy";
 type Subject = "Villas" | "Land" | "Business";
+export type HeaderTitleType = PropertyType | "villas";
 
-const actionByType: Record<PropertyType, Action> = {
+const actionByType: Record<HeaderTitleType, Action> = {
   rent: "Rent",
   sale: "Buy",
   land: "Buy",
   business: "Buy",
+  villas: "Rent or Buy",
 };
 
-const subjectByType: Record<PropertyType, Subject> = {
+const subjectByType: Record<HeaderTitleType, Subject> = {
   rent: "Villas",
   sale: "Villas",
   land: "Land",
   business: "Business",
+  villas: "Villas",
 };
 
-function typeFromActionSubject(action: Action, subject: Subject): PropertyType {
-  if (action === "Rent") return "rent"; // only Villas for rent
+function typeFromActionSubject(action: Action, subject: Subject): PropertyType | "villas" {
+  if (action === "Rent or Buy") return "villas";
+  if (action === "Rent") return "rent";
   if (subject === "Villas") return "sale";
   if (subject === "Land") return "land";
   return "business";
@@ -34,7 +38,7 @@ const SUBJECTS_FOR_RENT: Subject[] = ["Villas"];
 const SUBJECTS_FOR_BUY: Subject[] = ["Villas", "Land", "Business"];
 
 interface PropertyHeaderTitleProps {
-  type: PropertyType;
+  type: HeaderTitleType;
   currentArea: MainArea;
   variant?: "hero" | "default";
   className?: string;
@@ -93,7 +97,7 @@ export default function PropertyHeaderTitle({
 
   const handleSelectArea = (areaId: MainArea) => {
     setAreaOpen(false);
-    router.push(`/properties/${type}/${areaId}`);
+    router.push(`/properties/${type}/${areaId}`, { scroll: false });
   };
 
   return (

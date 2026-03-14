@@ -13,17 +13,20 @@ import {
   areas,
 } from "@/lib/propertiesCatalog";
 import { buildTitle, buildH1, buildDescription, buildSeoText } from "@/lib/seoTemplates";
+import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const propertyTypeNames: Record<PropertyType, string> = {
+const VALID_TYPE_SLUGS = ["rent", "sale", "villas", "land", "business"] as const;
+const propertyTypeNames: Record<string, string> = {
   rent: "Rent",
   sale: "Buy",
   land: "Land",
   business: "Business",
+  villas: "Villas (Rent or Buy)",
 };
 
 export async function generateMetadata({
@@ -32,33 +35,33 @@ export async function generateMetadata({
   params: Promise<{ type: string; area: string; segment: string }>;
 }): Promise<Metadata> {
   const { type, area, segment } = await params;
-  const propertyType = type as PropertyType;
   const mainArea = area as MainArea;
 
-  if (!propertyTypeNames[propertyType] || !areas[mainArea]) {
+  if (!VALID_TYPE_SLUGS.includes(type as (typeof VALID_TYPE_SLUGS)[number]) || !areas[mainArea]) {
     return { title: "Properties Not Found" };
   }
 
-  const parsed = parseSegment(segment, mainArea, propertyType);
+  const catalogType = type as CatalogTypeForSeo;
+  const parsed = parseSegment(segment, mainArea, catalogType);
   if (!parsed) {
     return { title: "Properties Not Found" };
   }
 
   const subArea = parsed.kind === "subArea" ? (parsed.value as SubArea) : undefined;
   const all = await loadAllProperties();
-  const filtered = filterProperties(all, { type: propertyType, mainArea }, parsed);
+  const filtered = filterProperties(all, { type: catalogType, mainArea }, parsed);
   const noIndex = filtered.length === 0 || mainArea !== "ubud";
 
   return {
-    title: buildTitle(propertyType, mainArea, subArea, parsed),
-    description: buildDescription(propertyType, mainArea, subArea, parsed),
+    title: buildTitle(catalogType, mainArea, subArea, parsed),
+    description: buildDescription(catalogType, mainArea, subArea, parsed),
     robots: noIndex ? { index: false, follow: true } : { index: true, follow: true },
   };
 }
 
 function parseQueryFilters(
   query: Record<string, string | string[] | undefined>,
-  type: PropertyType,
+  type: CatalogTypeForSeo,
   area: MainArea
 ): CatalogFilters {
   const filters: CatalogFilters = { type, mainArea: area };
@@ -98,19 +101,18 @@ export default async function PropertiesSegmentPage({
 }) {
   const { type, area, segment } = await params;
   const query = await searchParams;
-  const propertyType = type as PropertyType;
-  const mainArea = area as MainArea;
-
-  if (!propertyTypeNames[propertyType] || !areas[mainArea]) {
+  if (!VALID_TYPE_SLUGS.includes(type as (typeof VALID_TYPE_SLUGS)[number]) || !areas[area as MainArea]) {
     notFound();
   }
+  const catalogType = type as CatalogTypeForSeo;
+  const mainArea = area as MainArea;
 
-  const parsed = parseSegment(segment, mainArea, propertyType);
+  const parsed = parseSegment(segment, mainArea, catalogType);
   if (!parsed) {
     notFound();
   }
 
-  const filters = parseQueryFilters(query, propertyType, mainArea);
+  const filters = parseQueryFilters(query, catalogType, mainArea);
   const page = Math.max(1, parseInt(String(query.page || "1"), 10) || 1);
 
   const all = await loadAllProperties();
@@ -119,7 +121,7 @@ export default async function PropertiesSegmentPage({
 
   const subArea = parsed.kind === "subArea" ? (parsed.value as SubArea) : undefined;
   const areaInfo = areas[mainArea];
-  const basePath = `/properties/${propertyType}/${mainArea}/${segment}`;
+  const basePath = `/properties/${catalogType}/${mainArea}/${segment}`;
 
   const searchParamsForPagination: Record<string, string> = { ...query } as Record<string, string>;
   if (filters.subArea?.length) searchParamsForPagination.subArea = filters.subArea.join(",");
@@ -151,7 +153,7 @@ export default async function PropertiesSegmentPage({
     hasPool: "pool",
     hasWashingMachine: "washingMachine",
   };
-  let propertiesForAmenities = filterProperties(all, { type: propertyType, mainArea }, parsed);
+  let propertiesForAmenities = filterProperties(all, { type: catalogType, mainArea }, parsed);
   if (filters.subArea?.length) {
     propertiesForAmenities = propertiesForAmenities.filter(
       (p) => p.subArea && filters.subArea!.includes(p.subArea)
@@ -176,7 +178,7 @@ export default async function PropertiesSegmentPage({
           <CatalogStructuredData
             properties={items}
             baseUrl={baseUrl}
-            listName={buildH1(propertyType, mainArea, subArea, parsed)}
+            listName={buildH1(catalogType, mainArea, subArea, parsed)}
           />
         )}
         {areaInfo.image && (
@@ -192,7 +194,7 @@ export default async function PropertiesSegmentPage({
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
               <div className="text-center text-white">
                 <h1 className="text-4xl md:text-5xl font-bold mb-2">
-                  {buildH1(propertyType, mainArea, subArea, parsed)}
+                  {buildH1(catalogType, mainArea, subArea, parsed)}
                 </h1>
               </div>
             </div>
@@ -202,7 +204,7 @@ export default async function PropertiesSegmentPage({
         {!areaInfo.image && (
           <div className="mb-8">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-              {buildH1(propertyType, mainArea, subArea, parsed)}
+              {buildH1(catalogType, mainArea, subArea, parsed)}
             </h1>
             <p className="text-gray-600 mt-4">{areaInfo.description}</p>
           </div>
@@ -211,7 +213,7 @@ export default async function PropertiesSegmentPage({
         <div className="flex flex-col lg:flex-row gap-8">
           <aside className="lg:w-64 flex-shrink-0">
             <PropertyFilters
-              defaultType={propertyType}
+              defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
               defaultMainArea={mainArea}
               availableAmenityKeys={availableAmenityFilterKeys}
             />
@@ -247,7 +249,7 @@ export default async function PropertiesSegmentPage({
 
         {total > 0 && (
           <div className="mt-16 max-w-3xl text-gray-600 text-sm leading-relaxed">
-            {buildSeoText(propertyType, mainArea, subArea, parsed)}
+            {buildSeoText(catalogType, mainArea, subArea, parsed)}
           </div>
         )}
       </div>

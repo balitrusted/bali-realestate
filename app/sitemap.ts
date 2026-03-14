@@ -9,7 +9,8 @@ import type { PropertyType, MainArea } from '@/types/property'
 // Use env or localhost so site works before domain is connected
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
 
-const propertyTypes = ['rent', 'sale', 'land', 'business'] as const
+type CatalogTypeSlug = PropertyType | 'villas'
+const propertyTypes: CatalogTypeSlug[] = ['rent', 'sale', 'villas', 'land', 'business']
 const mainAreas = ['ubud', 'canggu', 'sanur', 'seminyak', 'tanah-lot'] as const
 const guideCategories = ['rent', 'buy', 'land', 'legal', 'ubud', 'areas', 'risks']
 
@@ -71,7 +72,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const all = await loadAllProperties()
     propertyPages = propertyTypes.flatMap((type) => {
       const typePages: MetadataRoute.Sitemap = []
-      const typeFiltered = filterProperties(all, { type: type as PropertyType })
+      const typeFiltered = filterProperties(all, { type })
       if (typeFiltered.length > 0) {
         typePages.push({
           url: `${baseUrl}/properties/${type}`,
@@ -81,7 +82,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         })
       }
       for (const area of mainAreas) {
-        const filtered = filterProperties(all, { type: type as PropertyType, mainArea: area as MainArea })
+        const filtered = filterProperties(all, { type, mainArea: area as MainArea })
         if (filtered.length > 0) {
           typePages.push({
             url: `${baseUrl}/properties/${type}/${area}`,
@@ -91,9 +92,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           })
           if (area === 'ubud') {
             for (const segSlug of segmentSlugs) {
-              const parsed = parseSegment(segSlug, area as MainArea, type as PropertyType)
+              const parsed = parseSegment(segSlug, area as MainArea, type)
               if (parsed) {
-                const segFiltered = filterProperties(all, { type: type as PropertyType, mainArea: area as MainArea }, parsed)
+                const segFiltered = filterProperties(all, { type, mainArea: area as MainArea }, parsed)
                 if (segFiltered.length > 0) {
                   typePages.push({
                     url: `${baseUrl}/properties/${type}/${area}/${segSlug}`,

@@ -9,6 +9,7 @@ const REQUEST_TYPE_LABELS: Record<string, string> = {
   "client-other": "Client – other",
   owner: "Owner/agent",
   specialist: "Specialist",
+  "catalog-feedback": "Catalog – no/few results",
 };
 
 const STATUS_LABELS: Record<RequestStatus, string> = {

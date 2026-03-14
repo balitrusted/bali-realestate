@@ -61,11 +61,11 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
   const updateURL = (newFilters: typeof filters) => {
     const currentPath = window.location.pathname;
     const matchSegment = currentPath.match(/\/properties\/([^\/]+)\/([^\/]+)(?:\/([^\/]+))?/);
-    const pathType = matchSegment?.[1];
+    const matchTypeOnly = currentPath.match(/^\/properties\/(rent|sale|land|business|villas)$/);
+    const isTypeOnlyPath = !!matchTypeOnly;
+    const pathType = matchSegment?.[1] ?? matchTypeOnly?.[1];
     const pathArea = matchSegment?.[2];
     const pathSegment = matchSegment?.[3];
-    const matchTypeOnly = currentPath.match(/^\/properties\/(rent|sale|land|business)$/);
-    const isTypeOnlyPath = !!matchTypeOnly;
 
     const queryParams = new URLSearchParams();
     if (newFilters.mainArea) queryParams.set('mainArea', newFilters.mainArea);

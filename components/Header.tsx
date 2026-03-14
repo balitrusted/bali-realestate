@@ -8,7 +8,7 @@ export default function Header() {
           <Link href="/" className="inline-block hover:opacity-80 transition-opacity">
             <div className="inline-block">
               <span className="block text-2xl font-bold text-gray-900">Balitrusted</span>
-              <span className="block text-right text-[10px] text-gray-500 font-normal">more than an agency.</span>
+              <span className="block text-right text-[10px] text-gray-500 font-normal">[ rent, buy, learn, explore ]</span>
             </div>
           </Link>
           

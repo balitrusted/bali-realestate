@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { areas } from "@/types/areas";
+import { loadAllProperties } from "@/lib/propertiesCatalog";
+import HomePropertyCard from "@/components/HomePropertyCard";
 
 export const metadata = {
   title: "Bali Villas for Rent – Trusted Long Term Villa Rentals",
@@ -9,34 +11,107 @@ export const metadata = {
 
 const POPULAR_AREAS = ["ubud", "sanur", "seminyak", "canggu"] as const;
 
-export default function Home() {
+/** Seeded shuffle so the homepage selection rotates daily without client randomness. */
+function shuffle<T>(arr: T[], daySeed: number): T[] {
+  let s = daySeed;
+  const next = () => {
+    s = (s * 9301 + 49297) % 233280;
+    return s / 233280;
+  };
+  const out = [...arr];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(next() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+export default async function Home() {
+  const allProperties = await loadAllProperties();
+  const available = allProperties.filter((p) => !p.archived);
+  const daySeed = Math.floor(Date.now() / (1000 * 60 * 60 * 24)); // changes once per day
+  const randomProperties = shuffle(available, daySeed).slice(0, 12);
+
   return (
     <div className="bg-white">
-      {/* Hero */}
-      <section className="container mx-auto px-4 py-16 md:py-24">
-        <div className="max-w-3xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Real Estate in Bali for Long-term Living and Investments
-          </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            No noise. No spam. No tourist approach.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/properties"
-              className="px-6 py-3 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
-            >
-              View Properties
-            </Link>
-            <Link
-              href="/qa"
-              className="px-6 py-3 border border-gray-300 text-gray-900 rounded-md hover:bg-gray-50 transition-colors"
-            >
-              Ask a Question
-            </Link>
+      {/* Hero with Balinese-style header */}
+      <section className="relative overflow-hidden">
+        {/* Light semi-transparent background: gradient + subtle pattern */}
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            background:
+              "linear-gradient(165deg, rgba(250,250,248,0.98) 0%, rgba(236,243,236,0.95) 40%, rgba(245,248,242,0.98) 100%)",
+          }}
+        />
+        <div
+          className="absolute inset-0 z-0 opacity-[0.04]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30z' fill='none' stroke='%231a1a1a' stroke-width='0.5'/%3E%3C/svg%3E")`,
+          }}
+        />
+        {/* Optional: hero image - light overlay for future use. For now gradient only. */}
+        <div className="relative z-10 container mx-auto px-4 py-16 md:py-24">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Villas, land and business for long-term rental and investment in Ubud and other areas of Bali
+            </h1>
+            <p className="text-xl text-gray-600 mb-10">
+              No noise. No spam. No tourist approach.
+            </p>
+            <div className="flex flex-wrap gap-3 justify-center">
+              <Link
+                href="/properties"
+                className="px-5 py-2.5 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors font-medium"
+              >
+                View properties
+              </Link>
+              <Link
+                href="/request"
+                className="px-5 py-2.5 border border-gray-300 text-gray-900 rounded-md hover:bg-gray-50 transition-colors font-medium"
+              >
+                List a property
+              </Link>
+              <Link
+                href="/guides"
+                className="px-5 py-2.5 border border-gray-300 text-gray-900 rounded-md hover:bg-gray-50 transition-colors font-medium"
+              >
+                Read our guides
+              </Link>
+              <Link
+                href="/qa"
+                className="px-5 py-2.5 border border-gray-300 text-gray-900 rounded-md hover:bg-gray-50 transition-colors font-medium"
+              >
+                Ask a question
+              </Link>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* Random selection from catalog */}
+      {randomProperties.length > 0 && (
+        <section className="py-12 border-t border-gray-100">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+              From the catalog
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+              {randomProperties.map((property) => (
+                <HomePropertyCard key={property.id} property={property} />
+              ))}
+            </div>
+            <div className="text-center mt-6">
+              <Link
+                href="/properties"
+                className="inline-block px-5 py-2.5 border border-gray-300 text-gray-900 rounded-md hover:bg-gray-50 transition-colors font-medium"
+              >
+                View all properties
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Popular Areas */}
       <section className="bg-gray-50 py-12">
@@ -66,7 +141,7 @@ export default function Home() {
       {/* Start Here */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
             Start Here
           </h2>
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -101,7 +176,7 @@ export default function Home() {
       {/* For Whom */}
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
             Who This Site Is For
           </h2>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -137,7 +212,7 @@ export default function Home() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
               How We Differ from Traditional Agencies
             </h2>
             <div className="space-y-6 text-gray-600">

@@ -118,6 +118,12 @@ export default function AdminLayout({
               >
                 Notify requests
               </Link>
+              <Link
+                href="/admin/catalog-structure"
+                className="text-gray-700 hover:text-gray-900"
+              >
+                Catalog structure
+              </Link>
             </div>
             <div className="flex items-center gap-4">
               <Link

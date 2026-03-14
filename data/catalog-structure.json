@@ -1,0 +1,22 @@
+{
+  "types": [
+    { "slug": "rent", "labelEn": "Rent" },
+    { "slug": "sale", "labelEn": "Buy" },
+    { "slug": "villas", "labelEn": "Villas (Rent or Buy)" },
+    { "slug": "land", "labelEn": "Land" },
+    { "slug": "business", "labelEn": "Business" }
+  ],
+  "areas": [
+    { "slug": "ubud", "nameEn": "Ubud" },
+    { "slug": "canggu", "nameEn": "Canggu" },
+    { "slug": "sanur", "nameEn": "Sanur" },
+    { "slug": "seminyak", "nameEn": "Seminyak" },
+    { "slug": "tanah-lot", "nameEn": "Tanah Lot" }
+  ],
+  "segmentCategories": {
+    "subArea": ["gentong", "kedewatan", "keliki", "kemenuh", "lodtunduh", "penestanan", "petulu", "sayan", "sukawati", "tegallalang"],
+    "bedroom": ["1-bedroom-villa", "2-bedroom-villa", "3-bedroom-villa", "4-bedroom-villa"],
+    "payment": ["monthly", "yearly"],
+    "amenity": ["pool", "nature-view", "bathtub", "closed-kitchen", "enclosed-living", "pet-friendly", "car-park", "desk", "garage", "high-speed-wifi", "washing-machine"]
+  }
+}

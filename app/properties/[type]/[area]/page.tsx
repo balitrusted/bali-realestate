@@ -4,6 +4,9 @@ import PropertyCard from "@/components/PropertyCard";
 import PropertyFilters from "@/components/PropertyFilters";
 import PropertyHeaderTitle from "@/components/PropertyHeaderTitle";
 import Pagination from "@/components/Pagination";
+import CatalogWizard from "@/components/CatalogWizard";
+import CatalogFiltersToggle from "@/components/CatalogFiltersToggle";
+import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
 import CatalogStructuredData from "@/components/CatalogStructuredData";
 import { Property, PropertyType, MainArea, SubArea } from "@/types/property";
 import { areas } from "@/types/areas";
@@ -14,23 +17,28 @@ import {
   CatalogFilters,
 } from "@/lib/propertiesCatalog";
 import { buildSeoText } from "@/lib/seoTemplates";
+import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
 import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const propertyTypeNames: Record<PropertyType, string> = {
+const VALID_TYPE_SLUGS = ["rent", "sale", "villas", "land", "business"] as const;
+
+const propertyTypeNames: Record<string, string> = {
   rent: "Rent",
   sale: "Buy",
   land: "Land",
   business: "Business",
+  villas: "Villas (Rent or Buy)",
 };
 
-const propertyTypeVerbs: Record<PropertyType, string> = {
+const propertyTypeVerbs: Record<string, string> = {
   rent: "Rent",
   sale: "Buy",
   land: "Buy",
   business: "Buy",
+  villas: "Rent or Buy",
 };
 
 export async function generateMetadata({
@@ -39,38 +47,38 @@ export async function generateMetadata({
   params: Promise<{ type: string; area: string }>;
 }): Promise<Metadata> {
   const { type, area } = await params;
-  const propertyType = type as PropertyType;
   const mainArea = area as MainArea;
 
-  if (!propertyTypeNames[propertyType] || !areas[mainArea]) {
+  if (!VALID_TYPE_SLUGS.includes(type as (typeof VALID_TYPE_SLUGS)[number]) || !areas[mainArea]) {
     return { title: "Properties Not Found" };
   }
 
+  const catalogType = type as CatalogTypeForSeo;
   const areaInfo = areas[mainArea];
-  const typeName = propertyTypeNames[propertyType];
-  const verb = propertyTypeVerbs[propertyType];
+  const typeName = propertyTypeNames[type];
+  const verb = propertyTypeVerbs[type];
   const subject =
-    type === "rent" ? "Villas" : type === "sale" ? "Villas" : type === "land" ? "Land" : "Business";
+    type === "rent" ? "Villas" : type === "sale" ? "Villas" : type === "villas" ? "Villas" : type === "land" ? "Land" : "Business";
   const title = `${verb} ${subject} in ${areaInfo.nameEn}`;
   const description =
     areaInfo.seoDescription ||
     `Find ${typeName.toLowerCase()} in ${areaInfo.nameEn}. ${areaInfo.description}`;
 
   const all = await loadAllProperties();
-  const filtered = filterProperties(all, { type: propertyType, mainArea });
+  const filtered = filterProperties(all, { type: catalogType, mainArea });
   const noIndex = filtered.length === 0;
 
   return {
     title: `${title} - Balitrusted`,
     description,
-    keywords: `${areaInfo.nameEn}, ${typeName}, Bali, real estate, ${type === "rent" ? "rental" : "sale"}`,
+    keywords: `${areaInfo.nameEn}, ${typeName}, Bali, real estate, ${type === "rent" ? "rental" : type === "sale" ? "sale" : "rent and sale"}`,
     robots: noIndex ? { index: false, follow: true } : { index: true, follow: true },
   };
 }
 
 function parseQueryFilters(
   query: Record<string, string | string[] | undefined>,
-  type: PropertyType,
+  type: CatalogTypeForSeo,
   area: MainArea
 ): CatalogFilters {
   const filters: CatalogFilters = { type, mainArea: area };
@@ -110,15 +118,13 @@ export default async function PropertiesByTypeAndAreaPage({
 }) {
   const { type, area } = await params;
   const queryParams = await searchParams;
-  const propertyType = type as PropertyType;
-  const mainArea = area as MainArea;
-
-  if (!propertyTypeNames[propertyType] || !areas[mainArea]) {
+  if (!VALID_TYPE_SLUGS.includes(type as (typeof VALID_TYPE_SLUGS)[number]) || !areas[area as MainArea]) {
     notFound();
   }
-
+  const catalogType = type as CatalogTypeForSeo;
+  const mainArea = area as MainArea;
   const areaInfo = areas[mainArea];
-  const filters = parseQueryFilters(queryParams, propertyType, mainArea);
+  const filters = parseQueryFilters(queryParams, catalogType, mainArea);
   const page = Math.max(1, parseInt(String(queryParams.page || "1"), 10) || 1);
 
   const all = await loadAllProperties();
@@ -138,7 +144,7 @@ export default async function PropertiesByTypeAndAreaPage({
     hasPool: "pool",
     hasWashingMachine: "washingMachine",
   };
-  let propertiesForAmenities = filterProperties(all, { type: propertyType, mainArea });
+  let propertiesForAmenities = filterProperties(all, { type: catalogType, mainArea });
   if (filters.subArea?.length) {
     propertiesForAmenities = propertiesForAmenities.filter(
       (p) => p.subArea && filters.subArea!.includes(p.subArea)
@@ -167,7 +173,7 @@ export default async function PropertiesByTypeAndAreaPage({
   if (queryParams.hasWashingMachine === "true") featureTexts.push("with washing machine");
   const featureText = featureTexts.length > 0 ? ` ${featureTexts.join(", ")}` : "";
 
-  const basePath = `/properties/${propertyType}/${mainArea}`;
+  const basePath = `/properties/${catalogType}/${mainArea}`;
   const searchParamsForPagination: Record<string, string> = { ...queryParams } as Record<string, string>;
   if (filters.subArea?.length) searchParamsForPagination.subArea = filters.subArea.join(",");
   if (filters.bedrooms?.length) searchParamsForPagination.bedrooms = filters.bedrooms.join(",");
@@ -194,7 +200,7 @@ export default async function PropertiesByTypeAndAreaPage({
         <CatalogStructuredData
           properties={sortedProperties}
           baseUrl={baseUrl}
-          listName={`${propertyTypeNames[propertyType]} in ${areaInfo.nameEn}`}
+          listName={`${propertyTypeNames[catalogType]} in ${areaInfo.nameEn}`}
         />
         {/* Area Header with Image */}
         {areaInfo.image && (
@@ -210,7 +216,7 @@ export default async function PropertiesByTypeAndAreaPage({
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
               <div className="text-center text-white">
                 <h1 className="text-4xl md:text-5xl font-bold mb-2">
-                  <PropertyHeaderTitle type={propertyType} currentArea={mainArea} variant="hero" />
+                  <PropertyHeaderTitle type={catalogType} currentArea={mainArea} variant="hero" />
                 </h1>
                 {featureText && (
                   <p className="text-xl md:text-2xl opacity-90">
@@ -225,7 +231,7 @@ export default async function PropertiesByTypeAndAreaPage({
         {!areaInfo.image && (
           <div className="mb-8">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-              <PropertyHeaderTitle type={propertyType} currentArea={mainArea} variant="default" />
+              <PropertyHeaderTitle type={catalogType} currentArea={mainArea} variant="default" />
             </h1>
             {featureText && (
               <p className="text-xl text-gray-600">
@@ -239,25 +245,21 @@ export default async function PropertiesByTypeAndAreaPage({
         )}
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar with filters */}
-          <aside className="lg:w-64 flex-shrink-0">
-            <PropertyFilters 
-              defaultType={propertyType}
+          <CatalogFiltersToggle>
+            <PropertyFilters
+              defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
               defaultMainArea={mainArea}
               availableAmenityKeys={availableAmenityFilterKeys}
             />
-          </aside>
+          </CatalogFiltersToggle>
 
-          {/* Properties grid */}
           <div className="flex-1">
+            <CatalogWizard />
+
             {sortedProperties.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-600 mb-4">
-                  No properties found in this category.
-                </p>
-                <p className="text-sm text-gray-500">
-                  Check other areas or property types.
-                </p>
+              <div className="space-y-6">
+                <p className="text-sm text-gray-500">No properties match your criteria.</p>
+                <CatalogFeedbackForm total={total} />
               </div>
             ) : (
               <>
@@ -276,6 +278,11 @@ export default async function PropertiesByTypeAndAreaPage({
                   totalPages={totalPages}
                   searchParams={searchParamsForPagination}
                 />
+                {total < 5 && (
+                  <div className="mt-8">
+                    <CatalogFeedbackForm total={total} />
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -283,7 +290,7 @@ export default async function PropertiesByTypeAndAreaPage({
 
         {total > 0 && (
           <div className="mt-16 max-w-3xl text-gray-600 text-sm leading-relaxed">
-            {buildSeoText(propertyType, mainArea)}
+            {buildSeoText(catalogType, mainArea)}
           </div>
         )}
       </div>

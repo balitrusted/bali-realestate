@@ -10,7 +10,19 @@ export const SEGMENT_TYPES = {
   subArea: ["gentong", "kedewatan", "keliki", "kemenuh", "lodtunduh", "penestanan", "petulu", "sayan", "sukawati", "tegallalang"] as SubArea[],
   bedroom: ["1-bedroom-villa", "2-bedroom-villa", "3-bedroom-villa", "4-bedroom-villa"] as const,
   payment: ["monthly", "yearly"] as const,
-  amenity: ["pool", "nature-view", "bathtub", "closed-kitchen", "enclosed-living", "pet-friendly"] as const,
+  amenity: [
+    "pool",
+    "nature-view",
+    "bathtub",
+    "closed-kitchen",
+    "enclosed-living",
+    "pet-friendly",
+    "car-park",
+    "desk",
+    "garage",
+    "high-speed-wifi",
+    "washing-machine",
+  ] as const,
 } as const;
 
 const amenityToFeature: Record<string, keyof Property["features"]> = {
@@ -20,11 +32,16 @@ const amenityToFeature: Record<string, keyof Property["features"]> = {
   "closed-kitchen": "closedKitchen",
   "enclosed-living": "enclosedLivingArea",
   "pet-friendly": "petFriendly",
+  "car-park": "carPark",
+  desk: "desk",
+  garage: "garage",
+  "high-speed-wifi": "highSpeedWifi",
+  "washing-machine": "washingMachine",
 };
 
 export type SegmentKind = "subArea" | "bedroom" | "payment" | "amenity" | null;
 
-export function parseSegment(segment: string, mainArea: MainArea, propertyType: PropertyType): { kind: SegmentKind; value: string | number } | null {
+export function parseSegment(segment: string, mainArea: MainArea, propertyType: PropertyType | "villas"): { kind: SegmentKind; value: string | number } | null {
   if (SEGMENT_TYPES.subArea.includes(segment as SubArea) && mainArea === "ubud") {
     return { kind: "subArea", value: segment };
   }
@@ -32,7 +49,7 @@ export function parseSegment(segment: string, mainArea: MainArea, propertyType: 
     const num = parseInt(segment.charAt(0), 10);
     return { kind: "bedroom", value: num };
   }
-  if (SEGMENT_TYPES.payment.includes(segment as (typeof SEGMENT_TYPES.payment)[number]) && propertyType === "rent") {
+  if (SEGMENT_TYPES.payment.includes(segment as (typeof SEGMENT_TYPES.payment)[number]) && (propertyType === "rent" || propertyType === "villas")) {
     return { kind: "payment", value: segment };
   }
   if (SEGMENT_TYPES.amenity.includes(segment as (typeof SEGMENT_TYPES.amenity)[number])) {
@@ -41,8 +58,12 @@ export function parseSegment(segment: string, mainArea: MainArea, propertyType: 
   return null;
 }
 
+/** URL slug for catalog level 1: rent, sale, land, business, or villas (rent + sale). */
+export type CatalogTypeSlug = PropertyType | "villas";
+
 export interface CatalogFilters {
-  type?: PropertyType;
+  /** PropertyType or "villas" (show both rent and sale). */
+  type?: PropertyType | "villas";
   mainArea?: MainArea;
   subArea?: SubArea[];
   bedrooms?: number[];
@@ -89,7 +110,11 @@ export function filterProperties(
   let result = [...properties];
 
   if (filters.type) {
-    result = result.filter((p) => p.types?.includes(filters.type!));
+    if (filters.type === "villas") {
+      result = result.filter((p) => p.types?.includes("rent") || p.types?.includes("sale"));
+    } else {
+      result = result.filter((p) => p.types?.includes(filters.type as PropertyType));
+    }
   }
   if (filters.mainArea) {
     result = result.filter((p) => p.mainArea === filters.mainArea);
