@@ -38,6 +38,9 @@ const nextConfig: NextConfig = {
     ],
   },
   images: {
+    // Disable Vercel Image Optimization to avoid burning free tier "Cache Writes" limit.
+    // Images are served as-is (no resize/WebP on Vercel). /uploads/ already use plain <img>.
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
