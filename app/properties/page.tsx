@@ -82,7 +82,7 @@ export default async function PropertiesCatalogPage({
   const hasBoth = query.both === "1";
 
   const all = await loadAllProperties();
-  const effectiveFilters = hasBoth ? { ...filters, type: "villas" } : filters;
+  const effectiveFilters: CatalogFilters = hasBoth ? { ...filters, type: "villas" as const } : filters;
   const filtered = filterProperties(all, effectiveFilters);
   const { items, total, totalPages, page: currentPage } = paginate(filtered, page);
 
