@@ -94,7 +94,7 @@ export default async function Home() {
         <section className="py-12 border-t border-gray-100">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-              From the catalog
+              Start exploring
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
               {randomProperties.map((property) => (
