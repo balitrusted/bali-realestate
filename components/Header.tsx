@@ -5,10 +5,10 @@ export default function Header() {
     <header className="border-b border-gray-200 bg-white">
       <div className="container mx-auto px-4 py-4">
         <nav className="flex items-center justify-between">
-          <Link href="/" className="inline-block hover:opacity-80 transition-opacity">
-            <div className="inline-block">
-              <span className="block text-2xl font-bold text-gray-900">Balitrusted</span>
-              <span className="block text-right text-[10px] text-gray-500 font-normal">[ rent, buy, learn, explore ]</span>
+          <Link href="/" className="inline-flex hover:opacity-80 transition-opacity">
+            <div className="flex flex-col items-center">
+              <span className="text-2xl font-bold text-gray-900">Balitrusted</span>
+              <span className="text-[10px] text-gray-500 font-normal mt-0.5">[ rent, buy, learn, explore ]</span>
             </div>
           </Link>
           
