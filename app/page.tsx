@@ -57,7 +57,7 @@ export default async function Home() {
               Villas, land and business for long-term rental and investment in Ubud and other areas of Bali.
             </h1>
             <p className="text-base text-gray-600 mb-6">
-              The shortest path to your Bali home.
+              Bridging the gap between you and Bali owners.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
               <Link
