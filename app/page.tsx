@@ -51,7 +51,7 @@ export default async function Home() {
           }}
         />
         {/* Optional: hero image - light overlay for future use. For now gradient only. */}
-        <div className="relative z-10 container mx-auto px-4 py-10 md:py-14">
+        <div className="relative z-10 container mx-auto px-4 py-8 md:py-12">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-[2rem] md:text-[2.5rem] font-bold text-gray-900 mb-4 leading-[1.15]">
               Villas, land and business for long-term rental and investment in Ubud and other areas of Bali.
