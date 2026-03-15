@@ -56,8 +56,8 @@ export default async function Home() {
             <h1 className="text-[2rem] md:text-[2.5rem] font-bold text-gray-900 mb-4 leading-[1.15]">
               Villas, land and business for long-term rental and investment in Ubud and other areas of Bali.
             </h1>
-            <p className="text-xl text-gray-600 mb-6">
-              No noise. No spam. No tourist approach.
+            <p className="text-base text-gray-600 mb-6">
+              The shortest path to your Bali home.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
               <Link
