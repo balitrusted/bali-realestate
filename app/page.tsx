@@ -51,12 +51,12 @@ export default async function Home() {
           }}
         />
         {/* Optional: hero image - light overlay for future use. For now gradient only. */}
-        <div className="relative z-10 container mx-auto px-4 py-16 md:py-24">
+        <div className="relative z-10 container mx-auto px-4 py-10 md:py-14">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Villas, land and business for long-term rental and investment in Ubud and other areas of Bali
+            <h1 className="text-[2rem] md:text-[2.5rem] font-bold text-gray-900 mb-4 leading-[1.15]">
+              Villas, land and business for long-term rental and investment in Ubud and other areas of Bali.
             </h1>
-            <p className="text-xl text-gray-600 mb-10">
+            <p className="text-xl text-gray-600 mb-6">
               No noise. No spam. No tourist approach.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
@@ -91,9 +91,9 @@ export default async function Home() {
 
       {/* Random selection from catalog */}
       {randomProperties.length > 0 && (
-        <section className="py-12 border-t border-gray-100">
+        <section className="py-8 border-t border-gray-100">
           <div className="container mx-auto px-4">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+            <h2 className="text-[1.375rem] font-bold text-gray-900 mb-4 text-center">
               Start exploring
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
@@ -101,7 +101,7 @@ export default async function Home() {
                 <HomePropertyCard key={property.id} property={property} />
               ))}
             </div>
-            <div className="text-center mt-6">
+            <div className="text-center mt-4">
               <Link
                 href="/properties"
                 className="inline-block px-5 py-2.5 border border-gray-300 text-gray-900 rounded-md hover:bg-gray-50 transition-colors font-medium"
@@ -114,19 +114,19 @@ export default async function Home() {
       )}
 
       {/* Popular Areas */}
-      <section className="bg-gray-50 py-12">
+      <section className="bg-gray-50 py-8">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+          <h2 className="text-[1.375rem] font-bold text-gray-900 mb-5 text-center">
             Popular Areas
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto">
             {POPULAR_AREAS.map((areaId) => {
               const area = areas[areaId];
               return (
                 <Link
                   key={areaId}
                   href={`/properties/rent/${areaId}`}
-                  className="bg-white p-5 rounded-lg shadow-sm hover:shadow-md transition-shadow text-center"
+                  className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow text-center"
                 >
                   <span className="font-semibold text-gray-900">
                     {area.nameEn} Villas
@@ -139,32 +139,32 @@ export default async function Home() {
       </section>
 
       {/* Start Here */}
-      <section className="py-16">
+      <section className="py-10">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+          <h2 className="text-[1.375rem] font-bold text-gray-900 mb-5 text-center">
             Start Here
           </h2>
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             <Link
               href="/properties"
-              className="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+              className="bg-gray-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow"
             >
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 Property Catalog
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-600 mb-3 text-sm">
                 Carefully selected real estate in Bali for living and investment
               </p>
               <span className="text-gray-900 font-medium">View →</span>
             </Link>
             <Link
               href="/guides"
-              className="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+              className="bg-gray-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow"
             >
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 Knowledge Base
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-600 mb-3 text-sm">
                 Practical articles about rentals, purchases, legal aspects, and areas
               </p>
               <span className="text-gray-900 font-medium">Explore →</span>
@@ -174,30 +174,30 @@ export default async function Home() {
       </section>
 
       {/* For Whom */}
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-50 py-10">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+          <h2 className="text-[1.375rem] font-bold text-gray-900 mb-5 text-center">
             Who This Site Is For
           </h2>
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="bg-white p-5 rounded-lg shadow-sm">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 For Long-Term Residents
               </h3>
               <p className="text-gray-600">
                 For those looking for a calm, private home in Bali for a month or longer, with a focus on Ubud and nearby areas. More areas will be added over time.
               </p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+            <div className="bg-white p-5 rounded-lg shadow-sm">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 For Investors
               </h3>
               <p className="text-gray-600">
                 Planning to invest in Bali real estate? Get honest information about risks, legal aspects, and real opportunities.
               </p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+            <div className="bg-white p-5 rounded-lg shadow-sm">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 For Conscious Clients
               </h3>
               <p className="text-gray-600">
@@ -209,13 +209,13 @@ export default async function Home() {
       </section>
 
       {/* How We Differ */}
-      <section className="py-16">
+      <section className="py-10">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+            <h2 className="text-[1.375rem] font-bold text-gray-900 mb-5 text-center">
               How We Differ from Traditional Agencies
             </h2>
-            <div className="space-y-6 text-gray-600">
+            <div className="space-y-4 text-gray-600 text-sm">
               <p>
                 We don&apos;t just list properties — we offer a curated selection of villas for rent and sale, combined with practical tools and real market knowledge.
               </p>
@@ -231,7 +231,7 @@ export default async function Home() {
       </section>
 
       {/* SEO text */}
-      <section className="bg-gray-50 py-12">
+      <section className="bg-gray-50 py-8">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto prose prose-gray">
             <p className="text-gray-700 leading-relaxed">
