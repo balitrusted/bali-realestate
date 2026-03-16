@@ -54,10 +54,16 @@ export function buildTitle(
   if (area) {
     return `${subject} for ${verb} in ${loc} | Balitrusted`;
   }
+  if (type === "rent") {
+    return "Villas for rent | Balitrusted";
+  }
+  if (type === "sale") {
+    return "Villas for sale | Balitrusted";
+  }
   if (type) {
     return `${subject} for ${verb} in Bali | Balitrusted`;
   }
-  return "Bali Properties for Rent and Sale | Villas, Land and Investments - Balitrusted";
+  return "All Bali Properties for Rent and Sale | Villas, Land and Investments - Balitrusted";
 }
 
 export function buildH1(
@@ -92,10 +98,59 @@ export function buildH1(
   if (area) {
     return `${subject} for ${verb} in ${loc}`;
   }
+  if (type === "rent") {
+    return "Villas for rent";
+  }
+  if (type === "sale") {
+    return "Villas for sale";
+  }
   if (type) {
     return `${subject} for ${verb} in Bali`;
   }
   return "Bali Properties for Rent and Sale";
+}
+
+/** Short intro line for the top of the catalog page (visible block under H1). */
+export function buildIntro(
+  type?: CatalogTypeForSeo | null,
+  area?: MainArea,
+  segment?: { kind: string | null; value: string | number }
+): string {
+  if (!type) {
+    return "Explore our curated collection of properties across Bali.";
+  }
+  if (type === "villas" && !area && !segment) {
+    return "Browse villas for rent and sale across Bali.";
+  }
+  if (type === "rent" && !area && !segment) {
+    return "Rent a villa in Bali. Browse long-term rentals by area, bedrooms and amenities.";
+  }
+  if (type === "sale" && !area && !segment) {
+    return "Buy a villa in Bali. Browse properties for sale across the island.";
+  }
+  if (type === "land" && !area) {
+    return "Browse land for sale in Bali. Find plots for building or investment.";
+  }
+  if (type === "business" && !area) {
+    return "Explore business and commercial properties in Bali.";
+  }
+  const loc = area ? areaName(area) : "Bali";
+  const subject = (subjectByType[type] ?? "villas").toLowerCase();
+  if (area && !segment) {
+    return `Find ${subject} for ${typeLabels[type]?.toLowerCase() ?? type} in ${loc}. Use filters to narrow your search.`;
+  }
+  if (segment?.kind === "bedroom") {
+    return `${segment.value} bedroom ${subject} in ${loc}. Browse listings and filter by amenities.`;
+  }
+  if (segment?.kind === "payment") {
+    const pay = segment.value === "yearly" ? "yearly" : "monthly";
+    return `${subject} for ${pay} payment in ${loc}.`;
+  }
+  if (segment?.kind === "amenity") {
+    const amenityLabel = (segment.value as string).replace(/-/g, " ");
+    return `${subject} with ${amenityLabel} in ${loc}.`;
+  }
+  return `Browse our curated selection in ${loc}.`;
 }
 
 export function buildDescription(
@@ -131,6 +186,12 @@ export function buildDescription(
   }
   if (area) {
     return areaDesc || `Find ${subject} in ${loc}. Browse our curated listings.`;
+  }
+  if (type === "rent") {
+    return "Rent a villa in Bali. Browse long-term villa rentals by area, bedrooms and amenities. Verified listings for stays of one month or more.";
+  }
+  if (type === "sale") {
+    return "Buy a villa in Bali. Browse villas and houses for sale. Freehold and leasehold options in Ubud, Canggu, Seminyak and more.";
   }
   if (type) {
     return `Browse ${subject} in Bali. Find properties across Ubud, Canggu, Sanur and more.`;

@@ -5,13 +5,14 @@ import Pagination from "@/components/Pagination";
 import CatalogWizard from "@/components/CatalogWizard";
 import CatalogFiltersToggle from "@/components/CatalogFiltersToggle";
 import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
+import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import {
   loadAllProperties,
   filterProperties,
   paginate,
   CatalogFilters,
 } from "@/lib/propertiesCatalog";
-import { buildTitle, buildH1, buildDescription, buildSeoText } from "@/lib/seoTemplates";
+import { buildTitle, buildH1, buildDescription, buildSeoText, buildIntro } from "@/lib/seoTemplates";
 import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 
@@ -128,14 +129,13 @@ export default async function PropertiesByTypePage({
   return (
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-8">
+        <CatalogBreadcrumb type={catalogType as "rent" | "sale" | "villas" | "land" | "business"} />
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
             {buildH1(catalogType)}
           </h1>
           <p className="text-gray-600">
-            {catalogType === "villas"
-              ? "Browse villas for rent and sale across Bali."
-              : `Browse ${(propertyTypeNames[catalogType] ?? "").toLowerCase()} for ${(propertyTypeVerbs[catalogType] ?? "").toLowerCase()} across Bali.`}
+            {buildIntro(catalogType)}
           </p>
         </div>
 

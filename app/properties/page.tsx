@@ -6,19 +6,21 @@ import Pagination from "@/components/Pagination";
 import CatalogWizard from "@/components/CatalogWizard";
 import CatalogFiltersToggle from "@/components/CatalogFiltersToggle";
 import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
+import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import {
   loadAllProperties,
   filterProperties,
   paginate,
   CatalogFilters,
 } from "@/lib/propertiesCatalog";
+import { buildIntro } from "@/lib/seoTemplates";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: "Bali Properties for Rent and Sale | Villas, Land and Investments",
+  title: "All Bali Properties for Rent and Sale | Villas, Land and Investments",
   description:
     "Explore a curated selection of Bali properties including villas for rent, land plots, and investment opportunities. Discover homes across Ubud, Canggu, Seminyak and other Bali locations.",
 };
@@ -60,6 +62,21 @@ export default async function PropertiesCatalogPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const query = await searchParams;
+  // Redirect old ?subject=villas to clean URL /properties/villas
+  const onlySubjectVillas =
+    query.subject === "villas" &&
+    !query.type &&
+    !query.mainArea &&
+    !query.subArea &&
+    !query.bedrooms &&
+    !query.minDuration &&
+    !query.maxPrice &&
+    query.both !== "1" &&
+    ["hasBathtub", "hasCarPark", "hasClosedKitchen", "hasDesk", "hasEnclosedLiving", "hasGarage", "hasHighSpeedWifi", "hasNatureView", "hasPetFriendly", "hasPool", "hasWashingMachine"].every((k) => query[k] !== "true");
+  if (onlySubjectVillas) {
+    const page = String(query.page || "1");
+    redirect(`/properties/villas${page !== "1" ? `?page=${page}` : ""}`);
+  }
   // Canonical URL for "both" (rent + sale): use path /properties/villas instead of ?both=1
   const onlyBoth =
     query.both === "1" &&
@@ -112,12 +129,13 @@ export default async function PropertiesCatalogPage({
   return (
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-8">
+        <CatalogBreadcrumb />
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-            Bali Properties for Rent and Sale
+            All Bali Properties for Rent and Sale
           </h1>
           <p className="text-gray-600">
-            Explore our curated collection of properties across Bali.
+            {buildIntro()}
           </p>
         </div>
 

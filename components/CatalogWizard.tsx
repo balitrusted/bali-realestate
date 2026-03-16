@@ -99,7 +99,7 @@ export default function CatalogWizard() {
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            onClick={() => pushQuery({ subject: "villas" })}
+            onClick={() => router.push("/properties/villas", { scroll: false })}
             className="px-4 py-2.5 rounded-lg border-2 border-gray-200 bg-white text-gray-800 font-medium hover:border-emerald-400 hover:bg-emerald-50/50 transition-colors"
           >
             Villa
@@ -123,8 +123,8 @@ export default function CatalogWizard() {
     );
   }
 
-  // Step 1: Rent or Buy? (only on root when subject=villas)
-  if (isRootCatalog && subject === "villas" && !type) {
+  // Step 1: Rent or Buy? (on /properties/villas)
+  if (pathType === "villas" && !pathArea) {
     return (
       <div className="rounded-xl bg-gray-50 border border-gray-200 p-4 md:p-5 mb-6">
         <p className="text-sm font-medium text-gray-500 mb-2">Step 2 of 5</p>

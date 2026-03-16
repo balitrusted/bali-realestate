@@ -13,6 +13,8 @@ import {
   areas,
 } from "@/lib/propertiesCatalog";
 import { buildTitle, buildH1, buildDescription, buildSeoText } from "@/lib/seoTemplates";
+import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
+import { subAreaNames } from "@/types/areas";
 import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 import Image from "next/image";
@@ -170,10 +172,26 @@ export default async function PropertiesSegmentPage({
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://balitrusted.com";
 
+  const segmentLabel =
+    parsed.kind === "bedroom"
+      ? `${parsed.value} bed${Number(parsed.value) === 1 ? "" : "s"}`
+      : parsed.kind === "payment"
+        ? (parsed.value === "yearly" ? "Yearly" : "Monthly")
+        : parsed.kind === "amenity"
+          ? (parsed.value as string).replace(/-/g, " ")
+          : parsed.kind === "subArea"
+            ? subAreaNames[parsed.value as SubArea]
+            : null;
+
   return (
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <link rel="canonical" href={`${baseUrl}${basePath}`} />
+        <CatalogBreadcrumb
+          type={catalogType as "rent" | "sale" | "villas" | "land" | "business"}
+          area={mainArea}
+          segmentLabel={segmentLabel ?? undefined}
+        />
         {items.length > 0 && (
           <CatalogStructuredData
             properties={items}

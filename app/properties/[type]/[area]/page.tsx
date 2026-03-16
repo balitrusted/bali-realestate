@@ -7,6 +7,7 @@ import Pagination from "@/components/Pagination";
 import CatalogWizard from "@/components/CatalogWizard";
 import CatalogFiltersToggle from "@/components/CatalogFiltersToggle";
 import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
+import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import CatalogStructuredData from "@/components/CatalogStructuredData";
 import { Property, PropertyType, MainArea, SubArea } from "@/types/property";
 import { areas } from "@/types/areas";
@@ -197,6 +198,7 @@ export default async function PropertiesByTypeAndAreaPage({
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <link rel="canonical" href={`${baseUrl}${basePath}`} />
+        <CatalogBreadcrumb type={catalogType as "rent" | "sale" | "villas" | "land" | "business"} area={mainArea} />
         <CatalogStructuredData
           properties={sortedProperties}
           baseUrl={baseUrl}
