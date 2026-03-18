@@ -10,6 +10,12 @@ interface PropertyCardProps {
   property: Property;
 }
 
+// Quick UI switch (easy rollback):
+// - "above": title + key info above the image (copy-friendly)
+// - "overlay": title + key info over the image (previous variant 1)
+// - "below": title below the image (original variant 0)
+const PROPERTY_CARD_TITLE_VARIANT: "above" | "overlay" | "below" = "above";
+
 export default function PropertyCard({ property }: PropertyCardProps) {
   const formatPrice = (price: number, currency: string) => {
     if (currency === "IDR") {
@@ -48,21 +54,75 @@ export default function PropertyCard({ property }: PropertyCardProps) {
     : null;
   const displayTitle = getPropertyDisplayTitle(property);
 
+  const locationLabel = [
+    property.mainArea ? (areas[property.mainArea]?.nameEn || property.mainArea) : null,
+    property.subArea != null ? (subAreaNames[property.subArea] || property.subArea) : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
+  const primaryPriceText =
+    forSale != null && isSale
+      ? `${formatPrice(forSale, p.currency)} · for sale`
+      : hasYearlyOnly && yearly != null && yearly > 0
+        ? `${formatPrice(yearly, p.currency)} / year`
+        : monthly != null && monthly > 0
+          ? `${formatPrice(monthly, p.currency)} / month`
+          : null;
+
+  const href = `/properties/view/${property.id}`;
+
   return (
-    <Link 
-      href={`/properties/view/${property.id}`}
-      className="flex flex-col h-full bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
-    >
+    <article className="flex flex-col h-full bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+      {PROPERTY_CARD_TITLE_VARIANT === "above" && (
+        <div className="p-5 pb-3">
+          <h3 className="text-xl font-semibold text-gray-900 leading-snug select-text">
+            <Link href={href} className="hover:underline underline-offset-2">
+              {displayTitle}
+            </Link>
+          </h3>
+          {locationLabel && (
+            <p className="mt-1 text-sm text-gray-600 select-text">
+              {locationLabel}
+            </p>
+          )}
+        </div>
+      )}
+
       {/* Image */}
       {mainImage ? (
         <div className="w-full h-48 relative overflow-hidden flex-shrink-0">
-          <PropertyImageWithFallback
-            src={mainImage}
-            alt={getPropertyImageAlt(property, 0)}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
+          <Link href={href} className="absolute inset-0" aria-label={displayTitle}>
+            <PropertyImageWithFallback
+              src={mainImage}
+              alt={getPropertyImageAlt(property, 0)}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          </Link>
+          {PROPERTY_CARD_TITLE_VARIANT === "overlay" && (
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/55 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/60 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-3">
+                <div className="text-white">
+                  <div className="text-sm font-semibold leading-snug line-clamp-2 drop-shadow">
+                    {displayTitle}
+                  </div>
+                  <div className="mt-0.5 text-xs text-white/90 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                    {locationLabel ? <span className="drop-shadow">{locationLabel}</span> : null}
+                    {primaryPriceText ? (
+                      <>
+                        <span className="text-white/70">·</span>
+                        <span className="drop-shadow">{primaryPriceText}</span>
+                      </>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           <PropertyCardActions propertyId={String(property.id)} />
         </div>
       ) : (
@@ -72,25 +132,17 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </div>
       )}
 
-      <div className="p-6 flex flex-col flex-1 min-h-0">
-        {/* Area & sub-area in a column */}
-        <div className="flex flex-col gap-0.5 mb-3 text-sm text-gray-600">
-          <span>
-            <span className="text-gray-500">Area: </span>
-            {property.mainArea ? (areas[property.mainArea]?.nameEn || property.mainArea) : "—"}
-          </span>
-          <span>
-            <span className="text-gray-500">Sub-area: </span>
-            {property.subArea != null ? (subAreaNames[property.subArea] || property.subArea) : SUBAREA_UNSPECIFIED_LABEL}
-          </span>
-        </div>
-
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">
-          {displayTitle}
-        </h3>
+      <div className={`${PROPERTY_CARD_TITLE_VARIANT === "above" ? "px-6 pt-4 pb-6" : "p-6"} flex flex-col flex-1 min-h-0`}>
+        {PROPERTY_CARD_TITLE_VARIANT === "below" && (
+          <h3 className="text-xl font-semibold text-gray-900 mb-2 select-text">
+            <Link href={href} className="hover:underline underline-offset-2">
+              {displayTitle}
+            </Link>
+          </h3>
+        )}
         
         {property.description?.trim() && (
-          <p className="text-gray-600 mb-4 line-clamp-2">
+          <p className="text-gray-600 mb-4 line-clamp-2 select-text">
             {fixDescriptionDisplay(property.description)}
           </p>
         )}
@@ -156,11 +208,14 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </div>
 
         <div className="mt-auto pt-2">
-          <div className="text-center px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors">
+          <Link
+            href={href}
+            className="block text-center px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
+          >
             View Details
-          </div>
+          </Link>
         </div>
       </div>
-    </Link>
+    </article>
   );
 }
