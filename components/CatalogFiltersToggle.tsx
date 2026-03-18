@@ -10,11 +10,11 @@ export default function CatalogFiltersToggle({ children }: CatalogFiltersToggleP
   const [open, setOpen] = useState(false);
 
   return (
-    <aside className="lg:w-64 flex-shrink-0">
+    <div className="w-full">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="w-full lg:w-auto mb-4 lg:mb-0 flex items-center justify-between gap-2 px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 text-sm font-medium text-gray-700 transition-colors"
+        className="w-full mb-4 flex items-center justify-between gap-2 px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 text-sm font-medium text-gray-700 transition-colors"
       >
         <span>{open ? "Hide filters" : "Show all filters"}</span>
         <svg
@@ -27,6 +27,6 @@ export default function CatalogFiltersToggle({ children }: CatalogFiltersToggleP
         </svg>
       </button>
       {open && <div className="mt-4">{children}</div>}
-    </aside>
+    </div>
   );
 }

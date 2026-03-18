@@ -145,12 +145,12 @@ export default async function PropertiesCatalogPage({
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="space-y-6">
           <CatalogFiltersToggle>
             <PropertyFilters />
           </CatalogFiltersToggle>
 
-          <div className="flex-1">
+          <div>
             <CatalogWizard availableMainAreas={availableMainAreas} />
 
             {items.length === 0 ? (

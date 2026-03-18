@@ -145,12 +145,12 @@ export default async function PropertiesByTypePage({
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="space-y-6">
           <CatalogFiltersToggle>
             <PropertyFilters defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)} />
           </CatalogFiltersToggle>
 
-          <div className="flex-1">
+          <div>
             <CatalogWizard availableMainAreas={availableMainAreas} />
 
             {items.length === 0 ? (

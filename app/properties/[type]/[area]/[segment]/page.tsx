@@ -4,6 +4,7 @@ import PropertyCard from "@/components/PropertyCard";
 import PropertyFilters from "@/components/PropertyFilters";
 import Pagination from "@/components/Pagination";
 import CatalogStructuredData from "@/components/CatalogStructuredData";
+import CatalogFiltersToggle from "@/components/CatalogFiltersToggle";
 import {
   loadAllProperties,
   filterProperties,
@@ -228,16 +229,16 @@ export default async function PropertiesSegmentPage({
           </div>
         )}
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          <aside className="lg:w-64 flex-shrink-0">
+        <div className="space-y-6">
+          <CatalogFiltersToggle>
             <PropertyFilters
               defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
               defaultMainArea={mainArea}
               availableAmenityKeys={availableAmenityFilterKeys}
             />
-          </aside>
+          </CatalogFiltersToggle>
 
-          <div className="flex-1">
+          <div>
             {items.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-gray-600 mb-4">No properties found in this category.</p>
