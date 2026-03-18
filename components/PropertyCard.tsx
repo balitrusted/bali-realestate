@@ -3,7 +3,7 @@ import PropertyImageWithFallback from "@/components/PropertyImageWithFallback";
 import PropertyCardActions from "@/components/PropertyCardActions";
 import { Property } from "@/types/property";
 import { areas, subAreaNames, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
-import { getPropertyDisplayTitle, fixDescriptionDisplay } from "@/lib/propertyUtils";
+import { getPropertyDisplayTitle } from "@/lib/propertyUtils";
 import { getPropertyImageAlt } from "@/lib/imageSeo";
 
 interface PropertyCardProps {
@@ -25,6 +25,117 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   };
 
   const mainAreaLabel = property.mainArea ? (areas[property.mainArea]?.nameEn || property.mainArea) : null;
+
+  const buildTeaser = (): string | null => {
+    const text = `${property.title ?? ""}\n${property.description ?? ""}`.toLowerCase();
+    const loc = mainAreaLabel ?? "Bali";
+    const isRent = property.types?.includes("rent");
+    const stayPhrase = isRent ? "long-term stay" : "property";
+
+    const hasAny = (...needles: string[]) => needles.some((n) => text.includes(n));
+
+    const pick = (variants: string[]) => {
+      // Deterministic pick so it doesn't change between renders
+      const seed = String(property.id ?? property.villaNumber ?? "0");
+      let h = 0;
+      for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+      return variants[h % variants.length];
+    };
+
+    // More specific “key value” branches (override generic "brand new")
+    // Premium/cozy design + standout bathroom/flow (e.g. Sayan #52)
+    if (
+      hasAny("cozy", "refined", "premium", "well balanced", "warm, modern") &&
+      (hasAny("double shower", "outdoor shower") || property.features.bathtub || hasAny("same level as the main living"))
+    ) {
+      return pick([
+        `Cozy premium feel with thoughtful details and a well designed layout. Great for a comfortable ${stayPhrase} in ${loc}.`,
+        `Refined atmosphere with a practical modern layout and a strong comfort focus. Ideal for a relaxed ${stayPhrase} in ${loc}.`,
+        `Warm modern design with standout bathroom details and an easy indoor-outdoor flow. A great ${stayPhrase} option in ${loc}.`,
+      ]);
+    }
+
+    // Practical “quiet green + bar counter” vibe (e.g. Gentong #61)
+    if (hasAny("bar counter") || hasAny("kitchen with bar counter")) {
+      return pick([
+        `Quiet green setting with a practical kitchen and bar counter - comfortable for everyday living. A great ${stayPhrase} choice in ${loc}.`,
+        `Bright, calm villa with a convenient bar counter kitchen setup. Ideal for a relaxed ${stayPhrase} in ${loc}.`,
+      ]);
+    }
+
+    // Rice field / open views called out explicitly
+    if (hasAny("rice field", "rice-field", "open view", "open views")) {
+      return pick([
+        `Open views and a peaceful atmosphere - perfect for a calm, inspiring routine. A great ${stayPhrase} option in ${loc}.`,
+        `Rice field vibes and a relaxed setting for a quieter daily rhythm. Lovely for a ${stayPhrase} in ${loc}.`,
+      ]);
+    }
+
+    if (hasAny("newly renovated", "renovated", "renovation")) {
+      return pick([
+        `Newly renovated and well maintained - fresh, clean and ready to move in. A great option for a comfortable ${stayPhrase} in ${loc}.`,
+        `Freshly renovated with everything in great condition. Ideal if you want an easy, move-in-ready ${stayPhrase} in ${loc}.`,
+        `Recently renovated for a clean, modern feel. A comfortable choice for a ${stayPhrase} in ${loc}.`,
+      ]);
+    }
+
+    if (hasAny("brand new", "fully new", "newly built", "freshly built", "never rented", "first guest", "first occupancy")) {
+      return pick([
+        `Brand new villa - first occupancy, lots of natural light and a calm atmosphere. Ideal for a relaxed ${stayPhrase} in ${loc}.`,
+        `New build, ready for first occupancy. Bright spaces and a calm setting - great for a ${stayPhrase} in ${loc}.`,
+        `Fully new and move-in ready - a fresh start with a peaceful vibe. Perfect for a ${stayPhrase} in ${loc}.`,
+        `Never rented before - clean, bright and quiet. A great match for a comfortable ${stayPhrase} in ${loc}.`,
+      ]);
+    }
+
+    if (hasAny("affordable", "cheap", "very affordable", "great value", "without overpaying")) {
+      return pick([
+        `Affordable private villa with a practical layout and everything you need for everyday life. Great value for ${loc} - ideal for a ${stayPhrase}.`,
+        `Great value option in ${loc}: your own private place without overpaying. Practical for everyday living and a solid ${stayPhrase} pick.`,
+        `A budget-friendly private villa in ${loc} with the essentials done right. A smart choice for a ${stayPhrase}.`,
+      ]);
+    }
+
+    if (property.features.enclosedLivingArea || property.features.closedKitchen) {
+      return pick([
+        `Rare enclosed living setup - cooler, quieter and more comfortable for daily life. A solid choice for a ${stayPhrase} in ${loc}.`,
+        `Enclosed living/kitchen - a real comfort upgrade in Bali. Great for a ${stayPhrase} where you want AC and less noise.`,
+        `Closed living space for a cooler, more private home feel. Ideal for a ${stayPhrase} in ${loc}.`,
+      ]);
+    }
+
+    if (hasAny("rice field", "rice-field") || property.features.natureView) {
+      return pick([
+        `Peaceful nature setting with open views - perfect for a calm, inspiring routine. A great ${stayPhrase} option in ${loc}.`,
+        `Open views and a green atmosphere for a quieter pace. Lovely for a ${stayPhrase} in ${loc}.`,
+        `Nature vibes and a relaxed setting - ideal if you value privacy and greenery. Great for a ${stayPhrase} in ${loc}.`,
+      ]);
+    }
+
+    if (property.features.pool) {
+      return pick([
+        `Private pool and a comfortable layout for relaxing at home. A practical ${stayPhrase} option in ${loc}.`,
+        `Pool-focused setup for easy daily comfort. Great for a ${stayPhrase} where you want to enjoy your own space.`,
+        `Your own private pool - simple, enjoyable living with a relaxed vibe. A strong ${stayPhrase} choice in ${loc}.`,
+      ]);
+    }
+
+    if (property.features.washingMachine) {
+      return pick([
+        `Designed for everyday comfort with a rare washing machine on-site. Great for a ${stayPhrase} in ${loc}.`,
+        `Rare bonus: washing machine at home - super practical for longer stays. A solid ${stayPhrase} option in ${loc}.`,
+      ]);
+    }
+
+    if (property.features.desk) {
+      return pick([
+        `Convenient setup for remote work with a dedicated desk. A good ${stayPhrase} choice in ${loc}.`,
+        `Work-friendly layout with a dedicated desk - great for remote work. Comfortable for a ${stayPhrase} in ${loc}.`,
+      ]);
+    }
+
+    return null;
+  };
 
   const p = property.price;
   const monthly = p.monthly ?? p.min;
@@ -77,6 +188,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           : null;
 
   const topSubline = locationLabel || null;
+  const teaser = buildTeaser();
 
   const href = `/properties/view/${property.id}`;
 
@@ -149,15 +261,15 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           </h3>
         )}
         
-        {property.description?.trim() && (
+        {teaser && (
           <p className="text-gray-600 mb-4 line-clamp-2 select-text">
-            {fixDescriptionDisplay(property.description)}
+            {teaser}
           </p>
         )}
 
         <div className="flex flex-wrap gap-2 mb-4">
           <span className="px-2 py-1 bg-gray-100 text-gray-700 text-sm rounded">
-            {property.bedrooms} {property.bedrooms === 1 ? "bedroom" : "bedrooms"}
+            {property.bedrooms} {property.bedrooms === 1 ? "bed" : "beds"}
           </span>
           {property.bathrooms != null && (
             <span className="px-2 py-1 bg-gray-100 text-gray-700 text-sm rounded">
