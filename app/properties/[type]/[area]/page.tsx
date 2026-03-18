@@ -268,7 +268,7 @@ export default async function PropertiesByTypeAndAreaPage({
                   Found {total} {total === 1 ? "property" : "properties"}
                   {totalPages > 1 && ` · Page ${currentPage} of ${totalPages}`}
                 </div>
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {sortedProperties.map((property) => (
                     <PropertyCard key={property.id} property={property} />
                   ))}
