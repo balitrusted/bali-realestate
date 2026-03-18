@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import PropertyCard from "@/components/PropertyCard";
 import PropertyFilters from "@/components/PropertyFilters";
-import PropertyHeaderTitle from "@/components/PropertyHeaderTitle";
 import Pagination from "@/components/Pagination";
 import CatalogWizard from "@/components/CatalogWizard";
 import CatalogFiltersToggle from "@/components/CatalogFiltersToggle";
@@ -17,7 +16,7 @@ import {
   paginate,
   CatalogFilters,
 } from "@/lib/propertiesCatalog";
-import { buildSeoText } from "@/lib/seoTemplates";
+import { buildH1, buildSeoText } from "@/lib/seoTemplates";
 import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
 import Image from "next/image";
 
@@ -218,7 +217,7 @@ export default async function PropertiesByTypeAndAreaPage({
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
               <div className="text-center text-white">
                 <h1 className="text-4xl md:text-5xl font-bold mb-2">
-                  <PropertyHeaderTitle type={catalogType} currentArea={mainArea} variant="hero" />
+                  {buildH1(catalogType, mainArea)}
                 </h1>
                 {featureText && (
                   <p className="text-xl md:text-2xl opacity-90">
@@ -233,7 +232,7 @@ export default async function PropertiesByTypeAndAreaPage({
         {!areaInfo.image && (
           <div className="mb-8">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-              <PropertyHeaderTitle type={catalogType} currentArea={mainArea} variant="default" />
+              {buildH1(catalogType, mainArea)}
             </h1>
             {featureText && (
               <p className="text-xl text-gray-600">
