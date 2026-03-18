@@ -156,42 +156,11 @@ export default function CatalogWizard() {
     );
   }
 
-  // Step 1b: Payment (only when type=rent, on /properties/rent)
-  if (type === "rent" && pathType === "rent" && !pathArea && minDuration === undefined && searchParams.get("minDuration") === null) {
-    const hasAnyOther = mainArea || bedrooms.length || amenityParams.length;
-    if (!hasAnyOther) {
-      return (
-        <div className="rounded-xl bg-gray-50 border border-gray-200 p-4 md:p-5 mb-6">
-          <p className="text-sm font-medium text-gray-500 mb-2">Step 2b</p>
-          <p className="text-lg font-semibold text-gray-900 mb-4">Monthly or yearly?</p>
-          <div className="flex flex-wrap gap-2">
-            {[
-              { value: 1, label: "Monthly" },
-              { value: 12, label: "Yearly" },
-              { value: undefined, label: "Any" },
-            ].map(({ value, label }) => (
-              <button
-                key={label}
-                type="button"
-                onClick={() => setFilter("minDuration", value as number)}
-                className="px-4 py-2.5 rounded-lg border-2 border-gray-200 bg-white text-gray-800 font-medium hover:border-emerald-400 hover:bg-emerald-50/50 transition-colors"
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        </div>
-      );
-    }
-  }
-
   // Step 2: Area (when we have type from path or query, no area in path yet)
   if (!pathArea && !mainArea && !areaDone && (type || both)) {
     return (
       <div className="rounded-xl bg-gray-50 border border-gray-200 p-4 md:p-5 mb-6">
-        <p className="text-sm font-medium text-gray-500 mb-2">
-          {type === "rent" && minDuration !== undefined ? "Step 3" : "Step 2"} of 5
-        </p>
+        <p className="text-sm font-medium text-gray-500 mb-2">Step 3 of 5</p>
         <p className="text-lg font-semibold text-gray-900 mb-4">Which area?</p>
         <div className="flex flex-wrap gap-2">
           {MAIN_AREAS.map((areaId) => {
