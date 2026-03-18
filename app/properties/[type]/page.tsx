@@ -38,6 +38,8 @@ const propertyTypeVerbs: Record<string, string> = {
   villas: "Rent or Buy",
 };
 
+const MAIN_AREAS_ORDER: MainArea[] = ["ubud", "canggu", "sanur", "seminyak", "tanah-lot"];
+
 export async function generateMetadata({ params }: { params: Promise<{ type: string }> }) {
   const { type } = await params;
   if (!VALID_TYPE_SLUGS.includes(type as CatalogTypeSlug)) {
@@ -108,6 +110,10 @@ export default async function PropertiesByTypePage({
   const filtered = filterProperties(all, filters);
   const { items, total, totalPages, page: currentPage } = paginate(filtered, page);
 
+  const availableMainAreas = MAIN_AREAS_ORDER.filter((area) =>
+    filtered.some((p) => p.mainArea === area)
+  );
+
   const searchParamsForPagination: Record<string, string> = { ...query } as Record<string, string>;
   if (filters.mainArea) searchParamsForPagination.mainArea = filters.mainArea;
   if (filters.subArea?.length) searchParamsForPagination.subArea = filters.subArea.join(",");
@@ -145,7 +151,7 @@ export default async function PropertiesByTypePage({
           </CatalogFiltersToggle>
 
           <div className="flex-1">
-            <CatalogWizard />
+            <CatalogWizard availableMainAreas={availableMainAreas} />
 
             {items.length === 0 ? (
               <div className="space-y-6">

@@ -34,7 +34,12 @@ function parsePath(pathname: string): { basePath: string; pathType: PropertyType
   return { basePath, pathType, pathArea };
 }
 
-export default function CatalogWizard() {
+type CatalogWizardProps = {
+  /** If provided, show only these areas in the "Which area?" step. */
+  availableMainAreas?: MainArea[];
+};
+
+export default function CatalogWizard({ availableMainAreas }: CatalogWizardProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -158,12 +163,17 @@ export default function CatalogWizard() {
 
   // Step 2: Area (when we have type from path or query, no area in path yet)
   if (!pathArea && !mainArea && !areaDone && (type || both)) {
+    const allowedAreas = Array.isArray(availableMainAreas) && availableMainAreas.length > 0
+      ? new Set(availableMainAreas)
+      : null;
+    const areaOptions = allowedAreas ? MAIN_AREAS.filter((a) => allowedAreas.has(a)) : MAIN_AREAS;
+
     return (
       <div className="rounded-xl bg-gray-50 border border-gray-200 p-4 md:p-5 mb-6">
         <p className="text-sm font-medium text-gray-500 mb-2">Step 3 of 5</p>
         <p className="text-lg font-semibold text-gray-900 mb-4">Which area?</p>
         <div className="flex flex-wrap gap-2">
-          {MAIN_AREAS.map((areaId) => {
+          {areaOptions.map((areaId) => {
             const area = areas[areaId];
             return (
               <button

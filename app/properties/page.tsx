@@ -19,6 +19,8 @@ import { PropertyType, MainArea, SubArea } from "@/types/property";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+const MAIN_AREAS_ORDER: MainArea[] = ["ubud", "canggu", "sanur", "seminyak", "tanah-lot"];
+
 export const metadata: Metadata = {
   title: "All Bali Properties for Rent and Sale | Villas, Land and Investments",
   description:
@@ -103,6 +105,10 @@ export default async function PropertiesCatalogPage({
   const filtered = filterProperties(all, effectiveFilters);
   const { items, total, totalPages, page: currentPage } = paginate(filtered, page);
 
+  const availableMainAreas = MAIN_AREAS_ORDER.filter((area) =>
+    filtered.some((p) => p.mainArea === area)
+  );
+
   const searchParamsForPagination: Record<string, string> = {};
   if (filters.type) searchParamsForPagination.type = filters.type;
   if (query.both === "1") searchParamsForPagination.both = "1";
@@ -145,7 +151,7 @@ export default async function PropertiesCatalogPage({
           </CatalogFiltersToggle>
 
           <div className="flex-1">
-            <CatalogWizard />
+            <CatalogWizard availableMainAreas={availableMainAreas} />
 
             {items.length === 0 ? (
               <div className="space-y-6">
