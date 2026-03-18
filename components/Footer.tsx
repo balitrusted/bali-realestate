@@ -16,17 +16,26 @@ export default function Footer() {
             <h4 className="font-semibold text-gray-900 mb-4">Sections</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/properties" className="text-gray-600 hover:text-gray-900">
+                <Link
+                  href="/properties"
+                  className="inline-block py-1 text-gray-600 hover:text-gray-900 touch-manipulation"
+                >
                   Property Catalog
                 </Link>
               </li>
               <li>
-                <Link href="/guides" className="text-gray-600 hover:text-gray-900">
+                <Link
+                  href="/guides"
+                  className="inline-block py-1 text-gray-600 hover:text-gray-900 touch-manipulation"
+                >
                   Knowledge Base
                 </Link>
               </li>
               <li>
-                <Link href="/qa" className="text-gray-600 hover:text-gray-900">
+                <Link
+                  href="/qa"
+                  className="inline-block py-1 text-gray-600 hover:text-gray-900 touch-manipulation"
+                >
                   Q&A
                 </Link>
               </li>
@@ -37,17 +46,26 @@ export default function Footer() {
             <h4 className="font-semibold text-gray-900 mb-4">Information</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/about" className="text-gray-600 hover:text-gray-900">
+                <Link
+                  href="/about"
+                  className="inline-block py-1 text-gray-600 hover:text-gray-900 touch-manipulation"
+                >
                   About
                 </Link>
               </li>
               <li>
-                <Link href="/guides/rent" className="text-gray-600 hover:text-gray-900">
+                <Link
+                  href="/guides/rent"
+                  className="inline-block py-1 text-gray-600 hover:text-gray-900 touch-manipulation"
+                >
                   Long-term rental
                 </Link>
               </li>
               <li>
-                <Link href="/guides/legal" className="text-gray-600 hover:text-gray-900">
+                <Link
+                  href="/guides/legal"
+                  className="inline-block py-1 text-gray-600 hover:text-gray-900 touch-manipulation"
+                >
                   Legal and Safety
                 </Link>
               </li>
@@ -58,12 +76,18 @@ export default function Footer() {
             <h4 className="font-semibold text-gray-900 mb-4">Contact</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/request" className="text-gray-600 hover:text-gray-900">
+                <Link
+                  href="/request"
+                  className="inline-block py-1 text-gray-600 hover:text-gray-900 touch-manipulation"
+                >
                   Send Request
                 </Link>
               </li>
               <li>
-                <Link href="/admin/login" className="text-gray-600 hover:text-gray-900">
+                <Link
+                  href="/admin/login"
+                  className="inline-block py-1 text-gray-600 hover:text-gray-900 touch-manipulation"
+                >
                   Admin
                 </Link>
               </li>
