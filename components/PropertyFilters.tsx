@@ -284,7 +284,7 @@ export default function PropertyFilters({
                   const newFilters = { ...filters, type: undefined, minDuration: undefined };
                   setFilters(newFilters);
                   updateURL(newFilters);
-                }, "Any")}
+                }, "any")}
                 {(["Rent", "Buy"] as const).map((a) =>
                   pill(action === a, () => handleActionChange(a), a.toLowerCase(), `action-${a}`)
                 )}
@@ -299,17 +299,17 @@ export default function PropertyFilters({
                     const newFilters = { ...filters, minDuration: undefined };
                     setFilters(newFilters);
                     updateURL(newFilters);
-                  }, "Any")}
+                  }, "any")}
                   {pill(filters.minDuration === 1, () => {
                     const newFilters = { ...filters, minDuration: 1 };
                     setFilters(newFilters);
                     updateURL(newFilters);
-                  }, "Monthly")}
+                  }, "monthly")}
                   {pill(filters.minDuration === 12, () => {
                     const newFilters = { ...filters, minDuration: 12 };
                     setFilters(newFilters);
                     updateURL(newFilters);
-                  }, "Yearly")}
+                  }, "yearly")}
                 </div>
               </section>
             )}
@@ -324,7 +324,7 @@ export default function PropertyFilters({
                 const newFilters = { ...filters, type: undefined };
                 setFilters(newFilters);
                 updateURL(newFilters);
-              }, "All types")}
+              }, "all types")}
               {subjectOptions.map((s) =>
                 pill(subject === s, () => handleSubjectChange(s), s.toLowerCase(), `subject-${s}`)
               )}
@@ -339,9 +339,14 @@ export default function PropertyFilters({
               const newFilters = { ...filters, mainArea: undefined, subArea: [] };
               setFilters(newFilters);
               updateURL(newFilters);
-            }, "All areas")}
+            }, "all")}
             {areaList.map((area) =>
-              pill(filters.mainArea === area.id, () => handleMainAreaChange(area.id), area.nameEn, `area-${area.id}`)
+              pill(
+                filters.mainArea === area.id,
+                () => handleMainAreaChange(area.id),
+                area.nameEn.toLowerCase(),
+                `area-${area.id}`
+              )
             )}
           </div>
         </section>
@@ -354,7 +359,7 @@ export default function PropertyFilters({
                 pill(
                   isSubAreaChecked(subArea),
                   () => handleSubAreaChange(subArea, !isSubAreaChecked(subArea)),
-                  subAreaNames[subArea],
+                  subAreaNames[subArea].toLowerCase(),
                   `subarea-${subArea}`
                 )
               )}
