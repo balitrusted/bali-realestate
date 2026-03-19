@@ -277,59 +277,32 @@ export default function PropertyFilters({
     </button>
   );
 
-  const activeFilterSummary = (() => {
-    const parts: string[] = [];
-
-    if (action && subject) parts.push(`${action} ${subject}`);
-    if (filters.mainArea) parts.push(areas[filters.mainArea]?.name ?? filters.mainArea);
-    if (filters.subArea.length > 0) parts.push(filters.subArea.map((s) => subAreaNames[s]).join(", "));
-    if (filters.bedrooms.length > 0) {
-      parts.push(filters.bedrooms.length === 1 ? bedroomLabel(filters.bedrooms[0]) : `${filters.bedrooms.join(", ")} beds`);
-    }
-    if (isRent && filters.minDuration) {
-      parts.push(filters.minDuration === 1 ? "Monthly" : filters.minDuration === 12 ? "Yearly" : `Duration ${filters.minDuration}`);
-    }
-    const activeAmenities = visibleFeatureOptions.filter(({ key }) => !!filters[key]).map(({ label }) => label);
-    if (activeAmenities.length > 0) parts.push(activeAmenities.join(", "));
-
-    if (parts.length === 0) return "All properties shown. Tap to choose filters.";
-    return parts.join(" · ");
-  })();
+  const collapsedMessage = "Tap here to see all the filters.";
 
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-3 md:p-5 shadow-sm">
-      <div className="flex items-start justify-between gap-3 mb-3 md:mb-4">
-        <h2 className="text-sm md:text-base font-semibold text-gray-900">Filters</h2>
-        <button
-          type="button"
-          onClick={() => setIsCollapsed((v) => !v)}
-          className={`px-3 py-1.5 text-sm font-medium rounded-xl border active:scale-[0.99] transition-all duration-200 ${
-            isCollapsed
-              ? "bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100 hover:border-emerald-300"
-              : "bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-200 hover:border-gray-300"
-          }`}
-          aria-expanded={!isCollapsed}
-        >
-          {isCollapsed ? "Show filters" : "Hide filters"}
-        </button>
-      </div>
+      {!isCollapsed && (
+        <div className="flex justify-end mb-3 md:mb-4">
+          <button
+            type="button"
+            onClick={() => setIsCollapsed(true)}
+            className="px-3 py-1.5 text-sm font-medium bg-gray-100 text-gray-800 rounded-xl border border-gray-200 hover:bg-gray-200 hover:border-gray-300 active:scale-[0.99] transition-all duration-200"
+            aria-expanded={true}
+          >
+            Hide filters
+          </button>
+        </div>
+      )}
 
       {isCollapsed ? (
-        <div className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2">
-          <div
-            className="text-sm text-gray-700"
-            style={
-              {
-                display: "-webkit-box",
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-              } as any
-            }
-          >
-            {activeFilterSummary}
-          </div>
-        </div>
+        <button
+          type="button"
+          onClick={() => setIsCollapsed(false)}
+          className="w-full px-4 py-2.5 text-sm font-medium bg-emerald-50 text-emerald-800 rounded-xl border border-emerald-200 hover:bg-emerald-100 hover:border-emerald-300 active:scale-[0.99] transition-all duration-200"
+          aria-expanded={false}
+        >
+          {collapsedMessage}
+        </button>
       ) : (
         <div className="space-y-4 md:space-y-5">
           {showVillasSpecificBlocks && (
