@@ -115,7 +115,7 @@ export default async function PropertiesCatalogPage({
       <div className="container mx-auto px-4 py-8">
         <CatalogBreadcrumb className="mb-3" />
         <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
-          <h1 className="text-2xl md:text-4xl font-semibold leading-snug tracking-normal text-gray-900 mb-2">Properties</h1>
+          <h1 className="text-3xl md:text-5xl font-semibold tracking-tight text-gray-900 mb-2">Properties</h1>
           <p className="text-gray-600 text-base md:text-lg max-w-3xl">
             {buildIntro()}
           </p>
