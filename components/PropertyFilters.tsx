@@ -261,6 +261,7 @@ export default function PropertyFilters({
       className={`
         px-3 py-1.5 text-sm font-medium rounded-full border transition-all duration-200 ease-out
         active:scale-[0.97]
+        whitespace-nowrap leading-none
         ${selected
           ? "bg-emerald-500 text-white border-emerald-500 shadow-sm hover:bg-emerald-600 hover:shadow"
           : "bg-gray-100 text-gray-700 border-transparent hover:bg-gray-200 hover:border-gray-200"
