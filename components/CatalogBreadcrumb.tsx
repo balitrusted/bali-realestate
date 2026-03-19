@@ -51,7 +51,7 @@ export default function CatalogBreadcrumb({
   }
 
   return (
-    <nav aria-label="Breadcrumb" className={`mb-5 ${className ?? ""}`.trim()}>
+    <nav aria-label="Breadcrumb" className={className ?? "mb-5"}>
       <ol className="inline-flex flex-wrap items-center gap-2 rounded-2xl border border-gray-200 bg-white/90 px-3 py-2 shadow-sm">
         {items.map((item, i) => (
           <li key={i} className="flex items-center gap-2">
