@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import PropertyCard from "@/components/PropertyCard";
 import PropertyFilters from "@/components/PropertyFilters";
 import Pagination from "@/components/Pagination";
+import TopPageNumbers from "@/components/TopPageNumbers";
 import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import {
@@ -153,9 +154,16 @@ export default async function PropertiesByTypePage({
               </div>
             ) : (
               <>
-                <div className="mt-3 mb-3 text-xs text-gray-500 text-right">
-                  {total} {total === 1 ? "property" : "properties"}
-                  {totalPages > 1 && ` · Page ${currentPage} of ${totalPages}`}
+                <div className="mt-3 mb-3 flex items-center justify-between gap-4">
+                  <div className="text-xs text-gray-500">
+                    {total} {total === 1 ? "property" : "properties"}
+                  </div>
+                  <TopPageNumbers
+                    basePath={`/properties/${catalogType}`}
+                    page={currentPage}
+                    totalPages={totalPages}
+                    searchParams={searchParamsForPagination}
+                  />
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {items.map((property) => (

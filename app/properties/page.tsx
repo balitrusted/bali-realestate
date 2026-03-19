@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import PropertyCard from "@/components/PropertyCard";
 import Pagination from "@/components/Pagination";
+import TopPageNumbers from "@/components/TopPageNumbers";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import Link from "next/link";
 import { buildIntro } from "@/lib/seoTemplates";
@@ -148,9 +149,16 @@ export default async function PropertiesCatalogPage({
         </div>
 
         <div className="mt-10">
-          <div className="mb-3 text-xs text-gray-500 text-right">
-            {total} {total === 1 ? "property" : "properties"}
-            {totalPages > 1 && ` · Page ${currentPage} of ${totalPages}`}
+          <div className="mb-3 flex items-center justify-between gap-4">
+            <div className="text-xs text-gray-500">
+              {total} {total === 1 ? "property" : "properties"}
+            </div>
+            <TopPageNumbers
+              basePath="/properties"
+              page={currentPage}
+              totalPages={totalPages}
+              searchParams={searchParamsForPagination}
+            />
           </div>
 
           {items.length === 0 ? (
