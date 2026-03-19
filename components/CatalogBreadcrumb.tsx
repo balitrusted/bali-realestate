@@ -11,6 +11,8 @@ export type CatalogBreadcrumbProps = {
   area?: MainArea | null;
   /** Last segment label (e.g. bedroom count, payment) – shown as current, no link */
   segmentLabel?: string | null;
+  /** Optional override for vertical spacing. */
+  className?: string;
 };
 
 const areaName = (a: MainArea): string => areas[a]?.nameEn ?? a;
@@ -19,6 +21,7 @@ export default function CatalogBreadcrumb({
   type = null,
   area = null,
   segmentLabel = null,
+  className,
 }: CatalogBreadcrumbProps) {
   const items: { label: string; href?: string }[] = [];
   const isRoot = !type && !area && !segmentLabel;
@@ -48,7 +51,7 @@ export default function CatalogBreadcrumb({
   }
 
   return (
-    <nav aria-label="Breadcrumb" className="mb-5">
+    <nav aria-label="Breadcrumb" className={`mb-5 ${className ?? ""}`.trim()}>
       <ol className="inline-flex flex-wrap items-center gap-2 rounded-2xl border border-gray-200 bg-white/90 px-3 py-2 shadow-sm">
         {items.map((item, i) => (
           <li key={i} className="flex items-center gap-2">

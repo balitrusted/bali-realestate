@@ -130,8 +130,11 @@ export default async function PropertiesByTypePage({
   return (
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-8">
-        <CatalogBreadcrumb type={catalogType as "rent" | "sale" | "villas" | "land" | "business"} />
-        <div className="mb-8 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
+        <CatalogBreadcrumb
+          type={catalogType as "rent" | "sale" | "villas" | "land" | "business"}
+          className="mb-3"
+        />
+        <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
           <h1 className="text-2xl md:text-4xl font-semibold tracking-tight text-gray-900 mb-2">
             {buildH1(catalogType)}
           </h1>
@@ -155,7 +158,7 @@ export default async function PropertiesByTypePage({
             ) : (
               <>
                 <div className="mt-3 mb-3 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 flex items-center justify-between gap-4">
-                  <div className="text-sm text-gray-600">
+                  <div className="text-xs font-medium text-gray-600">
                     Found {total} {total === 1 ? "property" : "properties"}
                   </div>
                   <TopPageNumbers
