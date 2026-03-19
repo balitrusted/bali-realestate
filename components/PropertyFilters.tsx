@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 import { areas, subAreaNames } from "@/types/areas";
@@ -23,11 +23,11 @@ export default function PropertyFilters({
 }: PropertyFiltersProps = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isCollapsed, setIsCollapsed] = useState(() => {
-    // Collapse on mobile by default to keep the catalog usable.
-    if (typeof window === "undefined") return false;
-    return window.innerWidth < 768;
-  });
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  useEffect(() => {
+    // Expanded on mobile by default; collapsed on desktop by default.
+    setIsCollapsed(window.innerWidth >= 768);
+  }, []);
   const [filters, setFilters] = useState<{
     mainArea?: MainArea;
     subArea: SubArea[];
@@ -292,8 +292,8 @@ export default function PropertyFilters({
     const activeAmenities = visibleFeatureOptions.filter(({ key }) => !!filters[key]).map(({ label }) => label);
     if (activeAmenities.length > 0) parts.push(activeAmenities.join(", "));
 
-    if (parts.length === 0) return "Filters: all options";
-    return `Active: ${parts.join(" · ")}`;
+    if (parts.length === 0) return "All properties shown. Tap to choose filters.";
+    return parts.join(" · ");
   })();
 
   return (
@@ -303,7 +303,11 @@ export default function PropertyFilters({
         <button
           type="button"
           onClick={() => setIsCollapsed((v) => !v)}
-          className="px-3 py-1.5 text-sm font-medium bg-gray-100 text-gray-800 rounded-xl border border-gray-200 hover:bg-gray-200 hover:border-gray-300 active:scale-[0.99] transition-all duration-200"
+          className={`px-3 py-1.5 text-sm font-medium rounded-xl border active:scale-[0.99] transition-all duration-200 ${
+            isCollapsed
+              ? "bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100 hover:border-emerald-300"
+              : "bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-200 hover:border-gray-300"
+          }`}
           aria-expanded={!isCollapsed}
         >
           {isCollapsed ? "Show filters" : "Hide filters"}
@@ -311,18 +315,20 @@ export default function PropertyFilters({
       </div>
 
       {isCollapsed ? (
-        <div
-          className="text-sm text-gray-600"
-          style={
-            {
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            } as any
-          }
-        >
-          {activeFilterSummary}
+        <div className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2">
+          <div
+            className="text-sm text-gray-700"
+            style={
+              {
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+              } as any
+            }
+          >
+            {activeFilterSummary}
+          </div>
         </div>
       ) : (
         <div className="space-y-4 md:space-y-5">
