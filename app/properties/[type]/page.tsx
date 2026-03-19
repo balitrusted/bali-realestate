@@ -155,8 +155,8 @@ export default async function PropertiesByTypePage({
             ) : (
               <>
                 <div className="mt-3 mb-3 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 flex items-center justify-between gap-4">
-                  <div className="text-xs text-gray-500">
-                    {total} {total === 1 ? "property" : "properties"}
+                  <div className="text-sm text-gray-600">
+                    Found {total} {total === 1 ? "property" : "properties"}
                   </div>
                   <TopPageNumbers
                     basePath={`/properties/${catalogType}`}

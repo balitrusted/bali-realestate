@@ -14,7 +14,7 @@ export default function Header() {
           <Link href="/" className="inline-flex hover:opacity-80 transition-opacity">
             <div className="flex flex-col items-center">
               <span className="text-[1.625rem] font-bold text-gray-900">Balitrusted</span>
-              <span className="text-[10px] text-gray-500 font-normal -mt-1">[ rent, buy, learn, explore ]</span>
+              <span className="text-[10px] text-gray-500 font-normal -mt-1">[ rent, buy, learn and explore ]</span>
             </div>
           </Link>
           

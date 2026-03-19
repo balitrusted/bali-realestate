@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import { useRouter } from "next/navigation";
 
 interface TopPageNumbersProps {
   basePath: string;
@@ -13,6 +15,7 @@ export default function TopPageNumbers({
   totalPages,
   searchParams,
 }: TopPageNumbersProps) {
+  const router = useRouter();
   if (totalPages <= 1) return null;
 
   const params = new URLSearchParams(searchParams ?? {});
@@ -26,13 +29,18 @@ export default function TopPageNumbers({
     return qs ? `${basePath}?${qs}` : basePath;
   };
 
+  const goToPage = (p: number) => {
+    // Keep scroll position on mobile Safari by disabling the scroll reset.
+    router.push(pageUrl(p), { scroll: false });
+  };
+
   return (
     <div className="flex items-center justify-end gap-2 flex-wrap" aria-label="Page numbers">
       {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
         const isActive = p === page;
 
         const common =
-          "h-7 w-7 flex items-center justify-center rounded border text-sm font-medium leading-none transition-colors";
+          "h-6 w-6 flex items-center justify-center rounded border text-xs font-medium leading-none transition-colors";
         const inactive = "bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300";
         const active = "bg-emerald-50 border-emerald-200 text-emerald-800";
 
@@ -45,9 +53,15 @@ export default function TopPageNumbers({
         }
 
         return (
-          <Link key={p} href={pageUrl(p)} className={`${common} ${inactive}`}>
+          <button
+            key={p}
+            type="button"
+            onClick={() => goToPage(p)}
+            className={`${common} ${inactive}`}
+            aria-label={`Go to page ${p}`}
+          >
             {p}
-          </Link>
+          </button>
         );
       })}
     </div>

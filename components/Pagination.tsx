@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface PaginationProps {
   basePath: string;
@@ -10,6 +10,7 @@ interface PaginationProps {
 }
 
 export default function Pagination({ basePath, page, totalPages, searchParams }: PaginationProps) {
+  const router = useRouter();
   if (totalPages <= 1) return null;
 
   const params = new URLSearchParams(searchParams);
@@ -21,26 +22,32 @@ export default function Pagination({ basePath, page, totalPages, searchParams }:
     return qs ? `${basePath}?${qs}` : basePath;
   };
 
+  const goToPage = (p: number) => {
+    router.push(pageUrl(p), { scroll: false });
+  };
+
   return (
     <nav className="flex justify-center gap-2 mt-8" aria-label="Pagination">
       {page > 1 && (
-        <Link
-          href={pageUrl(page - 1)}
+        <button
+          type="button"
+          onClick={() => goToPage(page - 1)}
           className="px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
         >
           ← Previous
-        </Link>
+        </button>
       )}
       <span className="px-4 py-2 text-gray-600">
         Page {page} of {totalPages}
       </span>
       {page < totalPages && (
-        <Link
-          href={pageUrl(page + 1)}
+        <button
+          type="button"
+          onClick={() => goToPage(page + 1)}
           className="px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
         >
           Next →
-        </Link>
+        </button>
       )}
     </nav>
   );
