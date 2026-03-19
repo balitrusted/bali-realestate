@@ -32,8 +32,8 @@ export default function TopPageNumbers({
         const isActive = p === page;
 
         const common =
-          "h-10 w-10 flex items-center justify-center rounded-md border text-sm font-medium transition-colors";
-        const inactive = "bg-white border-gray-300 text-gray-700 hover:bg-gray-50";
+          "h-7 w-7 flex items-center justify-center rounded border text-sm font-medium leading-none transition-colors";
+        const inactive = "bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300";
         const active = "bg-emerald-50 border-emerald-200 text-emerald-800";
 
         if (isActive) {

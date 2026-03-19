@@ -149,7 +149,7 @@ export default async function PropertiesCatalogPage({
         </div>
 
         <div className="mt-10">
-          <div className="mb-3 flex items-center justify-between gap-4">
+          <div className="mb-3 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 flex items-center justify-between gap-4">
             <div className="text-xs text-gray-500">
               {total} {total === 1 ? "property" : "properties"}
             </div>
