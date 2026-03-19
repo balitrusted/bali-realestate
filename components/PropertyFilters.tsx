@@ -23,6 +23,11 @@ export default function PropertyFilters({
 }: PropertyFiltersProps = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    // Collapse on mobile by default to keep the catalog usable.
+    if (typeof window === "undefined") return false;
+    return window.innerWidth < 768;
+  });
   const [filters, setFilters] = useState<{
     mainArea?: MainArea;
     subArea: SubArea[];
@@ -272,168 +277,181 @@ export default function PropertyFilters({
     </button>
   );
 
+  const activeFilterSummary = (() => {
+    const parts: string[] = [];
+
+    if (action && subject) parts.push(`${action} ${subject}`);
+    if (filters.mainArea) parts.push(areas[filters.mainArea]?.name ?? filters.mainArea);
+    if (filters.subArea.length > 0) parts.push(filters.subArea.map((s) => subAreaNames[s]).join(", "));
+    if (filters.bedrooms.length > 0) {
+      parts.push(filters.bedrooms.length === 1 ? bedroomLabel(filters.bedrooms[0]) : `${filters.bedrooms.join(", ")} beds`);
+    }
+    if (isRent && filters.minDuration) {
+      parts.push(filters.minDuration === 1 ? "Monthly" : filters.minDuration === 12 ? "Yearly" : `Duration ${filters.minDuration}`);
+    }
+    const activeAmenities = visibleFeatureOptions.filter(({ key }) => !!filters[key]).map(({ label }) => label);
+    if (activeAmenities.length > 0) parts.push(activeAmenities.join(", "));
+
+    if (parts.length === 0) return "Фильтры: все варианты";
+    return `Активно: ${parts.join(" · ")}`;
+  })();
+
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-3 md:p-5 shadow-sm">
-      <h2 className="text-sm md:text-base font-semibold text-gray-900 mb-3 md:mb-4">Filters</h2>
-      <div className="space-y-4 md:space-y-5">
-        {showVillasSpecificBlocks && (
-          <>
-            <section>
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Rent or buy</p>
-              <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
-                {pill(!action, () => {
-                  const newFilters = { ...filters, type: undefined, minDuration: undefined };
-                  setFilters(newFilters);
-                  updateURL(newFilters);
-                }, "any")}
-                {(["Rent", "Buy"] as const).map((a) =>
-                  pill(action === a, () => handleActionChange(a), a.toLowerCase(), `action-${a}`)
-                )}
-              </div>
-            </section>
+      <div className="flex items-start justify-between gap-3 mb-3 md:mb-4">
+        <h2 className="text-sm md:text-base font-semibold text-gray-900">Filters</h2>
+        <button
+          type="button"
+          onClick={() => setIsCollapsed((v) => !v)}
+          className="px-3 py-1.5 text-sm font-medium bg-gray-100 text-gray-800 rounded-xl border border-gray-200 hover:bg-gray-200 hover:border-gray-300 active:scale-[0.99] transition-all duration-200"
+          aria-expanded={!isCollapsed}
+        >
+          {isCollapsed ? "Раскрыть фильтры" : "Скрыть фильтры"}
+        </button>
+      </div>
 
-            {isRent && (
+      {isCollapsed ? (
+        <div
+          className="text-sm text-gray-600"
+          style={
+            {
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            } as any
+          }
+        >
+          {activeFilterSummary}
+        </div>
+      ) : (
+        <div className="space-y-4 md:space-y-5">
+          {showVillasSpecificBlocks && (
+            <>
               <section>
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Payment</p>
-                <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
-                  {pill(!filters.minDuration || (filters.minDuration !== 1 && filters.minDuration !== 12), () => {
-                    const newFilters = { ...filters, minDuration: undefined };
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Rent or buy</p>
+                <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
+                  {pill(!action, () => {
+                    const newFilters = { ...filters, type: undefined, minDuration: undefined };
                     setFilters(newFilters);
                     updateURL(newFilters);
                   }, "any")}
-                  {pill(filters.minDuration === 1, () => {
-                    const newFilters = { ...filters, minDuration: 1 };
-                    setFilters(newFilters);
-                    updateURL(newFilters);
-                  }, "monthly")}
-                  {pill(filters.minDuration === 12, () => {
-                    const newFilters = { ...filters, minDuration: 12 };
-                    setFilters(newFilters);
-                    updateURL(newFilters);
-                  }, "yearly")}
+                  {(["Rent", "Buy"] as const).map((a) =>
+                    pill(action === a, () => handleActionChange(a), a.toLowerCase(), `action-${a}`)
+                  )}
                 </div>
               </section>
-            )}
-          </>
-        )}
 
-        {showSubjectBlock && (
+              {isRent && (
+                <section>
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Payment</p>
+                  <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
+                    {pill(!filters.minDuration || (filters.minDuration !== 1 && filters.minDuration !== 12), () => {
+                      const newFilters = { ...filters, minDuration: undefined };
+                      setFilters(newFilters);
+                      updateURL(newFilters);
+                    }, "any")}
+                    {pill(filters.minDuration === 1, () => {
+                      const newFilters = { ...filters, minDuration: 1 };
+                      setFilters(newFilters);
+                      updateURL(newFilters);
+                    }, "monthly")}
+                    {pill(filters.minDuration === 12, () => {
+                      const newFilters = { ...filters, minDuration: 12 };
+                      setFilters(newFilters);
+                      updateURL(newFilters);
+                    }, "yearly")}
+                  </div>
+                </section>
+              )}
+            </>
+          )}
+
+          {showSubjectBlock && (
+            <section>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Type</p>
+              <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
+                {pill(!subject, () => {
+                  const newFilters = { ...filters, type: undefined };
+                  setFilters(newFilters);
+                  updateURL(newFilters);
+                }, "all types")}
+                {subjectOptions.map((s) =>
+                  pill(subject === s, () => handleSubjectChange(s), s.toLowerCase(), `subject-${s}`)
+                )}
+              </div>
+            </section>
+          )}
+
           <section>
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Type</p>
-            <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
-              {pill(!subject, () => {
-                const newFilters = { ...filters, type: undefined };
+            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Area</p>
+            <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
+              {pill(!filters.mainArea, () => {
+                const newFilters = { ...filters, mainArea: undefined, subArea: [] };
                 setFilters(newFilters);
                 updateURL(newFilters);
-              }, "all types")}
-              {subjectOptions.map((s) =>
-                pill(subject === s, () => handleSubjectChange(s), s.toLowerCase(), `subject-${s}`)
-              )}
-            </div>
-          </section>
-        )}
-
-        <section>
-          <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Area</p>
-          <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
-            {pill(!filters.mainArea, () => {
-              const newFilters = { ...filters, mainArea: undefined, subArea: [] };
-              setFilters(newFilters);
-              updateURL(newFilters);
-            }, "all")}
-            {areaList.map((area) =>
-              pill(
-                filters.mainArea === area.id,
-                () => handleMainAreaChange(area.id),
-                area.nameEn.toLowerCase(),
-                `area-${area.id}`
-              )
-            )}
-          </div>
-        </section>
-
-        {availableSubAreas.length > 0 && (
-          <section>
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Sub-area</p>
-            <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
-              {availableSubAreas.map((subArea) =>
+              }, "all")}
+              {areaList.map((area) =>
                 pill(
-                  isSubAreaChecked(subArea),
-                  () => handleSubAreaChange(subArea, !isSubAreaChecked(subArea)),
-                  subAreaNames[subArea].toLowerCase(),
-                  `subarea-${subArea}`
+                  filters.mainArea === area.id,
+                  () => handleMainAreaChange(area.id),
+                  area.nameEn.toLowerCase(),
+                  `area-${area.id}`
                 )
               )}
             </div>
           </section>
-        )}
 
-        {showVillasSpecificBlocks && (
-          <>
+          {availableSubAreas.length > 0 && (
             <section>
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Bedrooms</p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Sub-area</p>
               <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
-                {BEDROOMS_OPTIONS.map((beds) =>
+                {availableSubAreas.map((subArea) =>
                   pill(
-                    isBedroomChecked(beds),
-                    () => handleBedroomChange(beds, !isBedroomChecked(beds)),
-                    bedroomLabel(beds),
-                    `beds-${beds}`
+                    isSubAreaChecked(subArea),
+                    () => handleSubAreaChange(subArea, !isSubAreaChecked(subArea)),
+                    subAreaNames[subArea].toLowerCase(),
+                    `subarea-${subArea}`
                   )
                 )}
               </div>
             </section>
+          )}
 
-            <section>
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Amenities</p>
-              <div className="divide-y divide-gray-100 rounded-xl border border-gray-100 bg-gray-50/50 p-2 md:p-3">
-                {visibleFeatureOptions.map(({ key, label }) => (
-                  <ToggleSwitch
-                    key={key}
-                    id={`filter-${key}`}
-                    label={label}
-                    checked={!!filters[key]}
-                    onChange={(checked) => handleFeatureChange(key, checked)}
-                  />
-                ))}
-              </div>
-            </section>
-          </>
-        )}
+          {showVillasSpecificBlocks && (
+            <>
+              <section>
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Bedrooms</p>
+                <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
+                  {BEDROOMS_OPTIONS.map((beds) =>
+                    pill(
+                      isBedroomChecked(beds),
+                      () => handleBedroomChange(beds, !isBedroomChecked(beds)),
+                      bedroomLabel(beds),
+                      `beds-${beds}`
+                    )
+                  )}
+                </div>
+              </section>
 
-        <button
-          onClick={() => {
-            const clearedFilters = {
-              mainArea: undefined,
-              subArea: [],
-              bedrooms: [],
-              type: undefined,
-              hasBathtub: false,
-              hasCarPark: false,
-              hasClosedKitchen: false,
-              hasDesk: false,
-              hasEnclosedLiving: false,
-              hasGarage: false,
-              hasHighSpeedWifi: false,
-              hasNatureView: false,
-              hasPetFriendly: false,
-              hasPool: false,
-              hasWashingMachine: false,
-              minDuration: undefined,
-              maxPrice: undefined,
-            };
-            setFilters(clearedFilters);
-            const currentPath = window.location.pathname;
-            const matchTypeOnly = currentPath.match(/^\/properties\/(rent|sale|land|business|villas)$/);
-            const matchSegment = currentPath.match(/\/properties\/([^\/]+)\/([^\/]+)(?:\/([^\/]+))?/);
-            const destinationType = matchTypeOnly?.[1] ?? matchSegment?.[1];
-            router.push(destinationType ? `/properties/${destinationType}` : "/properties");
-          }}
-          className="w-full px-4 py-2.5 mt-2 text-sm font-medium bg-gray-100 text-gray-800 rounded-xl border border-gray-200 hover:bg-gray-200 hover:border-gray-300 active:scale-[0.99] transition-all duration-200"
-        >
-          Clear filters
-        </button>
-      </div>
+              <section>
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Amenities</p>
+                <div className="divide-y divide-gray-100 rounded-xl border border-gray-100 bg-gray-50/50 p-2 md:p-3">
+                  {visibleFeatureOptions.map(({ key, label }) => (
+                    <ToggleSwitch
+                      key={key}
+                      id={`filter-${key}`}
+                      label={label}
+                      checked={!!filters[key]}
+                      onChange={(checked) => handleFeatureChange(key, checked)}
+                    />
+                  ))}
+                </div>
+              </section>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }
