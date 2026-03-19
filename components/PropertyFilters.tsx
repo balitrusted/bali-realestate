@@ -292,8 +292,8 @@ export default function PropertyFilters({
     const activeAmenities = visibleFeatureOptions.filter(({ key }) => !!filters[key]).map(({ label }) => label);
     if (activeAmenities.length > 0) parts.push(activeAmenities.join(", "));
 
-    if (parts.length === 0) return "Фильтры: все варианты";
-    return `Активно: ${parts.join(" · ")}`;
+    if (parts.length === 0) return "Filters: all options";
+    return `Active: ${parts.join(" · ")}`;
   })();
 
   return (
@@ -306,7 +306,7 @@ export default function PropertyFilters({
           className="px-3 py-1.5 text-sm font-medium bg-gray-100 text-gray-800 rounded-xl border border-gray-200 hover:bg-gray-200 hover:border-gray-300 active:scale-[0.99] transition-all duration-200"
           aria-expanded={!isCollapsed}
         >
-          {isCollapsed ? "Раскрыть фильтры" : "Скрыть фильтры"}
+          {isCollapsed ? "Show filters" : "Hide filters"}
         </button>
       </div>
 
