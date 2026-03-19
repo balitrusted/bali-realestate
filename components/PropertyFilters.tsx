@@ -1,18 +1,26 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 import { areas, subAreaNames } from "@/types/areas";
+import ToggleSwitch from "@/components/ToggleSwitch";
 
 interface PropertyFiltersProps {
   defaultType?: PropertyType;
   defaultMainArea?: MainArea;
   /** Only show these amenity checkboxes (filter keys like "hasPool"). If empty/undefined, show all. */
   availableAmenityKeys?: string[];
+  /** Limits visible filter blocks to the current "base" catalog category. */
+  baseVariant?: "villas" | "land" | "business";
 }
 
-export default function PropertyFilters({ defaultType, defaultMainArea, availableAmenityKeys }: PropertyFiltersProps = {}) {
+export default function PropertyFilters({
+  defaultType,
+  defaultMainArea,
+  availableAmenityKeys,
+  baseVariant,
+}: PropertyFiltersProps = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [filters, setFilters] = useState<{
@@ -53,10 +61,16 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
     maxPrice: searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : undefined,
   });
 
+  const constrainedBase = baseVariant != null;
+  const isVillasBase = baseVariant === "villas";
+  const showVillasSpecificBlocks = !constrainedBase || isVillasBase;
+  const showSubjectBlock = !constrainedBase;
+
   // Get sub-areas for selected main area
   const availableSubAreas: SubArea[] = (filters.mainArea && areas[filters.mainArea]?.subAreas)
     ? areas[filters.mainArea].subAreas || []
     : [];
+  const areaList = Object.values(areas);
 
   const updateURL = (newFilters: typeof filters) => {
     const currentPath = window.location.pathname;
@@ -210,107 +224,11 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
     else updateURL(newFilters);
   };
 
-  const [open, setOpen] = useState<Record<string, boolean>>({
-    action: false,
-    subject: false,
-    area: false,
-    neighborhood: false,
-    bedrooms: false,
-    features: false,
-    duration: false,
-  });
-  const toggle = (key: string) => setOpen((o) => ({ ...o, [key]: !o[key] }));
-
-  const block = (key: string, title: string, children: React.ReactNode) => (
-    <div className="border border-gray-200 rounded-md overflow-hidden bg-gray-50/50">
-      <button
-        type="button"
-        onClick={() => toggle(key)}
-        className="w-full flex items-center justify-between px-3 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-100/80 transition-colors"
-      >
-        {title}
-        <svg
-          className={`w-4 h-4 text-gray-500 shrink-0 transition-transform ${open[key] ? "rotate-180" : ""}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-      {open[key] && <div className="px-3 pb-3 pt-0 space-y-2 border-t border-gray-100">{children}</div>}
-    </div>
-  );
-
-  // Value-as-rectangle filters: refs for click-outside to close
-  const actionRef = useRef<HTMLDivElement>(null);
-  const subjectRef = useRef<HTMLDivElement>(null);
-  const areaRef = useRef<HTMLDivElement>(null);
-  const neighborhoodRef = useRef<HTMLDivElement>(null);
-  const bedroomsRef = useRef<HTMLDivElement>(null);
-  const featuresRef = useRef<HTMLDivElement>(null);
-  const durationRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      const target = e.target as Node;
-      if (actionRef.current && !actionRef.current.contains(target)) setOpen((o) => ({ ...o, action: false }));
-      if (subjectRef.current && !subjectRef.current.contains(target)) setOpen((o) => ({ ...o, subject: false }));
-      if (areaRef.current && !areaRef.current.contains(target)) setOpen((o) => ({ ...o, area: false }));
-      if (neighborhoodRef.current && !neighborhoodRef.current.contains(target)) setOpen((o) => ({ ...o, neighborhood: false }));
-      if (bedroomsRef.current && !bedroomsRef.current.contains(target)) setOpen((o) => ({ ...o, bedrooms: false }));
-      if (featuresRef.current && !featuresRef.current.contains(target)) setOpen((o) => ({ ...o, features: false }));
-      if (durationRef.current && !durationRef.current.contains(target)) setOpen((o) => ({ ...o, duration: false }));
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const areaList = Object.values(areas);
-  const otherAreasHint = filters.mainArea
-    ? areaList.filter((a) => a.id !== filters.mainArea).map((a) => a.nameEn)
-    : areaList.map((a) => a.nameEn);
-  const areaHint = otherAreasHint.length > 0 ? `(or ${otherAreasHint.map((n) => n.toLowerCase()).join(", ")})` : "";
-
-  const neighborhoodDisplay =
-    availableSubAreas.length > 0
-      ? filters.subArea.length === 0
-        ? "all areas"
-        : [...filters.subArea]
-            .map((s) => subAreaNames[s].toLowerCase())
-            .join(", ")
-      : "";
-  const neighborhoodUnselected =
-    availableSubAreas.length > 0 && filters.subArea.length > 0
-      ? availableSubAreas.filter((s) => !filters.subArea.includes(s))
-      : [];
-  const neighborhoodHint =
-    availableSubAreas.length > 0
-      ? filters.subArea.length === 0
-        ? `(or ${availableSubAreas.map((s) => subAreaNames[s].toLowerCase()).join(", ")})`
-        : neighborhoodUnselected.length > 0
-          ? `(or ${neighborhoodUnselected.map((s) => subAreaNames[s].toLowerCase()).join(", ")})`
-          : ""
-      : "";
   const isSubAreaChecked = (s: SubArea) =>
     filters.subArea.length === 0 || filters.subArea.includes(s);
-
-  const bedroomLabel = (b: number) => (b === 1 ? "1 bed" : `${b} beds`);
-  const bedroomsDisplay =
-    filters.bedrooms.length === 0
-      ? "all beds"
-      : [...filters.bedrooms].sort((a, b) => a - b).map(bedroomLabel).join(", ");
-  const bedroomsUnselected =
-    filters.bedrooms.length === 0
-      ? []
-      : BEDROOMS_OPTIONS.filter((b) => !filters.bedrooms.includes(b));
-  const bedroomsHint =
-    filters.bedrooms.length === 0
-      ? `(or ${BEDROOMS_OPTIONS.map(bedroomLabel).join(", ")})`
-      : bedroomsUnselected.length > 0
-        ? `(or ${bedroomsUnselected.map(bedroomLabel).join(", ")})`
-        : "";
   const isBedroomChecked = (b: number) =>
     filters.bedrooms.length === 0 || filters.bedrooms.includes(b);
+  const bedroomLabel = (b: number) => (b === 1 ? "1 bed" : `${b} beds`);
 
   const FEATURES_OPTIONS: { key: keyof typeof filters; label: string }[] = [
     { key: "hasBathtub", label: "bathtub" },
@@ -328,385 +246,154 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
   const visibleFeatureOptions = availableAmenityKeys?.length
     ? FEATURES_OPTIONS.filter((f) => availableAmenityKeys.includes(f.key))
     : FEATURES_OPTIONS;
-  const hasAnyFeature = FEATURES_OPTIONS.some((f) => filters[f.key]);
-  const amenitiesDisplay = hasAnyFeature
-    ? FEATURES_OPTIONS.filter((f) => filters[f.key]).map((f) => f.label).join(", ")
-    : "any amenities";
-  const amenitiesUnselected = hasAnyFeature
-    ? visibleFeatureOptions.filter((f) => !filters[f.key]).map((f) => f.label)
-    : visibleFeatureOptions.map((f) => f.label);
-  const amenitiesHint =
-    amenitiesUnselected.length > 0 ? `(or ${amenitiesUnselected.join(", ")})` : "";
-
   const isRent = action === "Rent";
-  const paymentDisplay = !action
-    ? "any payment"
-    : isRent
-      ? (filters.minDuration === 12 ? "pay yearly" : filters.minDuration === 1 ? "pay monthly" : "any payment")
-      : "full payment";
-  const paymentHint = !action
-    ? "(pay monthly or yearly)"
-    : isRent
-      ? (filters.minDuration === 12 ? "(or pay monthly)" : filters.minDuration === 1 ? "(or pay yearly)" : "(or pay monthly, or pay yearly)")
-      : "";
 
-  const subjectHint =
-    subject === "Villas"
-      ? "(or land, business)"
-      : subject === "Land"
-        ? "(or villas, business)"
-        : subject === "Business"
-          ? "(or villas, land)"
-          : "(villas, land, business)";
+  const pill = (
+    selected: boolean,
+    onClick: () => void,
+    children: React.ReactNode,
+    key?: string
+  ) => (
+    <button
+      key={key}
+      type="button"
+      onClick={onClick}
+      className={`
+        px-3 py-1.5 text-sm font-medium rounded-full border transition-all duration-200 ease-out
+        active:scale-[0.97]
+        ${selected
+          ? "bg-emerald-500 text-white border-emerald-500 shadow-sm hover:bg-emerald-600 hover:shadow"
+          : "bg-gray-100 text-gray-700 border-transparent hover:bg-gray-200 hover:border-gray-200"
+        }
+      `}
+    >
+      {children}
+    </button>
+  );
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4">
-      <h2 className="text-base font-semibold text-gray-900 mb-3">filters</h2>
-      <div className="space-y-2">
-        {/* Rent or Buy: value-as-rectangle — user sees "Rent", clicks to open and pick Rent/Buy */}
-        <div className="border border-gray-200 rounded-md overflow-hidden bg-gray-50/50" ref={actionRef}>
-          <button
-            type="button"
-            onClick={() => toggle("action")}
-            className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-100/80 transition-colors"
-          >
-            <span className="min-w-0 overflow-hidden whitespace-nowrap">
-              <span className="border-b border-dashed border-gray-500 font-semibold">
-                {action ? action.toLowerCase() : "rent or buy"}
-              </span>
-              <span className="ml-1.5 text-xs font-normal text-gray-500">
-                ({action === "Rent" ? "or buy" : action === "Buy" ? "or rent" : "rent or buy"})
-              </span>
-            </span>
-            <svg
-              className={`w-4 h-4 text-gray-500 shrink-0 transition-transform ${open.action ? "rotate-180" : ""}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          {open.action && (
-            <div className="border-t border-gray-200 bg-white px-2 py-2 space-y-0.5">
-              <button
-                type="button"
-                onClick={() => {
+    <div className="bg-white border border-gray-200 rounded-2xl p-3 md:p-5 shadow-sm">
+      <h2 className="text-sm md:text-base font-semibold text-gray-900 mb-3 md:mb-4">Filters</h2>
+      <div className="space-y-4 md:space-y-5">
+        {showVillasSpecificBlocks && (
+          <>
+            <section>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Rent or buy</p>
+              <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
+                {pill(!action, () => {
                   const newFilters = { ...filters, type: undefined, minDuration: undefined };
                   setFilters(newFilters);
                   updateURL(newFilters);
-                  setOpen((o) => ({ ...o, action: false }));
-                }}
-                className={`w-full text-left px-2 py-1.5 text-sm rounded hover:bg-gray-100 ${!action ? "font-semibold text-gray-900 bg-gray-50" : "text-gray-700"}`}
-              >
-                rent or buy
-              </button>
-              {(["Rent", "Buy"] as const).map((a) => (
-                <button
-                  key={a}
-                  type="button"
-                  onClick={() => {
-                    handleActionChange(a);
-                    setOpen((o) => ({ ...o, action: false }));
-                  }}
-                  className={`w-full text-left px-2 py-1.5 text-sm rounded hover:bg-gray-100 ${action === a ? "font-semibold text-gray-900 bg-gray-50" : "text-gray-700"}`}
-                >
-                  {a.toLowerCase()}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Payment: Rent = Pay monthly / Pay yearly; Buy = Full payment (automatic) — second after Rent or Buy */}
-        <div className="border border-gray-200 rounded-md overflow-hidden bg-gray-50/50" ref={durationRef}>
-          <button
-            type="button"
-            onClick={() => isRent && toggle("duration")}
-            className={`w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-sm font-medium text-gray-900 transition-colors ${isRent ? "hover:bg-gray-100/80 cursor-pointer" : "cursor-default"}`}
-          >
-            <span className="min-w-0 overflow-hidden whitespace-nowrap">
-              <span className="border-b border-dashed border-gray-500 font-semibold">
-                {paymentDisplay}
-              </span>
-              {paymentHint && <span className="ml-1.5 text-xs font-normal text-gray-500">{paymentHint}</span>}
-            </span>
-            {isRent && (
-              <svg
-                className={`w-4 h-4 text-gray-500 shrink-0 transition-transform ${open.duration ? "rotate-180" : ""}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            )}
-          </button>
-          {isRent && open.duration && (
-            <div className="border-t border-gray-200 bg-white px-2 py-2 space-y-0.5">
-              <button
-                type="button"
-                onClick={() => {
-                  const newFilters = { ...filters, minDuration: undefined };
-                  setFilters(newFilters);
-                  updateURL(newFilters);
-                  setOpen((o) => ({ ...o, duration: false }));
-                }}
-                className={`w-full text-left px-2 py-1.5 text-sm rounded hover:bg-gray-100 ${!filters.minDuration || (filters.minDuration !== 1 && filters.minDuration !== 12) ? "font-semibold text-gray-900 bg-gray-50" : "text-gray-700"}`}
-              >
-                any payment
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  const newFilters = { ...filters, minDuration: 1 };
-                  setFilters(newFilters);
-                  updateURL(newFilters);
-                  setOpen((o) => ({ ...o, duration: false }));
-                }}
-                className={`w-full text-left px-2 py-1.5 text-sm rounded hover:bg-gray-100 ${filters.minDuration === 1 ? "font-semibold text-gray-900 bg-gray-50" : "text-gray-700"}`}
-              >
-                pay monthly
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  const newFilters = { ...filters, minDuration: 12 };
-                  setFilters(newFilters);
-                  updateURL(newFilters);
-                  setOpen((o) => ({ ...o, duration: false }));
-                }}
-                className={`w-full text-left px-2 py-1.5 text-sm rounded hover:bg-gray-100 ${filters.minDuration === 12 ? "font-semibold text-gray-900 bg-gray-50" : "text-gray-700"}`}
-              >
-                pay yearly
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Type: value-as-rectangle — shows "Villas", hint "(or Land, or Business)" */}
-        <div className="border border-gray-200 rounded-md overflow-hidden bg-gray-50/50" ref={subjectRef}>
-          <button
-            type="button"
-            onClick={() => toggle("subject")}
-            className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-100/80 transition-colors"
-          >
-            <span className="min-w-0 overflow-hidden whitespace-nowrap">
-              <span className="border-b border-dashed border-gray-500 font-semibold">
-                {subject ? subject.toLowerCase() : "all types"}
-              </span>
-              <span className="ml-1.5 text-xs font-normal text-gray-500">{subjectHint}</span>
-            </span>
-            <svg
-              className={`w-4 h-4 text-gray-500 shrink-0 transition-transform ${open.subject ? "rotate-180" : ""}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          {open.subject && (
-            <div className="border-t border-gray-200 bg-white px-2 py-2 space-y-0.5">
-              <button
-                type="button"
-                onClick={() => {
-                  const newFilters = { ...filters, type: undefined };
-                  setFilters(newFilters);
-                  updateURL(newFilters);
-                  setOpen((o) => ({ ...o, subject: false }));
-                }}
-                className={`w-full text-left px-2 py-1.5 text-sm rounded hover:bg-gray-100 ${!subject ? "font-semibold text-gray-900 bg-gray-50" : "text-gray-700"}`}
-              >
-                all types
-              </button>
-              {subjectOptions.map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => {
-                    handleSubjectChange(s);
-                    setOpen((o) => ({ ...o, subject: false }));
-                  }}
-                  className={`w-full text-left px-2 py-1.5 text-sm rounded hover:bg-gray-100 ${subject === s ? "font-semibold text-gray-900 bg-gray-50" : "text-gray-700"}`}
-                >
-                  {s.toLowerCase()}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Area: value-as-rectangle — shows current area name, hint "(or Canggu, or Sanur)" etc. */}
-        <div className="border border-gray-200 rounded-md overflow-hidden bg-gray-50/50" ref={areaRef}>
-          <button
-            type="button"
-            onClick={() => toggle("area")}
-            className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-100/80 transition-colors"
-          >
-            <span className="min-w-0 overflow-hidden whitespace-nowrap">
-              <span className="border-b border-dashed border-gray-500 font-semibold">
-                {filters.mainArea ? areas[filters.mainArea].nameEn.toLowerCase() : "all areas"}
-              </span>
-              {areaHint && <span className="ml-1.5 text-xs font-normal text-gray-500">{areaHint}</span>}
-            </span>
-            <svg
-              className={`w-4 h-4 text-gray-500 shrink-0 transition-transform ${open.area ? "rotate-180" : ""}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          {open.area && (
-            <div className="border-t border-gray-200 bg-white px-2 py-2 space-y-0.5">
-              <button
-                type="button"
-                onClick={() => {
-                  const newFilters = { ...filters, mainArea: undefined, subArea: [] };
-                  setFilters(newFilters);
-                  updateURL(newFilters);
-                  setOpen((o) => ({ ...o, area: false }));
-                }}
-                className={`w-full text-left px-2 py-1.5 text-sm rounded hover:bg-gray-100 ${!filters.mainArea ? "font-semibold text-gray-900 bg-gray-50" : "text-gray-700"}`}
-              >
-                all areas
-              </button>
-              {areaList.map((area) => (
-                <button
-                  key={area.id}
-                  type="button"
-                  onClick={() => {
-                    handleMainAreaChange(area.id);
-                    setOpen((o) => ({ ...o, area: false }));
-                  }}
-                  className={`w-full text-left px-2 py-1.5 text-sm rounded hover:bg-gray-100 ${filters.mainArea === area.id ? "font-semibold text-gray-900 bg-gray-50" : "text-gray-700"}`}
-                >
-                  {area.nameEn.toLowerCase()}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {availableSubAreas.length > 0 && (
-          <div className="border border-gray-200 rounded-md overflow-hidden bg-gray-50/50" ref={neighborhoodRef}>
-            <button
-              type="button"
-              onClick={() => toggle("neighborhood")}
-              className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-100/80 transition-colors"
-            >
-              <span className="min-w-0 overflow-hidden whitespace-nowrap">
-                <span className="border-b border-dashed border-gray-500 font-semibold">
-                  {neighborhoodDisplay}
-                </span>
-                {neighborhoodHint && <span className="ml-1.5 text-xs font-normal text-gray-500">{neighborhoodHint}</span>}
-              </span>
-              <svg
-                className={`w-4 h-4 text-gray-500 shrink-0 transition-transform ${open.neighborhood ? "rotate-180" : ""}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            {open.neighborhood && (
-              <div className="border-t border-gray-200 bg-white px-2 py-2 space-y-0.5">
-                {availableSubAreas.map((subArea) => (
-                  <label key={subArea} className="flex items-center cursor-pointer px-2 py-1.5 rounded hover:bg-gray-50">
-                    <input
-                      type="checkbox"
-                      checked={isSubAreaChecked(subArea)}
-                      onChange={(e) => handleSubAreaChange(subArea, e.target.checked)}
-                      className="rounded border-gray-300 text-gray-900 focus:ring-gray-500"
-                    />
-                    <span className="ml-2 text-sm text-gray-700">{subAreaNames[subArea].toLowerCase()}</span>
-                  </label>
-                ))}
+                }, "Any")}
+                {(["Rent", "Buy"] as const).map((a) =>
+                  pill(action === a, () => handleActionChange(a), a.toLowerCase(), `action-${a}`)
+                )}
               </div>
+            </section>
+
+            {isRent && (
+              <section>
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Payment</p>
+                <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
+                  {pill(!filters.minDuration || (filters.minDuration !== 1 && filters.minDuration !== 12), () => {
+                    const newFilters = { ...filters, minDuration: undefined };
+                    setFilters(newFilters);
+                    updateURL(newFilters);
+                  }, "Any")}
+                  {pill(filters.minDuration === 1, () => {
+                    const newFilters = { ...filters, minDuration: 1 };
+                    setFilters(newFilters);
+                    updateURL(newFilters);
+                  }, "Monthly")}
+                  {pill(filters.minDuration === 12, () => {
+                    const newFilters = { ...filters, minDuration: 12 };
+                    setFilters(newFilters);
+                    updateURL(newFilters);
+                  }, "Yearly")}
+                </div>
+              </section>
             )}
-          </div>
+          </>
         )}
 
-        {/* Bedrooms: value-as-rectangle — "All bedrooms" by default, hint "(or 1 bedroom, ...)" */}
-        <div className="border border-gray-200 rounded-md overflow-hidden bg-gray-50/50" ref={bedroomsRef}>
-          <button
-            type="button"
-            onClick={() => toggle("bedrooms")}
-            className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-100/80 transition-colors"
-          >
-            <span className="min-w-0 overflow-hidden whitespace-nowrap">
-              <span className="border-b border-dashed border-gray-500 font-semibold">
-                {bedroomsDisplay}
-              </span>
-              {bedroomsHint && <span className="ml-1.5 text-xs font-normal text-gray-500">{bedroomsHint}</span>}
-            </span>
-            <svg
-              className={`w-4 h-4 text-gray-500 shrink-0 transition-transform ${open.bedrooms ? "rotate-180" : ""}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          {open.bedrooms && (
-            <div className="border-t border-gray-200 bg-white px-2 py-2 space-y-0.5">
-              {BEDROOMS_OPTIONS.map((beds) => (
-                <label key={beds} className="flex items-center cursor-pointer px-2 py-1.5 rounded hover:bg-gray-50">
-                  <input
-                    type="checkbox"
-                    checked={isBedroomChecked(beds)}
-                    onChange={(e) => handleBedroomChange(beds, e.target.checked)}
-                    className="rounded border-gray-300 text-gray-900 focus:ring-gray-500"
-                  />
-                  <span className="ml-2 text-sm text-gray-700">{bedroomLabel(beds)}</span>
-                </label>
-              ))}
+        {showSubjectBlock && (
+          <section>
+            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Type</p>
+            <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
+              {pill(!subject, () => {
+                const newFilters = { ...filters, type: undefined };
+                setFilters(newFilters);
+                updateURL(newFilters);
+              }, "All types")}
+              {subjectOptions.map((s) =>
+                pill(subject === s, () => handleSubjectChange(s), s.toLowerCase(), `subject-${s}`)
+              )}
             </div>
-          )}
-        </div>
+          </section>
+        )}
 
-        {/* Amenities: value-as-rectangle — "No specific amenities" by default, user checks what they need */}
-        <div className="border border-gray-200 rounded-md overflow-hidden bg-gray-50/50" ref={featuresRef}>
-          <button
-            type="button"
-            onClick={() => toggle("features")}
-            className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-100/80 transition-colors"
-          >
-            <span className="min-w-0 overflow-hidden whitespace-nowrap">
-              <span className="border-b border-dashed border-gray-500 font-semibold">
-                {amenitiesDisplay}
-              </span>
-              {amenitiesHint && <span className="ml-1.5 text-xs font-normal text-gray-500">{amenitiesHint}</span>}
-            </span>
-            <svg
-              className={`w-4 h-4 text-gray-500 shrink-0 transition-transform ${open.features ? "rotate-180" : ""}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          {open.features && (
-            <div className="border-t border-gray-200 bg-white px-2 py-2 space-y-0.5">
-              {visibleFeatureOptions.map(({ key, label }) => (
-                <label key={key} className="flex items-center cursor-pointer px-2 py-1.5 rounded hover:bg-gray-50">
-                  <input
-                    type="checkbox"
-                    checked={!!filters[key]}
-                    onChange={(e) => handleFeatureChange(key, e.target.checked)}
-                    className="rounded border-gray-300 text-gray-900 focus:ring-gray-500"
-                  />
-                  <span className="ml-2 text-sm text-gray-700">{label}</span>
-                </label>
-              ))}
+        <section>
+          <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Area</p>
+          <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
+            {pill(!filters.mainArea, () => {
+              const newFilters = { ...filters, mainArea: undefined, subArea: [] };
+              setFilters(newFilters);
+              updateURL(newFilters);
+            }, "All areas")}
+            {areaList.map((area) =>
+              pill(filters.mainArea === area.id, () => handleMainAreaChange(area.id), area.nameEn, `area-${area.id}`)
+            )}
+          </div>
+        </section>
+
+        {availableSubAreas.length > 0 && (
+          <section>
+            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Sub-area</p>
+            <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
+              {availableSubAreas.map((subArea) =>
+                pill(
+                  isSubAreaChecked(subArea),
+                  () => handleSubAreaChange(subArea, !isSubAreaChecked(subArea)),
+                  subAreaNames[subArea],
+                  `subarea-${subArea}`
+                )
+              )}
             </div>
-          )}
-        </div>
+          </section>
+        )}
+
+        {showVillasSpecificBlocks && (
+          <>
+            <section>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Bedrooms</p>
+              <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
+                {BEDROOMS_OPTIONS.map((beds) =>
+                  pill(
+                    isBedroomChecked(beds),
+                    () => handleBedroomChange(beds, !isBedroomChecked(beds)),
+                    bedroomLabel(beds),
+                    `beds-${beds}`
+                  )
+                )}
+              </div>
+            </section>
+
+            <section>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Amenities</p>
+              <div className="divide-y divide-gray-100 rounded-xl border border-gray-100 bg-gray-50/50 p-2 md:p-3">
+                {visibleFeatureOptions.map(({ key, label }) => (
+                  <ToggleSwitch
+                    key={key}
+                    id={`filter-${key}`}
+                    label={label}
+                    checked={!!filters[key]}
+                    onChange={(checked) => handleFeatureChange(key, checked)}
+                  />
+                ))}
+              </div>
+            </section>
+          </>
+        )}
 
         <button
           onClick={() => {
@@ -715,26 +402,30 @@ export default function PropertyFilters({ defaultType, defaultMainArea, availabl
               subArea: [],
               bedrooms: [],
               type: undefined,
-      hasBathtub: false,
-      hasCarPark: false,
-      hasClosedKitchen: false,
-      hasDesk: false,
-      hasEnclosedLiving: false,
-      hasGarage: false,
-      hasHighSpeedWifi: false,
-      hasNatureView: false,
-      hasPetFriendly: false,
-      hasPool: false,
-      hasWashingMachine: false,
+              hasBathtub: false,
+              hasCarPark: false,
+              hasClosedKitchen: false,
+              hasDesk: false,
+              hasEnclosedLiving: false,
+              hasGarage: false,
+              hasHighSpeedWifi: false,
+              hasNatureView: false,
+              hasPetFriendly: false,
+              hasPool: false,
+              hasWashingMachine: false,
               minDuration: undefined,
               maxPrice: undefined,
             };
             setFilters(clearedFilters);
-            router.push("/properties");
+            const currentPath = window.location.pathname;
+            const matchTypeOnly = currentPath.match(/^\/properties\/(rent|sale|land|business|villas)$/);
+            const matchSegment = currentPath.match(/\/properties\/([^\/]+)\/([^\/]+)(?:\/([^\/]+))?/);
+            const destinationType = matchTypeOnly?.[1] ?? matchSegment?.[1];
+            router.push(destinationType ? `/properties/${destinationType}` : "/properties");
           }}
-          className="w-full px-3 py-2 mt-1 text-sm bg-gray-200 text-gray-900 rounded-md hover:bg-gray-300 transition-colors"
+          className="w-full px-4 py-2.5 mt-2 text-sm font-medium bg-gray-100 text-gray-800 rounded-xl border border-gray-200 hover:bg-gray-200 hover:border-gray-300 active:scale-[0.99] transition-all duration-200"
         >
-          clear filters
+          Clear filters
         </button>
       </div>
     </div>

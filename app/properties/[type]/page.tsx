@@ -2,8 +2,6 @@ import { notFound } from "next/navigation";
 import PropertyCard from "@/components/PropertyCard";
 import PropertyFilters from "@/components/PropertyFilters";
 import Pagination from "@/components/Pagination";
-import CatalogWizard from "@/components/CatalogWizard";
-import CatalogFiltersToggle from "@/components/CatalogFiltersToggle";
 import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import {
@@ -38,7 +36,7 @@ const propertyTypeVerbs: Record<string, string> = {
   villas: "Rent or Buy",
 };
 
-const MAIN_AREAS_ORDER: MainArea[] = ["ubud", "canggu", "sanur", "seminyak", "tanah-lot"];
+// (No wizard UI on this page; only filters + results.)
 
 export async function generateMetadata({ params }: { params: Promise<{ type: string }> }) {
   const { type } = await params;
@@ -110,10 +108,6 @@ export default async function PropertiesByTypePage({
   const filtered = filterProperties(all, filters);
   const { items, total, totalPages, page: currentPage } = paginate(filtered, page);
 
-  const availableMainAreas = MAIN_AREAS_ORDER.filter((area) =>
-    filtered.some((p) => p.mainArea === area)
-  );
-
   const searchParamsForPagination: Record<string, string> = { ...query } as Record<string, string>;
   if (filters.mainArea) searchParamsForPagination.mainArea = filters.mainArea;
   if (filters.subArea?.length) searchParamsForPagination.subArea = filters.subArea.join(",");
@@ -136,22 +130,21 @@ export default async function PropertiesByTypePage({
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <CatalogBreadcrumb type={catalogType as "rent" | "sale" | "villas" | "land" | "business"} />
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+        <div className="mb-8 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
+          <h1 className="text-2xl md:text-4xl font-semibold tracking-tight text-gray-900 mb-2">
             {buildH1(catalogType)}
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 text-base md:text-lg max-w-3xl">
             {buildIntro(catalogType)}
           </p>
         </div>
 
         <div className="space-y-6">
-          <CatalogFiltersToggle>
-            <PropertyFilters defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)} />
-          </CatalogFiltersToggle>
-
           <div>
-            <CatalogWizard availableMainAreas={availableMainAreas} />
+            <PropertyFilters
+              defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
+              baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
+            />
 
             {items.length === 0 ? (
               <div className="space-y-6">
@@ -160,8 +153,8 @@ export default async function PropertiesByTypePage({
               </div>
             ) : (
               <>
-                <div className="mb-4 text-sm text-gray-600">
-                  Found {total} {total === 1 ? "property" : "properties"}
+                <div className="mt-3 mb-3 text-xs text-gray-500 text-right">
+                  {total} {total === 1 ? "property" : "properties"}
                   {totalPages > 1 && ` · Page ${currentPage} of ${totalPages}`}
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

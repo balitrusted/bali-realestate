@@ -48,17 +48,22 @@ export default function CatalogBreadcrumb({
   }
 
   return (
-    <nav aria-label="Breadcrumb" className="mb-4">
-      <ol className="flex flex-wrap items-center gap-1.5 text-sm text-gray-600">
+    <nav aria-label="Breadcrumb" className="mb-5">
+      <ol className="inline-flex flex-wrap items-center gap-2 rounded-2xl border border-gray-200 bg-white/90 px-3 py-2 shadow-sm">
         {items.map((item, i) => (
-          <li key={i} className="flex items-center gap-1.5">
-            {i > 0 && <span className="text-gray-400" aria-hidden>/</span>}
+          <li key={i} className="flex items-center gap-2">
+            {i > 0 && <span className="text-gray-300" aria-hidden>/</span>}
             {item.href ? (
-              <Link href={item.href} className="hover:text-emerald-600 transition-colors">
+              <Link
+                href={item.href}
+                className="rounded-full px-2.5 py-1 text-xs font-medium text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition-colors"
+              >
                 {item.label}
               </Link>
             ) : (
-              <span className="text-gray-900 font-medium">{item.label}</span>
+              <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800">
+                {item.label}
+              </span>
             )}
           </li>
         ))}

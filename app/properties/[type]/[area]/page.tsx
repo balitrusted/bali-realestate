@@ -3,8 +3,6 @@ import { Metadata } from "next";
 import PropertyCard from "@/components/PropertyCard";
 import PropertyFilters from "@/components/PropertyFilters";
 import Pagination from "@/components/Pagination";
-import CatalogWizard from "@/components/CatalogWizard";
-import CatalogFiltersToggle from "@/components/CatalogFiltersToggle";
 import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import CatalogStructuredData from "@/components/CatalogStructuredData";
@@ -216,7 +214,7 @@ export default async function PropertiesByTypeAndAreaPage({
             />
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
               <div className="text-center text-white">
-                <h1 className="text-4xl md:text-5xl font-bold mb-2">
+                <h1 className="text-3xl md:text-4xl font-bold mb-2">
                   {buildH1(catalogType, mainArea)}
                 </h1>
                 {featureText && (
@@ -230,32 +228,29 @@ export default async function PropertiesByTypeAndAreaPage({
         )}
         
         {!areaInfo.image && (
-          <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+          <div className="mb-8 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
+            <h1 className="text-2xl md:text-4xl font-semibold tracking-tight text-gray-900 mb-2">
               {buildH1(catalogType, mainArea)}
             </h1>
             {featureText && (
-              <p className="text-xl text-gray-600">
+              <p className="text-lg text-emerald-700 font-medium">
                 {featureText}
               </p>
             )}
-            <p className="text-gray-600 mt-4">
+            <p className="text-gray-600 mt-4 text-base md:text-lg max-w-3xl">
               {areaInfo.description}
             </p>
           </div>
         )}
 
         <div className="space-y-6">
-          <CatalogFiltersToggle>
+          <div>
             <PropertyFilters
               defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
               defaultMainArea={mainArea}
               availableAmenityKeys={availableAmenityFilterKeys}
+              baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
             />
-          </CatalogFiltersToggle>
-
-          <div>
-            <CatalogWizard />
 
             {sortedProperties.length === 0 ? (
               <div className="space-y-6">
@@ -264,8 +259,8 @@ export default async function PropertiesByTypeAndAreaPage({
               </div>
             ) : (
               <>
-                <div className="mb-4 text-sm text-gray-600">
-                  Found {total} {total === 1 ? "property" : "properties"}
+                <div className="mt-3 mb-3 text-xs text-gray-500 text-right">
+                  {total} {total === 1 ? "property" : "properties"}
                   {totalPages > 1 && ` · Page ${currentPage} of ${totalPages}`}
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

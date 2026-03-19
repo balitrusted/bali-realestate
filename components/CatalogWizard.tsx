@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { PropertyType, MainArea } from "@/types/property";
 import { areas } from "@/types/areas";
 
@@ -62,6 +62,14 @@ export default function CatalogWizard({ availableMainAreas }: CatalogWizardProps
 
   const isRootCatalog = pathname === "/properties" || pathname === "/properties/";
 
+  const isVillasBase = type === "rent" || type === "sale" || type === "villas" || both;
+  const [collapsed, setCollapsed] = useState(false);
+
+  // For `Land` and `Business` there are no UI preferences blocks.
+  // Important: do NOT return before `useCallback` hooks below,
+  // otherwise React hook order will break ("Rendered fewer hooks than expected").
+  const shouldShowWizard = isRootCatalog || isVillasBase;
+
   const pushQuery = useCallback(
     (updates: Record<string, string | number | undefined | string[]>) => {
       const next = new URLSearchParams(searchParams.toString());
@@ -95,11 +103,27 @@ export default function CatalogWizard({ availableMainAreas }: CatalogWizardProps
     [router, searchParams, basePath, pathType, pathArea]
   );
 
+  if (!shouldShowWizard) return null;
+
+  // Allow hiding the villas preferences UI.
+  if (collapsed && isVillasBase && !isRootCatalog) {
+    return (
+      <div className="rounded-xl bg-gray-50 border border-gray-200 p-4 md:p-5 mb-6">
+        <button
+          type="button"
+          onClick={() => setCollapsed(false)}
+          className="text-sm font-medium text-emerald-700 hover:text-emerald-800"
+        >
+          Show preferences
+        </button>
+      </div>
+    );
+  }
+
   // Step 0: What are you looking for? (only on root /properties)
   if (isRootCatalog && !subject && !type && !both) {
     return (
       <div className="rounded-xl bg-gray-50 border border-gray-200 p-4 md:p-5 mb-6">
-        <p className="text-sm font-medium text-gray-500 mb-2">Step 1 of 5</p>
         <p className="text-lg font-semibold text-gray-900 mb-4">What are you looking for?</p>
         <div className="flex flex-wrap gap-2">
           <button
@@ -128,12 +152,20 @@ export default function CatalogWizard({ availableMainAreas }: CatalogWizardProps
     );
   }
 
-  // Step 1: Rent or Buy? (on /properties/villas)
+  // Preferences: Rent or Buy? (on /properties/villas)
   if (pathType === "villas" && !pathArea) {
     return (
       <div className="rounded-xl bg-gray-50 border border-gray-200 p-4 md:p-5 mb-6">
-        <p className="text-sm font-medium text-gray-500 mb-2">Step 2 of 5</p>
-        <p className="text-lg font-semibold text-gray-900 mb-4">Rent or buy?</p>
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <p className="text-lg font-semibold text-gray-900">Rent or buy?</p>
+          <button
+            type="button"
+            onClick={() => setCollapsed(true)}
+            className="text-sm font-medium text-emerald-700 hover:text-emerald-800"
+          >
+            Hide
+          </button>
+        </div>
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
@@ -161,7 +193,7 @@ export default function CatalogWizard({ availableMainAreas }: CatalogWizardProps
     );
   }
 
-  // Step 2: Area (when we have type from path or query, no area in path yet)
+  // Preferences: Area (when we have type, no area in path yet)
   if (!pathArea && !mainArea && !areaDone && (type || both)) {
     const allowedAreas = Array.isArray(availableMainAreas) && availableMainAreas.length > 0
       ? new Set(availableMainAreas)
@@ -170,8 +202,16 @@ export default function CatalogWizard({ availableMainAreas }: CatalogWizardProps
 
     return (
       <div className="rounded-xl bg-gray-50 border border-gray-200 p-4 md:p-5 mb-6">
-        <p className="text-sm font-medium text-gray-500 mb-2">Step 3 of 5</p>
-        <p className="text-lg font-semibold text-gray-900 mb-4">Which area?</p>
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <p className="text-lg font-semibold text-gray-900">Which area?</p>
+          <button
+            type="button"
+            onClick={() => setCollapsed(true)}
+            className="text-sm font-medium text-emerald-700 hover:text-emerald-800"
+          >
+            Hide
+          </button>
+        </div>
         <div className="flex flex-wrap gap-2">
           {areaOptions.map((areaId) => {
             const area = areas[areaId];
@@ -198,7 +238,7 @@ export default function CatalogWizard({ availableMainAreas }: CatalogWizardProps
     );
   }
 
-  // Step 3: Bedrooms (only for villas: rent, sale, or both)
+  // Preferences: Bedrooms (only for villas: rent, sale, or both)
   const showBedrooms =
     (type === "rent" || type === "sale" || both) &&
     bedrooms.length === 0 &&
@@ -207,8 +247,16 @@ export default function CatalogWizard({ availableMainAreas }: CatalogWizardProps
   if (showBedrooms) {
     return (
       <div className="rounded-xl bg-gray-50 border border-gray-200 p-4 md:p-5 mb-6">
-        <p className="text-sm font-medium text-gray-500 mb-2">Step 4 of 5</p>
-        <p className="text-lg font-semibold text-gray-900 mb-4">How many bedrooms?</p>
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <p className="text-lg font-semibold text-gray-900">How many beds?</p>
+          <button
+            type="button"
+            onClick={() => setCollapsed(true)}
+            className="text-sm font-medium text-emerald-700 hover:text-emerald-800"
+          >
+            Hide
+          </button>
+        </div>
         <div className="flex flex-wrap gap-2">
           {BEDROOMS.map((b) => (
             <button
@@ -232,7 +280,7 @@ export default function CatalogWizard({ availableMainAreas }: CatalogWizardProps
     );
   }
 
-  // Step 4: Amenities
+  // Preferences: Amenities
   const pastBedrooms = bedrooms.length > 0 || bedroomsDone;
   const showAmenitiesStep =
     (type === "rent" || type === "sale" || both) &&
@@ -243,8 +291,17 @@ export default function CatalogWizard({ availableMainAreas }: CatalogWizardProps
   if (showAmenitiesStep) {
     return (
       <div className="rounded-xl bg-gray-50 border border-gray-200 p-4 md:p-5 mb-6">
-        <p className="text-sm font-medium text-gray-500 mb-2">Step 5 of 5</p>
-        <p className="text-lg font-semibold text-gray-900 mb-4">What matters to you? (optional)</p>
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <p className="text-lg font-semibold text-gray-900">What matters to you?</p>
+          <button
+            type="button"
+            onClick={() => setCollapsed(true)}
+            className="text-sm font-medium text-emerald-700 hover:text-emerald-800"
+          >
+            Hide
+          </button>
+        </div>
+        <p className="text-sm text-gray-500 mb-4">Optional</p>
         <div className="flex flex-wrap gap-2">
           {AMENITY_OPTIONS.slice(0, 6).map(({ key, label }) => (
             <button
