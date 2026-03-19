@@ -13,7 +13,7 @@ const AMENITY_KEYS = [
   "hasCarPark", "hasDesk", "hasPetFriendly", "hasGarage", "hasHighSpeedWifi", "hasWashingMachine",
 ] as const;
 const AMENITY_LABELS: Record<string, string> = {
-  hasPool: "Pool", hasBathtub: "Bathtub", hasClosedKitchen: "Closed kitchen",
+  hasPool: "Pool", hasBathtub: "Bathtub", hasClosedKitchen: "Enclosed kitchen",
   hasEnclosedLiving: "Enclosed living", hasNatureView: "Nature view", hasCarPark: "Car park",
   hasDesk: "Desk", hasPetFriendly: "Pet friendly", hasGarage: "Garage",
   hasHighSpeedWifi: "High-speed WiFi", hasWashingMachine: "Washing machine",

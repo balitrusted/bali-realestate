@@ -31,7 +31,7 @@ const TYPE_LABEL: Record<Exclude<PathType, null>, string> = {
 const AMENITY_FILTERS: { key: string; label: string }[] = [
   { key: "hasPool", label: "pool" },
   { key: "hasBathtub", label: "bathtub" },
-  { key: "hasClosedKitchen", label: "closed kitchen" },
+  { key: "hasClosedKitchen", label: "enclosed kitchen" },
   { key: "hasEnclosedLiving", label: "enclosed living" },
   { key: "hasNatureView", label: "nature view" },
   { key: "hasCarPark", label: "car park" },

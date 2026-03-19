@@ -697,7 +697,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
           {[
             { key: "bathtub", label: "Bathtub" },
             { key: "carPark", label: "Car park" },
-            { key: "closedKitchen", label: "Closed kitchen" },
+            { key: "closedKitchen", label: "Enclosed kitchen" },
             { key: "desk", label: "Desk" },
             { key: "enclosedLivingArea", label: "Enclosed living area" },
             { key: "garage", label: "Garage" },

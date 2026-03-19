@@ -161,7 +161,7 @@ export default async function PropertiesByTypeAndAreaPage({
   const featureTexts: string[] = [];
   if (queryParams.hasBathtub === "true") featureTexts.push("with bathtub");
   if (queryParams.hasCarPark === "true") featureTexts.push("with car park");
-  if (queryParams.hasClosedKitchen === "true") featureTexts.push("with closed kitchen");
+  if (queryParams.hasClosedKitchen === "true") featureTexts.push("with enclosed kitchen");
   if (queryParams.hasDesk === "true") featureTexts.push("with desk");
   if (queryParams.hasEnclosedLiving === "true") featureTexts.push("with enclosed living");
   if (queryParams.hasGarage === "true") featureTexts.push("with garage");

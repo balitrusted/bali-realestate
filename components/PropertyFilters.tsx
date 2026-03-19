@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 import { areas, subAreaNames } from "@/types/areas";
@@ -23,11 +23,8 @@ export default function PropertyFilters({
 }: PropertyFiltersProps = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  useEffect(() => {
-    // Expanded on mobile by default; collapsed on desktop by default.
-    setIsCollapsed(window.innerWidth >= 768);
-  }, []);
+  // Start hidden everywhere; user opens via the green CTA button.
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [filters, setFilters] = useState<{
     mainArea?: MainArea;
     subArea: SubArea[];
@@ -48,8 +45,21 @@ export default function PropertyFilters({
     maxPrice?: number;
   }>({
     mainArea: defaultMainArea || (searchParams.get('mainArea') as MainArea) || undefined,
-    subArea: [] as SubArea[],
-    bedrooms: [] as number[],
+    subArea: (() => {
+      const subAreaParam = searchParams.get('subArea');
+      if (!subAreaParam) return [] as SubArea[];
+      return subAreaParam
+        .split(',')
+        .map((v) => v.trim())
+        .filter((v): v is SubArea => v in subAreaNames);
+    })(),
+    bedrooms: searchParams.get('bedrooms')
+      ? searchParams
+          .get('bedrooms')!
+          .split(',')
+          .map((v) => Number(v))
+          .filter((n) => [1, 2, 3, 4].includes(n))
+      : ([] as number[]),
     type: defaultType || (searchParams.get('type') as PropertyType) || undefined,
     hasBathtub: searchParams.get('hasBathtub') === 'true',
     hasCarPark: searchParams.get('hasCarPark') === 'true',
@@ -167,16 +177,15 @@ export default function PropertyFilters({
 
   const BEDROOMS_OPTIONS = [1, 2, 3, 4] as const;
   const handleBedroomChange = (beds: number, checked: boolean) => {
-    let newBedrooms: number[];
-    if (checked) {
-      newBedrooms = [...filters.bedrooms, beds];
-      if (newBedrooms.length === BEDROOMS_OPTIONS.length) newBedrooms = [];
-    } else {
-      newBedrooms =
-        filters.bedrooms.length === 0
-          ? BEDROOMS_OPTIONS.filter((b) => b !== beds)
-          : filters.bedrooms.filter((b) => b !== beds);
-    }
+    // `bedrooms: []` means "any" (no bedrooms filter applied).
+    const newBedrooms = checked
+      ? (() => {
+          const next = [...filters.bedrooms, beds];
+          // Avoid duplicates and keep order.
+          const unique = Array.from(new Set(next)).sort((a, b) => a - b);
+          return unique;
+        })()
+      : filters.bedrooms.filter((b) => b !== beds);
     const newFilters = { ...filters, bedrooms: newBedrooms };
     setFilters(newFilters);
     updateURL(newFilters);
@@ -231,16 +240,17 @@ export default function PropertyFilters({
 
   const isSubAreaChecked = (s: SubArea) =>
     filters.subArea.length === 0 || filters.subArea.includes(s);
-  const isBedroomChecked = (b: number) =>
-    filters.bedrooms.length === 0 || filters.bedrooms.includes(b);
+  // When `bedrooms` is empty it means "any" (no bedrooms filter).
+  // Individual bedroom pills should be active only when selected.
+  const isBedroomChecked = (b: number) => filters.bedrooms.includes(b);
   const bedroomLabel = (b: number) => (b === 1 ? "1 bed" : `${b} beds`);
 
   const FEATURES_OPTIONS: { key: keyof typeof filters; label: string }[] = [
     { key: "hasBathtub", label: "bathtub" },
     { key: "hasCarPark", label: "car park" },
-    { key: "hasClosedKitchen", label: "closed kitchen" },
-    { key: "hasDesk", label: "desk" },
+    { key: "hasClosedKitchen", label: "enclosed kitchen" },
     { key: "hasEnclosedLiving", label: "enclosed living" },
+    { key: "hasDesk", label: "desk" },
     { key: "hasGarage", label: "garage" },
     { key: "hasHighSpeedWifi", label: "high-speed WiFi" },
     { key: "hasNatureView", label: "nature view" },
@@ -281,19 +291,6 @@ export default function PropertyFilters({
 
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-3 md:p-5 shadow-sm">
-      {!isCollapsed && (
-        <div className="flex justify-end mb-3 md:mb-4">
-          <button
-            type="button"
-            onClick={() => setIsCollapsed(true)}
-            className="px-3 py-1.5 text-sm font-medium bg-gray-100 text-gray-800 rounded-xl border border-gray-200 hover:bg-gray-200 hover:border-gray-300 active:scale-[0.99] transition-all duration-200"
-            aria-expanded={true}
-          >
-            Hide filters
-          </button>
-        </div>
-      )}
-
       {isCollapsed ? (
         <button
           type="button"
@@ -369,7 +366,7 @@ export default function PropertyFilters({
                 const newFilters = { ...filters, mainArea: undefined, subArea: [] };
                 setFilters(newFilters);
                 updateURL(newFilters);
-              }, "all")}
+              }, "any")}
               {areaList.map((area) =>
                 pill(
                   filters.mainArea === area.id,
@@ -402,6 +399,16 @@ export default function PropertyFilters({
               <section>
                 <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Bedrooms</p>
                 <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
+                  {pill(
+                    filters.bedrooms.length === 0,
+                    () => {
+                      const newFilters = { ...filters, bedrooms: [] };
+                      setFilters(newFilters);
+                      updateURL(newFilters);
+                    },
+                    "any",
+                    "beds-any"
+                  )}
                   {BEDROOMS_OPTIONS.map((beds) =>
                     pill(
                       isBedroomChecked(beds),
@@ -429,6 +436,15 @@ export default function PropertyFilters({
               </section>
             </>
           )}
+
+          <button
+            type="button"
+            onClick={() => setIsCollapsed(true)}
+            className="w-full px-4 py-2.5 mt-2 text-sm font-medium bg-gray-100 text-gray-800 rounded-xl border border-gray-200 hover:bg-gray-200 hover:border-gray-300 active:scale-[0.99] transition-all duration-200"
+            aria-expanded
+          >
+            Hide filters
+          </button>
         </div>
       )}
     </div>

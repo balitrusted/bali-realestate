@@ -152,9 +152,9 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   const featuresList: string[] = [];
   if (property.features.bathtub) featuresList.push("bathtub");
   if (property.features.carPark) featuresList.push("car park");
-  if (property.features.closedKitchen) featuresList.push("closed kitchen");
-  if (property.features.desk) featuresList.push("desk");
+  if (property.features.closedKitchen) featuresList.push("enclosed kitchen");
   if (property.features.enclosedLivingArea) featuresList.push("enclosed living");
+  if (property.features.desk) featuresList.push("desk");
   if (property.features.garage) featuresList.push("garage");
   if (property.features.highSpeedWifi) featuresList.push("high-speed WiFi");
   if (property.features.natureView) featuresList.push("nature view");

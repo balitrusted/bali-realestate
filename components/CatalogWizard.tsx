@@ -13,7 +13,7 @@ const BEDROOMS = [1, 2, 3, 4] as const;
 const AMENITY_OPTIONS: { key: string; label: string }[] = [
   { key: "hasPool", label: "Pool" },
   { key: "hasBathtub", label: "Bathtub" },
-  { key: "hasClosedKitchen", label: "Closed kitchen" },
+  { key: "hasClosedKitchen", label: "Enclosed kitchen" },
   { key: "hasEnclosedLiving", label: "Enclosed living" },
   { key: "hasNatureView", label: "Nature view" },
   { key: "hasCarPark", label: "Car park" },
