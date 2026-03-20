@@ -17,6 +17,7 @@ const CONTENT_TYPES: Record<string, string> = {
 // Base URL of the Blob store (no trailing slash). Set BLOB_STORE_URL in Vercel to avoid list().
 // Example: https://xxxxx.public.blob.vercel-storage.com (from Storage → open any blob → copy base)
 let cachedBlobBaseUrl: string | null = null;
+const cachedBlobUrlByPrefix = new Map<string, string | null>();
 
 async function getBlobBaseUrl(): Promise<string | null> {
   const envUrl = process.env.BLOB_STORE_URL?.trim();
@@ -65,11 +66,19 @@ export async function GET(
         if (!res.ok && res.status === 404) {
           // Blob SDK adds random suffix by default → pathname is e.g. properties/villa-xxx-ABC123.jpg
           const prefix = blobPath.replace(/\.[^.]+$/, "");
-          const { blobs } = await list({ prefix, limit: 1 });
-          const match = blobs?.[0];
-          if (match?.url) {
-            imageUrl = match.url;
+          const cached = cachedBlobUrlByPrefix.get(prefix);
+          if (cached) {
+            imageUrl = cached;
             res = await fetch(imageUrl, { cache: "force-cache" });
+          } else if (cached === undefined) {
+            const { blobs } = await list({ prefix, limit: 1 });
+            const match = blobs?.[0];
+            const matchedUrl = match?.url ?? null;
+            cachedBlobUrlByPrefix.set(prefix, matchedUrl);
+            if (matchedUrl) {
+              imageUrl = matchedUrl;
+              res = await fetch(imageUrl, { cache: "force-cache" });
+            }
           }
         }
         if (res?.ok && res.body) {

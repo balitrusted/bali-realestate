@@ -1,6 +1,7 @@
 import { list, put } from "@vercel/blob";
 
 const BLOB_KEY = "data/requests.json";
+const getBlobStoreBaseUrl = () => process.env.BLOB_STORE_URL?.trim().replace(/\/$/, "");
 
 export type RequestStatus = "new" | "in_progress" | "done";
 
@@ -27,6 +28,20 @@ export interface SiteRequest {
 async function readFromBlob(): Promise<SiteRequest[]> {
   if (!process.env.BLOB_READ_WRITE_TOKEN) return [];
   try {
+    const baseUrl = getBlobStoreBaseUrl();
+    // Prefer direct fetch (no list()) to avoid Advanced Requests.
+    if (baseUrl) {
+      const url = `${baseUrl}/${BLOB_KEY}`;
+      const urlWithCacheBust = `${url}${url.includes("?") ? "&" : "?"}t=${Date.now()}`;
+      const res = await fetch(urlWithCacheBust, {
+        cache: "no-store",
+        headers: { Pragma: "no-cache", "Cache-Control": "no-cache" },
+      });
+      if (!res.ok) return [];
+      const data = await res.json();
+      return Array.isArray(data) ? data : [];
+    }
+
     const { blobs } = await list({ prefix: "data/", limit: 100 });
     const match = blobs?.find((b) => b.pathname === BLOB_KEY);
     if (!match?.url) return [];
