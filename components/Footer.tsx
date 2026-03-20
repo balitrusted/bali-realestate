@@ -46,12 +46,12 @@ export default function Footer() {
             <h4 className="font-semibold text-gray-900 mb-4">Information</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link
+                <a
                   href="/about"
-                  className="inline-block py-1 text-gray-600 hover:text-gray-900 touch-manipulation"
+                  className="inline-block py-1.5 text-gray-600 hover:text-gray-900 touch-manipulation"
                 >
                   About
-                </Link>
+                </a>
               </li>
               <li>
                 <Link
