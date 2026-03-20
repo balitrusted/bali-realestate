@@ -21,6 +21,8 @@ const nextConfig: NextConfig = {
   ],
   outputFileTracingExcludes: {
     "*": [
+      // Local media cache; do not pack into serverless functions on Vercel.
+      "public/uploads/**",
       ".next/cache/**",
       "node_modules/@swc/**",
       // Do NOT exclude next/dist/compiled/** — runtime needs source-map etc.
