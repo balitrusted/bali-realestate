@@ -5,7 +5,6 @@ import Pagination from "@/components/Pagination";
 import TopPageNumbers from "@/components/TopPageNumbers";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import Link from "next/link";
-import { buildIntro } from "@/lib/seoTemplates";
 import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
 import {
   loadAllProperties,
@@ -19,9 +18,9 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: "All Bali Properties for Rent and Sale | Villas, Land and Investments",
+  title: "Bali Property Catalogue — Rent or Buy | Villas, Land & More | Balitrusted",
   description:
-    "Explore a curated selection of Bali properties including villas for rent, land plots, and investment opportunities. Discover homes across Ubud, Canggu, Seminyak and other Bali locations.",
+    "Browse the full Balitrusted Bali property catalogue: rent or buy villas, explore land and business listings. Curated, regularly updated listings across Ubud, Canggu, Seminyak, Sanur and beyond.",
 };
 
 export default async function PropertiesCatalogPage({
@@ -115,9 +114,13 @@ export default async function PropertiesCatalogPage({
       <div className="container mx-auto px-4 py-8">
         <CatalogBreadcrumb className="mb-3" />
         <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
-          <h1 className="text-3xl md:text-5xl font-semibold tracking-tight text-gray-900 mb-2">Properties</h1>
+          <h1 className="text-3xl md:text-5xl font-semibold tracking-tight text-gray-900 mb-2">
+            Balitrusted — Full Bali Property Catalogue
+          </h1>
           <p className="text-gray-600 text-base md:text-lg max-w-3xl">
-            {buildIntro()}
+            Here you&apos;ll find every listing currently in our catalogue. We refresh it regularly as
+            properties are added or updated. Choose a property type below to open a focused category,
+            or use the filters to narrow results by area, bedrooms, budget, and amenities.
           </p>
         </div>
 
@@ -183,19 +186,27 @@ export default async function PropertiesCatalogPage({
           )}
         </div>
 
-        <div className="mt-16 max-w-3xl text-gray-600 text-sm leading-relaxed">
+        <div className="mt-16 max-w-3xl text-gray-600 text-sm leading-relaxed space-y-4">
           <p>
-            Bali offers a wide range of real estate opportunities, from peaceful jungle villas in
-            Ubud to modern coastal properties in Canggu and Seminyak. On this page you can browse a
-            curated collection of properties available for rent and sale across the island. Our
-            listings include private villas, land plots and unique investment opportunities suitable
-            for both long-term living and property investment.
+            If you plan to <strong>rent or buy property in Bali</strong>, this hub is our complete{" "}
+            <strong>Bali property catalogue</strong> in one place. You will see curated villas, land,
+            and business-related listings from across the island—not an endless directory, but a
+            focused set we maintain with clear photos, pricing context, and realistic expectations.
           </p>
-          <p className="mt-4">
-            Use filters to explore properties by location, number of bedrooms, rental terms and
-            amenities such as private pools, enclosed living areas or nature views. Whether you are
-            searching for a quiet home in the hills of Ubud or a vibrant property near Bali&apos;s
-            beaches, our listings provide a convenient starting point for your search.
+          <p>
+            Start with the property-type cards above for a quicker path into villas, land, or
+            business opportunities. If you prefer to stay on this page, use the filters to match
+            location, number of bedrooms, rental terms, and features such as a private pool,
+            enclosed living, or nature views. Whether you are comparing long-term rentals in Ubud or
+            weighing a purchase near the coast, the same tools help you move from browsing to a
+            shortlist.
+          </p>
+          <p>
+            Listings change as we verify updates—check back from time to time, or use{" "}
+            <Link href="/request" className="text-emerald-800 underline hover:text-emerald-900">
+              Request
+            </Link>{" "}
+            if you want help finding the right fit.
           </p>
         </div>
       </div>
