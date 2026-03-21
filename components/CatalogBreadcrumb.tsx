@@ -51,12 +51,18 @@ export default function CatalogBreadcrumb({
   }
 
   const currentCrumbClass =
-    "rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800";
+    "rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800 shadow-sm";
   const linkCrumbClass =
-    "rounded-full px-2.5 py-1 text-xs font-medium text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition-colors";
+    "rounded-full border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-700 shadow-sm transition-colors hover:border-emerald-200 hover:bg-emerald-50/60 hover:text-emerald-800";
+  const plainCrumbClass =
+    "rounded-full border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 shadow-sm";
 
   return (
-    <nav aria-label="Breadcrumb" className={className ?? "mb-5"}>
+    <nav
+      id="catalog-breadcrumb-anchor"
+      aria-label="Breadcrumb"
+      className={[className ?? "mb-5", "scroll-mt-6"].join(" ")}
+    >
       <ol className="inline-flex flex-wrap items-center gap-2 rounded-2xl border border-gray-200 bg-white/90 px-3 py-2 shadow-sm">
         {items.map((item, i) => {
           const isLast = i === items.length - 1;
@@ -79,7 +85,7 @@ export default function CatalogBreadcrumb({
                   {item.label}
                 </Link>
               ) : (
-                <span className="rounded-full px-2.5 py-1 text-xs font-medium text-gray-600">{item.label}</span>
+                <span className={plainCrumbClass}>{item.label}</span>
               )}
             </li>
           );

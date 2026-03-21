@@ -149,11 +149,13 @@ export default async function PropertiesByTypePage({
             <PropertyFilters
               defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
               baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
+              matchingCount={total}
             />
 
             <div className="mt-8">
             {items.length === 0 ? (
               <div className="space-y-6">
+                <div id="catalog-listings-anchor" className="scroll-mt-8 h-px w-full" aria-hidden />
                 <p className="text-sm text-gray-500">No properties match your criteria.</p>
                 <CatalogFeedbackForm total={total} />
               </div>
@@ -173,7 +175,7 @@ export default async function PropertiesByTypePage({
                     />
                   </div>
                 )}
-                <CatalogListingDivider className="my-6" />
+                <CatalogListingDivider id="catalog-listings-anchor" className="my-6 scroll-mt-8" />
                 <Pagination
                   basePath={`/properties/${catalogType}`}
                   page={currentPage}

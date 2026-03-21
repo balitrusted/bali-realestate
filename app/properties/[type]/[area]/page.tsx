@@ -256,11 +256,13 @@ export default async function PropertiesByTypeAndAreaPage({
               defaultMainArea={mainArea}
               availableAmenityKeys={availableAmenityFilterKeys}
               baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
+              matchingCount={total}
             />
 
             <div className="mt-8">
             {sortedProperties.length === 0 ? (
               <div className="space-y-6">
+                <div id="catalog-listings-anchor" className="scroll-mt-8 h-px w-full" aria-hidden />
                 <p className="text-sm text-gray-500">No properties match your criteria.</p>
                 <CatalogFeedbackForm total={total} />
               </div>
@@ -280,7 +282,7 @@ export default async function PropertiesByTypeAndAreaPage({
                     />
                   </div>
                 )}
-                <CatalogListingDivider className="my-6" />
+                <CatalogListingDivider id="catalog-listings-anchor" className="my-6 scroll-mt-8" />
                 <Pagination
                   basePath={basePath}
                   page={currentPage}

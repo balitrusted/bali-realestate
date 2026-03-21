@@ -237,11 +237,13 @@ export default async function PropertiesSegmentPage({
             defaultMainArea={mainArea}
             availableAmenityKeys={availableAmenityFilterKeys}
             baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
+            matchingCount={total}
           />
 
           <div>
             {items.length === 0 ? (
               <div className="text-center py-12">
+                <div id="catalog-listings-anchor" className="scroll-mt-8 h-px w-full max-w-none" aria-hidden />
                 <p className="text-gray-600 mb-4">No properties found in this category.</p>
                 <p className="text-sm text-gray-500">Try other filters or areas.</p>
               </div>
@@ -261,7 +263,7 @@ export default async function PropertiesSegmentPage({
                     />
                   </div>
                 )}
-                <CatalogListingDivider className="my-6" />
+                <CatalogListingDivider id="catalog-listings-anchor" className="my-6 scroll-mt-8" />
                 <Pagination
                   basePath={basePath}
                   page={currentPage}
