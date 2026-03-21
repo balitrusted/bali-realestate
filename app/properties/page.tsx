@@ -115,9 +115,9 @@ export default async function PropertiesCatalogPage({
         <CatalogBreadcrumb className="mb-3" />
         <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
           <h1 className="text-2xl md:text-4xl font-semibold tracking-tight text-gray-900 mb-2">
-            Full Bali Property Catalogue
+            All properties
           </h1>
-          <p className="text-gray-600 text-base md:text-lg max-w-3xl">
+          <p className="text-sm text-gray-600 max-w-3xl leading-relaxed">
             Here you&apos;ll find every listing currently in our catalogue. We refresh it regularly as
             properties are added or updated. Choose a property type below to open a focused category,
             or use the filters to narrow results by area, bedrooms, budget, and amenities.
@@ -125,7 +125,9 @@ export default async function PropertiesCatalogPage({
         </div>
 
         <div className="rounded-3xl border border-gray-200 bg-white p-4 md:p-5 shadow-sm">
-          <p className="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-3">Choose property type</p>
+          <p className="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-3">
+            Begin by choosing a property type
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <Link
               href="/properties/villas"
@@ -151,7 +153,7 @@ export default async function PropertiesCatalogPage({
           </div>
         </div>
 
-        <div className="mt-10">
+        <div className="mt-3">
           <div className="mb-3 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 flex items-center justify-between gap-4">
             <div className="text-xs font-medium text-gray-600">
               Found {total} {total === 1 ? "property" : "properties"}
