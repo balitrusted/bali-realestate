@@ -50,26 +50,33 @@ export default function CatalogBreadcrumb({
     items.push({ label: segmentLabel });
   }
 
+  const currentCrumbClass =
+    "rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800";
+  const linkCrumbClass =
+    "rounded-full px-2.5 py-1 text-xs font-medium text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition-colors";
+
   return (
     <nav aria-label="Breadcrumb" className={className ?? "mb-5"}>
       <ol className="inline-flex flex-wrap items-center gap-2 rounded-2xl border border-gray-200 bg-white/90 px-3 py-2 shadow-sm">
-        {items.map((item, i) => (
-          <li key={i} className="flex items-center gap-2">
-            {i > 0 && <span className="text-gray-300" aria-hidden>/</span>}
-            {item.href ? (
-              <Link
-                href={item.href}
-                className="rounded-full px-2.5 py-1 text-xs font-medium text-gray-600 hover:bg-emerald-50 hover:text-emerald-700 transition-colors"
-              >
-                {item.label}
-              </Link>
-            ) : (
-              <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800">
-                {item.label}
-              </span>
-            )}
-          </li>
-        ))}
+        {items.map((item, i) => {
+          const isLast = i === items.length - 1;
+          return (
+            <li key={i} className="flex items-center gap-2">
+              {i > 0 && <span className="text-gray-300" aria-hidden>/</span>}
+              {isLast ? (
+                <span className={currentCrumbClass} aria-current="page">
+                  {item.label}
+                </span>
+              ) : item.href ? (
+                <Link href={item.href} className={linkCrumbClass}>
+                  {item.label}
+                </Link>
+              ) : (
+                <span className="rounded-full px-2.5 py-1 text-xs font-medium text-gray-600">{item.label}</span>
+              )}
+            </li>
+          );
+        })}
       </ol>
     </nav>
   );
