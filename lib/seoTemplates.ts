@@ -29,8 +29,8 @@ export function buildTitle(
   segment?: { kind: string | null; value: string | number }
 ): string {
   if (type === "villas" && !segment) {
-    if (area) return `Villas for Rent and Sale in ${areaName(area)} | Balitrusted`;
-    return "Villas for Rent and Sale in Bali | Balitrusted";
+    if (area) return `All Villas in ${areaName(area)} | Rent or Buy | Balitrusted`;
+    return "All Villas for Rent & Sale in Bali | Balitrusted";
   }
   const subject = subjectByType[type] ?? "Villas";
   const verb = typeLabels[type] ?? "Rent";
@@ -55,10 +55,10 @@ export function buildTitle(
     return `${subject} for ${verb} in ${loc} | Balitrusted`;
   }
   if (type === "rent") {
-    return "Villas for rent | Balitrusted";
+    return "Villas for Rent in Bali | Long-Term Rentals | Balitrusted";
   }
   if (type === "sale") {
-    return "Villas for sale | Balitrusted";
+    return "Villas for Sale in Bali | Balitrusted";
   }
   if (type) {
     return `${subject} for ${verb} in Bali | Balitrusted`;
@@ -73,8 +73,8 @@ export function buildH1(
   segment?: { kind: string | null; value: string | number }
 ): string {
   if (type === "villas" && !segment) {
-    if (area) return `Villas for Rent and Sale in ${areaName(area)}`;
-    return "Villas for Rent and Sale in Bali";
+    if (area) return `All villas in ${areaName(area)}`;
+    return "All villas";
   }
   const subject = subjectByType[type] ?? "Villas";
   const verb = typeLabels[type] ?? "Rent";
@@ -99,10 +99,10 @@ export function buildH1(
     return `${subject} for ${verb} in ${loc}`;
   }
   if (type === "rent") {
-    return "Villas for rent";
+    return "Villas for rent in Bali";
   }
   if (type === "sale") {
-    return "Villas for sale";
+    return "Villas for sale in Bali";
   }
   if (type) {
     return `${subject} for ${verb} in Bali`;
@@ -120,13 +120,13 @@ export function buildIntro(
     return "Explore our curated collection of properties across Bali.";
   }
   if (type === "villas" && !area && !segment) {
-    return "Browse villas for rent and sale across Bali.";
+    return "Here you'll find every villa currently in our catalogue—available for long-term rent or for purchase. We refresh listings as they change. Use the filters to narrow by area, bedrooms, budget, and amenities, or browse the full set below.";
   }
   if (type === "rent" && !area && !segment) {
-    return "Rent a villa in Bali. Browse long-term rentals by area, bedrooms and amenities.";
+    return "Compare long-term villas for rent in Bali—verified listings with clear pricing. Ready to rent a villa in Bali for a month or longer? Filter by area, bedrooms, pool, enclosed living, payment terms, and more.";
   }
   if (type === "sale" && !area && !segment) {
-    return "Buy a villa in Bali. Browse properties for sale across the island.";
+    return "Explore villas for sale in Bali in one curated catalogue. Planning to buy a villa in Bali for living or investment? Filter by area, size, features, and ownership context—then shortlist what fits your budget.";
   }
   if (type === "land" && !area) {
     return "Browse land for sale in Bali. Find plots for building or investment.";
@@ -164,7 +164,7 @@ export function buildDescription(
       const areaDesc = areas[area]?.seoDescription ?? areas[area]?.description ?? "";
       return areaDesc || `Browse villas for rent and sale in ${areaName(area)}. Find your next home or investment.`;
     }
-    return "Browse villas for rent and sale in Bali. Find long-term rentals and villas for purchase across Ubud, Canggu, Sanur and more.";
+    return "Browse all villas for rent and for sale in Bali—one catalogue, regularly updated. Long-term rentals and purchase options across Ubud, Canggu, Sanur, Seminyak and more.";
   }
   const subject = (subjectByType[type] ?? "villas").toLowerCase();
   const loc = area ? areaName(area) : "Bali";
@@ -188,10 +188,10 @@ export function buildDescription(
     return areaDesc || `Find ${subject} in ${loc}. Browse our curated listings.`;
   }
   if (type === "rent") {
-    return "Rent a villa in Bali. Browse long-term villa rentals by area, bedrooms and amenities. Verified listings for stays of one month or more.";
+    return "Villas for rent in Bali: long-term listings with clear filters. Rent a villa in Bali for a month or more—by area, bedrooms, pool, enclosed living, payment terms and more.";
   }
   if (type === "sale") {
-    return "Buy a villa in Bali. Browse villas and houses for sale. Freehold and leasehold options in Ubud, Canggu, Seminyak and more.";
+    return "Villas for sale in Bali in one curated catalogue. Buy a villa in Bali with realistic context—freehold and leasehold options in Ubud, Canggu, Seminyak, Tanah Lot and beyond.";
   }
   if (type) {
     return `Browse ${subject} in Bali. Find properties across Ubud, Canggu, Sanur and more.`;
@@ -203,10 +203,39 @@ export function buildDescription(
 const seoTextByType: Record<string, string> = {
   rent: `Looking for a villa to rent in Bali? This page lists private villas available for long-term rental across the island — from Ubud and the central highlands to coastal areas like Canggu, Seminyak and Sanur. All listings are verified and suitable for stays of one month or more. You can filter by area, number of bedrooms, payment terms (monthly or yearly) and amenities such as private pool, enclosed kitchen, bathtub or nature view. Whether you need a one-bedroom for remote work or a family villa with several bedrooms, our catalog helps you find a rental that fits your budget and lifestyle.`,
   sale: `Interested in buying a villa or house in Bali? Here you can browse villas for sale across the island. Our listings include freehold and leasehold options in popular areas like Ubud, Canggu, Seminyak and Tanah Lot. Use the filters to narrow by location, size and features. Buying property in Bali involves specific legal and permit requirements; we recommend consulting our guides and specialists before making a decision.`,
-  villas: `Looking for a villa in Bali — to rent or to buy? This page lists all villas available for both long-term rental and purchase across the island. You can choose to rent monthly or yearly, or explore options for buying. Filter by area (Ubud, Canggu, Sanur, Seminyak, Tanah Lot), number of bedrooms and amenities such as pool, bathtub or enclosed kitchen. Whether you plan to rent for a few months or invest in a property, our catalog helps you find the right villa.`,
+  villas: `Looking for a villa in Bali — to rent or to buy? This hub lists all villas available for both long-term rental and purchase across the island. You can choose monthly or yearly rent where offered, or explore purchase options. Filter by area (Ubud, Canggu, Sanur, Seminyak, Tanah Lot), bedrooms, and amenities such as pool, bathtub or enclosed kitchen. Whether you plan to rent for a few months or invest, our catalogue helps you find the right villa.`,
   land: `Searching for land for sale in Bali? This page shows land plots available for purchase in different areas of the island. Land listings may be suitable for building a villa, developing a small project or long-term investment. Locations range from the green hills of Ubud to coastal zones. Always verify zoning, permits and ownership structure with a qualified professional before committing.`,
   business: `Exploring business property or commercial opportunities in Bali? This section lists properties that can be used for business — guesthouses, small hotels, cafes or other ventures. Listings may include villas with tourist accommodation permits or land suitable for commercial use. Check each listing and local regulations to ensure the property fits your business plan.`,
 };
+
+/**
+ * Multi-paragraph SEO footer for type hub pages only: /properties/villas, /rent, /sale.
+ * Area and segment pages keep using {@link buildSeoText}.
+ */
+export function buildTypeHubFooterParagraphs(type: CatalogTypeForSeo): string[] | null {
+  if (type === "villas") {
+    return [
+      "If you are looking for a villa in Bali—to rent for a longer stay or to buy—this hub lists every villa currently in our public catalogue. Listings combine long-term rental options (monthly or yearly where offered) with properties offered for purchase, so you can compare approaches in one place rather than jumping between separate directories.",
+      "Filter by area such as Ubud, Canggu, Sanur, Seminyak or Tanah Lot, by number of bedrooms, by rental or payment preferences, and by amenities including private pool, bathtub, enclosed kitchen, enclosed living, nature views, garage or car park, desk space, and more. The goal is practical browsing: fewer surprises, clearer expectations.",
+      "We update the catalogue as listings change and details are verified. Whether you already know Ubud well or are weighing hills against the coast, the same tools help you move from exploration to a manageable shortlist.",
+    ];
+  }
+  if (type === "rent") {
+    return [
+      "Villas for rent in Bali are easy to find online—but hard to trust when photos, prices, and contract terms do not line up. This page focuses on long-term villas for rent in Bali: private homes suited to stays of one month or more, with information we aim to keep accurate and useful.",
+      "When you decide to rent a villa in Bali, the right filters save time: choose an area and sub-area, bedroom count, monthly or yearly payment where available, and must-have features such as a pool, enclosed kitchen, high-speed Wi-Fi, bathtub, or nature views. Compare Ubud's jungle calm with coastal energy in Canggu, Seminyak, or Sanur depending on your routine.",
+      "Renting long-term still means reading contracts carefully and confirming what is included—utilities, cleaning, pool maintenance, and deposit terms. Browse here at your own pace; if you want a curated shortlist or have fixed dates and budget, we can help you connect the dots between villas for rent in Bali and a place that actually fits how you want to rent a villa in Bali.",
+    ];
+  }
+  if (type === "sale") {
+    return [
+      "Villas for sale in Bali range from compact one-bedroom homes to large multi-bedroom estates, across freehold and leasehold structures and many price bands. This catalogue highlights properties we represent with clear presentation—so you can compare seriously before engaging lawyers and notaries on the ground.",
+      "If you plan to buy a villa in Bali, map your priorities first: location, land and building size, pool, enclosed living for climate control, views, parking, and whether the listing fits residential use, mixed use, or investment strategy. Use filters to narrow villas for sale in Bali by area and features, then review each detail page for pricing context and next steps.",
+      "Purchasing property in Indonesia involves permits, ownership structures, and tax questions that vary by case. We recommend specialist legal advice before you commit. When you are still in research mode, use this page to understand what shapes the current market for villas for sale in Bali—and what it really takes to buy a villa in Bali with confidence.",
+    ];
+  }
+  return null;
+}
 
 export function buildSeoText(
   type: CatalogTypeForSeo,

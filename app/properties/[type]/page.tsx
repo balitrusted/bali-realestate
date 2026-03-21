@@ -20,7 +20,15 @@ import {
   getAvailableBedroomCounts,
   getAvailableAmenityFilterKeys,
 } from "@/lib/propertiesCatalog";
-import { buildTitle, buildH1, buildDescription, buildSeoText, buildIntro } from "@/lib/seoTemplates";
+import Link from "next/link";
+import {
+  buildTitle,
+  buildH1,
+  buildDescription,
+  buildSeoText,
+  buildIntro,
+  buildTypeHubFooterParagraphs,
+} from "@/lib/seoTemplates";
 import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 
@@ -146,6 +154,8 @@ export default async function PropertiesByTypePage({
   if (filters.hasPool) searchParamsForPagination.hasPool = "true";
   if (filters.hasWashingMachine) searchParamsForPagination.hasWashingMachine = "true";
 
+  const hubFooterParagraphs = buildTypeHubFooterParagraphs(catalogType);
+
   return (
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-8">
@@ -154,10 +164,10 @@ export default async function PropertiesByTypePage({
           className="mb-3"
         />
         <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
-          <h1 className="text-xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-2">
+          <h1 className="text-2xl md:text-4xl font-semibold tracking-tight text-gray-900 mb-2">
             {buildH1(catalogType)}
           </h1>
-          <p className="text-gray-600 text-base md:text-lg max-w-3xl">
+          <p className="text-sm text-gray-600 max-w-3xl leading-relaxed">
             {buildIntro(catalogType)}
           </p>
         </div>
@@ -228,9 +238,24 @@ export default async function PropertiesByTypePage({
           </div>
         </div>
 
-        <div className="mt-16 max-w-3xl text-gray-600 text-sm leading-relaxed">
-          {buildSeoText(catalogType)}
-        </div>
+        {hubFooterParagraphs ? (
+          <div className="mt-16 max-w-3xl text-gray-600 text-sm leading-relaxed space-y-4">
+            {hubFooterParagraphs.map((para, i) => (
+              <p key={i}>{para}</p>
+            ))}
+            <p>
+              Listings change as we verify updates—check back from time to time, or use{" "}
+              <Link href="/request" className="text-emerald-800 underline hover:text-emerald-900">
+                Request
+              </Link>{" "}
+              if you want help finding the right fit.
+            </p>
+          </div>
+        ) : (
+          <div className="mt-16 max-w-3xl text-gray-600 text-sm leading-relaxed">
+            <p>{buildSeoText(catalogType)}</p>
+          </div>
+        )}
       </div>
     </div>
   );

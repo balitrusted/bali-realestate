@@ -208,11 +208,11 @@ export default async function PropertiesByTypeAndAreaPage({
             />
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
               <div className="text-center text-white">
-                <h1 className="text-2xl md:text-3xl font-bold mb-2">
+                <h1 className="text-2xl md:text-4xl font-semibold tracking-tight mb-2">
                   {buildH1(catalogType, mainArea)}
                 </h1>
                 {featureText && (
-                  <p className="text-xl md:text-2xl opacity-90">
+                  <p className="text-sm md:text-base opacity-95 max-w-2xl mx-auto leading-relaxed mt-2">
                     {featureText}
                   </p>
                 )}
@@ -223,15 +223,15 @@ export default async function PropertiesByTypeAndAreaPage({
         
         {!areaInfo.image && (
           <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
-            <h1 className="text-xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-2">
+            <h1 className="text-2xl md:text-4xl font-semibold tracking-tight text-gray-900 mb-2">
               {buildH1(catalogType, mainArea)}
             </h1>
             {featureText && (
-              <p className="text-lg text-emerald-700 font-medium">
+              <p className="text-sm text-emerald-800 font-medium max-w-3xl leading-relaxed">
                 {featureText}
               </p>
             )}
-            <p className="text-gray-600 mt-4 text-base md:text-lg max-w-3xl">
+            <p className="text-gray-600 mt-4 text-sm max-w-3xl leading-relaxed">
               {areaInfo.description}
             </p>
           </div>
