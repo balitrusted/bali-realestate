@@ -219,7 +219,7 @@ export default async function PropertiesByTypeAndAreaPage({
             />
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
               <div className="text-center text-white">
-                <h1 className="text-3xl md:text-4xl font-bold mb-2">
+                <h1 className="text-2xl md:text-3xl font-bold mb-2">
                   {buildH1(catalogType, mainArea)}
                 </h1>
                 {featureText && (
@@ -234,7 +234,7 @@ export default async function PropertiesByTypeAndAreaPage({
         
         {!areaInfo.image && (
           <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
-            <h1 className="text-2xl md:text-4xl font-semibold tracking-tight text-gray-900 mb-2">
+            <h1 className="text-xl md:text-3xl font-semibold tracking-tight text-gray-900 mb-2">
               {buildH1(catalogType, mainArea)}
             </h1>
             {featureText && (
