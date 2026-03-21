@@ -430,7 +430,7 @@ export default function PropertyFilters({
           <button
             type="button"
             onClick={closeFilters}
-            className="w-full flex flex-col items-center justify-center gap-1 rounded-xl border border-gray-200 bg-gray-100 px-3 py-2.5 text-center text-sm font-medium text-gray-800 hover:bg-gray-200 hover:border-gray-300 active:scale-[0.99] transition-all duration-200"
+            className="w-full flex flex-col items-center justify-center gap-1 rounded-xl border border-gray-200 bg-btn-hatch px-3 py-2.5 text-center text-sm font-medium text-gray-800 hover:border-gray-300 active:scale-[0.99] transition-[transform,border-color] duration-200"
             aria-expanded={true}
           >
             <span>Hide filters</span>
