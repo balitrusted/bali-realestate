@@ -125,9 +125,9 @@ export default async function PropertiesCatalogPage({
         </div>
 
         <div className="rounded-3xl border border-gray-200 bg-white p-4 md:p-5 shadow-sm">
-          <p className="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-3">
-            Begin by choosing a property type
-          </p>
+          <h2 className="text-xl font-semibold text-gray-900 leading-snug mb-3">
+            Start by choosing a property type
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <Link
               href="/properties/villas"
