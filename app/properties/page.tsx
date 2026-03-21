@@ -124,7 +124,7 @@ export default async function PropertiesCatalogPage({
           </p>
         </div>
 
-        <div className="rounded-3xl border border-gray-200 bg-white p-4 md:p-5 shadow-sm">
+        <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
           <h2 className="text-xl font-semibold text-gray-900 leading-snug mb-3">
             Start by choosing a property type
           </h2>
@@ -167,6 +167,22 @@ export default async function PropertiesCatalogPage({
                 searchParams={searchParamsForPagination}
               />
             </div>
+          )}
+
+          {items.length > 0 && (
+            <>
+              <div
+                className="my-6 h-px w-full bg-gradient-to-r from-transparent via-emerald-200/70 to-transparent"
+                aria-hidden
+              />
+              <Pagination
+                basePath="/properties"
+                page={currentPage}
+                totalPages={totalPages}
+                searchParams={searchParamsForPagination}
+                navClassName="flex justify-center gap-2 mt-0 mb-2"
+              />
+            </>
           )}
 
           {items.length === 0 ? (

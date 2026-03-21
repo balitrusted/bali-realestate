@@ -150,6 +150,7 @@ export default async function PropertiesByTypePage({
               baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
             />
 
+            <div className="mt-8">
             {items.length === 0 ? (
               <div className="space-y-6">
                 <p className="text-sm text-gray-500">No properties match your criteria.</p>
@@ -189,6 +190,7 @@ export default async function PropertiesByTypePage({
                 )}
               </>
             )}
+            </div>
           </div>
         </div>
 

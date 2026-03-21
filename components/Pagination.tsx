@@ -7,9 +7,17 @@ interface PaginationProps {
   page: number;
   totalPages: number;
   searchParams?: Record<string, string>;
+  /** Override default nav layout/margins (default: flex + centered + mt-8) */
+  navClassName?: string;
 }
 
-export default function Pagination({ basePath, page, totalPages, searchParams }: PaginationProps) {
+export default function Pagination({
+  basePath,
+  page,
+  totalPages,
+  searchParams,
+  navClassName,
+}: PaginationProps) {
   const router = useRouter();
   if (totalPages <= 1) return null;
 
@@ -27,7 +35,10 @@ export default function Pagination({ basePath, page, totalPages, searchParams }:
   };
 
   return (
-    <nav className="flex justify-center gap-2 mt-8" aria-label="Pagination">
+    <nav
+      className={navClassName ?? "flex justify-center gap-2 mt-8"}
+      aria-label="Pagination"
+    >
       {page > 1 && (
         <button
           type="button"
