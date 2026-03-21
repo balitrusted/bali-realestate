@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import PropertyCard from "@/components/PropertyCard";
 import PropertyFilters from "@/components/PropertyFilters";
 import Pagination from "@/components/Pagination";
+import CatalogListingDivider from "@/components/CatalogListingDivider";
 import TopPageNumbers from "@/components/TopPageNumbers";
 import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
@@ -279,6 +280,14 @@ export default async function PropertiesByTypeAndAreaPage({
                     />
                   </div>
                 )}
+                <CatalogListingDivider className="my-6" />
+                <Pagination
+                  basePath={basePath}
+                  page={currentPage}
+                  totalPages={totalPages}
+                  searchParams={searchParamsForPagination}
+                  navClassName="flex justify-center items-center gap-2 mt-0 mb-2"
+                />
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {sortedProperties.map((property) => (
                     <PropertyCard key={property.id} property={property} />
@@ -290,6 +299,7 @@ export default async function PropertiesByTypeAndAreaPage({
                   totalPages={totalPages}
                   searchParams={searchParamsForPagination}
                 />
+                {totalPages > 1 && <CatalogListingDivider className="mt-6" />}
                 {total < 5 && (
                   <div className="mt-8">
                     <CatalogFeedbackForm total={total} />

@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import PropertyCard from "@/components/PropertyCard";
 import Pagination from "@/components/Pagination";
+import CatalogListingDivider from "@/components/CatalogListingDivider";
 import TopPageNumbers from "@/components/TopPageNumbers";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import Link from "next/link";
@@ -171,10 +172,7 @@ export default async function PropertiesCatalogPage({
 
           {items.length > 0 && (
             <>
-              <div
-                className="my-6 h-px w-full bg-gradient-to-r from-transparent via-emerald-200/70 to-transparent"
-                aria-hidden
-              />
+              <CatalogListingDivider className="my-6" />
               <Pagination
                 basePath="/properties"
                 page={currentPage}
@@ -203,6 +201,7 @@ export default async function PropertiesCatalogPage({
                 totalPages={totalPages}
                 searchParams={searchParamsForPagination}
               />
+              {totalPages > 1 && <CatalogListingDivider className="mt-6" />}
             </>
           )}
         </div>
