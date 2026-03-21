@@ -157,17 +157,20 @@ export default async function PropertiesByTypePage({
               </div>
             ) : (
               <>
-                <div className="mt-3 mb-3 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 flex items-center justify-between gap-4">
-                  <div className="text-xs font-medium text-gray-600">
-                    Found {total} {total === 1 ? "property" : "properties"}
+                {/* RESTORE-CATALOG-TOP-COUNT-PAGINATION — temporarily hidden. Say "restore RESTORE-CATALOG-TOP-COUNT-PAGINATION" to undo. */}
+                {false && (
+                  <div className="mt-3 mb-3 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 flex items-center justify-between gap-4">
+                    <div className="text-xs font-medium text-gray-600">
+                      Found {total} {total === 1 ? "property" : "properties"}
+                    </div>
+                    <TopPageNumbers
+                      basePath={`/properties/${catalogType}`}
+                      page={currentPage}
+                      totalPages={totalPages}
+                      searchParams={searchParamsForPagination}
+                    />
                   </div>
-                  <TopPageNumbers
-                    basePath={`/properties/${catalogType}`}
-                    page={currentPage}
-                    totalPages={totalPages}
-                    searchParams={searchParamsForPagination}
-                  />
-                </div>
+                )}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {items.map((property) => (
                     <PropertyCard key={property.id} property={property} />

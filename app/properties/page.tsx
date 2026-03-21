@@ -154,17 +154,20 @@ export default async function PropertiesCatalogPage({
         </div>
 
         <div className="mt-3">
-          <div className="mb-3 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 flex items-center justify-between gap-4">
-            <div className="text-xs font-medium text-gray-600">
-              Found {total} {total === 1 ? "property" : "properties"}
+          {/* RESTORE-CATALOG-TOP-COUNT-PAGINATION — temporarily hidden. Tell the assistant: "restore RESTORE-CATALOG-TOP-COUNT-PAGINATION" to bring back the "Found N properties" row + top page number buttons. */}
+          {false && (
+            <div className="mb-3 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 flex items-center justify-between gap-4">
+              <div className="text-xs font-medium text-gray-600">
+                Found {total} {total === 1 ? "property" : "properties"}
+              </div>
+              <TopPageNumbers
+                basePath="/properties"
+                page={currentPage}
+                totalPages={totalPages}
+                searchParams={searchParamsForPagination}
+              />
             </div>
-            <TopPageNumbers
-              basePath="/properties"
-              page={currentPage}
-              totalPages={totalPages}
-              searchParams={searchParamsForPagination}
-            />
-          </div>
+          )}
 
           {items.length === 0 ? (
             <div className="space-y-6">
