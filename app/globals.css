@@ -304,35 +304,36 @@ html {
   background-color: #dbeafe;
 }
 
-/* Diagonal hatch (slanted stripes: solid gray, then gap) for filter UI buttons */
+/* Diagonal hatch: two equal-width light-gray stripes (no transparency — avoids hover “crawl”).
+   Hover/active only swap colors; gradient stops stay identical so stripes don’t shift. */
 .bg-btn-hatch {
   background-color: #f3f4f6;
   background-image: repeating-linear-gradient(
-    -42deg,
-    #d1d5db 0,
-    #d1d5db 3px,
-    transparent 3px,
-    transparent 11px
+    -45deg,
+    #e5e7eb 0,
+    #e5e7eb 5px,
+    #f3f4f6 5px,
+    #f3f4f6 10px
   );
 }
 .bg-btn-hatch:hover {
   background-color: #e5e7eb;
   background-image: repeating-linear-gradient(
-    -42deg,
-    #9ca3af 0,
-    #9ca3af 3px,
-    transparent 3px,
-    transparent 11px
+    -45deg,
+    #d1d5db 0,
+    #d1d5db 5px,
+    #e5e7eb 5px,
+    #e5e7eb 10px
   );
 }
 .bg-btn-hatch:active {
   background-color: #e5e7eb;
   background-image: repeating-linear-gradient(
-    -42deg,
-    #94a3b8 0,
-    #94a3b8 3px,
-    transparent 3px,
-    transparent 11px
+    -45deg,
+    #cbd5e1 0,
+    #cbd5e1 5px,
+    #e5e7eb 5px,
+    #e5e7eb 10px
   );
 }
 
@@ -340,20 +341,20 @@ html {
 .bg-btn-hatch-soft {
   background-color: #f9fafb;
   background-image: repeating-linear-gradient(
-    -42deg,
-    #e5e7eb 0,
-    #e5e7eb 3px,
-    transparent 3px,
-    transparent 11px
+    -45deg,
+    #f3f4f6 0,
+    #f3f4f6 5px,
+    #f9fafb 5px,
+    #f9fafb 10px
   );
 }
 .bg-btn-hatch-soft:hover {
   background-color: #f3f4f6;
   background-image: repeating-linear-gradient(
-    -42deg,
-    #d1d5db 0,
-    #d1d5db 3px,
-    transparent 3px,
-    transparent 11px
+    -45deg,
+    #e5e7eb 0,
+    #e5e7eb 5px,
+    #f3f4f6 5px,
+    #f3f4f6 10px
   );
 }
