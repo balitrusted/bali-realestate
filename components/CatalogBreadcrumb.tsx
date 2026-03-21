@@ -62,7 +62,14 @@ export default function CatalogBreadcrumb({
           const isLast = i === items.length - 1;
           return (
             <li key={i} className="flex items-center gap-2">
-              {i > 0 && <span className="text-gray-300" aria-hidden>/</span>}
+              {i > 0 && (
+                <span
+                  className="select-none px-0.5 text-[0.7rem] font-light text-emerald-200"
+                  aria-hidden
+                >
+                  –
+                </span>
+              )}
               {isLast ? (
                 <span className={currentCrumbClass} aria-current="page">
                   {item.label}
