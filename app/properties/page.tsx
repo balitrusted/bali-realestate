@@ -180,7 +180,7 @@ export default async function PropertiesCatalogPage({
                 page={currentPage}
                 totalPages={totalPages}
                 searchParams={searchParamsForPagination}
-                navClassName="flex justify-center gap-2 mt-0 mb-2"
+                navClassName="flex justify-center items-center gap-2 mt-0 mb-2"
               />
             </>
           )}
