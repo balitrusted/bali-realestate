@@ -63,14 +63,14 @@ export default function CatalogBreadcrumb({
       aria-label="Breadcrumb"
       className={[className ?? "mb-5", "scroll-mt-6"].join(" ")}
     >
-      <ol className="inline-flex flex-wrap items-center gap-2 rounded-2xl border border-gray-200 bg-white/90 px-3 py-2 shadow-sm">
+      <ol className="inline-flex flex-wrap items-center gap-1 rounded-2xl border border-gray-200 bg-white/90 px-3 py-2 shadow-sm">
         {items.map((item, i) => {
           const isLast = i === items.length - 1;
           return (
-            <li key={i} className="flex items-center gap-2">
+            <li key={i} className="flex items-center gap-0.5">
               {i > 0 && (
                 <span
-                  className="select-none px-0.5 text-[0.7rem] font-light text-emerald-200"
+                  className="select-none shrink-0 text-[0.65rem] font-light leading-none text-emerald-200"
                   aria-hidden
                 >
                   –

@@ -90,7 +90,16 @@ function buildFiltersFromSearchParams(
 interface PropertyFiltersProps {
   defaultType?: PropertyType;
   defaultMainArea?: MainArea;
-  /** Only show these amenity checkboxes (filter keys like "hasPool"). If empty/undefined, show all. */
+  /**
+   * If set, only these main areas appear (plus “any”). From server: areas with ≥1 listing for current scope.
+   * If omitted, all configured areas are listed (legacy).
+   */
+  allowedMainAreas?: MainArea[];
+  /** Sub-area pills: only these (plus “any”). Omit to fall back to static list for the selected main area. */
+  allowedSubAreas?: SubArea[];
+  /** Bedroom pills: only these counts (plus “any”). Omit = show 1–4. */
+  allowedBedroomCounts?: number[];
+  /** Amenity toggles that match ≥1 listing. Empty array = hide amenities block. Omit = show all keys from visibleFeatureOptions. */
   availableAmenityKeys?: string[];
   /** Limits visible filter blocks to the current "base" catalog category. */
   baseVariant?: "villas" | "land" | "business";
@@ -101,6 +110,9 @@ interface PropertyFiltersProps {
 export default function PropertyFilters({
   defaultType,
   defaultMainArea,
+  allowedMainAreas,
+  allowedSubAreas,
+  allowedBedroomCounts,
   availableAmenityKeys,
   baseVariant,
   matchingCount,
@@ -175,9 +187,15 @@ export default function PropertyFilters({
   const showVillasSpecificBlocks = !constrainedBase || isVillasBase;
   const showSubjectBlock = !constrainedBase;
 
-  const availableSubAreas: SubArea[] =
+  const staticSubAreasForMain: SubArea[] =
     filters.mainArea && areas[filters.mainArea]?.subAreas ? areas[filters.mainArea].subAreas || [] : [];
+  const subAreaOptions: SubArea[] =
+    allowedSubAreas !== undefined ? allowedSubAreas : staticSubAreasForMain;
   const areaList = Object.values(areas);
+  const areasToShow =
+    allowedMainAreas !== undefined
+      ? areaList.filter((a) => allowedMainAreas.includes(a.id))
+      : areaList;
 
   const updateURL = (newFilters: PropertyFiltersState) => {
     const currentPath = window.location.pathname;
@@ -209,17 +227,19 @@ export default function PropertyFilters({
     const queryString = queryParams.toString();
 
     if (pathType && pathArea) {
-      const newArea = newFilters.mainArea || pathArea;
       const newType = newFilters.type || pathType;
-      const segmentPart = pathSegment ? `/${pathSegment}` : "";
-      if (newArea !== pathArea || newType !== pathType) {
-        router.push(
-          `/properties/${newType}/${newArea}${segmentPart}${queryString ? `?${queryString}` : ""}`,
-          { scroll: false }
-        );
-      } else {
-        router.push(`${currentPath}${queryString ? `?${queryString}` : ""}`, { scroll: false });
+      if (!newFilters.mainArea) {
+        router.push(`/properties/${newType}${queryString ? `?${queryString}` : ""}`, { scroll: false });
+        return;
       }
+      const newArea = newFilters.mainArea;
+      if (newArea !== pathArea || newType !== pathType) {
+        router.push(`/properties/${newType}/${newArea}${queryString ? `?${queryString}` : ""}`, {
+          scroll: false,
+        });
+        return;
+      }
+      router.push(`${currentPath}${queryString ? `?${queryString}` : ""}`, { scroll: false });
       return;
     }
 
@@ -268,6 +288,10 @@ export default function PropertyFilters({
   };
 
   const BEDROOMS_OPTIONS = [1, 2, 3, 4] as const;
+  const bedroomOptions =
+    allowedBedroomCounts !== undefined
+      ? BEDROOMS_OPTIONS.filter((b) => allowedBedroomCounts.includes(b))
+      : [...BEDROOMS_OPTIONS];
   const handleBedroomChange = (beds: number, checked: boolean) => {
     const newBedrooms = checked
       ? (() => {
@@ -355,9 +379,10 @@ export default function PropertyFilters({
     { key: "hasPool", label: "pool" },
     { key: "hasWashingMachine", label: "washing machine" },
   ];
-  const visibleFeatureOptions = availableAmenityKeys?.length
-    ? FEATURES_OPTIONS.filter((f) => availableAmenityKeys.includes(f.key as string))
-    : FEATURES_OPTIONS;
+  const visibleFeatureOptions =
+    availableAmenityKeys !== undefined
+      ? FEATURES_OPTIONS.filter((f) => availableAmenityKeys.includes(f.key as string))
+      : FEATURES_OPTIONS;
   const isRent = action === "Rent";
 
   const pill = (selected: boolean, onClick: () => void, children: React.ReactNode, key?: string) => (
@@ -405,10 +430,13 @@ export default function PropertyFilters({
           <button
             type="button"
             onClick={closeFilters}
-            className="w-full px-4 py-2.5 text-sm font-medium bg-gray-100 text-gray-800 rounded-xl border border-gray-200 hover:bg-gray-200 hover:border-gray-300 active:scale-[0.99] transition-all duration-200"
+            className="w-full flex flex-col items-center justify-center gap-1 rounded-xl border border-gray-200 bg-gray-100 px-3 py-2.5 text-center text-sm font-medium text-gray-800 hover:bg-gray-200 hover:border-gray-300 active:scale-[0.99] transition-all duration-200"
             aria-expanded={true}
           >
-            Hide filters
+            <span>Hide filters</span>
+            <span className="text-xs font-normal text-gray-600 leading-snug">
+              Scrolls to breadcrumbs
+            </span>
           </button>
 
           <div
@@ -489,7 +517,7 @@ export default function PropertyFilters({
                 setFilters(newFilters);
                 updateURL(newFilters);
               }, "any")}
-              {areaList.map((area) =>
+              {areasToShow.map((area) =>
                 pill(
                   filters.mainArea === area.id,
                   () => handleMainAreaChange(area.id),
@@ -500,7 +528,7 @@ export default function PropertyFilters({
             </div>
           </section>
 
-          {availableSubAreas.length > 0 && (
+          {subAreaOptions.length > 0 && (
             <section>
               <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Sub-area</p>
               <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
@@ -509,7 +537,7 @@ export default function PropertyFilters({
                   setFilters(newFilters);
                   updateURL(newFilters);
                 }, "any", "sub-any")}
-                {availableSubAreas.map((subArea) =>
+                {subAreaOptions.map((subArea) =>
                   pill(
                     isSubAreaChecked(subArea),
                     () => handleSubAreaChange(subArea, !isSubAreaChecked(subArea)),
@@ -536,7 +564,7 @@ export default function PropertyFilters({
                     "any",
                     "beds-any"
                   )}
-                  {BEDROOMS_OPTIONS.map((beds) =>
+                  {bedroomOptions.map((beds) =>
                     pill(
                       isBedroomChecked(beds),
                       () => handleBedroomChange(beds, !isBedroomChecked(beds)),
@@ -547,20 +575,22 @@ export default function PropertyFilters({
                 </div>
               </section>
 
-              <section>
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Amenities</p>
-                <div className="divide-y divide-gray-100 rounded-xl border border-gray-100 bg-gray-50/50 p-2 md:p-3">
-                  {visibleFeatureOptions.map(({ key, label }) => (
-                    <ToggleSwitch
-                      key={key}
-                      id={`filter-${String(key)}`}
-                      label={label}
-                      checked={!!filters[key]}
-                      onChange={(checked) => handleFeatureChange(key, checked)}
-                    />
-                  ))}
-                </div>
-              </section>
+              {visibleFeatureOptions.length > 0 && (
+                <section>
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5 md:mb-2">Amenities</p>
+                  <div className="divide-y divide-gray-100 rounded-xl border border-gray-100 bg-gray-50/50 p-2 md:p-3">
+                    {visibleFeatureOptions.map(({ key, label }) => (
+                      <ToggleSwitch
+                        key={key}
+                        id={`filter-${String(key)}`}
+                        label={label}
+                        checked={!!filters[key]}
+                        onChange={(checked) => handleFeatureChange(key, checked)}
+                      />
+                    ))}
+                  </div>
+                </section>
+              )}
             </>
           )}
 

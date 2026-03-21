@@ -13,6 +13,14 @@ import {
   parseSegment,
   CatalogFilters,
   areas,
+  catalogFiltersWithoutMainArea,
+  catalogFiltersWithoutSubArea,
+  catalogFiltersWithoutBedrooms,
+  catalogFiltersWithoutAmenities,
+  getAvailableMainAreas,
+  getAvailableSubAreas,
+  getAvailableBedroomCounts,
+  getAvailableAmenityFilterKeys,
 } from "@/lib/propertiesCatalog";
 import { buildTitle, buildH1, buildDescription, buildSeoText } from "@/lib/seoTemplates";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
@@ -144,32 +152,13 @@ export default async function PropertiesSegmentPage({
   if (filters.hasPool) searchParamsForPagination.hasPool = "true";
   if (filters.hasWashingMachine) searchParamsForPagination.hasWashingMachine = "true";
 
-  const featureKeyToProp: Record<string, keyof import("@/types/property").Property["features"]> = {
-    hasBathtub: "bathtub",
-    hasCarPark: "carPark",
-    hasClosedKitchen: "closedKitchen",
-    hasDesk: "desk",
-    hasEnclosedLiving: "enclosedLivingArea",
-    hasGarage: "garage",
-    hasHighSpeedWifi: "highSpeedWifi",
-    hasNatureView: "natureView",
-    hasPetFriendly: "petFriendly",
-    hasPool: "pool",
-    hasWashingMachine: "washingMachine",
-  };
-  let propertiesForAmenities = filterProperties(all, { type: catalogType, mainArea }, parsed);
-  if (filters.subArea?.length) {
-    propertiesForAmenities = propertiesForAmenities.filter(
-      (p) => p.subArea && filters.subArea!.includes(p.subArea)
-    );
-  }
-  if (filters.bedrooms?.length) {
-    propertiesForAmenities = propertiesForAmenities.filter((p) =>
-      filters.bedrooms!.includes(p.bedrooms)
-    );
-  }
-  const availableAmenityFilterKeys = (Object.keys(featureKeyToProp) as string[]).filter((key) =>
-    propertiesForAmenities.some((p) => p.features[featureKeyToProp[key]] === true)
+  const allowedMainAreas = getAvailableMainAreas(all, catalogFiltersWithoutMainArea(filters), parsed);
+  const allowedSubAreas = getAvailableSubAreas(all, catalogFiltersWithoutSubArea(filters), parsed);
+  const allowedBedroomCounts = getAvailableBedroomCounts(all, catalogFiltersWithoutBedrooms(filters), parsed);
+  const availableAmenityFilterKeys = getAvailableAmenityFilterKeys(
+    all,
+    catalogFiltersWithoutAmenities(filters),
+    parsed
   );
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://balitrusted.com";
@@ -235,6 +224,9 @@ export default async function PropertiesSegmentPage({
           <PropertyFilters
             defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
             defaultMainArea={mainArea}
+            allowedMainAreas={allowedMainAreas}
+            allowedSubAreas={allowedSubAreas}
+            allowedBedroomCounts={allowedBedroomCounts}
             availableAmenityKeys={availableAmenityFilterKeys}
             baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
             matchingCount={total}

@@ -8,13 +8,21 @@ import TopPageNumbers from "@/components/TopPageNumbers";
 import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import CatalogStructuredData from "@/components/CatalogStructuredData";
-import { Property, PropertyType, MainArea, SubArea } from "@/types/property";
+import { PropertyType, MainArea, SubArea } from "@/types/property";
 import { areas } from "@/types/areas";
 import {
   loadAllProperties,
   filterProperties,
   paginate,
   CatalogFilters,
+  catalogFiltersWithoutMainArea,
+  catalogFiltersWithoutSubArea,
+  catalogFiltersWithoutBedrooms,
+  catalogFiltersWithoutAmenities,
+  getAvailableMainAreas,
+  getAvailableSubAreas,
+  getAvailableBedroomCounts,
+  getAvailableAmenityFilterKeys,
 } from "@/lib/propertiesCatalog";
 import { buildH1, buildSeoText } from "@/lib/seoTemplates";
 import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
@@ -131,32 +139,12 @@ export default async function PropertiesByTypeAndAreaPage({
   const filtered = filterProperties(all, filters);
   const { items: sortedProperties, total, totalPages, page: currentPage } = paginate(filtered, page);
 
-  const featureKeyToProp: Record<string, keyof Property["features"]> = {
-    hasBathtub: "bathtub",
-    hasCarPark: "carPark",
-    hasClosedKitchen: "closedKitchen",
-    hasDesk: "desk",
-    hasEnclosedLiving: "enclosedLivingArea",
-    hasGarage: "garage",
-    hasHighSpeedWifi: "highSpeedWifi",
-    hasNatureView: "natureView",
-    hasPetFriendly: "petFriendly",
-    hasPool: "pool",
-    hasWashingMachine: "washingMachine",
-  };
-  let propertiesForAmenities = filterProperties(all, { type: catalogType, mainArea });
-  if (filters.subArea?.length) {
-    propertiesForAmenities = propertiesForAmenities.filter(
-      (p) => p.subArea && filters.subArea!.includes(p.subArea)
-    );
-  }
-  if (filters.bedrooms?.length) {
-    propertiesForAmenities = propertiesForAmenities.filter((p) =>
-      filters.bedrooms!.includes(p.bedrooms)
-    );
-  }
-  const availableAmenityFilterKeys = (Object.keys(featureKeyToProp) as string[]).filter((key) =>
-    propertiesForAmenities.some((p) => p.features[featureKeyToProp[key]] === true)
+  const allowedMainAreas = getAvailableMainAreas(all, catalogFiltersWithoutMainArea(filters));
+  const allowedSubAreas = getAvailableSubAreas(all, catalogFiltersWithoutSubArea(filters));
+  const allowedBedroomCounts = getAvailableBedroomCounts(all, catalogFiltersWithoutBedrooms(filters));
+  const availableAmenityFilterKeys = getAvailableAmenityFilterKeys(
+    all,
+    catalogFiltersWithoutAmenities(filters)
   );
 
   const featureTexts: string[] = [];
@@ -254,6 +242,9 @@ export default async function PropertiesByTypeAndAreaPage({
             <PropertyFilters
               defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
               defaultMainArea={mainArea}
+              allowedMainAreas={allowedMainAreas}
+              allowedSubAreas={allowedSubAreas}
+              allowedBedroomCounts={allowedBedroomCounts}
               availableAmenityKeys={availableAmenityFilterKeys}
               baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
               matchingCount={total}

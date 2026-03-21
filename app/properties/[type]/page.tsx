@@ -11,6 +11,14 @@ import {
   filterProperties,
   paginate,
   CatalogFilters,
+  catalogFiltersWithoutMainArea,
+  catalogFiltersWithoutSubArea,
+  catalogFiltersWithoutBedrooms,
+  catalogFiltersWithoutAmenities,
+  getAvailableMainAreas,
+  getAvailableSubAreas,
+  getAvailableBedroomCounts,
+  getAvailableAmenityFilterKeys,
 } from "@/lib/propertiesCatalog";
 import { buildTitle, buildH1, buildDescription, buildSeoText, buildIntro } from "@/lib/seoTemplates";
 import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
@@ -110,6 +118,16 @@ export default async function PropertiesByTypePage({
   const filtered = filterProperties(all, filters);
   const { items, total, totalPages, page: currentPage } = paginate(filtered, page);
 
+  const allowedMainAreas = getAvailableMainAreas(all, catalogFiltersWithoutMainArea(filters));
+  const allowedSubAreas = filters.mainArea
+    ? getAvailableSubAreas(all, catalogFiltersWithoutSubArea(filters))
+    : [];
+  const allowedBedroomCounts = getAvailableBedroomCounts(all, catalogFiltersWithoutBedrooms(filters));
+  const availableAmenityFilterKeys = getAvailableAmenityFilterKeys(
+    all,
+    catalogFiltersWithoutAmenities(filters)
+  );
+
   const searchParamsForPagination: Record<string, string> = { ...query } as Record<string, string>;
   if (filters.mainArea) searchParamsForPagination.mainArea = filters.mainArea;
   if (filters.subArea?.length) searchParamsForPagination.subArea = filters.subArea.join(",");
@@ -150,6 +168,10 @@ export default async function PropertiesByTypePage({
               defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
               baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
               matchingCount={total}
+              allowedMainAreas={allowedMainAreas}
+              allowedSubAreas={allowedSubAreas}
+              allowedBedroomCounts={allowedBedroomCounts}
+              availableAmenityKeys={availableAmenityFilterKeys}
             />
 
             <div className="mt-8">

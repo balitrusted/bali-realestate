@@ -2,7 +2,7 @@ import { readFile } from "fs/promises";
 import { join } from "path";
 import { parsePropertiesFile } from "@/lib/parseProperties";
 import { Property, PropertyType, MainArea, SubArea } from "@/types/property";
-import { areas } from "@/types/areas";
+import { areas, subAreaNames } from "@/types/areas";
 
 const PER_PAGE = 25;
 
@@ -169,6 +169,116 @@ export function filterProperties(
   if (filters.hasWashingMachine) result = result.filter((p) => p.features.washingMachine);
 
   return result.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+}
+
+const AMENITY_FILTER_KEYS: (keyof CatalogFilters)[] = [
+  "hasBathtub",
+  "hasCarPark",
+  "hasClosedKitchen",
+  "hasDesk",
+  "hasEnclosedLiving",
+  "hasGarage",
+  "hasHighSpeedWifi",
+  "hasNatureView",
+  "hasPetFriendly",
+  "hasPool",
+  "hasWashingMachine",
+];
+
+/** Build filters used to decide which *main areas* appear (drops mainArea from the active filter set). */
+export function catalogFiltersWithoutMainArea(f: CatalogFilters): CatalogFilters {
+  const c = { ...f };
+  delete c.mainArea;
+  return c;
+}
+
+export function catalogFiltersWithoutSubArea(f: CatalogFilters): CatalogFilters {
+  const c = { ...f };
+  delete c.subArea;
+  return c;
+}
+
+export function catalogFiltersWithoutBedrooms(f: CatalogFilters): CatalogFilters {
+  const c = { ...f };
+  delete c.bedrooms;
+  return c;
+}
+
+export function catalogFiltersWithoutAmenities(f: CatalogFilters): CatalogFilters {
+  const c = { ...f };
+  for (const k of AMENITY_FILTER_KEYS) delete c[k];
+  return c;
+}
+
+const DEFAULT_FEATURE_KEY_TO_PROP: Record<string, keyof Property["features"]> = {
+  hasBathtub: "bathtub",
+  hasCarPark: "carPark",
+  hasClosedKitchen: "closedKitchen",
+  hasDesk: "desk",
+  hasEnclosedLiving: "enclosedLivingArea",
+  hasGarage: "garage",
+  hasHighSpeedWifi: "highSpeedWifi",
+  hasNatureView: "natureView",
+  hasPetFriendly: "petFriendly",
+  hasPool: "pool",
+  hasWashingMachine: "washingMachine",
+};
+
+/** Main areas that have ≥1 listing after applying the rest of the filters (and optional path segment). */
+export function getAvailableMainAreas(
+  properties: Property[],
+  filtersSansMainArea: CatalogFilters,
+  segment?: { kind: SegmentKind; value: string | number } | null
+): MainArea[] {
+  const list = filterProperties(properties, filtersSansMainArea, segment ?? undefined);
+  const s = new Set<MainArea>();
+  for (const p of list) {
+    if (p.mainArea) s.add(p.mainArea);
+  }
+  return Array.from(s).sort((a, b) =>
+    (areas[a]?.nameEn ?? a).localeCompare(areas[b]?.nameEn ?? b)
+  );
+}
+
+/** Sub-areas that appear on ≥1 listing for this type + main area (ignores sub-area query). */
+export function getAvailableSubAreas(
+  properties: Property[],
+  filtersSansSubArea: CatalogFilters,
+  segment?: { kind: SegmentKind; value: string | number } | null
+): SubArea[] {
+  const list = filterProperties(properties, filtersSansSubArea, segment ?? undefined);
+  const s = new Set<SubArea>();
+  for (const p of list) {
+    if (p.subArea != null) s.add(p.subArea);
+  }
+  return Array.from(s).sort((a, b) => subAreaNames[a].localeCompare(subAreaNames[b]));
+}
+
+/** Bedroom counts that exist on ≥1 listing (ignores bedrooms query). */
+export function getAvailableBedroomCounts(
+  properties: Property[],
+  filtersSansBedrooms: CatalogFilters,
+  segment?: { kind: SegmentKind; value: string | number } | null
+): number[] {
+  const list = filterProperties(properties, filtersSansBedrooms, segment ?? undefined);
+  const s = new Set<number>();
+  for (const p of list) {
+    if (typeof p.bedrooms === "number" && p.bedrooms > 0) s.add(p.bedrooms);
+  }
+  return Array.from(s).sort((a, b) => a - b);
+}
+
+/** Amenity toggles that match ≥1 listing (ignores amenity query flags). */
+export function getAvailableAmenityFilterKeys(
+  properties: Property[],
+  filtersSansAmenities: CatalogFilters,
+  segment?: { kind: SegmentKind; value: string | number } | null,
+  featureKeyToProp: Record<string, keyof Property["features"]> = DEFAULT_FEATURE_KEY_TO_PROP
+): string[] {
+  const list = filterProperties(properties, filtersSansAmenities, segment ?? undefined);
+  return (Object.keys(featureKeyToProp) as string[]).filter((key) =>
+    list.some((p) => p.features[featureKeyToProp[key]] === true)
+  );
 }
 
 export function paginate<T>(items: T[], page: number): { items: T[]; total: number; totalPages: number; page: number } {
