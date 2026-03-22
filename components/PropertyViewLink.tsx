@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { Suspense, useMemo } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { persistListingReturnPath } from "@/lib/listingReturnStorage";
 
 type Props = {
   propertyId: string;
   className?: string;
   children: React.ReactNode;
+  /** When set (e.g. Similar strip), store this path instead of current URL */
   viewReturnPath?: string;
   "aria-label"?: string;
 };
@@ -23,10 +25,15 @@ function PropertyViewLinkInner({ propertyId, className, children, viewReturnPath
   const base = viewReturnPath ?? inferred;
   const safe =
     base.startsWith("/") && !base.startsWith("//") && !base.includes("://") ? base : "/properties";
-  const href = `/properties/view/${propertyId}?returnTo=${encodeURIComponent(safe)}`;
+  const href = `/properties/view/${propertyId}`;
 
   return (
-    <Link href={href} className={className} aria-label={ariaLabel}>
+    <Link
+      href={href}
+      className={className}
+      aria-label={ariaLabel}
+      onClick={() => persistListingReturnPath(safe)}
+    >
       {children}
     </Link>
   );

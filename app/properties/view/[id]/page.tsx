@@ -1,16 +1,13 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Property } from "@/types/property";
+import type { Property } from "@/types/property";
 import { readFile } from "fs/promises";
 import { join } from "path";
 import { parsePropertiesFile } from "@/lib/parseProperties";
 import { loadAllProperties } from "@/lib/propertiesCatalog";
 import { findSimilarProperties } from "@/lib/similarProperties";
-import {
-  sanitizeReturnTo,
-  getPropertyBackNavigation,
-  similarSectionReturnPath,
-} from "@/lib/propertyViewNavigation";
+import { sanitizeReturnTo, getPropertyBackNavigation, similarSectionReturnPath } from "@/lib/propertyViewNavigation";
+import PropertyBackNav from "@/components/PropertyBackNav";
 import PropertyImages from "@/components/PropertyImages";
 import NotifyWhenAvailableForm from "@/components/NotifyWhenAvailableForm";
 import PropertyStructuredData from "@/components/PropertyStructuredData";
@@ -67,10 +64,10 @@ export default async function PropertyDetailPage({
     notFound();
   }
 
-  const returnTo = sanitizeReturnTo(sp.returnTo);
-  const backNav = getPropertyBackNavigation(property, returnTo);
+  const returnToFromQuery = sanitizeReturnTo(sp.returnTo);
+  const fallbackBackNav = getPropertyBackNavigation(property, null);
   const similar = findSimilarProperties(property, all, 12);
-  const similarReturnPath = similarSectionReturnPath(property, returnTo);
+  const similarReturnPath = similarSectionReturnPath(property, returnToFromQuery);
 
   const formatPrice = (price: number, currency: string) => {
     if (currency === "IDR") {
@@ -116,16 +113,12 @@ export default async function PropertyDetailPage({
             <span className="text-amber-700 text-sm">It may become available again later. Use the form below to get notified.</span>
           </div>
         )}
-        {/* Back — uses ?returnTo= from listing links, else smart default (e.g. all villas) */}
-        <Link
-          href={backNav.href}
-          className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6"
-        >
-          <svg className="w-5 h-5 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          {backNav.label}
-        </Link>
+        {/* Back: clean URLs; listing path from sessionStorage (or legacy ?returnTo=) */}
+        <PropertyBackNav
+          property={property}
+          returnToFromQuery={returnToFromQuery}
+          fallbackNav={fallbackBackNav}
+        />
 
         <div className="grid lg:grid-cols-2 gap-8 mb-8">
           {/* Images */}

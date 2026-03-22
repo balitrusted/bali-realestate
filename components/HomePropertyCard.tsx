@@ -30,7 +30,6 @@ export default function HomePropertyCard({ property }: HomePropertyCardProps) {
   return (
     <PropertyViewLink
       propertyId={String(property.id)}
-      viewReturnPath="/"
       className="group flex flex-col h-full bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md hover:border-gray-300 transition-all"
     >
       <div className="relative w-full aspect-[4/3] overflow-hidden bg-gray-100">

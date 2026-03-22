@@ -3,44 +3,47 @@ import { areas } from "@/types/areas";
 
 const MAX_RETURN_LEN = 2048;
 
+/** Open-redirect safe path (already decoded). */
+export function safeInternalPath(decoded: string): string | null {
+  const trimmed = decoded.trim();
+  if (!trimmed || trimmed.length > MAX_RETURN_LEN) return null;
+  if (!trimmed.startsWith("/") || trimmed.startsWith("//")) return null;
+  if (trimmed.includes("://") || trimmed.includes("\\")) return null;
+  if (trimmed.includes("@")) return null;
+  return trimmed;
+}
+
 /**
- * Safe internal return path from ?returnTo= (open-redirect safe).
+ * Safe internal return path from ?returnTo= (legacy bookmarks; open-redirect safe).
  */
 export function sanitizeReturnTo(raw: string | string[] | undefined): string | null {
   if (raw == null) return null;
   const v = Array.isArray(raw) ? raw[0] : raw;
   if (!v || typeof v !== "string") return null;
-  let decoded: string;
   try {
-    decoded = decodeURIComponent(v.trim());
+    const decoded = decodeURIComponent(v.trim());
+    return safeInternalPath(decoded);
   } catch {
     return null;
   }
-  if (decoded.length > MAX_RETURN_LEN) return null;
-  if (!decoded.startsWith("/") || decoded.startsWith("//")) return null;
-  if (decoded.includes("://") || decoded.includes("\\")) return null;
-  if (decoded.includes("@")) return null;
-  return decoded;
 }
 
 function isVillaLike(p: Property): boolean {
   return p.types.some((t) => t === "rent" || t === "sale");
 }
 
-/** When ?returnTo= is missing: prefer broad villa hub; land/business stay on type+area. */
+/** When ?returnTo= is missing: broad hubs — villas, land, business (no area; area only if user came via ?returnTo= with area). */
 export function defaultListingPathForProperty(p: Property): string {
-  const ma = p.mainArea;
-  const areaPath = ma ? `/${ma}` : "";
   if (p.types.includes("land") && !isVillaLike(p)) {
-    return `/properties/land${areaPath}`;
+    return "/properties/land";
   }
   if (p.types.includes("business") && !isVillaLike(p)) {
-    return `/properties/business${areaPath}`;
+    return "/properties/business";
   }
   if (isVillaLike(p)) {
     return "/properties/villas";
   }
-  return ma ? `/properties/villas${areaPath}` : "/properties/villas";
+  return "/properties/villas";
 }
 
 const TYPE_LABEL: Record<string, string> = {
@@ -90,6 +93,12 @@ export function getPropertyBackNavigation(
   const pathOnly = fallback.split("?")[0];
   if (pathOnly === "/properties/villas") {
     return { href: fallback, label: "Back to all villas" };
+  }
+  if (pathOnly === "/properties/land") {
+    return { href: fallback, label: "Back to land" };
+  }
+  if (pathOnly === "/properties/business") {
+    return { href: fallback, label: "Back to business" };
   }
   if (pathOnly.startsWith("/properties/land/")) {
     const a = pathOnly.replace("/properties/land/", "");
