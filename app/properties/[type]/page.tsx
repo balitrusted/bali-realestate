@@ -66,7 +66,7 @@ export async function generateMetadata({ params }: { params: Promise<{ type: str
   const filtered = filterProperties(all, { type: catalogType });
   const noIndex = filtered.length === 0;
   return {
-    title: buildTitle(catalogType),
+    title: { absolute: buildTitle(catalogType) },
     description: buildDescription(catalogType),
     robots: noIndex ? { index: false, follow: true } : { index: true, follow: true },
   };

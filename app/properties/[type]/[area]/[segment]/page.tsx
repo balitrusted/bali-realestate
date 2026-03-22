@@ -65,7 +65,7 @@ export async function generateMetadata({
   const noIndex = filtered.length === 0 || mainArea !== "ubud";
 
   return {
-    title: buildTitle(catalogType, mainArea, subArea, parsed),
+    title: { absolute: buildTitle(catalogType, mainArea, subArea, parsed) },
     description: buildDescription(catalogType, mainArea, subArea, parsed),
     robots: noIndex ? { index: false, follow: true } : { index: true, follow: true },
   };

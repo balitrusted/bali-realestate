@@ -7,8 +7,9 @@ export type CatalogTypeForSeo = PropertyType | "villas";
 const typeLabels: Record<string, string> = {
   rent: "Rent",
   sale: "Buy",
-  land: "Land",
-  business: "Business",
+  /** Used in generic titles like "Land for Sale in Ubud" when segment filters apply */
+  land: "Sale",
+  business: "Sale",
   villas: "Rent or Buy",
 };
 
@@ -31,6 +32,14 @@ export function buildTitle(
   if (type === "villas" && !segment) {
     if (area) return `All Villas in ${areaName(area)} | Rent or Buy | Balitrusted`;
     return "All Villas for Rent & Sale in Bali | Balitrusted";
+  }
+  if (type === "land" && !segment) {
+    if (area) return `Buy Land in ${areaName(area)} | Balitrusted`;
+    return "Buy Land in Bali | Plots, Leasehold & Freehold | Balitrusted";
+  }
+  if (type === "business" && !segment) {
+    if (area) return `Buy a Business in ${areaName(area)} | Commercial Property | Balitrusted`;
+    return "Buy a Business in Bali | Commercial & Hospitality | Balitrusted";
   }
   const subject = subjectByType[type] ?? "Villas";
   const verb = typeLabels[type] ?? "Rent";
@@ -75,6 +84,14 @@ export function buildH1(
   if (type === "villas" && !segment) {
     if (area) return `All villas in ${areaName(area)}`;
     return "All villas";
+  }
+  if (type === "land" && !segment) {
+    if (area) return `Buy land in ${areaName(area)}`;
+    return "Buy land in Bali";
+  }
+  if (type === "business" && !segment) {
+    if (area) return `Buy a business in ${areaName(area)}`;
+    return "Buy a business in Bali";
   }
   const subject = subjectByType[type] ?? "Villas";
   const verb = typeLabels[type] ?? "Rent";
@@ -128,14 +145,20 @@ export function buildIntro(
   if (type === "sale" && !area && !segment) {
     return "Explore villas for sale in Bali in one curated catalogue. Planning to buy a villa in Bali for living or investment? Filter by area, size, features, and ownership context—then shortlist what fits your budget.";
   }
-  if (type === "land" && !area) {
-    return "Browse land for sale in Bali. Find plots for building or investment.";
+  if (type === "land" && !area && !segment) {
+    return "Here you can browse land parcels we currently list as available for purchase across Bali. This section is still growing—more filters are on the way; for now, open each plot below for full context.";
   }
-  if (type === "business" && !area) {
-    return "Explore business and commercial properties in Bali.";
+  if (type === "business" && !area && !segment) {
+    return "Here you can explore business and commercial listings we currently track in Bali—hospitality-ready villas, guesthouses, and similar opportunities. More filters will follow; for now, review what is live below.";
   }
   const loc = area ? areaName(area) : "Bali";
   const subject = (subjectByType[type] ?? "villas").toLowerCase();
+  if (type === "land" && area && !segment) {
+    return `Thinking about buying land in ${loc}? Here are plots we currently list in this area—useful if you plan to build or hold land long-term. Confirm access, zoning, and title (land leasehold vs land freehold for your case) with qualified advisers before you commit.`;
+  }
+  if (type === "business" && area && !segment) {
+    return `Looking to buy a business in ${loc} or pick up commercial-ready property? Browse what we list here, then validate permits, leases, and local regulations with professionals who know the area.`;
+  }
   if (area && !segment) {
     return `Find ${subject} for ${typeLabels[type]?.toLowerCase() ?? type} in ${loc}. Use filters to narrow your search.`;
   }
@@ -165,6 +188,26 @@ export function buildDescription(
       return areaDesc || `Browse villas for rent and sale in ${areaName(area)}. Find your next home or investment.`;
     }
     return "Browse all villas for rent and for sale in Bali—one catalogue, regularly updated. Long-term rentals and purchase options across Ubud, Canggu, Sanur, Seminyak and more.";
+  }
+  if (type === "land" && !segment) {
+    if (area) {
+      const areaDesc = areas[area]?.seoDescription ?? areas[area]?.description ?? "";
+      return (
+        areaDesc ||
+        `Buy land in ${areaName(area)}. Curated land listings with context on building or holding plots—research land leasehold, land freehold, and land for lease in Bali with your lawyer before you transfer.`
+      );
+    }
+    return "Buy land in Bali: curated plots for building or investment. Compare land for sale with how land for lease in Bali works, and learn how land leasehold vs land freehold framing affects foreign and domestic buyers—always confirm title on file with a notary.";
+  }
+  if (type === "business" && !segment) {
+    if (area) {
+      const areaDesc = areas[area]?.seoDescription ?? areas[area]?.description ?? "";
+      return (
+        areaDesc ||
+        `Buy a business in ${areaName(area)}. Commercial and hospitality listings in our Bali catalogue—verify licensing, leases, and operations with qualified advisers.`
+      );
+    }
+    return "Buy a business in Bali: commercial property and hospitality listings in one place. Shortlist guesthouses, permitted villas, and operator-ready assets—then validate every claim with local legal and tax professionals.";
   }
   const subject = (subjectByType[type] ?? "villas").toLowerCase();
   const loc = area ? areaName(area) : "Bali";
@@ -204,13 +247,13 @@ const seoTextByType: Record<string, string> = {
   rent: `Looking for a villa to rent in Bali? This page lists private villas available for long-term rental across the island — from Ubud and the central highlands to coastal areas like Canggu, Seminyak and Sanur. All listings are verified and suitable for stays of one month or more. You can filter by area, number of bedrooms, payment terms (monthly or yearly) and amenities such as private pool, enclosed kitchen, bathtub or nature view. Whether you need a one-bedroom for remote work or a family villa with several bedrooms, our catalog helps you find a rental that fits your budget and lifestyle.`,
   sale: `Interested in buying a villa or house in Bali? Here you can browse villas for sale across the island. Our listings include freehold and leasehold options in popular areas like Ubud, Canggu, Seminyak and Tanah Lot. Use the filters to narrow by location, size and features. Buying property in Bali involves specific legal and permit requirements; we recommend consulting our guides and specialists before making a decision.`,
   villas: `Looking for a villa in Bali — to rent or to buy? This hub lists all villas available for both long-term rental and purchase across the island. You can choose monthly or yearly rent where offered, or explore purchase options. Filter by area (Ubud, Canggu, Sanur, Seminyak, Tanah Lot), bedrooms, and amenities such as pool, bathtub or enclosed kitchen. Whether you plan to rent for a few months or invest, our catalogue helps you find the right villa.`,
-  land: `Searching for land for sale in Bali? This page shows land plots available for purchase in different areas of the island. Land listings may be suitable for building a villa, developing a small project or long-term investment. Locations range from the green hills of Ubud to coastal zones. Always verify zoning, permits and ownership structure with a qualified professional before committing.`,
-  business: `Exploring business property or commercial opportunities in Bali? This section lists properties that can be used for business — guesthouses, small hotels, cafes or other ventures. Listings may include villas with tourist accommodation permits or land suitable for commercial use. Check each listing and local regulations to ensure the property fits your business plan.`,
+  land: `Buy land in Bali through this growing catalogue of plots we list as available for purchase or structured acquisition. Compare how land for lease in Bali differs from fee-simple expectations elsewhere, and study land leasehold versus land freehold language with your notary—not with blog posts alone. Locations span Ubud hills to coastal zones; always verify zoning, access, and certificates on file before you commit.`,
+  business: `Buy a business in Bali starts with separating glossy photos from permits, leases, and operating reality. This section lists commercial and hospitality-oriented assets we track—guesthouses, larger pool villas with stay permits where stated, and similar concepts. Match each opportunity to how you want to run operations, then validate every claim with local legal and tax advisers.`,
 };
 
 /**
- * Multi-paragraph SEO footer for type hub pages only: /properties/villas, /rent, /sale.
- * Area and segment pages keep using {@link buildSeoText}.
+ * Multi-paragraph SEO footer for type hub pages: /properties/villas, /rent, /sale, /land, /business.
+ * Other area pages use {@link buildTypeAreaFooterParagraphs} or {@link buildSeoText}.
  */
 export function buildTypeHubFooterParagraphs(type: CatalogTypeForSeo): string[] | null {
   if (type === "villas") {
@@ -234,7 +277,44 @@ export function buildTypeHubFooterParagraphs(type: CatalogTypeForSeo): string[] 
       "Purchasing property in Indonesia involves permits, ownership structures, and tax questions that vary by case. We recommend specialist legal advice before you commit. When you are still in research mode, use this page to understand what shapes the current market for villas for sale in Bali—and what it really takes to buy a villa in Bali with confidence.",
     ];
   }
+  if (type === "land") {
+    return [
+      "If you plan to buy land in Bali, clarity on structure matters as much as location: many buyers compare land for sale with land for lease in Bali when a long lease fits budget or flexibility better than an outright purchase path. Land leasehold typically means a defined term (and negotiated extensions) for use or development; land freehold (hak milik) is uncommon for foreign individuals and usually requires structures your notary should explain in writing.",
+      "Plots vary by slope, access, zoning (peruntukan), green-belt or rice-field proximity, and whether power and water are practical. This catalogue lists land we currently present with photos and pricing context—still, site visits, recent land searches, and survey checks beat any online summary.",
+      "Search phrases like land for lease in Bali, land leasehold, and land freehold overlap in Google but point to different legal boxes on the ground. Use this page to shortlist, then run title, tax, permit, and village-level checks with qualified Bali professionals before you transfer funds.",
+    ];
+  }
+  if (type === "business") {
+    return [
+      "To buy a business in Bali is rarely a simple handover: hospitality listings often combine commercial property with brand, bookings, staff, and capex you still owe after closing. Read pondok wisata or other permit stacks alongside P&L narratives—photos show design, not compliance.",
+      "This hub lists opportunities we track today across the island. Match each asset to real demand in its neighborhood: Ubud, Canggu, Seminyak, Sanur, and the central highlands all behave differently for length of stay, rate strategy, and seasonality.",
+      "Whether you search buy a business in Bali or commercial property for sale in Bali, diligence is the same: verify licenses, lease terms, transfer taxes, and seller claims with local legal and accounting advisers before you sign.",
+    ];
+  }
   return null;
+}
+
+/**
+ * Multi-paragraph SEO footer for /properties/{land|business}/{area} (path-based area URLs).
+ */
+export function buildTypeAreaFooterParagraphs(
+  type: CatalogTypeForSeo,
+  area: MainArea
+): string[] | null {
+  if (type !== "land" && type !== "business") return null;
+  const loc = areaName(area);
+  if (type === "land") {
+    return [
+      `${loc} attracts land buyers for different reasons—views, access, quiet, or proximity to tourism corridors. When you buy land in ${loc}, treat every listing as a starting point: confirm boundaries, access rights, and whether the seller frames the plot as land leasehold, land freehold for an eligible party, or another structure. Buyers comparing land for lease in Bali with an outright purchase should model total cost over the years they plan to hold, not only headline price.`,
+      `Zoning and local rules can limit height, footprint, or use even when a plot looks ideal in photos. If you are researching land leasehold extensions or how land freehold certificates might relate to your nationality and entity setup, do that work with a notary and land specialist before you commit a deposit—online copy cannot replace a file review.`,
+      `We refresh this catalogue as plots change. If you are early in your search for land in ${loc} or want help interpreting how land for lease in Bali compares to fee-simple-style expectations from other countries, use our guides or reach out via Request once you have a shortlist.`,
+    ];
+  }
+  return [
+    `Operators who want to buy a business in ${loc} should stress-test the story behind each listing: occupancy, rate mix, staff contracts, and what permits actually allow on site. Commercial property in ${loc} only works when the guest profile and seasonality in this area match how you plan to market and operate—not only how the photos look.`,
+    `Listings may bundle real estate with goodwill, furniture, and channel accounts. Separately verify lease length, renewal clauses, landlord consent for assignment, and any seller financing claims. The phrase buy a business in Bali covers many shapes; make sure the one you pursue matches how you want to spend your time after closing.`,
+    `We update listings as we verify details. If you need a tighter shortlist of commercial property in ${loc} or guidance on licensing before you buy a business in Bali, note your budget and timeline in Request and we will help you orient.`,
+  ];
 }
 
 export function buildSeoText(
@@ -246,6 +326,12 @@ export function buildSeoText(
   if (type === "villas" && !segment) {
     if (area) return `${areaName(area)} is one of Bali's most sought-after areas for villas. Whether you want to rent or buy, this page lists villas in ${areaName(area)}. Use filters to narrow by bedrooms, payment terms and amenities. ${seoTextByType.villas}`;
     return seoTextByType.villas;
+  }
+  if (type === "land" && area && !segment) {
+    return `Land in ${areaName(area)}: plots we list for buyers comparing land for sale with land for lease in Bali, and researching land leasehold vs land freehold—confirm every certificate with a notary before you transfer.`;
+  }
+  if (type === "business" && area && !segment) {
+    return `Commercial listings in ${areaName(area)} for operators exploring buy a business in Bali and related commercial property searches—verify licensing and leases locally before you commit.`;
   }
   const subject = (subjectByType[type] ?? "villas").toLowerCase();
   const loc = area ? areaName(area) : "Bali";

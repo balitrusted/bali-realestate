@@ -24,7 +24,15 @@ import {
   getAvailableBedroomCounts,
   getAvailableAmenityFilterKeys,
 } from "@/lib/propertiesCatalog";
-import { buildH1, buildSeoText } from "@/lib/seoTemplates";
+import Link from "next/link";
+import {
+  buildH1,
+  buildSeoText,
+  buildTitle,
+  buildDescription,
+  buildIntro,
+  buildTypeAreaFooterParagraphs,
+} from "@/lib/seoTemplates";
 import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
 import Image from "next/image";
 
@@ -39,14 +47,6 @@ const propertyTypeNames: Record<string, string> = {
   land: "Land",
   business: "Business",
   villas: "Villas (Rent or Buy)",
-};
-
-const propertyTypeVerbs: Record<string, string> = {
-  rent: "Rent",
-  sale: "Buy",
-  land: "Buy",
-  business: "Buy",
-  villas: "Rent or Buy",
 };
 
 export async function generateMetadata({
@@ -64,22 +64,18 @@ export async function generateMetadata({
   const catalogType = type as CatalogTypeForSeo;
   const areaInfo = areas[mainArea];
   const typeName = propertyTypeNames[type];
-  const verb = propertyTypeVerbs[type];
-  const subject =
-    type === "rent" ? "Villas" : type === "sale" ? "Villas" : type === "villas" ? "Villas" : type === "land" ? "Land" : "Business";
-  const title = `${verb} ${subject} in ${areaInfo.nameEn}`;
-  const description =
-    areaInfo.seoDescription ||
-    `Find ${typeName.toLowerCase()} in ${areaInfo.nameEn}. ${areaInfo.description}`;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://balitrusted.com";
+  const canonicalPath = `/properties/${type}/${area}`;
 
   const all = await loadAllProperties();
   const filtered = filterProperties(all, { type: catalogType, mainArea });
   const noIndex = filtered.length === 0;
 
   return {
-    title: `${title} - Balitrusted`,
-    description,
-    keywords: `${areaInfo.nameEn}, ${typeName}, Bali, real estate, ${type === "rent" ? "rental" : type === "sale" ? "sale" : "rent and sale"}`,
+    title: { absolute: buildTitle(catalogType, mainArea) },
+    description: buildDescription(catalogType, mainArea) || areaInfo.seoDescription || areaInfo.description,
+    keywords: `${areaInfo.nameEn}, ${typeName}, Bali, real estate, ${type === "rent" ? "rental" : type === "sale" ? "sale" : type === "villas" ? "rent and sale" : "buy"}`,
+    alternates: { canonical: `${baseUrl}${canonicalPath}` },
     robots: noIndex ? { index: false, follow: true } : { index: true, follow: true },
   };
 }
@@ -161,6 +157,13 @@ export default async function PropertiesByTypeAndAreaPage({
   if (queryParams.hasWashingMachine === "true") featureTexts.push("with washing machine");
   const featureText = featureTexts.length > 0 ? ` ${featureTexts.join(", ")}` : "";
 
+  const heroBlurb =
+    catalogType === "land" || catalogType === "business"
+      ? buildIntro(catalogType, mainArea)
+      : areaInfo.description;
+
+  const areaFooterParagraphs = buildTypeAreaFooterParagraphs(catalogType, mainArea);
+
   const basePath = `/properties/${catalogType}/${mainArea}`;
   const searchParamsForPagination: Record<string, string> = { ...queryParams } as Record<string, string>;
   if (filters.subArea?.length) searchParamsForPagination.subArea = filters.subArea.join(",");
@@ -184,7 +187,6 @@ export default async function PropertiesByTypeAndAreaPage({
   return (
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-8">
-        <link rel="canonical" href={`${baseUrl}${basePath}`} />
         <CatalogBreadcrumb
           type={catalogType as "rent" | "sale" | "villas" | "land" | "business"}
           area={mainArea}
@@ -211,6 +213,11 @@ export default async function PropertiesByTypeAndAreaPage({
                 <h1 className="text-2xl md:text-4xl font-semibold tracking-tight mb-2">
                   {buildH1(catalogType, mainArea)}
                 </h1>
+                {(catalogType === "land" || catalogType === "business") && (
+                  <p className="text-sm md:text-base opacity-95 max-w-2xl mx-auto leading-relaxed mt-3 px-2">
+                    {heroBlurb}
+                  </p>
+                )}
                 {featureText && (
                   <p className="text-sm md:text-base opacity-95 max-w-2xl mx-auto leading-relaxed mt-2">
                     {featureText}
@@ -231,9 +238,7 @@ export default async function PropertiesByTypeAndAreaPage({
                 {featureText}
               </p>
             )}
-            <p className="text-gray-600 mt-4 text-sm max-w-3xl leading-relaxed">
-              {areaInfo.description}
-            </p>
+            <p className="text-gray-600 mt-4 text-sm max-w-3xl leading-relaxed">{heroBlurb}</p>
           </div>
         )}
 
@@ -304,11 +309,25 @@ export default async function PropertiesByTypeAndAreaPage({
           </div>
         </div>
 
-        {total > 0 && (
-          <div className="mt-16 max-w-3xl text-gray-600 text-sm leading-relaxed">
-            {buildSeoText(catalogType, mainArea)}
-          </div>
-        )}
+        {total > 0 &&
+          (areaFooterParagraphs ? (
+            <div className="mt-16 max-w-3xl text-gray-600 text-sm leading-relaxed space-y-4">
+              {areaFooterParagraphs.map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
+              <p>
+                Listings change as we verify updates—check back from time to time, or use{" "}
+                <Link href="/request" className="text-emerald-800 underline hover:text-emerald-900">
+                  Request
+                </Link>{" "}
+                if you want help finding the right fit.
+              </p>
+            </div>
+          ) : (
+            <div className="mt-16 max-w-3xl text-gray-600 text-sm leading-relaxed">
+              {buildSeoText(catalogType, mainArea)}
+            </div>
+          ))}
       </div>
     </div>
   );

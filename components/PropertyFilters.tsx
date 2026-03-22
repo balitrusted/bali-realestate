@@ -224,49 +224,64 @@ export default function PropertyFilters({
     if (newFilters.minDuration) queryParams.set("minDuration", newFilters.minDuration.toString());
     if (newFilters.maxPrice) queryParams.set("maxPrice", newFilters.maxPrice.toString());
 
-    const queryString = queryParams.toString();
+    /** Drop redundant ?mainArea= when area is already in /properties/{type}/{area}/… */
+    const qsForPath = (pathname: string) => {
+      const qp = new URLSearchParams(queryParams.toString());
+      const m = pathname.match(/^\/properties\/[^/]+\/([^/]+)(?:\/|$)/);
+      if (m?.[1] && newFilters.mainArea === m[1]) {
+        qp.delete("mainArea");
+      }
+      const s = qp.toString();
+      return s ? `?${s}` : "";
+    };
 
     if (pathType && pathArea) {
       const newType = newFilters.type || pathType;
       if (!newFilters.mainArea) {
-        router.push(`/properties/${newType}${queryString ? `?${queryString}` : ""}`, { scroll: false });
+        router.push(`/properties/${newType}${qsForPath(`/properties/${newType}`)}`, { scroll: false });
         return;
       }
       const newArea = newFilters.mainArea;
       if (newArea !== pathArea || newType !== pathType) {
-        router.push(`/properties/${newType}/${newArea}${queryString ? `?${queryString}` : ""}`, {
+        router.push(`/properties/${newType}/${newArea}${qsForPath(`/properties/${newType}/${newArea}`)}`, {
           scroll: false,
         });
         return;
       }
-      router.push(`${currentPath}${queryString ? `?${queryString}` : ""}`, { scroll: false });
+      router.push(`${currentPath}${qsForPath(currentPath)}`, { scroll: false });
       return;
     }
 
     if (isTypeOnlyPath || (pathType && !pathArea)) {
       const newType = newFilters.type || pathType;
       if (!newType) {
-        router.push(`/properties${queryString ? `?${queryString}` : ""}`, { scroll: false });
+        router.push(`/properties${qsForPath("/properties")}`, { scroll: false });
         return;
       }
       if (newFilters.mainArea) {
-        router.push(`/properties/${newType}/${newFilters.mainArea}${queryString ? `?${queryString}` : ""}`, {
-          scroll: false,
-        });
+        router.push(
+          `/properties/${newType}/${newFilters.mainArea}${qsForPath(`/properties/${newType}/${newFilters.mainArea}`)}`,
+          {
+            scroll: false,
+          }
+        );
       } else {
-        router.push(`/properties/${newType}${queryString ? `?${queryString}` : ""}`, { scroll: false });
+        router.push(`/properties/${newType}${qsForPath(`/properties/${newType}`)}`, { scroll: false });
       }
       return;
     }
 
     if (newFilters.type && newFilters.mainArea) {
-      router.push(`/properties/${newFilters.type}/${newFilters.mainArea}${queryString ? `?${queryString}` : ""}`, {
-        scroll: false,
-      });
+      router.push(
+        `/properties/${newFilters.type}/${newFilters.mainArea}${qsForPath(`/properties/${newFilters.type}/${newFilters.mainArea}`)}`,
+        {
+          scroll: false,
+        }
+      );
     } else if (newFilters.type) {
-      router.push(`/properties/${newFilters.type}${queryString ? `?${queryString}` : ""}`, { scroll: false });
+      router.push(`/properties/${newFilters.type}${qsForPath(`/properties/${newFilters.type}`)}`, { scroll: false });
     } else {
-      router.push(`/properties${queryString ? `?${queryString}` : ""}`, { scroll: false });
+      router.push(`/properties${qsForPath("/properties")}`, { scroll: false });
     }
   };
 
