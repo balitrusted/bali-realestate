@@ -1,13 +1,21 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
 import { Property } from "@/types/property";
 import { readFile } from "fs/promises";
 import { join } from "path";
 import { parsePropertiesFile } from "@/lib/parseProperties";
+import { loadAllProperties } from "@/lib/propertiesCatalog";
+import { findSimilarProperties } from "@/lib/similarProperties";
+import {
+  sanitizeReturnTo,
+  getPropertyBackNavigation,
+  similarSectionReturnPath,
+} from "@/lib/propertyViewNavigation";
 import PropertyImages from "@/components/PropertyImages";
 import NotifyWhenAvailableForm from "@/components/NotifyWhenAvailableForm";
 import PropertyStructuredData from "@/components/PropertyStructuredData";
+import PropertyCardActions from "@/components/PropertyCardActions";
+import PropertyDetailSimilar from "@/components/PropertyDetailSimilar";
 import { subAreaNames, areas, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
 import { getPropertyDisplayTitle, fixDescriptionDisplay } from "@/lib/propertyUtils";
 
@@ -43,13 +51,26 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   };
 }
 
-export default async function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function PropertyDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ returnTo?: string }>;
+}) {
   const { id } = await params;
-  const property = await getProperty(id);
+  const sp = await searchParams;
+  const all = await loadAllProperties();
+  const property = all.find((p) => p.id === id);
 
   if (!property) {
     notFound();
   }
+
+  const returnTo = sanitizeReturnTo(sp.returnTo);
+  const backNav = getPropertyBackNavigation(property, returnTo);
+  const similar = findSimilarProperties(property, all, 12);
+  const similarReturnPath = similarSectionReturnPath(property, returnTo);
 
   const formatPrice = (price: number, currency: string) => {
     if (currency === "IDR") {
@@ -95,17 +116,15 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
             <span className="text-amber-700 text-sm">It may become available again later. Use the form below to get notified.</span>
           </div>
         )}
-        {/* Back button */}
+        {/* Back — uses ?returnTo= from listing links, else smart default (e.g. all villas) */}
         <Link
-          href={property.mainArea && property.types && property.types.length > 0 
-            ? `/properties/${property.types[0]}/${property.mainArea}`
-            : "/properties"}
+          href={backNav.href}
           className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6"
         >
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Back to Properties
+          {backNav.label}
         </Link>
 
         <div className="grid lg:grid-cols-2 gap-8 mb-8">
@@ -132,9 +151,12 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
               )}
             </div>
             
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              {getPropertyDisplayTitle(property)}
-            </h1>
+            <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+              <h1 className="text-3xl font-bold text-gray-900 flex-1 min-w-0">
+                {getPropertyDisplayTitle(property)}
+              </h1>
+              <PropertyCardActions propertyId={String(property.id)} layout="inline" />
+            </div>
             
             <div className="mb-6">
               {forSale != null && isSale && (
@@ -225,6 +247,8 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
             )}
           </div>
         </div>
+
+        <PropertyDetailSimilar properties={similar} viewReturnPath={similarReturnPath} />
       </div>
     </div>
     </>

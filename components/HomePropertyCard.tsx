@@ -1,6 +1,6 @@
-import Link from "next/link";
 import Image from "next/image";
 import PropertyCardActions from "@/components/PropertyCardActions";
+import PropertyViewLink from "@/components/PropertyViewLink";
 import { Property } from "@/types/property";
 import { areas } from "@/types/areas";
 import { getPropertyDisplayTitle } from "@/lib/propertyUtils";
@@ -28,8 +28,9 @@ export default function HomePropertyCard({ property }: HomePropertyCardProps) {
         : "—";
 
   return (
-    <Link
-      href={`/properties/view/${property.id}`}
+    <PropertyViewLink
+      propertyId={String(property.id)}
+      viewReturnPath="/"
       className="group flex flex-col h-full bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md hover:border-gray-300 transition-all"
     >
       <div className="relative w-full aspect-[4/3] overflow-hidden bg-gray-100">
@@ -56,6 +57,6 @@ export default function HomePropertyCard({ property }: HomePropertyCardProps) {
         <p className="text-xs text-gray-500">{areaName}</p>
         <p className="text-xs font-medium text-gray-700 mt-auto pt-1">{priceLabel}</p>
       </div>
-    </Link>
+    </PropertyViewLink>
   );
 }

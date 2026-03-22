@@ -1,6 +1,6 @@
-import Link from "next/link";
 import PropertyImageWithFallback from "@/components/PropertyImageWithFallback";
 import PropertyCardActions from "@/components/PropertyCardActions";
+import PropertyViewLink from "@/components/PropertyViewLink";
 import { Property } from "@/types/property";
 import { areas, subAreaNames, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
 import { getPropertyDisplayTitle } from "@/lib/propertyUtils";
@@ -8,6 +8,8 @@ import { getPropertyImageAlt } from "@/lib/imageSeo";
 
 interface PropertyCardProps {
   property: Property;
+  /** Optional stable returnTo for links (e.g. Similar properties strip) */
+  viewReturnPath?: string;
 }
 
 // Quick UI switch (easy rollback):
@@ -16,7 +18,7 @@ interface PropertyCardProps {
 // - "below": title below the image (original variant 0)
 const PROPERTY_CARD_TITLE_VARIANT: "above" | "overlay" | "below" = "above";
 
-export default function PropertyCard({ property }: PropertyCardProps) {
+export default function PropertyCard({ property, viewReturnPath }: PropertyCardProps) {
   const formatPrice = (price: number, currency: string) => {
     if (currency === "IDR") {
       return `${(price / 1000000).toFixed(0)}M IDR`;
@@ -190,16 +192,18 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   const topSubline = locationLabel || null;
   const teaser = buildTeaser();
 
-  const href = `/properties/view/${property.id}`;
-
   return (
     <article className="flex flex-col h-full bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
       {PROPERTY_CARD_TITLE_VARIANT === "above" && (
         <div className="p-5 pb-3">
           <h3 className="text-xl font-semibold text-gray-900 leading-snug select-text">
-            <Link href={href} className="hover:underline underline-offset-2">
+            <PropertyViewLink
+              propertyId={String(property.id)}
+              viewReturnPath={viewReturnPath}
+              className="hover:underline underline-offset-2"
+            >
               {cardTitle}
-            </Link>
+            </PropertyViewLink>
           </h3>
           {topSubline && (
             <p className="mt-1 text-sm text-gray-600 select-text">
@@ -212,7 +216,12 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       {/* Image */}
       {mainImage ? (
         <div className="w-full h-48 relative overflow-hidden flex-shrink-0">
-          <Link href={href} className="absolute inset-0" aria-label={displayTitle}>
+          <PropertyViewLink
+            propertyId={String(property.id)}
+            viewReturnPath={viewReturnPath}
+            className="absolute inset-0"
+            aria-label={displayTitle}
+          >
             <PropertyImageWithFallback
               src={mainImage}
               alt={getPropertyImageAlt(property, 0)}
@@ -220,7 +229,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
               className="object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
-          </Link>
+          </PropertyViewLink>
           {PROPERTY_CARD_TITLE_VARIANT === "overlay" && (
             <div className="absolute inset-0 pointer-events-none">
               <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/55 to-transparent" />
@@ -255,9 +264,13 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       <div className={`${PROPERTY_CARD_TITLE_VARIANT === "above" ? "px-6 pt-4 pb-6" : "p-6"} flex flex-col flex-1 min-h-0`}>
         {PROPERTY_CARD_TITLE_VARIANT === "below" && (
           <h3 className="text-xl font-semibold text-gray-900 mb-2 select-text">
-            <Link href={href} className="hover:underline underline-offset-2">
+            <PropertyViewLink
+              propertyId={String(property.id)}
+              viewReturnPath={viewReturnPath}
+              className="hover:underline underline-offset-2"
+            >
               {displayTitle}
-            </Link>
+            </PropertyViewLink>
           </h3>
         )}
         
@@ -324,12 +337,13 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             ) : null}
           </div>
 
-          <Link
-            href={href}
+          <PropertyViewLink
+            propertyId={String(property.id)}
+            viewReturnPath={viewReturnPath}
             className="block text-center px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
           >
             View Details
-          </Link>
+          </PropertyViewLink>
         </div>
       </div>
     </article>

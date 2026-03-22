@@ -4,6 +4,8 @@ import { useSavedOptional } from "@/components/SavedProvider";
 
 interface PropertyCardActionsProps {
   propertyId: string;
+  /** "card" = absolute on image corner; "inline" = row next to title */
+  layout?: "card" | "inline";
 }
 
 function HeartIcon({ filled }: { filled: boolean }) {
@@ -27,16 +29,21 @@ function CompareIcon() {
   );
 }
 
-export default function PropertyCardActions({ propertyId }: PropertyCardActionsProps) {
+export default function PropertyCardActions({ propertyId, layout = "card" }: PropertyCardActionsProps) {
   const saved = useSavedOptional();
   if (!saved) return null;
 
   const isFav = saved.favorites.includes(propertyId);
   const inCompare = saved.compare.includes(propertyId);
 
+  const wrapClass =
+    layout === "inline"
+      ? "relative z-10 flex gap-1.5 shrink-0"
+      : "absolute top-2 right-2 z-10 flex gap-1.5";
+
   return (
     <div
-      className="absolute top-2 right-2 z-10 flex gap-1.5"
+      className={wrapClass}
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
