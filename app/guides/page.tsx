@@ -1,316 +1,321 @@
 import Link from "next/link";
-import { Article } from "@/types/article";
+import type { Article } from "@/types/article";
 import { getArticles } from "@/lib/articlesData";
+import {
+  GUIDE_CATEGORIES,
+  articlePreview,
+  articleReadingMinutes,
+  commentCountForArticle,
+  getApprovedCommentCountsByArticleId,
+  publishedArticles,
+} from "@/lib/guideHub";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
-
-// Static categories with their articles
-const guideCategories = [
-  {
-    slug: "rent",
-    title: "Long-term rental",
-    description: "Everything about long-term villa rentals in Bali",
-    articles: [
-      {
-        slug: "long-stay-rental-bali",
-        title: "Long-term Villa Rental in Bali: From 6 Months and More",
-        preview: "Why monthly rental is the worst option for living in Bali..."
-      },
-      {
-        slug: "monthly-rental-worst-option",
-        title: "Why Monthly Rental is the Worst Option for Living in Bali",
-        preview: "Short-term rental creates many problems..."
-      },
-      {
-        slug: "family-villa-ubud",
-        title: "Renting a Villa for Family in Ubud: What to Look For",
-        preview: "When choosing a villa for family, it's important to consider..."
-      }
-    ]
-  },
-  {
-    slug: "buy",
-    title: "Purchase and Investments",
-    description: "Real information about buying real estate in Bali",
-    articles: [
-      {
-        slug: "buying-villa-bali",
-        title: "Buying a Villa in Bali: What You Actually Buy",
-        preview: "Most foreigners cannot buy land..."
-      },
-      {
-        slug: "leasehold-vs-freehold",
-        title: "Leasehold vs Freehold in Simple Terms",
-        preview: "The difference between these ownership types is critical..."
-      }
-    ]
-  },
-  {
-    slug: "land",
-    title: "Land",
-    description: "Risks and opportunities of land investments",
-    articles: [
-      {
-        slug: "land-investment-risks",
-        title: "Land in Bali: Main Risks",
-        preview: "Buying land in Bali comes with serious risks..."
-      }
-    ]
-  },
-  {
-    slug: "legal",
-    title: "Legal and Safety",
-    description: "Legal aspects of rental and purchase",
-    articles: [
-      {
-        slug: "rental-contract-bali",
-        title: "What a Normal Rental Contract in Bali Looks Like",
-        preview: "A rental contract should contain the following points..."
-      },
-      {
-        slug: "check-before-signing",
-        title: "What to Check Before Signing a Contract",
-        preview: "Before signing a contract, be sure to check..."
-      }
-    ]
-  },
-  {
-    slug: "ubud",
-    title: "Ubud",
-    description: "Everything about Ubud: areas, neighborhoods, and local insights",
-    articles: [
-      // Articles will be loaded dynamically from data/articles.ts
-    ]
-  },
-  {
-    slug: "areas",
-    title: "Areas",
-    description: "Reviews of other Bali areas",
-    articles: [
-      {
-        slug: "quiet-areas-ubud-family",
-        title: "Quiet Areas of Ubud for Family Living",
-        preview: "Not all areas of Ubud are suitable for long-term living..."
-      },
-      {
-        slug: "ubud-center-bad-idea",
-        title: "Why Ubud Center is a Bad Idea for Long-term",
-        preview: "Ubud center is overloaded with tourists and noise..."
-      }
-    ]
-  },
-  {
-    slug: "risks",
-    title: "Mistakes and Reality",
-    description: "Common mistakes and disappointments",
-    articles: [
-      {
-        slug: "disappointments-bali-rental",
-        title: "Why 80% of People Get Disappointed with Bali Rentals",
-        preview: "Main reasons for disappointment are related to..."
-      },
-      {
-        slug: "myths-bali-realestate",
-        title: "Myths About Bali Real Estate Market",
-        preview: "Common misconceptions about real estate in Bali..."
-      }
-    ]
-  }
-];
 
 export const metadata = {
   title: "Knowledge Base",
-  description: "Practical articles about rentals, purchases, legal aspects, and areas of Bali",
+  description:
+    "Practical guides on long-term rental, buying property, land, legal basics, Ubud, and other Bali areas — updated as we learn more.",
 };
 
-// Strip HTML tags from text
-function stripHtml(html: string): string {
-  return html
-    .replace(/<[^>]*>/g, '') // Remove HTML tags
-    .replace(/&nbsp;/g, ' ') // Replace &nbsp; with space
-    .replace(/&amp;/g, '&') // Replace &amp; with &
-    .replace(/&lt;/g, '<') // Replace &lt; with <
-    .replace(/&gt;/g, '>') // Replace &gt; with >
-    .replace(/&quot;/g, '"') // Replace &quot; with "
-    .replace(/&#39;/g, "'") // Replace &#39; with '
-    .trim();
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
-// Calculate reading time (average reading speed: 200 words per minute)
-function calculateReadingTime(content: string): number {
-  const text = stripHtml(content);
-  const words = text.split(/\s+/).filter(word => word.length > 0).length;
-  const minutes = Math.ceil(words / 200);
-  return minutes || 1; // Minimum 1 minute
+function ArticleMeta({
+  article,
+  readingMinutes,
+  views,
+  comments,
+}: {
+  article: Article;
+  readingMinutes: number;
+  views: number;
+  comments: number;
+}) {
+  const dateLabel =
+    article.updatedAt && article.updatedAt !== article.createdAt
+      ? `Updated ${formatDate(article.updatedAt)}`
+      : article.publishedAt
+        ? formatDate(article.publishedAt)
+        : formatDate(article.createdAt);
+
+  return (
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-stone-500">
+      <span>{dateLabel}</span>
+      <span className="text-stone-300" aria-hidden>
+        ·
+      </span>
+      <span>{readingMinutes} min read</span>
+      <span className="text-stone-300" aria-hidden>
+        ·
+      </span>
+      <span>{views.toLocaleString()} reads</span>
+      <span className="text-stone-300" aria-hidden>
+        ·
+      </span>
+      <span>
+        {comments === 0
+          ? "No comments yet"
+          : `${comments} comment${comments === 1 ? "" : "s"}`}
+      </span>
+    </div>
+  );
 }
 
-// Get comment count for an article
-async function getCommentCount(articleId: string): Promise<number> {
-  try {
-    const { comments } = await import("@/data/comments");
-    const articleComments = comments.filter(c => c.articleId === articleId && c.approved);
-    return articleComments.length;
-  } catch {
-    return 0;
-  }
-}
-
-async function getArticlesByCategory(category: string): Promise<Article[]> {
-  try {
-    const articles = await getArticles();
-    return articles.filter(a => a.category === category && a.published);
-  } catch (error) {
-    console.error("Error fetching articles:", error);
-    return [];
-  }
+function PostCard({
+  article,
+  href,
+  readingMinutes,
+  views,
+  comments,
+  excerpt,
+  badge,
+}: {
+  article: Article;
+  href: string;
+  readingMinutes: number;
+  views: number;
+  comments: number;
+  excerpt: string;
+  badge?: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group flex flex-col rounded-2xl border border-stone-200/80 bg-white p-5 shadow-sm transition hover:border-emerald-200 hover:shadow-md"
+    >
+      <div className="mb-2 flex flex-wrap items-center gap-2">
+        {badge ? (
+          <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-emerald-800">
+            {badge}
+          </span>
+        ) : null}
+      </div>
+      <h3 className="text-lg font-semibold leading-snug text-stone-900 group-hover:text-emerald-900">{article.title}</h3>
+      <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-stone-600">{excerpt}</p>
+      <div className="mt-4 border-t border-stone-100 pt-3">
+        <ArticleMeta article={article} readingMinutes={readingMinutes} views={views} comments={comments} />
+      </div>
+    </Link>
+  );
 }
 
 export default async function GuidesPage() {
-  // Fetch all articles dynamically for each category
-  const categorySlugs = guideCategories.map(cat => cat.slug);
-  
-  // Fetch articles for all categories that might have dynamic articles
-  const articlesByCategory = new Map<string, Article[]>();
-  for (const slug of categorySlugs) {
-    const articles = await getArticlesByCategory(slug);
-    if (articles.length > 0) {
-      articlesByCategory.set(slug, articles);
-    }
+  const [rawArticles, commentMap] = await Promise.all([getArticles(), getApprovedCommentCountsByArticleId()]);
+  const all = publishedArticles(rawArticles);
+
+  const enrich = (a: Article) => {
+    const readingMinutes = articleReadingMinutes(a.content);
+    const excerpt = articlePreview(a);
+    const views = a.views ?? 0;
+    const comments = commentCountForArticle(a, commentMap);
+    const href = `/guides/${a.category}/${a.slug}`;
+    return { article: a, readingMinutes, excerpt, views, comments, href };
+  };
+
+  const enriched = all.map(enrich);
+
+  const listsByCategory = new Map<string, typeof enriched>();
+  for (const cat of GUIDE_CATEGORIES) {
+    listsByCategory.set(cat.slug, []);
   }
-  
-  // Update categories with fetched articles, or use fallback static articles
-  const categoriesWithArticles = await Promise.all(guideCategories.map(async (category) => {
-    const dynamicArticles = articlesByCategory.get(category.slug);
-    
-    // If we have dynamic articles, use them; otherwise use static fallback
-    const articlesToUse = dynamicArticles || category.articles;
-    
-    return {
-      ...category,
-      articles: await Promise.all(articlesToUse.map(async (article: any) => {
-        // If it's already in the format { slug, title, preview }, enrich it with metadata if possible
-        if (article.slug && article.title && article.preview && !article.id) {
-          // Static article - return as is
-          return article;
-        }
-        
-        // Otherwise, it's an Article object from the database
-        let preview = article.excerpt || '';
-        if (!preview && article.content) {
-          preview = stripHtml(article.content).substring(0, 150);
-          if (article.content.length > 150) {
-            preview += '...';
-          }
-        }
+  const uncategorized: typeof enriched = [];
+  for (const x of enriched) {
+    const bucket = listsByCategory.get(x.article.category);
+    if (bucket) bucket.push(x);
+    else uncategorized.push(x);
+  }
+  for (const [, list] of listsByCategory) {
+    list.sort((a, b) => +new Date(b.article.updatedAt) - +new Date(a.article.updatedAt));
+  }
 
-        // Get comment count
-        const commentCount = await getCommentCount(article.id);
-        
-        // Calculate reading time
-        const readingTime = calculateReadingTime(article.content);
+  const mostRead = [...enriched]
+    .sort((a, b) => b.views - a.views || +new Date(b.article.updatedAt) - +new Date(a.article.updatedAt))
+    .slice(0, 6);
+  const mostReadIds = new Set(mostRead.map((x) => x.article.id));
 
-        return {
-          id: article.id,
-          slug: article.slug,
-          title: article.title,
-          preview: preview,
-          createdAt: article.createdAt,
-          updatedAt: article.updatedAt,
-          views: article.views || 0,
-          commentCount: commentCount,
-          readingTime: readingTime,
-        };
-      }))
-    };
-  }));
+  const recentlyUpdated = [...enriched]
+    .filter((x) => !mostReadIds.has(x.article.id))
+    .sort((a, b) => +new Date(b.article.updatedAt) - +new Date(a.article.updatedAt))
+    .slice(0, 6);
+
+  const hubFreshAt =
+    all.length > 0
+      ? new Date(Math.max(...all.map((a) => +new Date(a.updatedAt || a.createdAt)))).toISOString()
+      : null;
 
   return (
-    <div className="bg-white min-h-screen">
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Knowledge Base
-          </h1>
-          <p className="text-xl text-gray-600">
-            Practical articles based on real experience and market research. 
-            No marketing, only facts and useful information.
+    <div className="min-h-screen bg-gradient-to-b from-stone-50 to-white">
+      <div className="container mx-auto max-w-6xl px-4 py-10 md:py-14">
+        <header className="mx-auto mb-10 max-w-3xl text-center md:mb-14">
+          <p className="text-xs font-semibold uppercase tracking-widest text-emerald-800/90">Knowledge base</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-stone-900 md:text-4xl">Guides that stay honest</h1>
+          <p className="mt-3 text-base leading-relaxed text-stone-600 md:text-lg">
+            Field notes and research on renting, buying, land, contracts, Ubud, and other areas — structured like a blog,
+            organised so you can jump straight to what you need.
           </p>
-        </div>
+          {hubFreshAt ? (
+            <p className="mt-4 text-sm text-stone-500">
+              Library last touched{" "}
+              <time dateTime={hubFreshAt}>{formatDate(hubFreshAt)}</time>
+              <span className="text-stone-400"> · </span>
+              {all.length} {all.length === 1 ? "article" : "articles"}
+            </p>
+          ) : null}
+        </header>
 
-        <div className="space-y-12">
-          {categoriesWithArticles.map((category) => (
-            <section key={category.slug}>
-              <div className="mb-6">
+        <section className="mb-12 md:mb-16" aria-labelledby="topics-heading">
+          <h2 id="topics-heading" className="sr-only">
+            Browse by topic
+          </h2>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {GUIDE_CATEGORIES.map((cat) => {
+              const n = listsByCategory.get(cat.slug)?.length ?? 0;
+              return (
                 <Link
-                  href={`/guides/${category.slug}`}
-                  className="text-2xl font-semibold text-gray-900 hover:text-gray-700"
+                  key={cat.slug}
+                  href={`/guides/${cat.slug}`}
+                  className="flex flex-col rounded-2xl border border-stone-200/90 bg-white/90 p-4 shadow-sm transition hover:border-emerald-200 hover:bg-white"
                 >
-                  {category.title}
+                  <span className="text-[13px] font-semibold text-stone-900">{cat.title}</span>
+                  <span className="mt-1 line-clamp-2 text-xs leading-relaxed text-stone-500">{cat.description}</span>
+                  <span className="mt-3 text-xs font-medium text-emerald-800">
+                    {n === 0 ? "Open topic" : `${n} ${n === 1 ? "article" : "articles"}`}
+                    <span className="text-emerald-600"> →</span>
+                  </span>
                 </Link>
-                <p className="text-gray-600 mt-2">{category.description}</p>
-              </div>
+              );
+            })}
+          </div>
+        </section>
 
-              {category.articles.length > 0 ? (
-                <div className="grid md:grid-cols-2 gap-6">
-                  {category.articles.map((article: any) => (
+        <section className="mb-12 md:mb-16" aria-labelledby="popular-heading">
+          <div className="mb-6 flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h2 id="popular-heading" className="text-xl font-semibold text-stone-900 md:text-2xl">
+                Most read
+              </h2>
+              <p className="text-sm text-stone-500">Ranked by views; newer edits break ties.</p>
+            </div>
+          </div>
+          {mostRead.length === 0 ? (
+            <p className="text-sm text-stone-500">No articles yet.</p>
+          ) : (
+            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {mostRead.map(({ article, readingMinutes, excerpt, views, comments, href }, i) => (
+                <PostCard
+                  key={article.id}
+                  article={article}
+                  href={href}
+                  readingMinutes={readingMinutes}
+                  views={views}
+                  comments={comments}
+                  excerpt={excerpt}
+                  badge={i < 3 ? `#${i + 1}` : undefined}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section className="mb-12 md:mb-16" aria-labelledby="fresh-heading">
+          <div className="mb-6">
+            <h2 id="fresh-heading" className="text-xl font-semibold text-stone-900 md:text-2xl">
+              Recently updated
+            </h2>
+            <p className="text-sm text-stone-500">New material and revisions — outside the top reads above.</p>
+          </div>
+          {recentlyUpdated.length === 0 ? (
+            <p className="text-sm text-stone-500">Nothing extra to show yet — check back after the next edits.</p>
+          ) : (
+            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {recentlyUpdated.map(({ article, readingMinutes, excerpt, views, comments, href }) => (
+                <PostCard
+                  key={article.id}
+                  article={article}
+                  href={href}
+                  readingMinutes={readingMinutes}
+                  views={views}
+                  comments={comments}
+                  excerpt={excerpt}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section className="border-t border-stone-200/80 pt-12 md:pt-16" aria-labelledby="by-topic-heading">
+          <h2 id="by-topic-heading" className="text-xl font-semibold text-stone-900 md:text-2xl">
+            By topic
+          </h2>
+          <p className="mt-1 max-w-2xl text-sm text-stone-500">
+            A few entry points per section — open the topic page for the full list.
+          </p>
+
+          <div className="mt-8 space-y-12">
+            {GUIDE_CATEGORIES.map((cat) => {
+              const full = listsByCategory.get(cat.slug) ?? [];
+              const rows = full.slice(0, 3);
+              const total = full.length;
+              return (
+                <div key={cat.slug}>
+                  <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
+                    <h3 className="text-lg font-semibold text-stone-900">{cat.title}</h3>
                     <Link
-                      key={article.slug}
-                      href={`/guides/${category.slug}/${article.slug}`}
-                      className="block p-6 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                      href={`/guides/${cat.slug}`}
+                      className="text-sm font-medium text-emerald-800 hover:text-emerald-900"
                     >
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        {article.title}
-                      </h3>
-                      <p className="text-gray-600 text-sm mb-4">{article.preview}</p>
-                      
-                      {/* Metadata bar */}
-                      <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 pt-3 border-t border-gray-200">
-                        <span>{new Date(article.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                        
-                        {article.readingTime && (
-                          <>
-                            <span>•</span>
-                            <span>{article.readingTime} min read</span>
-                          </>
-                        )}
-                        
-                        {article.views !== undefined && article.views > 0 && (
-                          <>
-                            <span>•</span>
-                            <span className="flex items-center gap-1">
-                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                              </svg>
-                              {article.views}
-                            </span>
-                          </>
-                        )}
-                        
-                        {article.commentCount !== undefined && article.commentCount > 0 && (
-                          <>
-                            <span>•</span>
-                            <span>{article.commentCount} {article.commentCount === 1 ? 'comment' : 'comments'}</span>
-                          </>
-                        )}
-                        
-                        {article.updatedAt && article.updatedAt !== article.createdAt && (
-                          <>
-                            <span>•</span>
-                            <span>Updated {new Date(article.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                          </>
-                        )}
-                      </div>
+                      {total === 0 ? "Topic hub →" : `View all ${total} ${total === 1 ? "articles" : "articles"} →`}
                     </Link>
-                  ))}
+                  </div>
+                  {rows.length === 0 ? (
+                    <p className="text-sm text-stone-500">Articles for this topic are on the way.</p>
+                  ) : (
+                    <ul className="divide-y divide-stone-100 rounded-2xl border border-stone-200/80 bg-white">
+                      {rows.map(({ article, readingMinutes, views, comments, href, excerpt }) => (
+                        <li key={article.id}>
+                          <Link href={href} className="block px-4 py-4 transition hover:bg-stone-50/80 md:px-5">
+                            <span className="font-medium text-stone-900 hover:text-emerald-900">{article.title}</span>
+                            <p className="mt-1 line-clamp-2 text-sm text-stone-600">{excerpt}</p>
+                            <div className="mt-2">
+                              <ArticleMeta
+                                article={article}
+                                readingMinutes={readingMinutes}
+                                views={views}
+                                comments={comments}
+                              />
+                            </div>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
-              ) : (
-                <p className="text-gray-500 text-sm">No articles yet in this category.</p>
-              )}
-            </section>
-          ))}
-        </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {uncategorized.length > 0 ? (
+          <section className="mt-12 border-t border-stone-200/80 pt-12" aria-labelledby="other-heading">
+            <h2 id="other-heading" className="text-lg font-semibold text-stone-900">
+              More articles
+            </h2>
+            <p className="mt-1 text-sm text-stone-500">Not yet mapped to a hub category in the list above.</p>
+            <ul className="mt-4 space-y-3">
+              {uncategorized.map(({ article, href, excerpt }) => (
+                <li key={article.id}>
+                  <Link href={href} className="block rounded-xl border border-stone-200 bg-white px-4 py-3 hover:border-emerald-200">
+                    <span className="font-medium text-stone-900">{article.title}</span>
+                    <p className="mt-1 line-clamp-2 text-sm text-stone-600">{excerpt}</p>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
       </div>
     </div>
   );
