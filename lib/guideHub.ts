@@ -63,3 +63,44 @@ export function commentCountForArticle(article: Article, fromData: Map<string, n
 export function publishedArticles(articles: Article[]): Article[] {
   return articles.filter((a) => a.published);
 }
+
+/** Same PRNG shuffle as the homepage — rotation changes once per calendar day when `daySeed` is `floor(ms / 86400000)`. */
+export function shuffleBySeed<T>(items: T[], seed: number): T[] {
+  let s = seed;
+  const next = () => {
+    s = (s * 9301 + 49297) % 233280;
+    return s / 233280;
+  };
+  const out = [...items];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(next() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+export function pickDailySpotlightArticle(articles: Article[], daySeed: number): Article | null {
+  if (articles.length === 0) return null;
+  return shuffleBySeed(articles, daySeed)[0];
+}
+
+/** Featured image field or first `<img src>` in HTML body. */
+export function resolveArticleHeroImage(article: Article): string | null {
+  const featured = article.featuredImage?.trim();
+  if (featured) return featured;
+  const m = article.content.match(/<img[^>]+(?:src|data-src)=["']([^"']+)["']/i);
+  return m?.[1]?.trim() || null;
+}
+
+/** Longer plain teaser from article body (word-aware cut); falls back to excerpt if body is empty. */
+export function articleSpotlightTeaser(article: Article, maxChars = 720): string {
+  let one = stripHtml(article.content).replace(/\s+/g, " ").trim();
+  if (!one && article.excerpt?.trim()) {
+    one = article.excerpt.trim().replace(/\s+/g, " ");
+  }
+  if (one.length <= maxChars) return one;
+  const cut = one.slice(0, maxChars);
+  const lastSpace = cut.lastIndexOf(" ");
+  const trimmed = lastSpace > maxChars * 0.55 ? cut.slice(0, lastSpace) : cut;
+  return `${trimmed.trim()}…`;
+}

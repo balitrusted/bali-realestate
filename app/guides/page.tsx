@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Article } from "@/types/article";
 import { getArticles } from "@/lib/articlesData";
@@ -5,9 +6,12 @@ import {
   GUIDE_CATEGORIES,
   articlePreview,
   articleReadingMinutes,
+  articleSpotlightTeaser,
   commentCountForArticle,
   getApprovedCommentCountsByArticleId,
+  pickDailySpotlightArticle,
   publishedArticles,
+  resolveArticleHeroImage,
 } from "@/lib/guideHub";
 
 export const dynamic = "force-dynamic";
@@ -117,6 +121,21 @@ export default async function GuidesPage() {
 
   const enriched = all.map(enrich);
 
+  const daySeed = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+  const spotlightArticle = pickDailySpotlightArticle(all, daySeed);
+  const spotlightEnriched = spotlightArticle
+    ? enriched.find((x) => x.article.id === spotlightArticle.id) ?? null
+    : null;
+  const spotlightHeroSrc = spotlightArticle ? resolveArticleHeroImage(spotlightArticle) : null;
+  const spotlightTeaser = spotlightArticle ? articleSpotlightTeaser(spotlightArticle) : "";
+  const spotlightCategoryTitle = spotlightArticle
+    ? GUIDE_CATEGORIES.find((c) => c.slug === spotlightArticle.category)?.title ?? spotlightArticle.category
+    : "";
+
+  const enrichedForLists = spotlightArticle
+    ? enriched.filter((x) => x.article.id !== spotlightArticle.id)
+    : enriched;
+
   const listsByCategory = new Map<string, typeof enriched>();
   for (const cat of GUIDE_CATEGORIES) {
     listsByCategory.set(cat.slug, []);
@@ -131,12 +150,12 @@ export default async function GuidesPage() {
     list.sort((a, b) => +new Date(b.article.updatedAt) - +new Date(a.article.updatedAt));
   }
 
-  const mostRead = [...enriched]
+  const mostRead = [...enrichedForLists]
     .sort((a, b) => b.views - a.views || +new Date(b.article.updatedAt) - +new Date(a.article.updatedAt))
     .slice(0, 6);
   const mostReadIds = new Set(mostRead.map((x) => x.article.id));
 
-  const recentlyUpdated = [...enriched]
+  const recentlyUpdated = [...enrichedForLists]
     .filter((x) => !mostReadIds.has(x.article.id))
     .sort((a, b) => +new Date(b.article.updatedAt) - +new Date(a.article.updatedAt))
     .slice(0, 6);
@@ -190,6 +209,58 @@ export default async function GuidesPage() {
             })}
           </div>
         </section>
+
+        {spotlightEnriched && spotlightArticle ? (
+          <section
+            className="mb-12 md:mb-16"
+            aria-labelledby="spotlight-heading"
+          >
+            <div className="overflow-hidden rounded-3xl border border-stone-200/90 bg-white shadow-md shadow-stone-200/40 md:flex md:min-h-[280px] md:flex-row-reverse">
+              {spotlightHeroSrc ? (
+                <Link
+                  href={spotlightEnriched.href}
+                  className="relative block aspect-[16/10] w-full shrink-0 overflow-hidden bg-stone-100 md:aspect-auto md:w-[min(44%,420px)] md:max-w-[420px]"
+                  aria-label={`Open article: ${spotlightArticle.title}`}
+                >
+                  <Image
+                    src={spotlightHeroSrc}
+                    alt=""
+                    fill
+                    className="object-cover transition duration-300 hover:scale-[1.02]"
+                    sizes="(max-width: 768px) 100vw, 420px"
+                  />
+                </Link>
+              ) : null}
+              <div className="flex flex-1 flex-col justify-center p-6 md:p-8 lg:p-10">
+                <p className="text-xs font-semibold uppercase tracking-widest text-emerald-800">
+                  Featured today · {spotlightCategoryTitle}
+                </p>
+                <h2 id="spotlight-heading" className="mt-3 text-2xl font-bold tracking-tight text-stone-900 md:text-3xl">
+                  <Link href={spotlightEnriched.href} className="hover:text-emerald-900">
+                    {spotlightArticle.title}
+                  </Link>
+                </h2>
+                <p className="mt-4 text-base leading-relaxed text-stone-700 md:text-[1.05rem]">{spotlightTeaser}</p>
+                <div className="mt-4">
+                  <ArticleMeta
+                    article={spotlightArticle}
+                    readingMinutes={spotlightEnriched.readingMinutes}
+                    views={spotlightEnriched.views}
+                    comments={spotlightEnriched.comments}
+                  />
+                </div>
+                <div className="mt-6">
+                  <Link
+                    href={spotlightEnriched.href}
+                    className="inline-flex items-center justify-center rounded-xl bg-stone-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-900"
+                  >
+                    Read full article
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </section>
+        ) : null}
 
         <section className="mb-12 md:mb-16" aria-labelledby="popular-heading">
           <div className="mb-6 flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
