@@ -8,6 +8,7 @@ import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import {
   loadAllProperties,
+  loadAllPropertiesForSlugIndex,
   filterProperties,
   paginate,
   CatalogFilters,
@@ -20,6 +21,7 @@ import {
   getAvailableBedroomCounts,
   getAvailableAmenityFilterKeys,
 } from "@/lib/propertiesCatalog";
+import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import Link from "next/link";
 import {
   buildTitle,
@@ -123,6 +125,8 @@ export default async function PropertiesByTypePage({
   const page = Math.max(1, parseInt(String(query.page || "1"), 10) || 1);
 
   const all = await loadAllProperties();
+  const allForSlugs = await loadAllPropertiesForSlugIndex();
+  const slugIdx = buildPropertySlugIndex(allForSlugs);
   const filtered = filterProperties(all, filters);
   const { items, total, totalPages, page: currentPage } = paginate(filtered, page);
 
@@ -217,7 +221,11 @@ export default async function PropertiesByTypePage({
                 />
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {items.map((property) => (
-                    <PropertyCard key={property.id} property={property} />
+                    <PropertyCard
+                      key={property.id}
+                      property={property}
+                      detailSlug={slugIdx.segmentFor(property)}
+                    />
                   ))}
                 </div>
                 <Pagination

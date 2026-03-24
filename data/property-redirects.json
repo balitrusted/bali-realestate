@@ -1,0 +1,4 @@
+{
+  "entries": [],
+  "_comment": "Add { fromPath, toPath } when a slug changes (301). Example: { \"fromPath\": \"/properties/old-slug\", \"toPath\": \"/properties/new-slug\" }"
+}

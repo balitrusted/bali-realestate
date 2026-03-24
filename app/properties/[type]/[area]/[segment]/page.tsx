@@ -8,6 +8,7 @@ import TopPageNumbers from "@/components/TopPageNumbers";
 import CatalogStructuredData from "@/components/CatalogStructuredData";
 import {
   loadAllProperties,
+  loadAllPropertiesForSlugIndex,
   filterProperties,
   paginate,
   parseSegment,
@@ -22,6 +23,7 @@ import {
   getAvailableBedroomCounts,
   getAvailableAmenityFilterKeys,
 } from "@/lib/propertiesCatalog";
+import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { buildTitle, buildH1, buildDescription, buildSeoText } from "@/lib/seoTemplates";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import { subAreaNames } from "@/types/areas";
@@ -128,6 +130,8 @@ export default async function PropertiesSegmentPage({
   const page = Math.max(1, parseInt(String(query.page || "1"), 10) || 1);
 
   const all = await loadAllProperties();
+  const allForSlugs = await loadAllPropertiesForSlugIndex();
+  const slugIdx = buildPropertySlugIndex(allForSlugs);
   const filtered = filterProperties(all, filters, parsed);
   const { items, total, totalPages, page: currentPage } = paginate(filtered, page);
 
@@ -189,6 +193,7 @@ export default async function PropertiesSegmentPage({
             properties={items}
             baseUrl={baseUrl}
             listName={buildH1(catalogType, mainArea, subArea, parsed)}
+            allPropertiesForSlugs={allForSlugs}
           />
         )}
         {areaInfo.image && (
@@ -265,7 +270,11 @@ export default async function PropertiesSegmentPage({
                 />
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {items.map((property) => (
-                    <PropertyCard key={property.id} property={property} />
+                    <PropertyCard
+                      key={property.id}
+                      property={property}
+                      detailSlug={slugIdx.segmentFor(property)}
+                    />
                   ))}
                 </div>
                 <Pagination

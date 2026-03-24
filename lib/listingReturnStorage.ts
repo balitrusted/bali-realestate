@@ -2,7 +2,7 @@ import { safeInternalPath } from "@/lib/propertyViewNavigation";
 
 export const LISTING_RETURN_STORAGE_KEY = "balitrusted-listing-return";
 
-/** Call before navigating to /properties/view/... so Back can use a clean URL. */
+/** Call before navigating to a property detail URL so Back can use a clean catalog URL. */
 export function persistListingReturnPath(path: string): void {
   const s = safeInternalPath(path);
   if (!s || typeof window === "undefined") return;

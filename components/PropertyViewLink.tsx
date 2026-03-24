@@ -6,7 +6,8 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { persistListingReturnPath } from "@/lib/listingReturnStorage";
 
 type Props = {
-  propertyId: string;
+  /** URL segment after /properties/ (SEO slug) */
+  detailSlug: string;
   className?: string;
   children: React.ReactNode;
   /** When set (e.g. Similar strip), store this path instead of current URL */
@@ -14,7 +15,7 @@ type Props = {
   "aria-label"?: string;
 };
 
-function PropertyViewLinkInner({ propertyId, className, children, viewReturnPath, "aria-label": ariaLabel }: Props) {
+function PropertyViewLinkInner({ detailSlug, className, children, viewReturnPath, "aria-label": ariaLabel }: Props) {
   const pathname = usePathname() || "/properties";
   const searchParams = useSearchParams();
   const inferred = useMemo(() => {
@@ -25,7 +26,7 @@ function PropertyViewLinkInner({ propertyId, className, children, viewReturnPath
   const base = viewReturnPath ?? inferred;
   const safe =
     base.startsWith("/") && !base.startsWith("//") && !base.includes("://") ? base : "/properties";
-  const href = `/properties/view/${propertyId}`;
+  const href = `/properties/${detailSlug}`;
 
   return (
     <Link
@@ -40,7 +41,7 @@ function PropertyViewLinkInner({ propertyId, className, children, viewReturnPath
 }
 
 export default function PropertyViewLink(props: Props) {
-  const fallbackHref = `/properties/view/${props.propertyId}`;
+  const fallbackHref = `/properties/${props.detailSlug}`;
   return (
     <Suspense
       fallback={

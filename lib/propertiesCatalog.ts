@@ -82,22 +82,41 @@ export interface CatalogFilters {
   maxPrice?: number;
 }
 
+function hasValidPrice(p: Property): boolean {
+  return !!(
+    p?.price &&
+    (typeof p.price.min === "number" ||
+      typeof p.price.monthly === "number" ||
+      typeof p.price.yearly === "number" ||
+      typeof p.price.forSale === "number")
+  );
+}
+
 export async function loadAllProperties(): Promise<Property[]> {
   try {
     const filePath = join(process.cwd(), "data", "properties.ts");
     const fileContent = await readFile(filePath, "utf-8");
     const properties = parsePropertiesFile(fileContent);
     return properties.filter((p) => {
-      const hasPrice =
-        p?.price &&
-        (typeof p.price.min === "number" ||
-          typeof p.price.monthly === "number" ||
-          typeof p.price.yearly === "number" ||
-          typeof p.price.forSale === "number");
-      return p && p.id && hasPrice && !p.archived;
+      return p && p.id && hasValidPrice(p) && !p.archived;
     });
   } catch (error) {
     console.error("Error loading properties:", error);
+    return [];
+  }
+}
+
+/**
+ * Valid-price listings including archived. Used for stable SEO slugs, redirects, and `/properties/p/[slug]`.
+ */
+export async function loadAllPropertiesForSlugIndex(): Promise<Property[]> {
+  try {
+    const filePath = join(process.cwd(), "data", "properties.ts");
+    const fileContent = await readFile(filePath, "utf-8");
+    const properties = parsePropertiesFile(fileContent);
+    return properties.filter((p) => p && p.id && hasValidPrice(p));
+  } catch (error) {
+    console.error("Error loading properties for slug index:", error);
     return [];
   }
 }

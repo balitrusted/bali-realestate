@@ -4,6 +4,7 @@ import { join } from 'path'
 import { parsePropertiesFile } from '@/lib/parseProperties'
 import { getArticles } from '@/lib/articlesData'
 import { loadAllProperties, filterProperties, parseSegment, SEGMENT_TYPES } from '@/lib/propertiesCatalog'
+import { buildPropertySlugIndex } from '@/lib/propertySlug'
 import type { PropertyType, MainArea } from '@/types/property'
 
 // Use env or localhost so site works before domain is connected
@@ -136,12 +137,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const filePath = join(process.cwd(), 'data', 'properties.ts')
     const fileContent = await readFile(filePath, 'utf-8')
     const properties = parsePropertiesFile(fileContent)
-    
+    const forSitemap = properties.filter((p) => {
+      const hasPrice =
+        p?.price &&
+        (typeof p.price.min === 'number' ||
+          typeof p.price.monthly === 'number' ||
+          typeof p.price.yearly === 'number' ||
+          typeof p.price.forSale === 'number')
+      return p && p.id && hasPrice
+    })
+    const slugIdx = buildPropertySlugIndex(forSitemap)
+
     // Only include non-archived properties
-    propertyDetailPages = properties
+    propertyDetailPages = forSitemap
       .filter((p) => !p.archived && p.id)
       .map((property) => ({
-        url: `${baseUrl}/properties/view/${property.id}`,
+        url: `${baseUrl.replace(/\/$/, '')}${slugIdx.pathFor(property)}`,
         lastModified: property.updatedAt ? new Date(property.updatedAt) : new Date(property.createdAt),
         changeFrequency: 'weekly' as const,
         priority: 0.8, // High priority for individual properties

@@ -8,10 +8,13 @@ import type { Property } from "@/types/property";
 import { areas } from "@/types/areas";
 import { MAX_COMPARE } from "@/lib/savedStore";
 
+type ListedProperty = Property & { publicSlug: string };
+
 export default function SavedPage() {
   const { favorites, compare, removeFromCompare, refresh } = useSaved();
-  const [favoriteProps, setFavoriteProps] = useState<Property[]>([]);
-  const [compareProps, setCompareProps] = useState<Property[]>([]);
+
+  const [favoriteProps, setFavoriteProps] = useState<ListedProperty[]>([]);
+  const [compareProps, setCompareProps] = useState<ListedProperty[]>([]);
   const [loading, setLoading] = useState(true);
 
   const allIds = [...new Set([...favorites, ...compare])];
@@ -30,8 +33,8 @@ export default function SavedPage() {
     setLoading(true);
     fetch(`/api/properties?ids=${allIds.join(",")}`)
       .then((res) => res.json())
-      .then((data: { properties?: Property[] }) => {
-        const list = data.properties ?? [];
+      .then((data: { properties?: ListedProperty[] }) => {
+        const list = (data.properties ?? []).filter((p): p is ListedProperty => Boolean(p.publicSlug));
         const favSet = new Set(favorites);
         const compSet = new Set(compare);
         setFavoriteProps(list.filter((p) => p.id && favSet.has(p.id)));
@@ -82,7 +85,7 @@ export default function SavedPage() {
               ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {favoriteProps.map((p) => (
-                    <PropertyCard key={p.id} property={p} />
+                    <PropertyCard key={p.id} property={p} detailSlug={p.publicSlug} />
                   ))}
                 </div>
               )}
@@ -109,7 +112,10 @@ export default function SavedPage() {
                           {compareProps.map((p) => (
                             <th key={p.id} className="text-left py-3 px-4 text-sm font-semibold text-gray-900 border-b border-gray-200 align-top">
                               <div className="flex justify-between items-start gap-2">
-                                <Link href={`/properties/view/${p.id}`} className="underline hover:no-underline line-clamp-2">
+                                <Link
+                                  href={`/properties/${p.publicSlug ?? p.id}`}
+                                  className="underline hover:no-underline line-clamp-2"
+                                >
                                   {p.title?.trim() || `Villa #${p.villaNumber ?? p.id} · ${p.bedrooms} bed`}
                                 </Link>
                                 <button

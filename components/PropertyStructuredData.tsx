@@ -4,9 +4,10 @@ import { areas } from "@/types/areas";
 interface PropertyStructuredDataProps {
   property: Property;
   baseUrl: string;
+  propertyUrl: string;
 }
 
-export default function PropertyStructuredData({ property, baseUrl }: PropertyStructuredDataProps) {
+export default function PropertyStructuredData({ property, baseUrl, propertyUrl }: PropertyStructuredDataProps) {
   const areaInfo = property.mainArea ? areas[property.mainArea] : null;
   const areaName = areaInfo?.nameEn || property.mainArea || "Bali";
   const displayTitle = property.title || `Villa ${property.villaNumber || property.id}`;
@@ -23,7 +24,6 @@ export default function PropertyStructuredData({ property, baseUrl }: PropertySt
     return `${baseUrl}${u.startsWith("/") ? "" : "/"}${u}`;
   };
 
-  const propertyUrl = `${baseUrl}/properties/view/${property.id}`;
   const address = {
     "@type": "PostalAddress" as const,
     addressLocality: areaName,

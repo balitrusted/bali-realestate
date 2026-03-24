@@ -9,10 +9,12 @@ import Link from "next/link";
 import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
 import {
   loadAllProperties,
+  loadAllPropertiesForSlugIndex,
   filterProperties,
   paginate,
   CatalogFilters,
 } from "@/lib/propertiesCatalog";
+import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 
 export const dynamic = "force-dynamic";
@@ -99,6 +101,8 @@ export default async function PropertiesCatalogPage({
   const hasBoth = query.both === "1";
 
   const all = await loadAllProperties();
+  const allForSlugs = await loadAllPropertiesForSlugIndex();
+  const slugIdx = buildPropertySlugIndex(allForSlugs);
   const effectiveFilters: CatalogFilters = hasBoth ? { ...filters, type: "villas" as const } : filters;
   const filtered = filterProperties(all, effectiveFilters);
   const { items, total, totalPages, page: currentPage } = paginate(filtered, page);
@@ -192,7 +196,7 @@ export default async function PropertiesCatalogPage({
             <>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {items.map((property) => (
-                  <PropertyCard key={property.id} property={property} />
+                  <PropertyCard key={property.id} property={property} detailSlug={slugIdx.segmentFor(property)} />
                 ))}
               </div>
               <Pagination

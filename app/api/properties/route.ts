@@ -5,6 +5,7 @@ import { join } from "path";
 import { Property, PropertyType } from "@/types/property";
 import { parsePropertiesFile } from "@/lib/parseProperties";
 import { generatePropertiesFile } from "@/lib/generatePropertiesFile";
+import { buildPropertySlugIndex } from "@/lib/propertySlug";
 
 const DATA_FILE = join(process.cwd(), "data", "properties.ts");
 
@@ -54,7 +55,22 @@ export async function GET(request: Request) {
       return orderA - orderB;
     });
 
-    return NextResponse.json({ properties: sorted });
+    const allForSlugs = properties.filter((p) => {
+      const hasPrice = p?.price && (
+        typeof p.price.min === "number" ||
+        typeof p.price.monthly === "number" ||
+        typeof p.price.yearly === "number" ||
+        typeof p.price.forSale === "number"
+      );
+      return p && p.id && hasPrice;
+    });
+    const slugIdx = buildPropertySlugIndex(allForSlugs);
+    const withSlugs = sorted.map((p) => ({
+      ...p,
+      publicSlug: slugIdx.segmentFor(p),
+    }));
+
+    return NextResponse.json({ properties: withSlugs });
   } catch (error) {
     console.error("Error reading properties:", error);
     return NextResponse.json(

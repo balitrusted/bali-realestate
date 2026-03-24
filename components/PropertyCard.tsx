@@ -8,6 +8,8 @@ import { getPropertyImageAlt } from "@/lib/imageSeo";
 
 interface PropertyCardProps {
   property: Property;
+  /** SEO path segment: `/properties/{detailSlug}` */
+  detailSlug: string;
   /** Optional stable returnTo for links (e.g. Similar properties strip) */
   viewReturnPath?: string;
 }
@@ -18,7 +20,7 @@ interface PropertyCardProps {
 // - "below": title below the image (original variant 0)
 const PROPERTY_CARD_TITLE_VARIANT: "above" | "overlay" | "below" = "above";
 
-export default function PropertyCard({ property, viewReturnPath }: PropertyCardProps) {
+export default function PropertyCard({ property, detailSlug, viewReturnPath }: PropertyCardProps) {
   const formatPrice = (price: number, currency: string) => {
     if (currency === "IDR") {
       return `${(price / 1000000).toFixed(0)}M IDR`;
@@ -198,7 +200,7 @@ export default function PropertyCard({ property, viewReturnPath }: PropertyCardP
         <div className="p-5 pb-3">
           <h3 className="text-xl font-semibold text-gray-900 leading-snug select-text">
             <PropertyViewLink
-              propertyId={String(property.id)}
+              detailSlug={detailSlug}
               viewReturnPath={viewReturnPath}
               className="hover:underline underline-offset-2"
             >
@@ -217,7 +219,7 @@ export default function PropertyCard({ property, viewReturnPath }: PropertyCardP
       {mainImage ? (
         <div className="w-full h-48 relative overflow-hidden flex-shrink-0">
           <PropertyViewLink
-            propertyId={String(property.id)}
+            detailSlug={detailSlug}
             viewReturnPath={viewReturnPath}
             className="absolute inset-0"
             aria-label={displayTitle}
@@ -265,7 +267,7 @@ export default function PropertyCard({ property, viewReturnPath }: PropertyCardP
         {PROPERTY_CARD_TITLE_VARIANT === "below" && (
           <h3 className="text-xl font-semibold text-gray-900 mb-2 select-text">
             <PropertyViewLink
-              propertyId={String(property.id)}
+              detailSlug={detailSlug}
               viewReturnPath={viewReturnPath}
               className="hover:underline underline-offset-2"
             >
@@ -338,7 +340,7 @@ export default function PropertyCard({ property, viewReturnPath }: PropertyCardP
           </div>
 
           <PropertyViewLink
-            propertyId={String(property.id)}
+            detailSlug={detailSlug}
             viewReturnPath={viewReturnPath}
             className="block text-center px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
           >

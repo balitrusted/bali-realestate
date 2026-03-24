@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { areas } from "@/types/areas";
-import { loadAllProperties } from "@/lib/propertiesCatalog";
+import { loadAllProperties, loadAllPropertiesForSlugIndex } from "@/lib/propertiesCatalog";
+import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import HomePropertyCard from "@/components/HomePropertyCard";
 
 export const metadata = {
@@ -28,6 +29,8 @@ function shuffle<T>(arr: T[], daySeed: number): T[] {
 
 export default async function Home() {
   const allProperties = await loadAllProperties();
+  const allForSlugs = await loadAllPropertiesForSlugIndex();
+  const slugIdx = buildPropertySlugIndex(allForSlugs);
   const available = allProperties.filter((p) => !p.archived);
   const daySeed = Math.floor(Date.now() / (1000 * 60 * 60 * 24)); // changes once per day
   const randomProperties = shuffle(available, daySeed).slice(0, 12);
@@ -98,7 +101,11 @@ export default async function Home() {
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
               {randomProperties.map((property) => (
-                <HomePropertyCard key={property.id} property={property} />
+                <HomePropertyCard
+                  key={property.id}
+                  property={property}
+                  detailSlug={slugIdx.segmentFor(property)}
+                />
               ))}
             </div>
             <div className="text-center mt-4">

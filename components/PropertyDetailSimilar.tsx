@@ -5,19 +5,22 @@ import PropertyCard from "@/components/PropertyCard";
 import type { Property } from "@/types/property";
 
 export default function PropertyDetailSimilar({
-  properties,
+  items,
   viewReturnPath,
 }: {
-  properties: Property[];
+  items: { property: Property; detailSlug: string }[];
   viewReturnPath: string;
 }) {
   const scroller = useRef<HTMLDivElement>(null);
 
   const scrollBy = (dir: -1 | 1) => {
-    scroller.current?.scrollBy({ left: dir * Math.min(360, typeof window !== "undefined" ? window.innerWidth * 0.85 : 360), behavior: "smooth" });
+    scroller.current?.scrollBy({
+      left: dir * Math.min(360, typeof window !== "undefined" ? window.innerWidth * 0.85 : 360),
+      behavior: "smooth",
+    });
   };
 
-  if (properties.length === 0) return null;
+  if (items.length === 0) return null;
 
   return (
     <section className="mt-16 border-t border-gray-200 pt-10" aria-labelledby="similar-properties-heading">
@@ -54,9 +57,9 @@ export default function PropertyDetailSimilar({
         className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scroll-smooth [-ms-overflow-style:none] [scrollbar-width:thin]"
         style={{ scrollbarGutter: "stable" }}
       >
-        {properties.map((p) => (
+        {items.map(({ property: p, detailSlug }) => (
           <div key={p.id} className="w-[min(100%,20rem)] shrink-0 snap-start">
-            <PropertyCard property={p} viewReturnPath={viewReturnPath} />
+            <PropertyCard property={p} detailSlug={detailSlug} viewReturnPath={viewReturnPath} />
           </div>
         ))}
       </div>
