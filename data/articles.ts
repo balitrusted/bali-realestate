@@ -286,7 +286,7 @@ export const articles: Article[] = [
     published: true,
     publishedAt: "2026-01-26T15:18:57.154Z",
     createdAt: "2026-01-26T15:18:57.154Z",
-    updatedAt: "2026-01-26T15:18:57.154Z",
+    updatedAt: "2026-03-25T10:00:00.000Z",
     allowComments: true,
     commentCount: 0,
   }
