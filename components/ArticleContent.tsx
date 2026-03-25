@@ -88,9 +88,9 @@ export default function ArticleContent({ content }: ArticleContentProps) {
         prose prose-lg max-w-none
         prose-hr:hidden
         prose-headings:tracking-tight
-        prose-h2:text-lg prose-h2:leading-snug prose-h2:mt-4 prose-h2:mb-2
-        prose-h3:text-base prose-h3:leading-snug prose-h3:mt-4 prose-h3:mb-2
-        prose-p:mt-2 prose-p:mb-3
+        prose-h2:text-base prose-h2:leading-snug prose-h2:mt-2 prose-h2:mb-1
+        prose-h3:text-sm prose-h3:leading-snug prose-h3:mt-2 prose-h3:mb-1
+        prose-p:mt-2 prose-p:mb-2
         prose-ul:my-2 prose-ul:pl-0 prose-ul:list-none
         prose-ol:my-2 prose-ol:pl-0 prose-ol:list-none
         prose-li:my-1 prose-li:pl-0
