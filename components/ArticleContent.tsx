@@ -90,11 +90,6 @@ export default function ArticleContent({ content }: ArticleContentProps) {
         prose-headings:tracking-tight
         prose-h2:text-xl prose-h2:leading-snug prose-h2:mt-6 prose-h2:mb-2
         prose-h3:text-lg prose-h3:leading-snug prose-h3:mt-5 prose-h3:mb-2
-        prose-h2:bg-stone-50 prose-h2:rounded-xl prose-h2:px-4 prose-h2:py-3
-        prose-h3:bg-stone-50 prose-h3:rounded-xl prose-h3:px-4 prose-h3:py-2
-        prose-h2:before:content-['“'] prose-h2:before:mr-2 prose-h2:before:text-emerald-700
-        prose-h3:before:content-['“'] prose-h3:before:mr-2 prose-h3:before:text-emerald-700
-        prose-h2:before:font-serif prose-h3:before:font-serif prose-h2:before:align-baseline
         prose-p:mt-2 prose-p:mb-4
         prose-ul:my-2 prose-ul:pl-0 prose-ul:list-none
         prose-ol:my-2 prose-ol:pl-0 prose-ol:list-none
