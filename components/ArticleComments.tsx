@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Comment } from "@/types/article";
+import { formatLocaleDate } from "@/lib/formatDate";
 
 interface ArticleCommentsProps {
   articleId: string;
@@ -199,11 +200,7 @@ export default function ArticleComments({ articleId }: ArticleCommentsProps) {
                     {comment.authorName}
                   </span>
                   <span className="text-sm text-gray-500">
-                    {new Date(comment.createdAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
+                    {formatLocaleDate(comment.createdAt)}
                   </span>
                 </div>
                 <div 

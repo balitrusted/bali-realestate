@@ -23,6 +23,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Property } from "@/types/property";
 import PropertyImageWithFallback from "@/components/PropertyImageWithFallback";
 import { getPropertyDisplayTitle, fixDescriptionDisplay } from "@/lib/propertyUtils";
+import { formatLocaleDate } from "@/lib/formatDate";
 import { subAreaNames, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
 
 function SortablePropertyItem({ property }: { property: Property }) {
@@ -118,7 +119,7 @@ function SortablePropertyItem({ property }: { property: Property }) {
             {priceDisplay}
           </span>
           <span className="text-xs">
-            Availability: {property.availableFrom ? new Date(property.availableFrom).toLocaleDateString() : "Now"}
+            Availability: {property.availableFrom ? formatLocaleDate(property.availableFrom) : "Now"}
           </span>
           <span className="text-xs">Order: {property.order ?? 999}</span>
         </div>

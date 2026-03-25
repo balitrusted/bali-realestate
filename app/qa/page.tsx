@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { formatLocaleDate } from "@/lib/formatDate";
 
 interface Question {
   id: string;
@@ -267,7 +268,7 @@ export default function QAPage() {
                       <article key={q.id} className="border-b border-gray-200 pb-8">
                         <div className="mb-4 flex items-center gap-3 flex-wrap">
                           <span className="text-sm text-gray-500">
-                            {new Date(q.createdAt).toLocaleDateString("en-US")}
+                            {formatLocaleDate(q.createdAt)}
                           </span>
                           <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">
                             {categoryLabels[q.category] || q.category}
@@ -281,7 +282,7 @@ export default function QAPage() {
                             <p className="text-gray-700 whitespace-pre-line">{q.answer}</p>
                             {q.answeredAt && (
                               <p className="text-sm text-gray-500 mt-4">
-                                Answer published {new Date(q.answeredAt).toLocaleDateString("en-US")}
+                                Answer published {formatLocaleDate(q.answeredAt)}
                               </p>
                             )}
                           </div>

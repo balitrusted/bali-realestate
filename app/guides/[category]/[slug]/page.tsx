@@ -6,6 +6,7 @@ import Image from "next/image";
 import ArticleComments from "@/components/ArticleComments";
 import ArticleContent from "@/components/ArticleContent";
 import ArticleViewTracker from "@/components/ArticleViewTracker";
+import { formatLocaleDate } from "@/lib/formatDate";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -79,7 +80,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ catego
             <div className="flex items-center gap-4 text-sm text-gray-600 mb-8">
               <span>By {article.author}</span>
               {article.publishedAt && (
-                <span>• {new Date(article.publishedAt).toLocaleDateString()}</span>
+                <span>• {formatLocaleDate(article.publishedAt)}</span>
               )}
               {article.tags.length > 0 && (
                 <div className="flex gap-2">

@@ -13,6 +13,7 @@ import {
   publishedArticles,
   resolveArticleHeroImage,
 } from "@/lib/guideHub";
+import { formatLocaleDate } from "@/lib/formatDate";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -22,10 +23,6 @@ export const metadata = {
   description:
     "Practical guides on long-term rental, buying property, land, legal basics, Ubud, and other Bali areas — updated as we learn more.",
 };
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-}
 
 function ArticleMeta({
   article,
@@ -40,10 +37,10 @@ function ArticleMeta({
 }) {
   const dateLabel =
     article.updatedAt && article.updatedAt !== article.createdAt
-      ? `Updated ${formatDate(article.updatedAt)}`
+      ? `Updated ${formatLocaleDate(article.updatedAt)}`
       : article.publishedAt
-        ? formatDate(article.publishedAt)
-        : formatDate(article.createdAt);
+        ? formatLocaleDate(article.publishedAt)
+        : formatLocaleDate(article.createdAt);
 
   return (
     <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-stone-500">
@@ -178,7 +175,7 @@ export default async function GuidesPage() {
           {hubFreshAt ? (
             <p className="mt-4 text-sm text-stone-500">
               Library last touched{" "}
-              <time dateTime={hubFreshAt}>{formatDate(hubFreshAt)}</time>
+              <time dateTime={hubFreshAt}>{formatLocaleDate(hubFreshAt)}</time>
               <span className="text-stone-400"> · </span>
               {all.length} {all.length === 1 ? "article" : "articles"}
             </p>

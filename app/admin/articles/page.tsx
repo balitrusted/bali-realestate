@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Article } from "@/types/article";
+import { formatLocaleDate } from "@/lib/formatDate";
 
 export default function AdminArticlesPage() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -102,7 +103,7 @@ export default function AdminArticlesPage() {
                     <span>Slug: {article.slug}</span>
                     <span>Author: {article.author}</span>
                     {article.publishedAt && (
-                      <span>Published: {new Date(article.publishedAt).toLocaleDateString()}</span>
+                      <span>Published: {formatLocaleDate(article.publishedAt)}</span>
                     )}
                   </div>
                 </div>

@@ -10,6 +10,7 @@ import {
   getApprovedCommentCountsByArticleId,
   publishedArticles,
 } from "@/lib/guideHub";
+import { formatLocaleDate } from "@/lib/formatDate";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -36,10 +37,6 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     title: `${categoryInfo.title} - Knowledge Base`,
     description: categoryInfo.description,
   };
-}
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
@@ -84,10 +81,10 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
               const comments = commentCountForArticle(article, commentMap);
               const dateLabel =
                 article.updatedAt && article.updatedAt !== article.createdAt
-                  ? `Updated ${formatDate(article.updatedAt)}`
+                  ? `Updated ${formatLocaleDate(article.updatedAt)}`
                   : article.publishedAt
-                    ? formatDate(article.publishedAt)
-                    : formatDate(article.createdAt);
+                    ? formatLocaleDate(article.publishedAt)
+                    : formatLocaleDate(article.createdAt);
 
               return (
                 <li key={article.id}>
