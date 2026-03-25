@@ -148,17 +148,14 @@ html {
 }
 
 /*
- * Knowledge base / article HTML: compact headings and paragraph rhythm.
- * Generic `.prose h2` / `.prose p` above use large em-based margins and win over
- * Tailwind `prose-h2:*` utilities because this project does not use @tailwindcss/typography.
+ * Knowledge base / article HTML: slightly tighter than default `.prose`, but still readable.
+ * (Default `.prose h2` is ~1.875em with 2em top margin — too heavy for long guides.)
  */
 .prose.prose-article h1,
 .prose.prose-article h2,
 .prose.prose-article h3,
 .prose.prose-article h4 {
-  margin-top: 0.5rem;
-  margin-bottom: 0.25rem;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.02em;
   scroll-margin-top: 80px;
 }
 
@@ -167,23 +164,39 @@ html {
 }
 
 .prose.prose-article h1 {
-  font-size: 1.5rem;
-  line-height: 1.3;
+  font-size: 1.625rem;
+  line-height: 1.28;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
 }
 
 .prose.prose-article h2 {
-  font-size: 1rem;
-  line-height: 1.375;
+  font-size: 1.3125rem;
+  line-height: 1.35;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.65rem;
 }
 
 .prose.prose-article h3 {
-  font-size: 0.875rem;
-  line-height: 1.375;
+  font-size: 1.125rem;
+  line-height: 1.4;
+  font-weight: 700;
+  margin-top: 1.25rem;
+  margin-bottom: 0.55rem;
 }
 
-.prose.prose-article p {
-  margin-top: 0.5rem;
+.prose.prose-article h4 {
+  font-size: 1.0625rem;
+  line-height: 1.45;
+  font-weight: 700;
+  margin-top: 1.1rem;
   margin-bottom: 0.5rem;
+}
+
+/* One bottom margin per paragraph; adjacent blocks collapse to the larger of adjoining margins */
+.prose.prose-article p {
+  margin: 0 0 1rem;
   line-height: 1.75;
 }
 
@@ -194,9 +207,9 @@ html {
 .prose.prose-article blockquote {
   background-color: #fafaf9;
   border-radius: 0.75rem;
-  padding: 0.5rem 1rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  padding: 0.75rem 1.125rem;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
   border-left-width: 4px;
   font-style: italic;
   color: #6b7280;
@@ -204,13 +217,13 @@ html {
 
 .prose.prose-article ul,
 .prose.prose-article ol {
-  margin-top: 0.5rem !important;
-  margin-bottom: 0.5rem !important;
+  margin-top: 0.75rem !important;
+  margin-bottom: 1rem !important;
 }
 
 .prose.prose-article li {
-  margin-top: 0.25rem !important;
-  margin-bottom: 0.25rem !important;
+  margin-top: 0.35rem !important;
+  margin-bottom: 0.35rem !important;
 }
 
 /* Tiptap editor styles */
