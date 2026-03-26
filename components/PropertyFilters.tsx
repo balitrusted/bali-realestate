@@ -420,7 +420,7 @@ export default function PropertyFilters({
     </button>
   );
 
-  const collapsedBase = "Tap here to see all the filters";
+  const collapsedBase = "Show all filters";
   const collapsedLabel =
     activeFilterParamsCount > 0
       ? `${collapsedBase} · ${activeFilterParamsCount} active`
@@ -435,22 +435,23 @@ export default function PropertyFilters({
         <button
           type="button"
           onClick={openFilters}
-          className="w-full px-4 py-2.5 text-sm font-medium bg-emerald-50 text-emerald-800 rounded-xl border border-emerald-200 hover:bg-emerald-100 hover:border-emerald-300 active:scale-[0.99] transition-all duration-200"
+          className="w-full rounded-xl border border-stone-200 bg-white px-4 py-3 text-left transition-colors duration-200 hover:border-emerald-200 hover:bg-emerald-50/40 active:scale-[0.99]"
           aria-expanded={false}
         >
-          {collapsedLabel}
+          <span className="block text-sm font-semibold tracking-tight text-stone-900">{collapsedLabel}</span>
+          <span className="mt-0.5 block text-xs text-stone-500">Quick access to all options</span>
         </button>
       ) : (
         <div className="flex flex-col gap-4 md:gap-5">
           <button
             type="button"
             onClick={closeFilters}
-            className="w-full flex flex-col items-center justify-center gap-1 rounded-xl border border-gray-200 bg-btn-hatch px-3 py-2.5 text-center text-sm font-medium text-gray-800 hover:border-gray-300 active:scale-[0.99] transition-[transform,border-color] duration-200"
+            className="w-full flex items-center justify-between rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm font-medium text-stone-800 hover:border-stone-300 active:scale-[0.99] transition-[transform,border-color] duration-200"
             aria-expanded={true}
           >
             <span>Hide filters</span>
-            <span className="text-xs font-normal text-gray-600 leading-snug">
-              Scrolls to breadcrumbs
+            <span className="text-xs font-normal text-stone-500 leading-snug">
+              Back to breadcrumbs
             </span>
           </button>
 
