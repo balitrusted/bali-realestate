@@ -249,20 +249,19 @@ export default async function PropertiesByTypeAndAreaPage({
 
         <div className="space-y-6">
           <div>
-            <PropertyFilters
-              defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
-              defaultMainArea={mainArea}
-              allowedMainAreas={allowedMainAreas}
-              allowedSubAreas={allowedSubAreas}
-              allowedBedroomCounts={allowedBedroomCounts}
-              availableAmenityKeys={availableAmenityFilterKeys}
-              baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
-              matchingCount={total}
-            />
-
             <div className="mt-8">
             {sortedProperties.length === 0 ? (
               <div className="space-y-6">
+                <PropertyFilters
+                  defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
+                  defaultMainArea={mainArea}
+                  allowedMainAreas={allowedMainAreas}
+                  allowedSubAreas={allowedSubAreas}
+                  allowedBedroomCounts={allowedBedroomCounts}
+                  availableAmenityKeys={availableAmenityFilterKeys}
+                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
+                  matchingCount={total}
+                />
                 <div id="catalog-listings-anchor" className="scroll-mt-8 h-px w-full" aria-hidden />
                 <p className="text-sm text-gray-500">No properties match your criteria.</p>
                 <CatalogFeedbackForm total={total} />
@@ -290,6 +289,16 @@ export default async function PropertiesByTypeAndAreaPage({
                   totalPages={totalPages}
                   searchParams={searchParamsForPagination}
                   navClassName="flex justify-center items-center gap-2 mt-0 mb-2"
+                />
+                <PropertyFilters
+                  defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
+                  defaultMainArea={mainArea}
+                  allowedMainAreas={allowedMainAreas}
+                  allowedSubAreas={allowedSubAreas}
+                  allowedBedroomCounts={allowedBedroomCounts}
+                  availableAmenityKeys={availableAmenityFilterKeys}
+                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
+                  matchingCount={total}
                 />
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {sortedProperties.map((property) => (

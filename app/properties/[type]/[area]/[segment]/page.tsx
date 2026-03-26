@@ -226,23 +226,24 @@ export default async function PropertiesSegmentPage({
         )}
 
         <div className="space-y-6">
-          <PropertyFilters
-            defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
-            defaultMainArea={mainArea}
-            allowedMainAreas={allowedMainAreas}
-            allowedSubAreas={allowedSubAreas}
-            allowedBedroomCounts={allowedBedroomCounts}
-            availableAmenityKeys={availableAmenityFilterKeys}
-            baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
-            matchingCount={total}
-          />
-
           <div>
             {items.length === 0 ? (
-              <div className="text-center py-12">
-                <div id="catalog-listings-anchor" className="scroll-mt-8 h-px w-full max-w-none" aria-hidden />
-                <p className="text-gray-600 mb-4">No properties found in this category.</p>
-                <p className="text-sm text-gray-500">Try other filters or areas.</p>
+              <div className="space-y-6 py-12">
+                <PropertyFilters
+                  defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
+                  defaultMainArea={mainArea}
+                  allowedMainAreas={allowedMainAreas}
+                  allowedSubAreas={allowedSubAreas}
+                  allowedBedroomCounts={allowedBedroomCounts}
+                  availableAmenityKeys={availableAmenityFilterKeys}
+                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
+                  matchingCount={total}
+                />
+                <div className="text-center">
+                  <div id="catalog-listings-anchor" className="scroll-mt-8 h-px w-full max-w-none" aria-hidden />
+                  <p className="text-gray-600 mb-4">No properties found in this category.</p>
+                  <p className="text-sm text-gray-500">Try other filters or areas.</p>
+                </div>
               </div>
             ) : (
               <>
@@ -267,6 +268,16 @@ export default async function PropertiesSegmentPage({
                   totalPages={totalPages}
                   searchParams={searchParamsForPagination}
                   navClassName="flex justify-center items-center gap-2 mt-0 mb-2"
+                />
+                <PropertyFilters
+                  defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
+                  defaultMainArea={mainArea}
+                  allowedMainAreas={allowedMainAreas}
+                  allowedSubAreas={allowedSubAreas}
+                  allowedBedroomCounts={allowedBedroomCounts}
+                  availableAmenityKeys={availableAmenityFilterKeys}
+                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
+                  matchingCount={total}
                 />
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {items.map((property) => (
