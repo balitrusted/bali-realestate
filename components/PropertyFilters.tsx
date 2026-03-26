@@ -425,7 +425,7 @@ export default function PropertyFilters({
     matchingCount === 1 ? "Found 1 property" : `Found ${matchingCount} properties`;
 
   return (
-    <div className="mb-5">
+    <div className="mb-4 bg-white rounded-2xl p-2.5 md:p-3.5 shadow-sm">
       {isCollapsed ? (
         <button
           type="button"
@@ -437,7 +437,7 @@ export default function PropertyFilters({
           <span className="text-xs text-stone-500">{activeFilterParamsCount > 0 ? `${activeFilterParamsCount} active` : "tap to open"}</span>
         </button>
       ) : (
-        <div className="bg-white rounded-2xl p-3 md:p-4 shadow-sm flex flex-col gap-3.5 md:gap-4">
+        <div className="flex flex-col gap-3 md:gap-3.5">
           <button
             type="button"
             onClick={closeFilters}
@@ -448,7 +448,7 @@ export default function PropertyFilters({
           </button>
 
           <div
-            className="w-full h-12 flex items-center justify-start rounded-xl border border-emerald-100 bg-emerald-50/80 px-4 text-sm font-semibold tracking-tight text-emerald-900"
+            className="w-full h-12 flex items-center justify-start rounded-xl border border-stone-200 bg-white px-4 text-sm font-semibold tracking-tight text-stone-800"
             role="status"
             aria-live="polite"
           >
@@ -457,7 +457,7 @@ export default function PropertyFilters({
 
           {showVillasSpecificBlocks && (
             <>
-              <section className="pt-2.5 border-t border-gray-100">
+              <section className="pt-2 border-t border-gray-100">
                 <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Rent or buy</p>
                 <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
                   {pill(
@@ -476,7 +476,7 @@ export default function PropertyFilters({
               </section>
 
               {isRent && (
-                <section className="pt-2.5 border-t border-gray-100">
+                <section className="pt-2 border-t border-gray-100">
                   <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Payment</p>
                   <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
                     {pill(!filters.minDuration || (filters.minDuration !== 1 && filters.minDuration !== 12), () => {
@@ -501,7 +501,7 @@ export default function PropertyFilters({
           )}
 
           {showSubjectBlock && (
-            <section className="pt-2.5 border-t border-gray-100">
+            <section className="pt-2 border-t border-gray-100">
               <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Type</p>
               <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
                 {pill(!subject, () => {
@@ -516,7 +516,7 @@ export default function PropertyFilters({
             </section>
           )}
 
-          <section className="pt-2.5 border-t border-gray-100">
+          <section className="pt-2 border-t border-gray-100">
             <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Area</p>
             <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
               {pill(!filters.mainArea, () => {
@@ -536,7 +536,7 @@ export default function PropertyFilters({
           </section>
 
           {subAreaOptions.length > 0 && (
-            <section className="pt-2.5 border-t border-gray-100">
+            <section className="pt-2 border-t border-gray-100">
               <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Sub-area</p>
               <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
                 {pill(filters.subArea.length === 0, () => {
@@ -558,7 +558,7 @@ export default function PropertyFilters({
 
           {showVillasSpecificBlocks && (
             <>
-              <section className="pt-2.5 border-t border-gray-100">
+              <section className="pt-2 border-t border-gray-100">
                 <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Bedrooms</p>
                 <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
                   {pill(
@@ -583,7 +583,7 @@ export default function PropertyFilters({
               </section>
 
               {visibleFeatureOptions.length > 0 && (
-                <section className="pt-2.5 border-t border-gray-100">
+                <section className="pt-2 border-t border-gray-100">
                   <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Amenities</p>
                   <div className="divide-y divide-gray-100 rounded-xl border border-gray-100 bg-gray-50/50 p-2 md:p-3">
                     {visibleFeatureOptions.map(({ key, label }) => (
