@@ -421,47 +421,38 @@ export default function PropertyFilters({
   );
 
   const collapsedBase = "Show all filters";
-  const collapsedLabel =
-    activeFilterParamsCount > 0
-      ? `${collapsedBase} · ${activeFilterParamsCount} active`
-      : collapsedBase;
-
   const countLabel =
     matchingCount === 1 ? "Found 1 property" : `Found ${matchingCount} properties`;
 
   return (
-    <div className={isCollapsed ? "" : "bg-white rounded-2xl p-3 md:p-5 shadow-sm"}>
+    <div className="mb-6">
       {isCollapsed ? (
         <button
           type="button"
           onClick={openFilters}
-          className="w-full rounded-xl border border-stone-200 bg-white px-4 py-3 text-left transition-colors duration-200 hover:border-emerald-200 hover:bg-emerald-50/40 active:scale-[0.99]"
+          className="w-full h-12 rounded-xl border border-stone-200 bg-white px-4 text-left transition-colors duration-200 hover:border-emerald-200 hover:bg-emerald-50/40 active:scale-[0.99] flex items-center justify-between"
           aria-expanded={false}
         >
-          <span className="block text-sm font-semibold tracking-tight text-stone-900">{collapsedLabel}</span>
-          <span className="mt-0.5 block text-xs text-stone-500">Quick access to all options</span>
+          <span className="text-sm font-semibold tracking-tight text-stone-900">{collapsedBase}</span>
+          <span className="text-xs text-stone-500">{activeFilterParamsCount > 0 ? `${activeFilterParamsCount} active` : "tap to open"}</span>
         </button>
       ) : (
-        <div className="flex flex-col gap-4 md:gap-5">
+        <div className="bg-white rounded-2xl p-3 md:p-5 shadow-sm flex flex-col gap-4 md:gap-5">
           <button
             type="button"
             onClick={closeFilters}
-            className="w-full flex items-center justify-between rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm font-medium text-stone-800 hover:border-stone-300 active:scale-[0.99] transition-[transform,border-color] duration-200"
+            className="w-full h-12 rounded-xl border border-stone-200 bg-white px-4 text-sm font-semibold tracking-tight text-stone-900 hover:border-stone-300 active:scale-[0.99] transition-[transform,border-color] duration-200"
             aria-expanded={true}
           >
-            <span>Hide filters</span>
-            <span className="text-xs font-normal text-stone-500 leading-snug">
-              Back to breadcrumbs
-            </span>
+            Hide filters
           </button>
 
           <div
-            className="flex flex-col items-center justify-center gap-1 rounded-xl border border-emerald-100 bg-emerald-50/80 px-3 py-2.5 text-center text-sm text-emerald-900"
+            className="w-full h-12 flex items-center justify-center rounded-xl border border-emerald-100 bg-emerald-50/80 px-4 text-sm font-semibold tracking-tight text-emerald-900"
             role="status"
             aria-live="polite"
           >
-            <span className="font-medium">{countLabel}</span>
-            <span className="text-xs text-emerald-800/80">Updates as you change filters</span>
+            {countLabel}
           </div>
 
           {showVillasSpecificBlocks && (
