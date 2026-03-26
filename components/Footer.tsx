@@ -33,6 +33,14 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  href="/blog"
+                  className="inline-block py-1 text-gray-600 hover:text-gray-900 touch-manipulation"
+                >
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/qa"
                   className="inline-block py-1 text-gray-600 hover:text-gray-900 touch-manipulation"
                 >

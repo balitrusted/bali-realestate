@@ -25,6 +25,9 @@ export default function Header() {
             <Link href="/guides" className="text-gray-700 hover:text-gray-900">
               Knowledge Base
             </Link>
+            <Link href="/blog" className="text-gray-700 hover:text-gray-900">
+              Blog
+            </Link>
             <Link href="/qa" className="text-gray-700 hover:text-gray-900">
               Q&A
             </Link>
@@ -68,6 +71,9 @@ export default function Header() {
             </Link>
             <Link href="/guides" className="py-3 text-gray-700 hover:text-gray-900" onClick={() => setMobileMenuOpen(false)}>
               Knowledge Base
+            </Link>
+            <Link href="/blog" className="py-3 text-gray-700 hover:text-gray-900" onClick={() => setMobileMenuOpen(false)}>
+              Blog
             </Link>
             <Link href="/qa" className="py-3 text-gray-700 hover:text-gray-900" onClick={() => setMobileMenuOpen(false)}>
               Q&A

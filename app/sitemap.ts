@@ -3,6 +3,7 @@ import { readFile } from 'fs/promises'
 import { join } from 'path'
 import { parsePropertiesFile } from '@/lib/parseProperties'
 import { getArticles } from '@/lib/articlesData'
+import { getBlogPosts } from '@/lib/blogData'
 import { loadAllProperties, filterProperties, parseSegment, SEGMENT_TYPES } from '@/lib/propertiesCatalog'
 import { buildPropertySlugIndex } from '@/lib/propertySlug'
 import type { PropertyType, MainArea } from '@/types/property'
@@ -41,6 +42,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.75,
     },
     {
       url: `${baseUrl}/site-map`,
@@ -178,5 +185,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Error loading articles for sitemap:', error)
   }
 
-  return [...staticPages, ...propertyPages, ...guideCategoryPages, ...propertyDetailPages, ...articlePages]
+  // Add individual blog post pages
+  let blogPages: MetadataRoute.Sitemap = []
+  try {
+    const posts = await getBlogPosts()
+    blogPages = posts
+      .filter((p) => p.slug)
+      .map((post) => ({
+        url: `${baseUrl}/blog/${post.slug}`,
+        lastModified: post.updatedAt ? new Date(post.updatedAt) : new Date(post.createdAt),
+        changeFrequency: 'weekly' as const,
+        priority: 0.65,
+      }))
+  } catch (error) {
+    console.error('Error loading blog posts for sitemap:', error)
+  }
+
+  return [...staticPages, ...propertyPages, ...guideCategoryPages, ...propertyDetailPages, ...articlePages, ...blogPages]
 }

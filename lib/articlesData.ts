@@ -4,12 +4,31 @@ import type { Article } from "@/types/article";
 const BLOB_KEY = "data/articles.json";
 const getBlobStoreBaseUrl = () => process.env.BLOB_STORE_URL?.trim().replace(/\/$/, "");
 
+function clampFutureIso(iso?: string): string | undefined {
+  if (!iso) return iso;
+  const t = Date.parse(iso);
+  if (!Number.isFinite(t)) return iso;
+  const now = Date.now();
+  if (t <= now) return iso;
+  return new Date(now).toISOString();
+}
+
+function normalizeArticleDates(article: Article): Article {
+  return {
+    ...article,
+    publishedAt: clampFutureIso(article.publishedAt),
+    createdAt: clampFutureIso(article.createdAt) ?? article.createdAt,
+    updatedAt: clampFutureIso(article.updatedAt) ?? article.updatedAt,
+  };
+}
+
 /**
  * Get articles: from Vercel Blob if present, else from bundled data/articles.
  */
 export async function getArticles(): Promise<Article[]> {
   // Always load bundled data/articles.ts (it is part of the deployment and contains our manual fixes).
-  const { articles: localArticles } = await import("@/data/articles");
+  const { articles: localArticlesRaw } = await import("@/data/articles");
+  const localArticles = localArticlesRaw.map(normalizeArticleDates);
 
   // If Blob is enabled, merge Blob + bundled by freshness (updatedAt, fallback createdAt).
   // This prevents “why did my text change not show?” when Blob contains older data.
@@ -42,6 +61,7 @@ export async function getArticles(): Promise<Article[]> {
       })();
 
       if (blobArticles && Array.isArray(blobArticles) && blobArticles.length > 0) {
+        const normalizedBlobArticles = blobArticles.map(normalizeArticleDates);
         const score = (a: Article) => {
           const updated = a.updatedAt ? Date.parse(a.updatedAt) : NaN;
           const created = a.createdAt ? Date.parse(a.createdAt) : NaN;
@@ -51,7 +71,7 @@ export async function getArticles(): Promise<Article[]> {
 
         const byId = new Map<string, Article>();
         for (const a of localArticles) byId.set(a.id, a);
-        for (const b of blobArticles) {
+        for (const b of normalizedBlobArticles) {
           const existing = byId.get(b.id);
           if (!existing) {
             byId.set(b.id, b);
@@ -61,7 +81,7 @@ export async function getArticles(): Promise<Article[]> {
           }
         }
 
-        return Array.from(byId.values());
+        return Array.from(byId.values()).map(normalizeArticleDates);
       }
     } catch {
       /* fall through to local */
