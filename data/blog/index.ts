@@ -24,14 +24,14 @@ export const blogPosts: BlogPost[] = [
 <p>The area you choose will define your experience more than the villa itself.</p>
 <p><strong>Penestanan</strong> feels social and connected. It is close to cafes, coworking spaces, and a more active expat community.</p>
 <p><strong>Gentong</strong> feels calmer and more hidden compared to central Ubud. Surrounded by rice fields and greenery, it is a peaceful residential area where many villas offer privacy and a slower rhythm of life.</p>
-<p><strong>Sukawati</strong> is often more affordable and practical for long-term stays with strong value.</p>
+<p><strong>Petulu</strong> is known for its peaceful village rhythm, rice-field surroundings, and evening white-heron flights. It sits north of central Ubud and is often chosen by people who want quieter long-term living while staying connected to town.</p>
 <p><strong>Lodtunduh</strong> offers spacious residential living with larger plots, gardens, and villas that feel more separated from the busier parts of Ubud. It is especially popular for long-term stays where privacy and space matter.</p>
 <p>Each of these areas creates a completely different version of Ubud. That is why choosing where to live here is not just a technical decision - it is a lifestyle decision.</p>
 <p>You can explore available villas in each area and compare the feel directly:</p>
 <ul>
 <li><p><a href="/properties/rent/ubud/penestanan">Penestanan villas</a></p></li>
 <li><p><a href="/properties/rent/ubud/gentong">Gentong villas</a></p></li>
-<li><p><a href="/properties/rent/ubud/sukawati">Sukawati villas</a></p></li>
+<li><p><a href="/properties/rent/ubud/petulu">Petulu villas</a></p></li>
 <li><p><a href="/properties/rent/ubud/lodtunduh">Lodtunduh villas</a></p></li>
 </ul>
 <h2>Details people notice only after moving in</h2>
@@ -39,7 +39,8 @@ export const blogPosts: BlogPost[] = [
 <p>This is why choosing a villa in Ubud is rarely just about aesthetics. It is about small details that shape your daily life - internet stability, airflow, privacy, and how the space feels during long periods of staying inside.</p>
 <h2>Final thought</h2>
 <p>In the end, renting a villa in Ubud is less about finding the perfect property and more about finding the right balance between comfort, location, and rhythm of life. Most people do not get it perfect on the first try - and that is normal. Ubud is a place where you adjust, not just choose.</p>
-<p>And once you understand what kind of life you want here, the rest becomes surprisingly simple.</p>`,
+<p>And once you understand what kind of life you want here, the rest becomes surprisingly simple.</p>
+<p class="final-cta"><a href="/properties/rent/ubud">Explore all Ubud rental villas →</a></p>`,
     location: "ubud",
     tags: ["ubud", "rent", "long-term rental", "villa"],
     author: "Balitrusted Team",

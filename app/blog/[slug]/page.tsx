@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import ArticleContent from "@/components/ArticleContent";
+import ArticleComments from "@/components/ArticleComments";
 import { getBlogPosts } from "@/lib/blogData";
 import { formatLocaleDate } from "@/lib/formatDate";
 import { blogReadingMinutes } from "@/lib/blogHub";
@@ -66,6 +67,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               {post.summary ? <p className="text-xl text-gray-700 mb-8 italic">{post.summary}</p> : null}
               <ArticleContent content={post.content} />
             </article>
+
+            <div className="mt-12 pt-8 border-t border-gray-200 max-w-3xl">
+              <ArticleComments articleId={`blog:${post.id}`} />
+            </div>
 
             <div className="mt-12 pt-8 border-t border-gray-200">
               <Link href="/blog" className="text-gray-900 hover:text-gray-700 font-medium">
