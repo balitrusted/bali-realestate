@@ -64,18 +64,22 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 </div>
               ) : null}
 
-              {post.summary ? <p className="text-xl text-gray-700 mb-8 italic">{post.summary}</p> : null}
+              {post.summary ? (
+                <p className="mb-8 rounded-2xl border border-emerald-100 bg-emerald-50/60 px-5 py-4 text-[1.05rem] leading-relaxed text-emerald-950">
+                  {post.summary}
+                </p>
+              ) : null}
               <ArticleContent content={post.content} />
             </article>
-
-            <div className="mt-12 pt-8 border-t border-gray-200 max-w-3xl">
-              <ArticleComments articleId={`blog:${post.id}`} />
-            </div>
 
             <div className="mt-12 pt-8 border-t border-gray-200">
               <Link href="/blog" className="text-gray-900 hover:text-gray-700 font-medium">
                 ← Back to Blog
               </Link>
+            </div>
+
+            <div className="mt-12 pt-8 border-t border-gray-200 max-w-3xl">
+              <ArticleComments articleId={`blog:${post.id}`} />
             </div>
           </div>
 
