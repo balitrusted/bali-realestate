@@ -430,7 +430,7 @@ export default function PropertyFilters({
     matchingCount === 1 ? "Found 1 property" : `Found ${matchingCount} properties`;
 
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl p-3 md:p-5 shadow-sm">
+    <div className="bg-white rounded-2xl p-3 md:p-5 shadow-sm">
       {isCollapsed ? (
         <button
           type="button"
