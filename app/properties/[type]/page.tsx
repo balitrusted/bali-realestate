@@ -218,15 +218,6 @@ export default async function PropertiesByTypePage({
                   searchParams={searchParamsForPagination}
                   navClassName="flex justify-center items-center gap-2 mt-0 mb-2"
                 />
-                <PropertyFilters
-                  defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
-                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
-                  matchingCount={total}
-                  allowedMainAreas={allowedMainAreas}
-                  allowedSubAreas={allowedSubAreas}
-                  allowedBedroomCounts={allowedBedroomCounts}
-                  availableAmenityKeys={availableAmenityFilterKeys}
-                />
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {items.map((property) => (
                     <PropertyCard
@@ -241,6 +232,15 @@ export default async function PropertiesByTypePage({
                   page={currentPage}
                   totalPages={totalPages}
                   searchParams={searchParamsForPagination}
+                />
+                <PropertyFilters
+                  defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
+                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
+                  matchingCount={total}
+                  allowedMainAreas={allowedMainAreas}
+                  allowedSubAreas={allowedSubAreas}
+                  allowedBedroomCounts={allowedBedroomCounts}
+                  availableAmenityKeys={availableAmenityFilterKeys}
                 />
                 {totalPages > 1 && <CatalogListingDivider className="mt-6" />}
                 {total < 5 && (
