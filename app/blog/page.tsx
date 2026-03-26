@@ -50,9 +50,9 @@ export default async function BlogPage() {
       <div className="container mx-auto max-w-6xl px-4 py-10 md:py-14">
         <header className="mx-auto mb-10 max-w-3xl text-center md:mb-12">
           <p className="text-xs font-semibold uppercase tracking-widest text-emerald-800/90">Blog</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-stone-900 md:text-4xl">Daily notes, local context</h1>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-stone-900 md:text-4xl">Stories and practical guides</h1>
           <p className="mt-3 text-base leading-relaxed text-stone-600 md:text-lg">
-            A high-frequency stream for SEO topics and real-world notes around Ubud, Sanur, and Bali living.
+            What it is actually like to live, rent, and settle in Ubud, Sanur, and nearby areas.
           </p>
           <p className="mt-4 text-sm text-stone-500">
             {rows.length} {rows.length === 1 ? "post" : "posts"}
