@@ -78,7 +78,11 @@ export default async function BlogPage() {
                   ) : null}
                   <div className="p-6 md:p-8">
                     <p className="text-xs font-semibold uppercase tracking-widest text-emerald-800">{featured.location}</p>
-                    <h2 className="mt-3 text-2xl font-bold tracking-tight text-stone-900 md:text-3xl">{featured.title}</h2>
+                    <h2 className="mt-3 text-2xl font-bold tracking-tight text-stone-900 md:text-3xl">
+                      <Link href={`/blog/${featured.slug}`} className="hover:text-emerald-900">
+                        {featured.title}
+                      </Link>
+                    </h2>
                     <p className="mt-4 text-base leading-relaxed text-stone-700">{blogPreview(featured, 360)}</p>
                     <div className="mt-4">
                       <PostMeta
