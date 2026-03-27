@@ -433,7 +433,7 @@ export default function PropertyFilters({
         <button
           type="button"
           onClick={openFilters}
-          className="w-full rounded-2xl border border-emerald-200/90 bg-btn-hatch-emerald px-3 py-2 text-left transition-[transform,border-color,background-color] duration-200 hover:border-emerald-300 active:scale-[0.99] flex items-center justify-between"
+          className="w-full rounded-lg border border-emerald-200/90 bg-btn-hatch-emerald px-3 py-2 text-left transition-[transform,border-color,background-color] duration-200 hover:border-emerald-300 active:scale-[0.99] flex items-center justify-between"
           aria-expanded={false}
         >
           <span className="text-sm font-semibold tracking-tight text-stone-900">{collapsedBase}</span>
@@ -444,10 +444,11 @@ export default function PropertyFilters({
           <button
             type="button"
             onClick={closeFilters}
-            className="w-full rounded-2xl border border-stone-200 px-3 py-2 text-left text-sm font-semibold tracking-tight text-stone-900 hover:border-stone-300 active:scale-[0.99] transition-[transform,border-color] duration-200 bg-btn-hatch"
+            className="w-full rounded-2xl border border-stone-200 px-3 py-2 text-left hover:border-stone-300 active:scale-[0.99] transition-[transform,border-color] duration-200 bg-btn-hatch flex items-center justify-between"
             aria-expanded={true}
           >
-            Hide filters
+            <span className="text-sm font-semibold tracking-tight text-stone-900">Hide filters</span>
+            <span className="text-xs text-stone-500">tap to close</span>
           </button>
 
           <p
