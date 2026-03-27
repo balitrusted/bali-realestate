@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSaved } from "@/components/SavedProvider";
 import PropertyCard from "@/components/PropertyCard";
+import PriceText from "@/components/PriceText";
 import type { Property } from "@/types/property";
 import { areas } from "@/types/areas";
 import { MAX_COMPARE } from "@/lib/savedStore";
@@ -46,14 +47,6 @@ export default function SavedPage() {
       })
       .finally(() => setLoading(false));
   }, [favorites.join(","), compare.join(",")]);
-
-  const formatPrice = (p: Property["price"], isSale: boolean) => {
-    if (isSale && p.forSale != null) return `${(p.forSale / 1_000_000).toFixed(0)}M ${p.currency}`;
-    const monthly = p.monthly ?? p.min;
-    if (monthly != null && monthly > 0) return `${(monthly / 1_000_000).toFixed(0)}M ${p.currency}/mo`;
-    if (p.yearly != null && p.yearly > 0) return `${(p.yearly / 1_000_000).toFixed(0)}M ${p.currency}/yr`;
-    return "—";
-  };
 
   const requestIds = [...favorites, ...compare].filter((id, i, arr) => arr.indexOf(id) === i);
 
@@ -148,7 +141,21 @@ export default function SavedPage() {
                           <td className="py-2 px-4 text-gray-500 bg-gray-50">Price</td>
                           {compareProps.map((p) => (
                             <td key={p.id} className="py-2 px-4">
-                              {formatPrice(p.price, p.types?.includes("sale") ?? false)}
+                              {p.types?.includes("sale") && p.price.forSale != null ? (
+                                <PriceText amount={p.price.forSale} sourceCurrency={p.price.currency} />
+                              ) : (p.price.monthly ?? p.price.min) != null && (p.price.monthly ?? p.price.min)! > 0 ? (
+                                <>
+                                  <PriceText amount={p.price.monthly ?? p.price.min ?? 0} sourceCurrency={p.price.currency} />
+                                  /mo
+                                </>
+                              ) : p.price.yearly != null && p.price.yearly > 0 ? (
+                                <>
+                                  <PriceText amount={p.price.yearly} sourceCurrency={p.price.currency} />
+                                  /yr
+                                </>
+                              ) : (
+                                "—"
+                              )}
                             </td>
                           ))}
                         </tr>

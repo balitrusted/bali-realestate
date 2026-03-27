@@ -9,6 +9,7 @@ import PropertyStructuredData from "@/components/PropertyStructuredData";
 import PropertyCardActions from "@/components/PropertyCardActions";
 import PropertyDetailSimilar from "@/components/PropertyDetailSimilar";
 import PropertyDetailLeadButtons from "@/components/PropertyDetailLeadButtons";
+import PriceText from "@/components/PriceText";
 import { subAreaNames, areas, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
 import { getPropertyDisplayTitle, fixDescriptionDisplay, fixVillaNumberDisplay } from "@/lib/propertyUtils";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
@@ -33,13 +34,6 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
     property: p,
     detailSlug: slugIndex.segmentFor(p),
   }));
-
-  const formatPrice = (price: number, currency: string) => {
-    if (currency === "IDR") {
-      return `${(price / 1000000).toFixed(0)}M IDR`;
-    }
-    return `$${price.toLocaleString()}`;
-  };
 
   const p = property.price;
   const monthly = p.monthly ?? p.min;
@@ -132,7 +126,7 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
               <div className="mb-5">
                 {forSale != null && isSale && (
                   <p className="text-3xl font-semibold text-gray-900">
-                    {formatPrice(forSale, p.currency)}
+                    <PriceText amount={forSale} sourceCurrency={p.currency} />
                     <span className="text-lg font-normal text-gray-500 ml-2">· for sale</span>
                   </p>
                 )}
@@ -140,12 +134,14 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
                   <>
                     {forSale != null && isSale && <div className="mt-2" />}
                     <p className="text-3xl font-semibold text-gray-900">
-                      {formatPrice(monthly, p.currency)}
+                      <PriceText amount={monthly} sourceCurrency={p.currency} />
                       <span className="text-lg font-normal text-gray-500 ml-2">/ month</span>
                     </p>
                     {yearly != null && (
                       <div className="mt-2 flex flex-wrap items-center gap-3">
-                        <p className="text-lg text-gray-700">{formatPrice(yearly, p.currency)} / year</p>
+                        <p className="text-lg text-gray-700">
+                          <PriceText amount={yearly} sourceCurrency={p.currency} /> / year
+                        </p>
                         {hasDiscount && discountPercent > 0 && (
                           <span className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-emerald-100 text-emerald-800">
                             Save {discountPercent}%

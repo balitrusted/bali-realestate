@@ -1,6 +1,7 @@
 import PropertyImageWithFallback from "@/components/PropertyImageWithFallback";
 import PropertyCardActions from "@/components/PropertyCardActions";
 import PropertyViewLink from "@/components/PropertyViewLink";
+import PriceText from "@/components/PriceText";
 import { Property } from "@/types/property";
 import { areas, subAreaNames, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
 import { getPropertyDisplayTitle } from "@/lib/propertyUtils";
@@ -21,12 +22,8 @@ interface PropertyCardProps {
 const PROPERTY_CARD_TITLE_VARIANT: "above" | "overlay" | "below" = "above";
 
 export default function PropertyCard({ property, detailSlug, viewReturnPath }: PropertyCardProps) {
-  const formatPrice = (price: number, currency: string) => {
-    if (currency === "IDR") {
-      return `${(price / 1000000).toFixed(0)}M IDR`;
-    }
-    return `$${price.toLocaleString()}`;
-  };
+  const formatBasePrice = (price: number, currency: string) =>
+    currency === "IDR" ? `${(price / 1000000).toFixed(0)}M IDR` : `$${price.toLocaleString()}`;
 
   const mainAreaLabel = property.mainArea ? (areas[property.mainArea]?.nameEn || property.mainArea) : null;
 
@@ -184,11 +181,11 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
 
   const primaryPriceText =
     forSale != null && isSale
-      ? `${formatPrice(forSale, p.currency)} · for sale`
+      ? `${formatBasePrice(forSale, p.currency)} · for sale`
       : hasYearlyOnly && yearly != null && yearly > 0
-        ? `${formatPrice(yearly, p.currency)} / year`
+        ? `${formatBasePrice(yearly, p.currency)} / year`
         : monthly != null && monthly > 0
-          ? `${formatPrice(monthly, p.currency)} / month`
+          ? `${formatBasePrice(monthly, p.currency)} / month`
           : null;
 
   const topSubline = locationLabel || null;
@@ -303,7 +300,7 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
           <div className="min-h-[56px] mb-3">
             {forSale != null && isSale && (
               <p className="text-lg font-semibold text-gray-900">
-                {formatPrice(forSale, p.currency)}
+                      <PriceText amount={forSale} sourceCurrency={p.currency} />
                 <span className="text-sm font-normal text-gray-500 ml-1">· for sale</span>
               </p>
             )}
@@ -312,13 +309,13 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
                 {!hasYearlyOnly && monthly != null && monthly > 0 && (
                   <>
                     <p className="text-lg font-semibold text-gray-900">
-                      {formatPrice(monthly, p.currency)}
+                      <PriceText amount={monthly} sourceCurrency={p.currency} />
                       <span className="text-sm font-normal text-gray-500 ml-1">/ month</span>
                     </p>
                     {yearly != null && yearly > 0 && (
                       <div className="mt-1 flex flex-wrap items-center gap-2">
                         <p className="text-sm text-gray-600">
-                          {formatPrice(yearly, p.currency)} / year
+                          <PriceText amount={yearly} sourceCurrency={p.currency} /> / year
                         </p>
                         {hasDiscount && discountPercent > 0 && (
                           <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-800">
@@ -331,7 +328,7 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
                 )}
                 {hasYearlyOnly && yearly != null && yearly > 0 && (
                   <p className="text-lg font-semibold text-gray-900">
-                    {formatPrice(yearly, p.currency)}
+                    <PriceText amount={yearly} sourceCurrency={p.currency} />
                     <span className="text-sm font-normal text-gray-500 ml-1">/ year</span>
                   </p>
                 )}

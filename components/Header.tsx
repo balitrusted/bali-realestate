@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import HeaderSavedLink from "@/components/HeaderSavedLink";
+import CurrencySwitcher from "@/components/CurrencySwitcher";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -35,6 +36,7 @@ export default function Header() {
               About
             </Link>
             <HeaderSavedLink />
+            <CurrencySwitcher />
             <Link 
               href="/request" 
               className="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
@@ -84,6 +86,9 @@ export default function Header() {
             <span className="py-3" onClick={() => setMobileMenuOpen(false)}>
               <HeaderSavedLink />
             </span>
+            <div className="py-3">
+              <CurrencySwitcher mobile />
+            </div>
             <Link
               href="/request"
               className="mt-2 inline-block px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 text-center"

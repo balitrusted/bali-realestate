@@ -1,6 +1,7 @@
 import Image from "next/image";
 import PropertyCardActions from "@/components/PropertyCardActions";
 import PropertyViewLink from "@/components/PropertyViewLink";
+import PriceText from "@/components/PriceText";
 import { Property } from "@/types/property";
 import { areas } from "@/types/areas";
 import { getPropertyDisplayTitle } from "@/lib/propertyUtils";
@@ -20,14 +21,6 @@ export default function HomePropertyCard({ property, detailSlug }: HomePropertyC
   const yearly = p?.yearly;
   const forSale = p?.forSale;
   const isSale = property.types?.includes("sale");
-  const priceLabel = isSale && forSale
-    ? `${(forSale / 1_000_000).toFixed(0)}M IDR`
-    : yearly != null && yearly > 0
-      ? `${(yearly / 1_000_000).toFixed(0)}M IDR/yr`
-      : monthly != null && monthly > 0
-        ? `${(monthly / 1_000_000).toFixed(0)}M IDR/mo`
-        : "—";
-
   return (
     <PropertyViewLink
       detailSlug={detailSlug}
@@ -55,7 +48,23 @@ export default function HomePropertyCard({ property, detailSlug }: HomePropertyC
           {displayTitle}
         </p>
         <p className="text-xs text-gray-500">{areaName}</p>
-        <p className="text-xs font-medium text-gray-700 mt-auto pt-1">{priceLabel}</p>
+        <p className="text-xs font-medium text-gray-700 mt-auto pt-1">
+          {isSale && forSale ? (
+            <PriceText amount={forSale} sourceCurrency={p.currency} />
+          ) : yearly != null && yearly > 0 ? (
+            <>
+              <PriceText amount={yearly} sourceCurrency={p.currency} />
+              /yr
+            </>
+          ) : monthly != null && monthly > 0 ? (
+            <>
+              <PriceText amount={monthly} sourceCurrency={p.currency} />
+              /mo
+            </>
+          ) : (
+            "—"
+          )}
+        </p>
       </div>
     </PropertyViewLink>
   );

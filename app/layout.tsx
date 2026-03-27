@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { SavedProvider } from "@/components/SavedProvider";
+import { CurrencyProvider } from "@/components/CurrencyProvider";
 
 /* Typography: V1 = Inter (see docs/TYPOGRAPHY-VERSIONS.md to rollback). V2 = IBM Plex Sans. */
 const fontSans = IBM_Plex_Sans({
@@ -40,11 +41,13 @@ export default function RootLayout({
       <body className={`${fontSans.variable} font-sans antialiased`}>
         <GoogleAnalytics />
         <SavedProvider>
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
+          <CurrencyProvider>
+            <div className="flex min-h-screen flex-col">
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
+          </CurrencyProvider>
         </SavedProvider>
       </body>
     </html>
