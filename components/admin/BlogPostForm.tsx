@@ -6,6 +6,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Underline from "@tiptap/extension-underline";
+import { ParagraphWithClass } from "@/lib/tiptap/paragraphWithClass";
 import type { BlogPost } from "@/types/blog";
 
 interface BlogPostFormProps {
@@ -51,6 +52,7 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
+        paragraph: false,
         heading: {
           levels: [1, 2, 3],
           HTMLAttributes: {
@@ -58,6 +60,7 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
           },
         },
       }),
+      ParagraphWithClass,
       Underline,
       Image.configure({
         inline: false,
@@ -433,6 +436,22 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
                 title="Add image from URL"
               >
                 Image URL
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  editor
+                    .chain()
+                    .focus()
+                    .insertContent(
+                      '<p class="article-image-caption">Jalan Subak Sok Wayah, Bali, Indonesia · 12 February 2025 · Photo by Kadek K.</p>'
+                    )
+                    .run()
+                }
+                className="px-3 py-1 text-sm rounded bg-white text-gray-700 hover:bg-gray-100"
+                title="Insert photo credit line (edit after inserting); place just below the image"
+              >
+                Caption
               </button>
               <div className="w-px bg-gray-300" />
               <button
