@@ -9,7 +9,7 @@ import PropertyCardActions from "@/components/PropertyCardActions";
 import PropertyDetailSimilar from "@/components/PropertyDetailSimilar";
 import PropertyDetailLeadButtons from "@/components/PropertyDetailLeadButtons";
 import { subAreaNames, areas, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
-import { getPropertyDisplayTitle, fixDescriptionDisplay } from "@/lib/propertyUtils";
+import { getPropertyDisplayTitle, fixDescriptionDisplay, fixVillaNumberDisplay } from "@/lib/propertyUtils";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 
 type Props = {
@@ -68,6 +68,23 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
   const hasSale = types.includes("sale");
   const hasLand = types.includes("land");
   const hasBusiness = types.includes("business");
+  const dealLabel = hasRent ? "Rent" : hasSale ? "Buy" : hasLand ? "Land" : hasBusiness ? "Business" : "Listing";
+  const headingTitle = (() => {
+    const beds = property.bedrooms ?? 0;
+    const bedLabel = beds === 1 ? "1 bed" : `${beds} bed`;
+    if (property.villaNumber?.trim?.()) {
+      const num = fixVillaNumberDisplay(property.villaNumber).trim().replace(/^#/, "");
+      return `Villa #${num} · ${bedLabel} · ${dealLabel}`;
+    }
+    const explicitTitle = property.title?.trim();
+    if (explicitTitle) return `${explicitTitle} · ${dealLabel}`;
+    return `${bedLabel} villa · ${dealLabel}`;
+  })();
+  const locationLabel = `${areaInfo?.nameEn || "Area"} • ${
+    property.subArea != null
+      ? subAreaNames[property.subArea] || property.subArea
+      : SUBAREA_UNSPECIFIED_LABEL
+  }`;
 
   return (
     <>
@@ -100,9 +117,13 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
             <div>
               <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
                 <h1 className="text-3xl font-bold text-gray-900 flex-1 min-w-0 pr-2">
-                  {getPropertyDisplayTitle(property)}
+                  {headingTitle}
                 </h1>
                 <PropertyCardActions propertyId={String(property.id)} layout="inline" />
+              </div>
+
+              <div className="mb-4 text-sm text-gray-500">
+                <span>{locationLabel}</span>
               </div>
 
               <div className="mb-5">
@@ -130,32 +151,6 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
                       </div>
                     )}
                   </>
-                )}
-              </div>
-
-              <div className="mb-6 text-sm text-gray-500">
-                <span>
-                  {areaInfo?.nameEn}
-                  {` • ${
-                    property.subArea != null
-                      ? subAreaNames[property.subArea] || property.subArea
-                      : SUBAREA_UNSPECIFIED_LABEL
-                  }`}
-                </span>
-                {property.types && property.types.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {property.types.map((type) => (
-                      <span key={type} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
-                        {type === "rent"
-                          ? "Rent"
-                          : type === "sale"
-                            ? "Sale"
-                            : type === "land"
-                              ? "Land"
-                              : "Business"}
-                      </span>
-                    ))}
-                  </div>
                 )}
               </div>
 
