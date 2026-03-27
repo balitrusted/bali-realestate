@@ -35,10 +35,28 @@ export default function PropertyLocationMapMapLibrePreview({ title, areaLabel, d
     const [lat, lng] = coords;
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
-      // Demo vector style from MapLibre (great for visual PoC, switch in production)
-      style: "https://demotiles.maplibre.org/style.json",
+      // OSM raster style via MapLibre renderer for a practical, street-level preview.
+      style: {
+        version: 8,
+        sources: {
+          osm: {
+            type: "raster",
+            tiles: ["https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"],
+            tileSize: 256,
+            attribution: "&copy; OpenStreetMap contributors",
+            maxzoom: 19,
+          },
+        },
+        layers: [
+          {
+            id: "osm-raster",
+            type: "raster",
+            source: "osm",
+          },
+        ],
+      },
       center: [lng, lat],
-      zoom: 13.5,
+      zoom: 15,
     });
 
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
