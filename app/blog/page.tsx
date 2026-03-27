@@ -63,7 +63,8 @@ export default async function BlogPage() {
           <section className="mx-auto max-w-3xl rounded-2xl border border-stone-200 bg-white px-6 py-12 text-center">
             <h2 className="text-xl font-semibold text-stone-900">Blog is ready</h2>
             <p className="mt-2 text-sm text-stone-600">
-              Add your first post in <code>data/blog/index.ts</code>, then it will appear here automatically.
+              Add your first post in the admin under <strong>Blog</strong> (<code className="text-xs">/admin/blog</code>),
+              or in <code className="text-xs">data/blog/index.ts</code> in the repo.
             </p>
           </section>
         ) : (

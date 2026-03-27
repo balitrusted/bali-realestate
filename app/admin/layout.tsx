@@ -94,6 +94,9 @@ export default function AdminLayout({
               >
                 Articles
               </Link>
+              <Link href="/admin/blog" className="text-gray-700 hover:text-gray-900">
+                Blog
+              </Link>
               <Link
                 href="/admin/comments"
                 className="text-gray-700 hover:text-gray-900"
