@@ -208,7 +208,6 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
                   title={headingTitle}
                   areaLabel={locationLabel}
                   displayLocation={property.displayLocation}
-                  exactLocation={property.exactLocation}
                 />
               </div>
 

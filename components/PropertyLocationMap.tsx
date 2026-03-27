@@ -8,7 +8,6 @@ type Props = {
   title: string;
   areaLabel: string;
   displayLocation?: string;
-  exactLocation?: string;
 };
 
 function parseLatLng(raw?: string): [number, number] | null {
@@ -20,7 +19,7 @@ function parseLatLng(raw?: string): [number, number] | null {
   return [lat, lng];
 }
 
-export default function PropertyLocationMap({ title, areaLabel, displayLocation, exactLocation }: Props) {
+export default function PropertyLocationMap({ title, areaLabel, displayLocation }: Props) {
   const coords = parseLatLng(displayLocation);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -69,22 +68,22 @@ export default function PropertyLocationMap({ title, areaLabel, displayLocation,
       </div>
     );
   }
+  const [lat, lng] = coords;
+  const approxMapUrl = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=15/${lat}/${lng}`;
 
   return (
     <div className="space-y-2">
       <div className="overflow-hidden rounded-xl border border-stone-200">
         <div ref={mapContainerRef} className="h-64 w-full" />
       </div>
-      {exactLocation ? (
-        <a
-          href={exactLocation}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center rounded-lg border border-stone-300 px-3 py-1.5 text-xs font-medium text-stone-700 hover:bg-stone-50"
-        >
-          Open exact location ↗
-        </a>
-      ) : null}
+      <a
+        href={approxMapUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center rounded-lg border border-stone-300 px-3 py-1.5 text-xs font-medium text-stone-700 hover:bg-stone-50"
+      >
+        Open area on map ↗
+      </a>
     </div>
   );
 }
