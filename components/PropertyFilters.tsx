@@ -425,7 +425,7 @@ export default function PropertyFilters({
     matchingCount === 1 ? "Found 1 property" : `Found ${matchingCount} properties`;
 
   return (
-    <div className="mb-4 bg-white rounded-2xl p-2.5 md:p-3.5 shadow-sm">
+    <div className="mb-4 rounded-2xl border-2 border-stone-300 bg-white p-2.5 md:p-3.5 shadow-md shadow-stone-200/50">
       {isCollapsed ? (
         <button
           type="button"
@@ -447,13 +447,13 @@ export default function PropertyFilters({
             Hide filters
           </button>
 
-          <div
-            className="w-full h-12 flex items-center justify-start rounded-xl border border-stone-200 bg-white px-4 text-sm font-semibold tracking-tight text-stone-800"
+          <p
+            className="px-1 text-sm font-medium text-stone-600"
             role="status"
             aria-live="polite"
           >
             {countLabel}
-          </div>
+          </p>
 
           {showVillasSpecificBlocks && (
             <>
