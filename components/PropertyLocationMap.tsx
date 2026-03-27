@@ -29,10 +29,10 @@ function getUbudEta(mainArea: MainArea, subArea?: SubArea): string | null {
   const north = new Set<SubArea>(["gentong", "petulu"]);
 
   if (subArea && south.has(subArea)) {
-    return "Estimated to Pison Ubud: by car 15-25 min · by scooter 12-20 min";
+    return "Estimated to Ubud Center: by car 15-25 min · by scooter 12-20 min";
   }
   if (subArea && north.has(subArea)) {
-    return "Estimated to Ubud Palace: by car 8-15 min · by scooter 7-12 min";
+    return "Estimated to Ubud Center: by car 8-15 min · by scooter 7-12 min";
   }
 
   return "Estimated to central Ubud: by car 10-25 min · by scooter 8-20 min";
