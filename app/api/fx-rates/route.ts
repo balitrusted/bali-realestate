@@ -5,7 +5,7 @@ import {
   type SupportedCurrency,
 } from "@/lib/currency";
 
-export const revalidate = 60 * 60 * 24; // 24h
+export const revalidate = 86400; // 24h
 
 type FxApiResponse = {
   result?: string;
@@ -16,7 +16,7 @@ type FxApiResponse = {
 export async function GET() {
   try {
     const res = await fetch("https://open.er-api.com/v6/latest/USD", {
-      next: { revalidate: 60 * 60 * 24 },
+      next: { revalidate: 86400 },
     });
     if (!res.ok) throw new Error("Failed to fetch FX rates");
     const data = (await res.json()) as FxApiResponse;
