@@ -425,10 +425,12 @@ export default function PropertyFilters({
     matchingCount === 1 ? "Found 1 property" : `Found ${matchingCount} properties`;
 
   // Chunkier frame (more expressive than card-matching thin border).
-  // Lighter “card-style” shell rollback: `mb-4 rounded-lg border border-gray-200 bg-white px-3 py-2 shadow-sm`;
+  // Bottom `mb-2` matches catalog top Pagination `mb-2` (gap under Next → filters).
+  // Looser gap to grid rollback: `mb-4` on this root div.
+  // Lighter “card-style” shell rollback: `rounded-lg border border-gray-200 ... shadow-sm`;
   // older rollback: `p-2.5 md:p-3.5`; toggles `h-12 rounded-xl px-4`.
   return (
-    <div className="mb-4 rounded-2xl border-2 border-stone-300 bg-white px-3 py-2 shadow-md shadow-stone-200/50">
+    <div className="mb-2 rounded-2xl border-2 border-stone-300 bg-white px-3 py-2 shadow-md shadow-stone-200/50">
       {isCollapsed ? (
         <button
           type="button"
