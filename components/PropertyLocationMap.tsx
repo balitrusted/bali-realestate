@@ -3,11 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import maplibregl, { Map } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import type { MainArea, SubArea } from "@/types/property";
 
 type Props = {
   title: string;
   areaLabel: string;
   displayLocation?: string;
+  mainArea: MainArea;
+  subArea?: SubArea;
 };
 
 function parseLatLng(raw?: string): [number, number] | null {
@@ -19,12 +22,29 @@ function parseLatLng(raw?: string): [number, number] | null {
   return [lat, lng];
 }
 
-export default function PropertyLocationMap({ title, areaLabel, displayLocation }: Props) {
+function getUbudEta(mainArea: MainArea, subArea?: SubArea): string | null {
+  if (mainArea !== "ubud") return null;
+
+  const south = new Set<SubArea>(["lodtunduh", "kemenuh", "sayan", "sukawati"]);
+  const north = new Set<SubArea>(["gentong", "petulu"]);
+
+  if (subArea && south.has(subArea)) {
+    return "Estimated to Pison Ubud: by car 15-25 min · by scooter 12-20 min";
+  }
+  if (subArea && north.has(subArea)) {
+    return "Estimated to Ubud Palace: by car 8-15 min · by scooter 7-12 min";
+  }
+
+  return "Estimated to central Ubud: by car 10-25 min · by scooter 8-20 min";
+}
+
+export default function PropertyLocationMap({ title, areaLabel, displayLocation, mainArea, subArea }: Props) {
   const coords = parseLatLng(displayLocation);
   const [styleMode, setStyleMode] = useState<"streets" | "outdoor" | "satellite">("streets");
   const mapTilerKey = process.env.NEXT_PUBLIC_MAPTILER_KEY?.trim();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<Map | null>(null);
+  const eta = getUbudEta(mainArea, subArea);
 
   useEffect(() => {
     if (!coords || !mapContainerRef.current) return;
@@ -86,9 +106,6 @@ export default function PropertyLocationMap({ title, areaLabel, displayLocation 
       </div>
     );
   }
-  const [lat, lng] = coords;
-  const approxMapUrl = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=15/${lat}/${lng}`;
-
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between gap-2">
@@ -128,14 +145,7 @@ export default function PropertyLocationMap({ title, areaLabel, displayLocation 
       <div className="overflow-hidden rounded-xl border border-stone-200">
         <div ref={mapContainerRef} className="h-64 w-full" />
       </div>
-      <a
-        href={approxMapUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center rounded-lg border border-stone-300 px-3 py-1.5 text-xs font-medium text-stone-700 hover:bg-stone-50"
-      >
-        Open area on map ↗
-      </a>
+      {eta ? <p className="text-xs text-stone-600">{eta}</p> : null}
     </div>
   );
 }

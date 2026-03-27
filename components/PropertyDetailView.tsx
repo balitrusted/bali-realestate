@@ -208,6 +208,8 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
                   title={headingTitle}
                   areaLabel={locationLabel}
                   displayLocation={property.displayLocation}
+                  mainArea={property.mainArea}
+                  subArea={property.subArea}
                 />
               </div>
 
