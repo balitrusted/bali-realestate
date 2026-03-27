@@ -67,8 +67,8 @@ export default function ArticleForm({ article, onSave }: ArticleFormProps) {
           class: 'article-link',
         },
         validate: (url) => {
-          // Allow both external URLs and anchor links (#id)
-          return /^(https?:\/\/|#)/.test(url);
+          // External URLs, anchors, and site-relative paths (e.g. /properties/rent/ubud)
+          return /^(https?:\/\/|#|\/)/.test(url);
         },
       }),
     ],
@@ -186,12 +186,13 @@ export default function ArticleForm({ article, onSave }: ArticleFormProps) {
     if (linkUrl.trim()) {
       const url = linkUrl.trim();
       // If it starts with #, it's an anchor link
-      if (url.startsWith('#')) {
+      if (url.startsWith("#")) {
         editor?.chain().focus().setLink({ href: url }).run();
-      } else if (url.startsWith('http://') || url.startsWith('https://')) {
+      } else if (url.startsWith("/")) {
+        editor?.chain().focus().setLink({ href: url }).run();
+      } else if (url.startsWith("http://") || url.startsWith("https://")) {
         editor?.chain().focus().setLink({ href: url }).run();
       } else {
-        // If no protocol, add https://
         editor?.chain().focus().setLink({ href: `https://${url}` }).run();
       }
       setLinkUrl("");
@@ -615,7 +616,8 @@ export default function ArticleForm({ article, onSave }: ArticleFormProps) {
             }}
           />
           <p className="text-xs text-gray-500 mb-4">
-            For anchor links, use format: #section-id (e.g., #central-ubud)
+            Use <code className="text-xs">https://…</code>, a site path like{" "}
+            <code className="text-xs">/properties/rent/ubud</code>, or an anchor <code className="text-xs">#section-id</code>.
           </p>
           <div className="flex gap-2">
             <button
