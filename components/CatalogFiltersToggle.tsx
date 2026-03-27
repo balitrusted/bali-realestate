@@ -19,7 +19,7 @@ export default function CatalogFiltersToggle({ children, hideButton }: CatalogFi
         className={
           hideButton
             ? "sr-only"
-            : "w-full mb-4 flex items-center justify-between gap-2 px-4 py-2.5 rounded-lg border border-gray-200 bg-btn-hatch-soft text-sm font-medium text-gray-700 transition-[border-color] duration-200"
+            : "w-full mb-4 flex items-center justify-between gap-2 px-3 py-2 rounded-2xl border border-gray-200 bg-btn-hatch-soft text-sm font-medium text-gray-700 transition-[border-color] duration-200"
         }
       >
         <span>{open ? "Hide filters" : "Show filters"}</span>

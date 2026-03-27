@@ -424,24 +424,27 @@ export default function PropertyFilters({
   const countLabel =
     matchingCount === 1 ? "Found 1 property" : `Found ${matchingCount} properties`;
 
+  // Sizing aligns with CatalogBreadcrumb bar (`rounded-2xl` strip, `px-3 py-2`).
+  // Rollback: shell `mb-4 rounded-2xl border-2 border-stone-300 bg-white p-2.5 md:p-3.5 shadow-md shadow-stone-200/50`;
+  // toggles `h-12 rounded-xl px-4` (48px tall buttons, looser card padding).
   return (
-    <div className="mb-4 rounded-2xl border-2 border-stone-300 bg-white p-2.5 md:p-3.5 shadow-md shadow-stone-200/50">
+    <div className="mb-4 rounded-2xl border-2 border-stone-300 bg-white px-3 py-2 shadow-md shadow-stone-200/50">
       {isCollapsed ? (
         <button
           type="button"
           onClick={openFilters}
-          className="w-full h-12 rounded-xl border border-emerald-200/90 bg-btn-hatch-emerald px-4 text-left transition-[transform,border-color,background-color] duration-200 hover:border-emerald-300 active:scale-[0.99] flex items-center justify-between"
+          className="w-full rounded-2xl border border-emerald-200/90 bg-btn-hatch-emerald px-3 py-2 text-left transition-[transform,border-color,background-color] duration-200 hover:border-emerald-300 active:scale-[0.99] flex items-center justify-between"
           aria-expanded={false}
         >
           <span className="text-sm font-semibold tracking-tight text-stone-900">{collapsedBase}</span>
           <span className="text-xs text-stone-500">{activeFilterParamsCount > 0 ? `${activeFilterParamsCount} active` : "tap to open"}</span>
         </button>
       ) : (
-        <div className="flex flex-col gap-3 md:gap-3.5">
+        <div className="flex flex-col gap-2.5 md:gap-3">
           <button
             type="button"
             onClick={closeFilters}
-            className="w-full h-12 rounded-xl border border-stone-200 px-4 text-left text-sm font-semibold tracking-tight text-stone-900 hover:border-stone-300 active:scale-[0.99] transition-[transform,border-color] duration-200 bg-btn-hatch"
+            className="w-full rounded-2xl border border-stone-200 px-3 py-2 text-left text-sm font-semibold tracking-tight text-stone-900 hover:border-stone-300 active:scale-[0.99] transition-[transform,border-color] duration-200 bg-btn-hatch"
             aria-expanded={true}
           >
             Hide filters
