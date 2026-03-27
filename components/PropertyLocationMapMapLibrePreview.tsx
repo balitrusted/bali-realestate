@@ -24,7 +24,8 @@ export default function PropertyLocationMapMapLibrePreview({ title, areaLabel, d
   const coords = parseLatLng(displayLocation);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
-  const [styleMode, setStyleMode] = useState<"standard" | "enhanced" | "vivid">("standard");
+  const [styleMode, setStyleMode] = useState<"streets" | "outdoor" | "satellite">("streets");
+  const mapTilerKey = process.env.NEXT_PUBLIC_MAPTILER_KEY?.trim();
 
   useEffect(() => {
     if (!coords || !mapContainerRef.current) return;
@@ -35,46 +36,32 @@ export default function PropertyLocationMapMapLibrePreview({ title, areaLabel, d
     }
 
     const [lat, lng] = coords;
-    const styleConfig =
-      styleMode === "enhanced"
-        ? {
-            tilesUrl: "https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-            attribution:
-              '&copy; OpenStreetMap contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-          }
-        : styleMode === "vivid"
-          ? {
-              tilesUrl: "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
-              attribution:
-                '&copy; OpenStreetMap contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank" rel="noopener noreferrer">Humanitarian OpenStreetMap Team</a>',
-            }
-          : {
-              tilesUrl: "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
-              attribution: "&copy; OpenStreetMap contributors",
-            };
+    const mapTilerStyle =
+      mapTilerKey && styleMode === "outdoor"
+        ? `https://api.maptiler.com/maps/outdoor-v2/style.json?key=${mapTilerKey}`
+        : mapTilerKey && styleMode === "satellite"
+          ? `https://api.maptiler.com/maps/hybrid/style.json?key=${mapTilerKey}`
+          : mapTilerKey
+            ? `https://api.maptiler.com/maps/streets-v2/style.json?key=${mapTilerKey}`
+            : null;
+
+    const fallbackRasterStyle = {
+      version: 8 as const,
+      sources: {
+        osm: {
+          type: "raster" as const,
+          tiles: ["https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"],
+          tileSize: 256,
+          attribution: "&copy; OpenStreetMap contributors",
+          maxzoom: 19,
+        },
+      },
+      layers: [{ id: "osm-raster", type: "raster" as const, source: "osm" }],
+    };
 
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
-      // Raster style rendered by MapLibre (easy side-by-side visual comparison).
-      style: {
-        version: 8,
-        sources: {
-          osm: {
-            type: "raster",
-            tiles: [styleConfig.tilesUrl],
-            tileSize: 256,
-            attribution: styleConfig.attribution,
-            maxzoom: 19,
-          },
-        },
-        layers: [
-          {
-            id: "osm-raster",
-            type: "raster",
-            source: "osm",
-          },
-        ],
-      },
+      style: mapTilerStyle || fallbackRasterStyle,
       center: [lng, lat],
       zoom: 15,
     });
@@ -92,41 +79,43 @@ export default function PropertyLocationMapMapLibrePreview({ title, areaLabel, d
       map.remove();
       mapRef.current = null;
     };
-  }, [coords, title, areaLabel, styleMode]);
+  }, [coords, title, areaLabel, styleMode, mapTilerKey]);
 
   if (!coords) return null;
 
   return (
     <div className="mt-3 space-y-2">
       <div className="flex items-center justify-between gap-2">
-        <p className="text-xs text-stone-500">MapLibre preview</p>
+        <p className="text-xs text-stone-500">
+          MapLibre preview{mapTilerKey ? " (MapTiler styles)" : " (fallback OSM)"}
+        </p>
         <div className="inline-flex rounded-full border border-stone-200 bg-white p-0.5">
           <button
             type="button"
-            onClick={() => setStyleMode("standard")}
+            onClick={() => setStyleMode("streets")}
             className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-              styleMode === "standard" ? "bg-stone-900 text-white" : "text-stone-600 hover:bg-stone-100"
+              styleMode === "streets" ? "bg-stone-900 text-white" : "text-stone-600 hover:bg-stone-100"
             }`}
           >
-            Standard
+            Streets
           </button>
           <button
             type="button"
-            onClick={() => setStyleMode("enhanced")}
+            onClick={() => setStyleMode("outdoor")}
             className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-              styleMode === "enhanced" ? "bg-stone-900 text-white" : "text-stone-600 hover:bg-stone-100"
+              styleMode === "outdoor" ? "bg-stone-900 text-white" : "text-stone-600 hover:bg-stone-100"
             }`}
           >
-            Enhanced
+            Outdoor
           </button>
           <button
             type="button"
-            onClick={() => setStyleMode("vivid")}
+            onClick={() => setStyleMode("satellite")}
             className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-              styleMode === "vivid" ? "bg-stone-900 text-white" : "text-stone-600 hover:bg-stone-100"
+              styleMode === "satellite" ? "bg-stone-900 text-white" : "text-stone-600 hover:bg-stone-100"
             }`}
           >
-            Vivid
+            Satellite
           </button>
         </div>
       </div>
