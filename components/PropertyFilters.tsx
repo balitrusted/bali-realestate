@@ -420,7 +420,7 @@ export default function PropertyFilters({
     </button>
   );
 
-  const collapsedBase = "Show all filters";
+  const collapsedBase = "Show filters";
   const countLabel =
     matchingCount === 1 ? "Found 1 property" : `Found ${matchingCount} properties`;
 
@@ -441,7 +441,7 @@ export default function PropertyFilters({
           <button
             type="button"
             onClick={closeFilters}
-            className="w-full h-12 rounded-xl border border-stone-200 bg-white px-4 text-left text-sm font-semibold tracking-tight text-stone-900 hover:border-stone-300 active:scale-[0.99] transition-[transform,border-color] duration-200"
+            className="w-full h-12 rounded-xl border border-stone-200 px-4 text-left text-sm font-semibold tracking-tight text-stone-900 hover:border-stone-300 active:scale-[0.99] transition-[transform,border-color] duration-200 bg-btn-hatch"
             aria-expanded={true}
           >
             Hide filters

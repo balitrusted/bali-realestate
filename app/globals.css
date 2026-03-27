@@ -443,7 +443,7 @@ html {
   );
 }
 
-/* Lighter variant (e.g. “Show all filters” bar) */
+/* Lighter variant (e.g. catalog filter toggle bar) */
 .bg-btn-hatch-soft {
   background-color: #f9fafb;
   background-image: repeating-linear-gradient(
@@ -462,5 +462,37 @@ html {
     #e5e7eb 5px,
     #f3f4f6 5px,
     #f3f4f6 10px
+  );
+}
+
+/* Brand-tint emerald hatch (collapsed “Show filters” on property listing) */
+.bg-btn-hatch-emerald {
+  background-color: #ecfdf5;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #d1fae5 0,
+    #d1fae5 5px,
+    #ecfdf5 5px,
+    #ecfdf5 10px
+  );
+}
+.bg-btn-hatch-emerald:hover {
+  background-color: #d1fae5;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #a7f3d0 0,
+    #a7f3d0 5px,
+    #d1fae5 5px,
+    #d1fae5 10px
+  );
+}
+.bg-btn-hatch-emerald:active {
+  background-color: #d1fae5;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #86efac 0,
+    #86efac 5px,
+    #a7f3d0 5px,
+    #a7f3d0 10px
   );
 }
