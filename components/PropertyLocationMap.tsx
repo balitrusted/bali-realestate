@@ -22,20 +22,43 @@ function parseLatLng(raw?: string): [number, number] | null {
   return [lat, lng];
 }
 
-function getUbudEta(mainArea: MainArea, subArea?: SubArea): string | null {
+function haversineKm(a: [number, number], b: [number, number]): number {
+  const toRad = (x: number) => (x * Math.PI) / 180;
+  const R = 6371;
+  const dLat = toRad(b[0] - a[0]);
+  const dLng = toRad(b[1] - a[1]);
+  const lat1 = toRad(a[0]);
+  const lat2 = toRad(b[0]);
+  const h =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLng / 2) * Math.sin(dLng / 2) * Math.cos(lat1) * Math.cos(lat2);
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+function toTimeRange(minutesBase: number): string {
+  const min = Math.max(5, Math.round((minutesBase * 0.8) / 5) * 5);
+  const max = Math.max(min + 3, Math.round((minutesBase * 1.2) / 5) * 5);
+  return `${min}-${max} min`;
+}
+
+function getUbudEta(mainArea: MainArea, coords: [number, number] | null, subArea?: SubArea): string | null {
   if (mainArea !== "ubud") return null;
+  if (!coords) return "Estimated to Ubud Center: by car 10-25 min · by scooter 8-20 min";
 
   const south = new Set<SubArea>(["lodtunduh", "kemenuh", "sayan", "sukawati"]);
   const north = new Set<SubArea>(["gentong", "petulu"]);
+  // Internal anchors only for ETA math (not displayed to users).
+  const centerSouth: [number, number] = [-8.5208, 115.2674];
+  const centerNorth: [number, number] = [-8.5069, 115.2625];
+  const anchor = subArea && south.has(subArea) ? centerSouth : subArea && north.has(subArea) ? centerNorth : centerNorth;
+  const distKm = haversineKm(coords, anchor);
+  // Approx city speeds + intersection/traffic overhead.
+  const carBaseMin = distKm / 24 * 60 + 5;
+  const scooterBaseMin = distKm / 30 * 60 + 4;
+  const carRange = toTimeRange(carBaseMin);
+  const scooterRange = toTimeRange(scooterBaseMin);
 
-  if (subArea && south.has(subArea)) {
-    return "Estimated to Ubud Center: by car 15-25 min · by scooter 12-20 min";
-  }
-  if (subArea && north.has(subArea)) {
-    return "Estimated to Ubud Center: by car 8-15 min · by scooter 7-12 min";
-  }
-
-  return "Estimated to central Ubud: by car 10-25 min · by scooter 8-20 min";
+  return `Estimated to Ubud Center: by car ${carRange} · by scooter ${scooterRange}`;
 }
 
 export default function PropertyLocationMap({ title, areaLabel, displayLocation, mainArea, subArea }: Props) {
@@ -44,7 +67,7 @@ export default function PropertyLocationMap({ title, areaLabel, displayLocation,
   const mapTilerKey = process.env.NEXT_PUBLIC_MAPTILER_KEY?.trim();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<Map | null>(null);
-  const eta = getUbudEta(mainArea, subArea);
+  const eta = getUbudEta(mainArea, coords, subArea);
 
   useEffect(() => {
     if (!coords || !mapContainerRef.current) return;
