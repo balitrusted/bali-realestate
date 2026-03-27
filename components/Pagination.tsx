@@ -26,6 +26,7 @@ export default function Pagination({
   const pageUrl = (p: number) => {
     const q = new URLSearchParams(params);
     if (p > 1) q.set("page", String(p));
+    else q.delete("page");
     const qs = q.toString();
     return qs ? `${basePath}?${qs}` : basePath;
   };
