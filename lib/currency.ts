@@ -28,7 +28,7 @@ export const SUPPORTED_CURRENCIES = [
 
 export type SupportedCurrency = (typeof SUPPORTED_CURRENCIES)[number];
 
-export const DEFAULT_CURRENCY: SupportedCurrency = "USD";
+export const DEFAULT_CURRENCY: SupportedCurrency = "IDR";
 
 export const FALLBACK_USD_RATES: Record<SupportedCurrency, number> = {
   USD: 1,
@@ -77,10 +77,10 @@ export function convertAmount(
 }
 
 export function formatMoney(amount: number, currency: SupportedCurrency): string {
-  const noDecimals = currency === "JPY" || currency === "KRW" || currency === "VND" || currency === "IDR";
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,
-    maximumFractionDigits: noDecimals ? 0 : 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(amount);
 }
