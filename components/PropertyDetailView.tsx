@@ -5,6 +5,7 @@ import PropertyBackNav from "@/components/PropertyBackNav";
 import PropertyImages from "@/components/PropertyImages";
 import NotifyWhenAvailableForm from "@/components/NotifyWhenAvailableForm";
 import PropertyLocationMap from "@/components/PropertyLocationMap";
+import PropertyLocationMapMapLibrePreview from "@/components/PropertyLocationMapMapLibrePreview";
 import PropertyStructuredData from "@/components/PropertyStructuredData";
 import PropertyCardActions from "@/components/PropertyCardActions";
 import PropertyDetailSimilar from "@/components/PropertyDetailSimilar";
@@ -209,6 +210,13 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
                   areaLabel={locationLabel}
                   displayLocation={property.displayLocation}
                 />
+                {String(property.id) === "prop-33-0" && (
+                  <PropertyLocationMapMapLibrePreview
+                    title={headingTitle}
+                    areaLabel={locationLabel}
+                    displayLocation={property.displayLocation}
+                  />
+                )}
               </div>
 
               {property.archived ? (
