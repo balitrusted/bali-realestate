@@ -1,7 +1,7 @@
 "use client";
 
 import { CURRENCY_OPTIONS, useCurrency } from "@/components/CurrencyProvider";
-import type { SupportedCurrency } from "@/lib/currency";
+import { CURRENCY_LABELS, type SupportedCurrency } from "@/lib/currency";
 
 export default function CurrencySwitcher({ mobile = false }: { mobile?: boolean }) {
   const { currency, setCurrency } = useCurrency();
@@ -16,7 +16,7 @@ export default function CurrencySwitcher({ mobile = false }: { mobile?: boolean 
       >
         {CURRENCY_OPTIONS.map((c) => (
           <option key={c} value={c}>
-            {c}
+            {`${CURRENCY_LABELS[c].symbol} ${c} - ${CURRENCY_LABELS[c].name}`}
           </option>
         ))}
       </select>

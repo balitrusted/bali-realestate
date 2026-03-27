@@ -1,6 +1,9 @@
 export const SUPPORTED_CURRENCIES = [
+  "IDR",
   "USD",
   "EUR",
+  "RUB",
+  "UAH",
   "GBP",
   "AUD",
   "CAD",
@@ -10,8 +13,6 @@ export const SUPPORTED_CURRENCIES = [
   "JPY",
   "KRW",
   "CNY",
-  "RUB",
-  "UAH",
   "INR",
   "AED",
   "SAR",
@@ -19,7 +20,6 @@ export const SUPPORTED_CURRENCIES = [
   "TRY",
   "THB",
   "MYR",
-  "IDR",
   "PHP",
   "VND",
   "CHF",
@@ -81,10 +81,56 @@ export function convertAmount(
 }
 
 export function formatMoney(amount: number, currency: SupportedCurrency): string {
+  const rounded = roundMoney(amount, currency);
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(amount);
+  }).format(rounded);
+}
+
+export const CURRENCY_LABELS: Record<
+  SupportedCurrency,
+  { name: string; symbol: string }
+> = {
+  IDR: { name: "Indonesian Rupiah", symbol: "Rp" },
+  USD: { name: "US Dollar", symbol: "$" },
+  EUR: { name: "Euro", symbol: "€" },
+  RUB: { name: "Russian Ruble", symbol: "₽" },
+  UAH: { name: "Ukrainian Hryvnia", symbol: "₴" },
+  GBP: { name: "British Pound", symbol: "£" },
+  AUD: { name: "Australian Dollar", symbol: "A$" },
+  CAD: { name: "Canadian Dollar", symbol: "C$" },
+  NZD: { name: "New Zealand Dollar", symbol: "NZ$" },
+  SGD: { name: "Singapore Dollar", symbol: "S$" },
+  HKD: { name: "Hong Kong Dollar", symbol: "HK$" },
+  JPY: { name: "Japanese Yen", symbol: "¥" },
+  KRW: { name: "South Korean Won", symbol: "₩" },
+  CNY: { name: "Chinese Yuan", symbol: "¥" },
+  INR: { name: "Indian Rupee", symbol: "₹" },
+  AED: { name: "UAE Dirham", symbol: "د.إ" },
+  SAR: { name: "Saudi Riyal", symbol: "﷼" },
+  QAR: { name: "Qatari Riyal", symbol: "﷼" },
+  TRY: { name: "Turkish Lira", symbol: "₺" },
+  THB: { name: "Thai Baht", symbol: "฿" },
+  MYR: { name: "Malaysian Ringgit", symbol: "RM" },
+  PHP: { name: "Philippine Peso", symbol: "₱" },
+  VND: { name: "Vietnamese Dong", symbol: "₫" },
+  CHF: { name: "Swiss Franc", symbol: "CHF" },
+  SEK: { name: "Swedish Krona", symbol: "kr" },
+  NOK: { name: "Norwegian Krone", symbol: "kr" },
+  DKK: { name: "Danish Krone", symbol: "kr" },
+};
+
+const CURRENCY_ROUNDING_STEP: Partial<Record<SupportedCurrency, number>> = {
+  IDR: 1000,
+  VND: 1000,
+  KRW: 100,
+  JPY: 100,
+};
+
+export function roundMoney(amount: number, currency: SupportedCurrency): number {
+  const step = CURRENCY_ROUNDING_STEP[currency] ?? 1;
+  return Math.round(amount / step) * step;
 }
