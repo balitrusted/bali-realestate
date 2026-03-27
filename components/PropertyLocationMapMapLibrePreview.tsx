@@ -24,7 +24,7 @@ export default function PropertyLocationMapMapLibrePreview({ title, areaLabel, d
   const coords = parseLatLng(displayLocation);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
-  const [styleMode, setStyleMode] = useState<"standard" | "enhanced">("enhanced");
+  const [styleMode, setStyleMode] = useState<"standard" | "enhanced" | "vivid">("standard");
 
   useEffect(() => {
     if (!coords || !mapContainerRef.current) return;
@@ -35,14 +35,23 @@ export default function PropertyLocationMapMapLibrePreview({ title, areaLabel, d
     }
 
     const [lat, lng] = coords;
-    const tilesUrl =
+    const styleConfig =
       styleMode === "enhanced"
-        ? "https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-        : "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png";
-    const attribution =
-      styleMode === "enhanced"
-        ? '&copy; OpenStreetMap contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        : "&copy; OpenStreetMap contributors";
+        ? {
+            tilesUrl: "https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+            attribution:
+              '&copy; OpenStreetMap contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          }
+        : styleMode === "vivid"
+          ? {
+              tilesUrl: "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+              attribution:
+                '&copy; OpenStreetMap contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank" rel="noopener noreferrer">Humanitarian OpenStreetMap Team</a>',
+            }
+          : {
+              tilesUrl: "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              attribution: "&copy; OpenStreetMap contributors",
+            };
 
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
@@ -52,9 +61,9 @@ export default function PropertyLocationMapMapLibrePreview({ title, areaLabel, d
         sources: {
           osm: {
             type: "raster",
-            tiles: [tilesUrl],
+            tiles: [styleConfig.tilesUrl],
             tileSize: 256,
-            attribution,
+            attribution: styleConfig.attribution,
             maxzoom: 19,
           },
         },
@@ -109,6 +118,15 @@ export default function PropertyLocationMapMapLibrePreview({ title, areaLabel, d
             }`}
           >
             Enhanced
+          </button>
+          <button
+            type="button"
+            onClick={() => setStyleMode("vivid")}
+            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              styleMode === "vivid" ? "bg-stone-900 text-white" : "text-stone-600 hover:bg-stone-100"
+            }`}
+          >
+            Vivid
           </button>
         </div>
       </div>
