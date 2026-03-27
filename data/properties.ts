@@ -12,7 +12,7 @@ export const properties: Property[] = [
     mainArea: "ubud",
     subArea: "kemenuh",
     exactLocation: "https://maps.app.goo.gl/tG21hYmc4CD2UVtY9",
-    displayLocation: "-8.551526023097983, 115.28384564433435",
+    displayLocation: "-8.5514502, 115.2879722",
     bedrooms: 4,
     bathrooms: 4,
     price: {
