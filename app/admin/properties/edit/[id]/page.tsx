@@ -40,7 +40,14 @@ export default function EditPropertyPage() {
       const targetId = property?.id ?? id;
       router.push(targetId ? `/admin/properties?scrollTo=${encodeURIComponent(targetId)}` : "/admin/properties");
     } else {
-      alert("Error updating property");
+      let detail = `HTTP ${response.status}`;
+      try {
+        const data = await response.json();
+        if (data?.error) detail += `: ${data.error}`;
+      } catch {
+        /* ignore */
+      }
+      alert(`Error updating property — ${detail}`);
     }
   };
 

@@ -199,47 +199,51 @@ export async function PUT(request: Request) {
     } else if (action === "update" && property) {
       // Update single property
       const index = properties.findIndex((p) => p.id === property.id);
-      if (index !== -1) {
-        // Ensure price structure (supports min/max or monthly/yearly)
-        const hasAnyPrice = property.price && (
-          typeof property.price.min === 'number' ||
-          typeof property.price.monthly === 'number' ||
-          typeof property.price.forSale === 'number'
+      if (index === -1) {
+        return NextResponse.json(
+          { error: `Property not found in data file: ${String(property.id)}` },
+          { status: 404 }
         );
-        if (!hasAnyPrice) {
-          property.price = {
-            currency: property.priceCurrency || properties[index].price?.currency || "IDR",
-            min: property.price?.min ?? property.price?.monthly ?? property.price?.forSale ?? property.priceMin ?? properties[index].price?.min ?? 0,
-            monthly: property.price?.monthly ?? properties[index].price?.monthly,
-            yearly: property.price?.yearly ?? properties[index].price?.yearly,
-            forSale: property.price?.forSale ?? properties[index].price?.forSale ?? property.priceForSale,
-          };
-        }
-        
-        // Ensure types array
-        let types: PropertyType[] = [];
-        if (Array.isArray(property.types)) {
-          types = property.types;
-        } else if (property.type) {
-          types = [property.type];
-        } else {
-          types = properties[index].types || ['rent'];
-        }
-
-        // Ensure mainArea; subArea is optional and can be cleared (null/undefined) for non-Ubud areas
-        const mainArea = property.mainArea || properties[index].mainArea || 'ubud';
-        const subArea = property.hasOwnProperty('subArea') ? (property.subArea || undefined) : properties[index].subArea;
-        
-        properties[index] = {
-          ...properties[index],
-          ...property,
-          types: types,
-          mainArea: mainArea,
-          subArea: subArea,
-          price: property.price,
-          updatedAt: new Date().toISOString(),
+      }
+      // Ensure price structure (supports min/max or monthly/yearly)
+      const hasAnyPrice = property.price && (
+        typeof property.price.min === 'number' ||
+        typeof property.price.monthly === 'number' ||
+        typeof property.price.forSale === 'number'
+      );
+      if (!hasAnyPrice) {
+        property.price = {
+          currency: property.priceCurrency || properties[index].price?.currency || "IDR",
+          min: property.price?.min ?? property.price?.monthly ?? property.price?.forSale ?? property.priceMin ?? properties[index].price?.min ?? 0,
+          monthly: property.price?.monthly ?? properties[index].price?.monthly,
+          yearly: property.price?.yearly ?? properties[index].price?.yearly,
+          forSale: property.price?.forSale ?? properties[index].price?.forSale ?? property.priceForSale,
         };
       }
+
+      // Ensure types array
+      let types: PropertyType[] = [];
+      if (Array.isArray(property.types)) {
+        types = property.types;
+      } else if (property.type) {
+        types = [property.type];
+      } else {
+        types = properties[index].types || ['rent'];
+      }
+
+      // Ensure mainArea; subArea is optional and can be cleared (null/undefined) for non-Ubud areas
+      const mainArea = property.mainArea || properties[index].mainArea || 'ubud';
+      const subArea = property.hasOwnProperty('subArea') ? (property.subArea || undefined) : properties[index].subArea;
+
+      properties[index] = {
+        ...properties[index],
+        ...property,
+        types: types,
+        mainArea: mainArea,
+        subArea: subArea,
+        price: property.price,
+        updatedAt: new Date().toISOString(),
+      };
     }
 
     // Write back to file
@@ -249,10 +253,9 @@ export async function PUT(request: Request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error updating properties:", error);
-    return NextResponse.json(
-      { error: "Failed to update properties" },
-      { status: 500 }
-    );
+    const message =
+      error instanceof Error ? error.message : "Failed to update properties";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
