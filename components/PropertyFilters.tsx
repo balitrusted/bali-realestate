@@ -424,11 +424,11 @@ export default function PropertyFilters({
   const countLabel =
     matchingCount === 1 ? "Found 1 property" : `Found ${matchingCount} properties`;
 
-  // Sizing aligns with CatalogBreadcrumb bar (`rounded-2xl` strip, `px-3 py-2`).
-  // Rollback: shell `mb-4 rounded-2xl border-2 border-stone-300 bg-white p-2.5 md:p-3.5 shadow-md shadow-stone-200/50`;
-  // toggles `h-12 rounded-xl px-4` (48px tall buttons, looser card padding).
+  // Shell matches listing cards: `border border-gray-200 rounded-lg` (see PropertyCard).
+  // Rollback shell chunkier frame: `mb-4 rounded-2xl border-2 border-stone-300 bg-white px-3 py-2 shadow-md shadow-stone-200/50`;
+  // older rollback: `p-2.5 md:p-3.5`; toggles `h-12 rounded-xl px-4`.
   return (
-    <div className="mb-4 rounded-2xl border-2 border-stone-300 bg-white px-3 py-2 shadow-md shadow-stone-200/50">
+    <div className="mb-4 rounded-lg border border-gray-200 bg-white px-3 py-2 shadow-sm">
       {isCollapsed ? (
         <button
           type="button"
@@ -444,7 +444,7 @@ export default function PropertyFilters({
           <button
             type="button"
             onClick={closeFilters}
-            className="w-full rounded-2xl border border-stone-200 px-3 py-2 text-left hover:border-stone-300 active:scale-[0.99] transition-[transform,border-color] duration-200 bg-btn-hatch flex items-center justify-between"
+            className="w-full rounded-lg border border-stone-200 px-3 py-2 text-left hover:border-gray-300 active:scale-[0.99] transition-[transform,border-color] duration-200 bg-btn-hatch flex items-center justify-between"
             aria-expanded={true}
           >
             <span className="text-sm font-semibold tracking-tight text-stone-900">Hide filters</span>
