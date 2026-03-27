@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import maplibregl, { Map } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import { useState } from "react";
 
 type Props = {
   title: string;
@@ -23,6 +24,7 @@ export default function PropertyLocationMapMapLibrePreview({ title, areaLabel, d
   const coords = parseLatLng(displayLocation);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
+  const [styleMode, setStyleMode] = useState<"standard" | "enhanced">("enhanced");
 
   useEffect(() => {
     if (!coords || !mapContainerRef.current) return;
@@ -33,17 +35,26 @@ export default function PropertyLocationMapMapLibrePreview({ title, areaLabel, d
     }
 
     const [lat, lng] = coords;
+    const tilesUrl =
+      styleMode === "enhanced"
+        ? "https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+        : "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png";
+    const attribution =
+      styleMode === "enhanced"
+        ? '&copy; OpenStreetMap contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        : "&copy; OpenStreetMap contributors";
+
     const map = new maplibregl.Map({
       container: mapContainerRef.current,
-      // OSM raster style via MapLibre renderer for a practical, street-level preview.
+      // Raster style rendered by MapLibre (easy side-by-side visual comparison).
       style: {
         version: 8,
         sources: {
           osm: {
             type: "raster",
-            tiles: ["https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"],
+            tiles: [tilesUrl],
             tileSize: 256,
-            attribution: "&copy; OpenStreetMap contributors",
+            attribution,
             maxzoom: 19,
           },
         },
@@ -72,13 +83,35 @@ export default function PropertyLocationMapMapLibrePreview({ title, areaLabel, d
       map.remove();
       mapRef.current = null;
     };
-  }, [coords, title, areaLabel]);
+  }, [coords, title, areaLabel, styleMode]);
 
   if (!coords) return null;
 
   return (
     <div className="mt-3 space-y-2">
-      <p className="text-xs text-stone-500">MapLibre GL preview (vector tiles)</p>
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs text-stone-500">MapLibre preview</p>
+        <div className="inline-flex rounded-full border border-stone-200 bg-white p-0.5">
+          <button
+            type="button"
+            onClick={() => setStyleMode("standard")}
+            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              styleMode === "standard" ? "bg-stone-900 text-white" : "text-stone-600 hover:bg-stone-100"
+            }`}
+          >
+            Standard
+          </button>
+          <button
+            type="button"
+            onClick={() => setStyleMode("enhanced")}
+            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              styleMode === "enhanced" ? "bg-stone-900 text-white" : "text-stone-600 hover:bg-stone-100"
+            }`}
+          >
+            Enhanced
+          </button>
+        </div>
+      </div>
       <div className="overflow-hidden rounded-xl border border-stone-200">
         <div ref={mapContainerRef} className="h-64 w-full" />
       </div>
