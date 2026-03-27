@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+import { useEffect, useRef, useState } from "react";
+import maplibregl, { Map } from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
 
 type Props = {
   title: string;
@@ -21,8 +21,10 @@ function parseLatLng(raw?: string): [number, number] | null {
 
 export default function PropertyLocationMap({ title, areaLabel, displayLocation }: Props) {
   const coords = parseLatLng(displayLocation);
+  const [styleMode, setStyleMode] = useState<"streets" | "outdoor" | "satellite">("streets");
+  const mapTilerKey = process.env.NEXT_PUBLIC_MAPTILER_KEY?.trim();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
-  const mapInstanceRef = useRef<L.Map | null>(null);
+  const mapInstanceRef = useRef<Map | null>(null);
 
   useEffect(() => {
     if (!coords || !mapContainerRef.current) return;
@@ -32,33 +34,49 @@ export default function PropertyLocationMap({ title, areaLabel, displayLocation 
       mapInstanceRef.current = null;
     }
 
-    const map = L.map(mapContainerRef.current, {
-      center: coords,
-      zoom: 14,
-      scrollWheelZoom: false,
-      attributionControl: true,
+    const [lat, lng] = coords;
+    const mapTilerStyle =
+      mapTilerKey && styleMode === "outdoor"
+        ? `https://api.maptiler.com/maps/outdoor-v2/style.json?key=${mapTilerKey}`
+        : mapTilerKey && styleMode === "satellite"
+          ? `https://api.maptiler.com/maps/hybrid/style.json?key=${mapTilerKey}`
+          : mapTilerKey
+            ? `https://api.maptiler.com/maps/streets-v2/style.json?key=${mapTilerKey}`
+            : null;
+    const fallbackRasterStyle = {
+      version: 8 as const,
+      sources: {
+        osm: {
+          type: "raster" as const,
+          tiles: ["https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"],
+          tileSize: 256,
+          attribution: "&copy; OpenStreetMap contributors",
+          maxzoom: 19,
+        },
+      },
+      layers: [{ id: "osm-raster", type: "raster" as const, source: "osm" }],
+    };
+
+    const map = new maplibregl.Map({
+      container: mapContainerRef.current,
+      style: mapTilerStyle || fallbackRasterStyle,
+      center: [lng, lat],
+      zoom: 15,
     });
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(map);
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 
-    const marker = L.circleMarker(coords, {
-      radius: 8,
-      color: "#065f46",
-      fillColor: "#10b981",
-      fillOpacity: 0.95,
-      weight: 2,
-    }).addTo(map);
-
-    marker.bindPopup(`<div><strong>${title}</strong><br/>${areaLabel}</div>`);
+    const popup = new maplibregl.Popup({ offset: 18 }).setHTML(
+      `<div style="font-size:12px"><strong>${title}</strong><br/>${areaLabel}</div>`
+    );
+    new maplibregl.Marker({ color: "#047857" }).setLngLat([lng, lat]).setPopup(popup).addTo(map);
 
     mapInstanceRef.current = map;
     return () => {
       map.remove();
       mapInstanceRef.current = null;
     };
-  }, [coords, title, areaLabel]);
+  }, [coords, title, areaLabel, styleMode, mapTilerKey]);
 
   if (!coords) {
     return (
@@ -73,6 +91,40 @@ export default function PropertyLocationMap({ title, areaLabel, displayLocation 
 
   return (
     <div className="space-y-2">
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs text-stone-500">
+          {mapTilerKey ? "Map styles" : "Map style (fallback)"}
+        </p>
+        <div className="inline-flex rounded-full border border-stone-200 bg-white p-0.5">
+          <button
+            type="button"
+            onClick={() => setStyleMode("streets")}
+            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              styleMode === "streets" ? "bg-stone-900 text-white" : "text-stone-600 hover:bg-stone-100"
+            }`}
+          >
+            Streets
+          </button>
+          <button
+            type="button"
+            onClick={() => setStyleMode("outdoor")}
+            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              styleMode === "outdoor" ? "bg-stone-900 text-white" : "text-stone-600 hover:bg-stone-100"
+            }`}
+          >
+            Outdoor
+          </button>
+          <button
+            type="button"
+            onClick={() => setStyleMode("satellite")}
+            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              styleMode === "satellite" ? "bg-stone-900 text-white" : "text-stone-600 hover:bg-stone-100"
+            }`}
+          >
+            Satellite
+          </button>
+        </div>
+      </div>
       <div className="overflow-hidden rounded-xl border border-stone-200">
         <div ref={mapContainerRef} className="h-64 w-full" />
       </div>
