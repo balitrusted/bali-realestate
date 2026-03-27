@@ -1,8 +1,6 @@
 import { MetadataRoute } from 'next'
-import { readFile } from 'fs/promises'
-import { join } from 'path'
-import { parsePropertiesFile } from '@/lib/parseProperties'
 import { getArticles } from '@/lib/articlesData'
+import { loadFullPropertyList } from '@/lib/propertiesStorage'
 import { getBlogPosts } from '@/lib/blogData'
 import { loadAllProperties, filterProperties, parseSegment, SEGMENT_TYPES } from '@/lib/propertiesCatalog'
 import { buildPropertySlugIndex } from '@/lib/propertySlug'
@@ -141,9 +139,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Add individual property pages (villas)
   let propertyDetailPages: MetadataRoute.Sitemap = []
   try {
-    const filePath = join(process.cwd(), 'data', 'properties.ts')
-    const fileContent = await readFile(filePath, 'utf-8')
-    const properties = parsePropertiesFile(fileContent)
+    const properties = await loadFullPropertyList()
     const forSitemap = properties.filter((p) => {
       const hasPrice =
         p?.price &&

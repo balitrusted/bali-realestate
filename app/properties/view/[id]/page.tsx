@@ -1,7 +1,5 @@
 import { notFound, permanentRedirect } from "next/navigation";
-import { readFile } from "fs/promises";
-import { join } from "path";
-import { parsePropertiesFile } from "@/lib/parseProperties";
+import { loadFullPropertyList } from "@/lib/propertiesStorage";
 import { loadAllPropertiesForSlugIndex } from "@/lib/propertiesCatalog";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { areas } from "@/types/areas";
@@ -12,9 +10,7 @@ export const revalidate = 0;
 
 async function getPropertyById(id: string) {
   try {
-    const filePath = join(process.cwd(), "data", "properties.ts");
-    const fileContent = await readFile(filePath, "utf-8");
-    const properties = parsePropertiesFile(fileContent);
+    const properties = await loadFullPropertyList();
     return properties.find((p) => p.id === id) || null;
   } catch (error) {
     console.error("Error loading property:", error);

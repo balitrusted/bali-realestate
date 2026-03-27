@@ -1,7 +1,5 @@
-import { readFile } from "fs/promises";
-import { join } from "path";
-import { parsePropertiesFile } from "@/lib/parseProperties";
 import { Property, PropertyType, MainArea, SubArea } from "@/types/property";
+import { loadFullPropertyList } from "@/lib/propertiesStorage";
 import { areas, subAreaNames } from "@/types/areas";
 
 const PER_PAGE = 25;
@@ -94,9 +92,7 @@ function hasValidPrice(p: Property): boolean {
 
 export async function loadAllProperties(): Promise<Property[]> {
   try {
-    const filePath = join(process.cwd(), "data", "properties.ts");
-    const fileContent = await readFile(filePath, "utf-8");
-    const properties = parsePropertiesFile(fileContent);
+    const properties = await loadFullPropertyList();
     return properties.filter((p) => {
       return p && p.id && hasValidPrice(p) && !p.archived;
     });
@@ -111,9 +107,7 @@ export async function loadAllProperties(): Promise<Property[]> {
  */
 export async function loadAllPropertiesForSlugIndex(): Promise<Property[]> {
   try {
-    const filePath = join(process.cwd(), "data", "properties.ts");
-    const fileContent = await readFile(filePath, "utf-8");
-    const properties = parsePropertiesFile(fileContent);
+    const properties = await loadFullPropertyList();
     return properties.filter((p) => p && p.id && hasValidPrice(p));
   } catch (error) {
     console.error("Error loading properties for slug index:", error);

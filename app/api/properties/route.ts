@@ -1,13 +1,8 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { readFile, writeFile } from "fs/promises";
-import { join } from "path";
 import { Property, PropertyType } from "@/types/property";
-import { parsePropertiesFile } from "@/lib/parseProperties";
-import { generatePropertiesFile } from "@/lib/generatePropertiesFile";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
-
-const DATA_FILE = join(process.cwd(), "data", "properties.ts");
+import { loadFullPropertyList, persistPropertyList } from "@/lib/propertiesStorage";
 
 // Check authentication
 async function checkAuth() {
@@ -22,8 +17,7 @@ export async function GET(request: Request) {
     const archiveFilter = searchParams.get("archived"); // "true" | "false" | null (all for admin)
     const idsParam = searchParams.get("ids"); // "1,2,3" for saved/compare lists
 
-    const fileContent = await readFile(DATA_FILE, "utf-8");
-    const properties = parsePropertiesFile(fileContent);
+    const properties = await loadFullPropertyList();
 
     // Validate and filter properties
     let validProperties = properties.filter((p) => {
@@ -90,8 +84,7 @@ export async function POST(request: Request) {
     const property: any = await request.json();
     
     // Read current properties
-    const fileContent = await readFile(DATA_FILE, "utf-8");
-    const properties = parsePropertiesFile(fileContent);
+    const properties = await loadFullPropertyList();
 
     // Validate property data
     if (!property.villaNumber?.trim() || !property.bedrooms) {
@@ -164,9 +157,7 @@ export async function POST(request: Request) {
 
     properties.push(newProperty);
 
-    // Write back to file
-    const newContent = generatePropertiesFile(properties);
-    await writeFile(DATA_FILE, newContent, "utf-8");
+    await persistPropertyList(properties);
 
     return NextResponse.json({ property: newProperty });
   } catch (error) {
@@ -187,8 +178,7 @@ export async function PUT(request: Request) {
   try {
     const { action, property, newOrder } = await request.json();
 
-    const fileContent = await readFile(DATA_FILE, "utf-8");
-    let properties = parsePropertiesFile(fileContent);
+    let properties = await loadFullPropertyList();
 
     if (action === "reorder") {
       // Reorder properties
@@ -246,9 +236,7 @@ export async function PUT(request: Request) {
       };
     }
 
-    // Write back to file
-    const newContent = generatePropertiesFile(properties);
-    await writeFile(DATA_FILE, newContent, "utf-8");
+    await persistPropertyList(properties);
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -273,13 +261,11 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "ID required" }, { status: 400 });
     }
 
-    const fileContent = await readFile(DATA_FILE, "utf-8");
-    let properties = parsePropertiesFile(fileContent);
+    let properties = await loadFullPropertyList();
 
     properties = properties.filter((p) => p.id !== id);
 
-    const newContent = generatePropertiesFile(properties);
-    await writeFile(DATA_FILE, newContent, "utf-8");
+    await persistPropertyList(properties);
 
     return NextResponse.json({ success: true });
   } catch (error) {
