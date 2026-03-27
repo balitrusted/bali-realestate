@@ -4,6 +4,7 @@ import { getPropertyBackNavigation, similarSectionReturnPath } from "@/lib/prope
 import PropertyBackNav from "@/components/PropertyBackNav";
 import PropertyImages from "@/components/PropertyImages";
 import NotifyWhenAvailableForm from "@/components/NotifyWhenAvailableForm";
+import PropertyLocationMap from "@/components/PropertyLocationMap";
 import PropertyStructuredData from "@/components/PropertyStructuredData";
 import PropertyCardActions from "@/components/PropertyCardActions";
 import PropertyDetailSimilar from "@/components/PropertyDetailSimilar";
@@ -200,6 +201,16 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
                   </div>
                 </div>
               )}
+
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold text-gray-900 mb-3">Location</h2>
+                <PropertyLocationMap
+                  title={headingTitle}
+                  areaLabel={locationLabel}
+                  displayLocation={property.displayLocation}
+                  exactLocation={property.exactLocation}
+                />
+              </div>
 
               {property.archived ? (
                 <NotifyWhenAvailableForm
