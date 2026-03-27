@@ -10,6 +10,9 @@ const REQUEST_TYPE_LABELS: Record<string, string> = {
   owner: "Owner/agent",
   specialist: "Specialist",
   "catalog-feedback": "Catalog – no/few results",
+  "property-book": "Property – book / enquire",
+  "property-info": "Property – info",
+  "property-buy": "Property – buy",
 };
 
 const STATUS_LABELS: Record<RequestStatus, string> = {
@@ -97,9 +100,23 @@ function RequestCard({
       </div>
       <p className="font-medium text-gray-900">{r.name}</p>
       <p className="text-sm text-gray-600">
-        <a href={`mailto:${r.email}`} className="hover:underline">{r.email}</a>
-        {r.whatsapp && ` · ${r.whatsapp}`}
+        {r.email && r.email !== "—" ? (
+          <a href={`mailto:${r.email}`} className="hover:underline">{r.email}</a>
+        ) : (
+          <span className="text-gray-500">Email: —</span>
+        )}
+        {r.whatsapp ? ` · ${r.whatsapp}` : null}
       </p>
+      {r.propertyId && <p className="text-sm text-gray-600">Property ID: {r.propertyId}</p>}
+      {r.propertyTitle && <p className="text-sm text-gray-600">Listing: {r.propertyTitle}</p>}
+      {r.propertyUrl && (
+        <p className="text-sm text-gray-600">
+          <a href={r.propertyUrl} className="text-emerald-800 hover:underline" target="_blank" rel="noopener noreferrer">
+            Open listing
+          </a>
+        </p>
+      )}
+      {r.desiredStart && <p className="text-sm text-gray-600">Preferred start: {r.desiredStart}</p>}
       {r.area && <p className="text-sm text-gray-600">Area: {r.area}</p>}
       {r.propertyType && <p className="text-sm text-gray-600">Type: {r.propertyType}</p>}
       {r.message && (

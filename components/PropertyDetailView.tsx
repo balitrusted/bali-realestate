@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { Property } from "@/types/property";
 import { findSimilarProperties } from "@/lib/similarProperties";
 import { getPropertyBackNavigation, similarSectionReturnPath } from "@/lib/propertyViewNavigation";
@@ -8,6 +7,7 @@ import NotifyWhenAvailableForm from "@/components/NotifyWhenAvailableForm";
 import PropertyStructuredData from "@/components/PropertyStructuredData";
 import PropertyCardActions from "@/components/PropertyCardActions";
 import PropertyDetailSimilar from "@/components/PropertyDetailSimilar";
+import PropertyDetailLeadButtons from "@/components/PropertyDetailLeadButtons";
 import { subAreaNames, areas, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
 import { getPropertyDisplayTitle, fixDescriptionDisplay } from "@/lib/propertyUtils";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
@@ -63,6 +63,11 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
   if (property.features.washingMachine) featuresList.push("Washing machine");
 
   const areaInfo = property.mainArea ? areas[property.mainArea] : null;
+  const types = property.types ?? [];
+  const hasRent = types.includes("rent");
+  const hasSale = types.includes("sale");
+  const hasLand = types.includes("land");
+  const hasBusiness = types.includes("business");
 
   return (
     <>
@@ -93,40 +98,14 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
             </div>
 
             <div>
-              <div className="mb-4">
-                <span className="text-sm text-gray-500">
-                  {areaInfo?.nameEn}
-                  {` • ${
-                    property.subArea != null
-                      ? subAreaNames[property.subArea] || property.subArea
-                      : SUBAREA_UNSPECIFIED_LABEL
-                  }`}
-                </span>
-                {property.types && property.types.length > 0 && (
-                  <div className="mt-2 flex gap-2">
-                    {property.types.map((type) => (
-                      <span key={type} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
-                        {type === "rent"
-                          ? "Rent"
-                          : type === "sale"
-                            ? "Sale"
-                            : type === "land"
-                              ? "Land"
-                              : "Business"}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
-                <h1 className="text-3xl font-bold text-gray-900 flex-1 min-w-0">
+              <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
+                <h1 className="text-3xl font-bold text-gray-900 flex-1 min-w-0 pr-2">
                   {getPropertyDisplayTitle(property)}
                 </h1>
                 <PropertyCardActions propertyId={String(property.id)} layout="inline" />
               </div>
 
-              <div className="mb-6">
+              <div className="mb-5">
                 {forSale != null && isSale && (
                   <p className="text-3xl font-semibold text-gray-900">
                     {formatPrice(forSale, p.currency)}
@@ -152,11 +131,31 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
                     )}
                   </>
                 )}
-                {property.duration && (
-                  <p className="text-sm text-gray-600 mt-2">
-                    Minimum duration: {property.duration.min}{" "}
-                    {property.duration.min === 1 ? "month" : "months"}
-                  </p>
+              </div>
+
+              <div className="mb-6 text-sm text-gray-500">
+                <span>
+                  {areaInfo?.nameEn}
+                  {` • ${
+                    property.subArea != null
+                      ? subAreaNames[property.subArea] || property.subArea
+                      : SUBAREA_UNSPECIFIED_LABEL
+                  }`}
+                </span>
+                {property.types && property.types.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {property.types.map((type) => (
+                      <span key={type} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                        {type === "rent"
+                          ? "Rent"
+                          : type === "sale"
+                            ? "Sale"
+                            : type === "land"
+                              ? "Land"
+                              : "Business"}
+                      </span>
+                    ))}
+                  </div>
                 )}
               </div>
 
@@ -204,12 +203,16 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
                   propertyTitle={getPropertyDisplayTitle(property)}
                 />
               ) : (
-                <Link
-                  href={`/request?property=${property.id}`}
-                  className="block w-full text-center px-6 py-3 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors font-medium"
-                >
-                  Request Information
-                </Link>
+                <PropertyDetailLeadButtons
+                  propertyId={String(property.id)}
+                  propertyTitle={getPropertyDisplayTitle(property)}
+                  propertyPageUrl={propertyUrl}
+                  hasRent={hasRent}
+                  hasSale={hasSale}
+                  hasLand={hasLand}
+                  hasBusiness={hasBusiness}
+                  archived={false}
+                />
               )}
             </div>
           </div>

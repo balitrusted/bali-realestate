@@ -20,6 +20,12 @@ export interface SiteRequest {
   budgetCurrency?: string;
   duration?: string[];
   message?: string;
+  /** Listing the user contacted from (property detail). */
+  propertyId?: string;
+  propertyTitle?: string;
+  propertyUrl?: string;
+  /** Preferred move-in / start (property-book). ISO date string. */
+  desiredStart?: string;
   status?: RequestStatus;
   comment?: string;
   createdAt: string;
