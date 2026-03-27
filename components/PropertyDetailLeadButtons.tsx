@@ -30,7 +30,7 @@ function LeadModal({
   propertyTitle: string;
   propertyPageUrl: string;
 }) {
-  const [contactMethod, setContactMethod] = useState<"phone" | "email">("phone");
+  const [contactMethod, setContactMethod] = useState<"whatsapp" | "email">("whatsapp");
   const [contactValue, setContactValue] = useState("");
   const [name, setName] = useState("");
   const [desiredStart, setDesiredStart] = useState("");
@@ -48,9 +48,11 @@ function LeadModal({
     setSending(true);
     try {
       const email = contactMethod === "email" ? contactValue.trim() : "";
-      const whatsapp = contactMethod === "phone" ? contactValue.trim() : "";
+      const whatsapp = contactMethod === "whatsapp" ? contactValue.trim() : "";
       if (!name.trim()) throw new Error("Name is required");
-      if (!email && !whatsapp) throw new Error(contactMethod === "phone" ? "Enter your phone number" : "Enter your email");
+      if (!email && !whatsapp) {
+        throw new Error(contactMethod === "whatsapp" ? "Enter your WhatsApp number" : "Enter your email");
+      }
 
       const res = await fetch("/api/request", {
         method: "POST",
@@ -60,7 +62,7 @@ function LeadModal({
           name: name.trim(),
           email: email || "",
           whatsapp: whatsapp || "",
-          preferredContact: contactMethod === "phone" ? "whatsapp" : "email",
+          preferredContact: contactMethod === "whatsapp" ? "whatsapp" : "email",
           message: kind === "info" || kind === "buy" ? comment.trim() || undefined : undefined,
           desiredStart: kind === "book" && desiredStart.trim() ? desiredStart.trim() : undefined,
           propertyId,
@@ -135,14 +137,14 @@ function LeadModal({
             <div className="mb-2 flex gap-2">
               <button
                 type="button"
-                onClick={() => setContactMethod("phone")}
+                onClick={() => setContactMethod("whatsapp")}
                 className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                  contactMethod === "phone"
+                  contactMethod === "whatsapp"
                     ? "bg-stone-900 text-white"
                     : "bg-stone-100 text-stone-600 hover:bg-stone-200"
                 }`}
               >
-                Phone
+                WhatsApp
               </button>
               <button
                 type="button"
@@ -156,13 +158,13 @@ function LeadModal({
                 Email
               </button>
             </div>
-            {contactMethod === "phone" ? (
+            {contactMethod === "whatsapp" ? (
               <input
                 type="tel"
                 value={contactValue}
                 onChange={(e) => setContactValue(e.target.value)}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600"
-                placeholder="WhatsApp or phone with country code"
+                placeholder="WhatsApp with country code"
                 autoComplete="tel"
               />
             ) : (

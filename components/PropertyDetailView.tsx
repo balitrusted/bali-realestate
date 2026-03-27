@@ -11,6 +11,7 @@ import PropertyDetailLeadButtons from "@/components/PropertyDetailLeadButtons";
 import { subAreaNames, areas, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
 import { getPropertyDisplayTitle, fixDescriptionDisplay, fixVillaNumberDisplay } from "@/lib/propertyUtils";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
+import { formatLocaleDate } from "@/lib/formatDate";
 
 type Props = {
   property: Property;
@@ -50,17 +51,17 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
     : 0;
 
   const featuresList: string[] = [];
-  if (property.features.bathtub) featuresList.push("Bathtub");
-  if (property.features.carPark) featuresList.push("Car park");
-  if (property.features.closedKitchen) featuresList.push("Closed kitchen");
-  if (property.features.desk) featuresList.push("Desk");
-  if (property.features.enclosedLivingArea) featuresList.push("Enclosed living area");
-  if (property.features.garage) featuresList.push("Garage");
-  if (property.features.highSpeedWifi) featuresList.push("High-speed WiFi");
-  if (property.features.natureView) featuresList.push("Nature view");
-  if (property.features.petFriendly) featuresList.push("Pet friendly");
-  if (property.features.pool) featuresList.push("Pool");
-  if (property.features.washingMachine) featuresList.push("Washing machine");
+  if (property.features.bathtub) featuresList.push("bathtub");
+  if (property.features.carPark) featuresList.push("car park");
+  if (property.features.closedKitchen) featuresList.push("closed kitchen");
+  if (property.features.desk) featuresList.push("desk");
+  if (property.features.enclosedLivingArea) featuresList.push("enclosed living area");
+  if (property.features.garage) featuresList.push("garage");
+  if (property.features.highSpeedWifi) featuresList.push("high-speed WiFi");
+  if (property.features.natureView) featuresList.push("nature view");
+  if (property.features.petFriendly) featuresList.push("pet friendly");
+  if (property.features.pool) featuresList.push("pool");
+  if (property.features.washingMachine) featuresList.push("washing machine");
 
   const areaInfo = property.mainArea ? areas[property.mainArea] : null;
   const types = property.types ?? [];
@@ -68,6 +69,7 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
   const hasSale = types.includes("sale");
   const hasLand = types.includes("land");
   const hasBusiness = types.includes("business");
+  const showAvailability = hasRent && !hasLand && !hasBusiness;
   const dealLabel = hasRent ? "Rent" : hasSale ? "Buy" : hasLand ? "Land" : hasBusiness ? "Business" : "Listing";
   const headingTitle = (() => {
     const beds = property.bedrooms ?? 0;
@@ -151,6 +153,13 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
                       </div>
                     )}
                   </>
+                )}
+                {showAvailability && (
+                  <div className="mt-3">
+                    <span className="inline-flex items-center rounded-md border border-stone-200 px-2.5 py-1 text-xs font-medium text-stone-700">
+                      Available: {property.availableFrom ? formatLocaleDate(property.availableFrom) : "Now"}
+                    </span>
+                  </div>
                 )}
               </div>
 
