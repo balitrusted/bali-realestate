@@ -430,7 +430,7 @@ export default function PropertyFilters({
         <button
           type="button"
           onClick={openFilters}
-          className="w-full h-12 rounded-xl border border-stone-200 bg-white px-4 text-left transition-colors duration-200 hover:border-emerald-200 hover:bg-emerald-50/40 active:scale-[0.99] flex items-center justify-between"
+          className="w-full h-12 rounded-xl border border-emerald-200/90 bg-btn-hatch-emerald px-4 text-left transition-[transform,border-color,background-color] duration-200 hover:border-emerald-300 active:scale-[0.99] flex items-center justify-between"
           aria-expanded={false}
         >
           <span className="text-sm font-semibold tracking-tight text-stone-900">{collapsedBase}</span>

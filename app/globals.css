@@ -410,8 +410,9 @@ html {
   background-color: #dbeafe;
 }
 
-/* Diagonal hatch: two equal-width light-gray stripes (no transparency — avoids hover “crawl”).
-   Hover/active only swap colors; gradient stops stay identical so stripes don’t shift. */
+/* Diagonal hatch (-45°, 5px + 5px stripes, opaque colors — no hover “crawl”).
+   PropertyFilters: collapsed “Show filters” = .bg-btn-hatch-emerald; expanded “Hide filters” = .bg-btn-hatch.
+   CatalogFiltersToggle: single toggle = .bg-btn-hatch-soft. */
 .bg-btn-hatch {
   background-color: #f3f4f6;
   background-image: repeating-linear-gradient(
@@ -443,7 +444,7 @@ html {
   );
 }
 
-/* Lighter variant (e.g. catalog filter toggle bar) */
+/* Softer gray (CatalogFiltersToggle — one button, Show/Hide filters) */
 .bg-btn-hatch-soft {
   background-color: #f9fafb;
   background-image: repeating-linear-gradient(
