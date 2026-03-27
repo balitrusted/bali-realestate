@@ -167,7 +167,7 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
               {property.description?.trim() && (
                 <div className="mb-6">
                   <h2 className="text-lg font-semibold text-gray-900 mb-3">Description</h2>
-                  <div className="text-gray-700 whitespace-pre-line">
+                  <div className="text-gray-700 whitespace-pre-line leading-[1.7]">
                     {fixDescriptionDisplay(property.description)}
                   </div>
                 </div>

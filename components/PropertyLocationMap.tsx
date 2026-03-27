@@ -43,7 +43,7 @@ function toTimeRange(minutesBase: number): string {
 
 function getUbudEta(mainArea: MainArea, coords: [number, number] | null, subArea?: SubArea): string | null {
   if (mainArea !== "ubud") return null;
-  if (!coords) return "Estimated to Ubud Center: by car 10-25 min · by scooter 8-20 min";
+  if (!coords) return "Estimated to Ubud Center: by scooter 8-20 min · by car 10-25 min";
 
   const south = new Set<SubArea>(["lodtunduh", "kemenuh", "sayan", "sukawati"]);
   const north = new Set<SubArea>(["gentong", "petulu"]);
@@ -58,7 +58,7 @@ function getUbudEta(mainArea: MainArea, coords: [number, number] | null, subArea
   const carRange = toTimeRange(carBaseMin);
   const scooterRange = toTimeRange(scooterBaseMin);
 
-  return `Estimated to Ubud Center: by car ${carRange} · by scooter ${scooterRange}`;
+  return `Estimated to Ubud Center: by scooter ${scooterRange} · by car ${carRange}`;
 }
 
 export default function PropertyLocationMap({ title, areaLabel, displayLocation, mainArea, subArea }: Props) {
