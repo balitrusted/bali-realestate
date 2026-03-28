@@ -43,9 +43,11 @@ async function readFromBlob(): Promise<SiteRequest[]> {
         cache: "no-store",
         headers: { Pragma: "no-cache", "Cache-Control": "no-cache" },
       });
-      if (!res.ok) return [];
-      const data = await res.json();
-      return Array.isArray(data) ? data : [];
+      if (res.ok) {
+        const data = await res.json();
+        return Array.isArray(data) ? data : [];
+      }
+      // Direct URL can 404 if BLOB_STORE_URL is wrong; fall through to list()+fetch by pathname.
     }
 
     const { blobs } = await list({ prefix: "data/", limit: 100 });
@@ -74,12 +76,16 @@ function normalizeRequest(r: SiteRequest): SiteRequest {
   return { ...r, status: r.status || "new" };
 }
 
-/** Get all requests (admin only). On Vercel uses Blob; locally can use file. */
+/**
+ * Get all requests (admin only).
+ * When BLOB_READ_WRITE_TOKEN is set, read only from Blob — never fall back to data/requests.json.
+ * Otherwise PATCH saves to Blob but GET would re-read the repo file and “lose” status/comments after refresh.
+ */
 export async function getRequests(): Promise<SiteRequest[]> {
   let raw: SiteRequest[] = [];
-  const fromBlob = await readFromBlob();
-  if (fromBlob.length > 0) raw = fromBlob;
-  else {
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    raw = await readFromBlob();
+  } else {
     try {
       const { readFile } = await import("fs/promises");
       const { join } = await import("path");
