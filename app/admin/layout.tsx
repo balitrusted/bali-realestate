@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import { AdminNavLinkWithBadge } from "@/components/admin/AdminNavLinkWithBadge";
 
 export default function AdminLayout({
   children,
@@ -10,6 +11,11 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
+  const [badgeCounts, setBadgeCounts] = useState({
+    commentsPending: 0,
+    requestsNew: 0,
+    notifyNew: 0,
+  });
   const router = useRouter();
   const pathname = usePathname();
 
@@ -47,6 +53,35 @@ export default function AdminLayout({
 
     checkAuth();
   }, [pathname, router]);
+
+  useEffect(() => {
+    if (pathname === "/admin/login" || authenticated !== true) return;
+    const load = async () => {
+      try {
+        const res = await fetch("/api/admin/badge-counts", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        setBadgeCounts({
+          commentsPending: data.commentsPending ?? 0,
+          requestsNew: data.requestsNew ?? 0,
+          notifyNew: data.notifyNew ?? 0,
+        });
+      } catch {
+        /* ignore */
+      }
+    };
+    load();
+    const interval = setInterval(load, 60_000);
+    const onFocus = () => load();
+    const onBadgesRefresh = () => load();
+    window.addEventListener("focus", onFocus);
+    window.addEventListener("admin-badges-refresh", onBadgesRefresh);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("focus", onFocus);
+      window.removeEventListener("admin-badges-refresh", onBadgesRefresh);
+    };
+  }, [pathname, authenticated]);
 
   // Show login page without layout
   if (pathname === "/admin/login") {
@@ -97,30 +132,21 @@ export default function AdminLayout({
               <Link href="/admin/blog" className="text-gray-700 hover:text-gray-900">
                 Blog
               </Link>
-              <Link
-                href="/admin/comments"
-                className="text-gray-700 hover:text-gray-900"
-              >
+              <AdminNavLinkWithBadge href="/admin/comments" count={badgeCounts.commentsPending}>
                 Comments
-              </Link>
+              </AdminNavLinkWithBadge>
               <Link
                 href="/admin/properties/archive"
                 className="text-gray-700 hover:text-gray-900"
               >
                 Archive
               </Link>
-              <Link
-                href="/admin/requests"
-                className="text-gray-700 hover:text-gray-900"
-              >
+              <AdminNavLinkWithBadge href="/admin/requests" count={badgeCounts.requestsNew}>
                 Requests
-              </Link>
-              <Link
-                href="/admin/notify-requests"
-                className="text-gray-700 hover:text-gray-900"
-              >
+              </AdminNavLinkWithBadge>
+              <AdminNavLinkWithBadge href="/admin/notify-requests" count={badgeCounts.notifyNew}>
                 Notify requests
-              </Link>
+              </AdminNavLinkWithBadge>
               <Link
                 href="/admin/catalog-structure"
                 className="text-gray-700 hover:text-gray-900"

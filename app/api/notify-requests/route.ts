@@ -1,34 +1,17 @@
 import { NextResponse } from "next/server";
-import { readFile, writeFile } from "fs/promises";
+import { writeFile } from "fs/promises";
 import { join } from "path";
 import { cookies } from "next/headers";
 import { sendToAdmin } from "@/lib/email";
+import { getNotifyRequests, type NotifyRequest } from "@/lib/notifyRequestsData";
+
+export type { NotifyRequest };
 
 const DATA_FILE = join(process.cwd(), "data", "notify-requests.json");
-
-export interface NotifyRequest {
-  id: string;
-  propertyId: string;
-  propertyTitle: string;
-  name: string;
-  email: string;
-  dateFrom?: string;
-  createdAt: string;
-}
 
 async function checkAuth() {
   const cookieStore = await cookies();
   return cookieStore.get("admin-auth")?.value === "true";
-}
-
-async function readRequests(): Promise<NotifyRequest[]> {
-  try {
-    const raw = await readFile(DATA_FILE, "utf-8");
-    const data = JSON.parse(raw);
-    return Array.isArray(data) ? data : [];
-  } catch {
-    return [];
-  }
 }
 
 async function writeRequests(requests: NotifyRequest[]) {
@@ -40,7 +23,7 @@ export async function GET() {
   if (!(await checkAuth())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const requests = await readRequests();
+  const requests = await getNotifyRequests();
   return NextResponse.json({ requests });
 }
 
@@ -55,7 +38,7 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    const requests = await readRequests();
+    const requests = await getNotifyRequests();
     const newRequest: NotifyRequest = {
       id: `nr-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
       propertyId: String(propertyId),

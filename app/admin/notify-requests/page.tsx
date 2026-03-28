@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import type { NotifyRequest } from "@/app/api/notify-requests/route";
+import type { NotifyRequest } from "@/lib/notifyRequestsData";
 
 function escapeCsvCell(s: string): string {
   if (/[",\n\r]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
@@ -28,6 +28,18 @@ export default function AdminNotifyRequestsPage() {
       }
     };
     fetchList();
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/admin/badge-seen", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ section: "notify" }),
+    })
+      .then(() => {
+        window.dispatchEvent(new CustomEvent("admin-badges-refresh"));
+      })
+      .catch(() => {});
   }, []);
 
   const downloadCsv = () => {
