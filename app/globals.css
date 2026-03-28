@@ -250,9 +250,16 @@ html {
 }
 
 /*
- * Inline images: global `.prose img` uses 2em vertical margins — that balloons the gap before a caption.
- * Reset only when a caption paragraph follows; otherwise keep normal paragraph spacing.
+ * TipTap `Image` with inline:false renders a block <img> sibling — NOT <p><img></p>.
+ * Global `.prose img { margin: 2em 0 }` then leaves a huge gap before the caption; reset when caption follows.
  */
+.prose.prose-article img:has(+ p.article-image-caption) {
+  margin-top: 0;
+  margin-bottom: 0;
+  display: block;
+}
+
+/* Legacy / pasted HTML: image wrapped in a paragraph */
 .prose.prose-article p:has(> img):has(+ p.article-image-caption) {
   margin-bottom: 0;
 }
@@ -265,7 +272,7 @@ html {
 
 /* TipTap: caption paragraph under image (class set via editor "Caption" button) */
 .prose.prose-article p.article-image-caption {
-  margin: 0.2rem 0 1.125rem;
+  margin: 0 0 1.125rem;
   padding-top: 0;
   font-size: 0.75rem;
   line-height: 1.4;
@@ -275,8 +282,10 @@ html {
   text-align: right;
 }
 
+/* Tight gap: block <img> immediately before caption (main case) or <p><img></p> before caption */
+.prose.prose-article img + p.article-image-caption,
 .prose.prose-article p:has(> img) + p.article-image-caption {
-  margin-top: 0.15rem;
+  margin-top: 0.125rem;
 }
 
 /* Reusable end-of-article CTA block (blog/knowledge posts) */
