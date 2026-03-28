@@ -249,18 +249,34 @@ html {
   letter-spacing: 0.017em;
 }
 
+/*
+ * Inline images: global `.prose img` uses 2em vertical margins — that balloons the gap before a caption.
+ * Reset only when a caption paragraph follows; otherwise keep normal paragraph spacing.
+ */
+.prose.prose-article p:has(> img):has(+ p.article-image-caption) {
+  margin-bottom: 0;
+}
+
+.prose.prose-article p:has(> img) img {
+  margin-top: 0;
+  margin-bottom: 0;
+  display: block;
+}
+
 /* TipTap: caption paragraph under image (class set via editor "Caption" button) */
 .prose.prose-article p.article-image-caption {
-  margin: 0.35rem 0 1.125rem;
-  font-size: 0.8125rem;
-  line-height: 1.45;
+  margin: 0.2rem 0 1.125rem;
+  padding-top: 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
   font-weight: 300;
   color: #78716c;
-  letter-spacing: 0.017em;
+  letter-spacing: 0.015em;
+  text-align: right;
 }
 
 .prose.prose-article p:has(> img) + p.article-image-caption {
-  margin-top: 0.4rem;
+  margin-top: 0.15rem;
 }
 
 /* Reusable end-of-article CTA block (blog/knowledge posts) */
