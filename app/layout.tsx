@@ -15,12 +15,21 @@ const fontSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://balitrusted.com"),
   title: {
-    default: "Balitrusted | Long-term Rentals and Investments",
+    default: "Balitrusted | Bali villas for rent & local guides",
     template: "%s | Balitrusted",
   },
-  description: "Platform for real estate in Bali for long-term living and investments. No noise. No spam. No tourist approach.",
-  keywords: ["bali real estate", "bali villa rental", "long-term rental", "bali investments", "ubud real estate"],
+  description:
+    "Villas and land for rent in Bali—especially Ubud—with transparent pricing, guides, and Q&A. A calmer way to search than noisy listing feeds.",
+  keywords: [
+    "bali villa rent",
+    "ubud villa rental",
+    "seminyak villa",
+    "sanur villa rental",
+    "bali real estate",
+    "rent villa bali",
+  ],
 };
 
 export default function RootLayout({

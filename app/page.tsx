@@ -1,13 +1,31 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { areas } from "@/types/areas";
 import { loadAllProperties, loadAllPropertiesForSlugIndex } from "@/lib/propertiesCatalog";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import HomePropertyCard from "@/components/HomePropertyCard";
 
-export const metadata = {
-  title: "Bali Villas for Rent – Trusted Long Term Villa Rentals",
+const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://balitrusted.com";
+
+export const metadata: Metadata = {
+  title: "Bali Villa Rentals — Ubud, Sanur & Seminyak | Balitrusted",
   description:
-    "Browse trusted villas for rent in Bali. Long-term rentals in Ubud, Sanur and Canggu. Verified listings, transparent prices and local support.",
+    "Curated villas for rent in Bali with transparent pricing and practical listing details. Focus on Ubud, plus Sanur and Seminyak. Guides, Q&A, and help connecting with owners.",
+  openGraph: {
+    title: "Bali Villa Rentals — Ubud, Sanur & Seminyak | Balitrusted",
+    description:
+      "Curated villas for rent in Bali with transparent pricing and practical listing details. Focus on Ubud, plus Sanur and Seminyak. Guides, Q&A, and help connecting with owners.",
+    url: siteUrl,
+    siteName: "Balitrusted",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Bali Villa Rentals — Ubud, Sanur & Seminyak | Balitrusted",
+    description:
+      "Curated villas for rent in Bali with transparent pricing and practical listing details. Focus on Ubud, plus Sanur and Seminyak. Guides, Q&A, and help connecting with owners.",
+  },
 };
 
 const POPULAR_AREAS = ["ubud", "sanur", "seminyak", "canggu"] as const;
