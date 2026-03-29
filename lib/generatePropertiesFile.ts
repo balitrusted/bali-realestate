@@ -1,4 +1,5 @@
 import { Property } from "@/types/property";
+import { normalizePropertyFeatures, PROPERTY_FEATURE_KEYS } from "@/lib/featureState";
 
 export function generatePropertiesFile(properties: Property[]): string {
   const indent = "  ";
@@ -57,19 +58,13 @@ export function generatePropertiesFile(properties: Property[]): string {
       }
       content += `${indent}${indent}},\n`;
     }
+    const feat = normalizePropertyFeatures(prop.features as Partial<Record<string, unknown>> | undefined);
     content += `${indent}${indent}features: {\n`;
-    content += `${indent}${indent}${indent}bathtub: ${prop.features?.bathtub ?? false},\n`;
-    content += `${indent}${indent}${indent}carPark: ${prop.features?.carPark ?? false},\n`;
-    content += `${indent}${indent}${indent}desk: ${prop.features?.desk ?? false},\n`;
-    content += `${indent}${indent}${indent}natureView: ${prop.features?.natureView ?? false},\n`;
-    content += `${indent}${indent}${indent}pool: ${prop.features?.pool ?? false}`;
-    if (prop.features?.closedKitchen) content += `,\n${indent}${indent}${indent}closedKitchen: true`;
-    if (prop.features?.enclosedLivingArea) content += `,\n${indent}${indent}${indent}enclosedLivingArea: true`;
-    if (prop.features?.garage) content += `,\n${indent}${indent}${indent}garage: true`;
-    if (prop.features?.highSpeedWifi) content += `,\n${indent}${indent}${indent}highSpeedWifi: true`;
-    if (prop.features?.petFriendly) content += `,\n${indent}${indent}${indent}petFriendly: true`;
-    if (prop.features?.washingMachine) content += `,\n${indent}${indent}${indent}washingMachine: true`;
-    content += `\n${indent}${indent}},\n`;
+    PROPERTY_FEATURE_KEYS.forEach((key, i) => {
+      const comma = i < PROPERTY_FEATURE_KEYS.length - 1 ? "," : "";
+      content += `${indent}${indent}${indent}${key}: ${JSON.stringify(feat[key])}${comma}\n`;
+    });
+    content += `${indent}${indent}},\n`;
     content += `${indent}${indent}images: [${(prop.images || []).map(img => JSON.stringify(img)).join(", ")}],\n`;
     if (prop.order !== undefined) {
       content += `${indent}${indent}order: ${prop.order},\n`;

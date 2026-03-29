@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { Property, PropertyType } from "@/types/property";
+import { normalizePropertyFeatures } from "@/lib/featureState";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { loadFullPropertyList, persistPropertyList } from "@/lib/propertiesStorage";
 
@@ -140,13 +141,7 @@ export async function POST(request: Request) {
       bathrooms: property.bathrooms,
       price: property.price,
       duration: property.duration,
-      features: property.features || {
-        bathtub: false,
-        carPark: false,
-        desk: false,
-        natureView: false,
-        pool: false,
-      },
+      features: normalizePropertyFeatures(property.features),
       images: Array.isArray(property.images) ? property.images : [],
       order: property.order ?? properties.length,
       archived: property.archived === true,
@@ -232,6 +227,9 @@ export async function PUT(request: Request) {
         mainArea: mainArea,
         subArea: subArea,
         price: property.price,
+        features: normalizePropertyFeatures(
+          property.features ?? properties[index].features
+        ),
         updatedAt: new Date().toISOString(),
       };
     }

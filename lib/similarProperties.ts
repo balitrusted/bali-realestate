@@ -1,4 +1,5 @@
 import { Property } from "@/types/property";
+import { featureIsYes } from "@/lib/featureState";
 
 function catalogKind(p: Property): "villa" | "land" | "business" {
   const villaLike = p.types.some((t) => t === "rent" || t === "sale");
@@ -54,8 +55,8 @@ export function findSimilarProperties(
         }
       }
 
-      if (current.features.pool && p.features.pool) score += 15;
-      if (current.features.pool !== p.features.pool) score -= 5;
+      if (featureIsYes(current.features.pool) && featureIsYes(p.features.pool)) score += 15;
+      if (featureIsYes(current.features.pool) !== featureIsYes(p.features.pool)) score -= 5;
 
       if (p.subArea && p.subArea === current.subArea) score += 30;
 

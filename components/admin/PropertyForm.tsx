@@ -20,6 +20,10 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import Image from "next/image";
 import { Property, MainArea, SubArea, PropertyType } from "@/types/property";
+import {
+  normalizePropertyFeatures,
+  type FeatureTriState,
+} from "@/lib/featureState";
 import { areas, subAreaNames, SUBAREA_UNSPECIFIED_LABEL, isSubAreaOfMainArea } from "@/types/areas";
 import { fixVillaNumberDisplay, fixDescriptionDisplay } from "@/lib/propertyUtils";
 
@@ -171,19 +175,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
     priceCurrency: property?.price.currency || "IDR",
     durationMin: property?.duration?.min || 1,
     durationMax: property?.duration?.max || undefined,
-    features: {
-      bathtub: property?.features.bathtub || false,
-      carPark: property?.features.carPark || false,
-      closedKitchen: property?.features.closedKitchen || false,
-      desk: property?.features.desk || false,
-      enclosedLivingArea: property?.features.enclosedLivingArea || false,
-      garage: property?.features.garage || false,
-      highSpeedWifi: property?.features.highSpeedWifi || false,
-      natureView: property?.features.natureView || false,
-      petFriendly: property?.features.petFriendly || false,
-      pool: property?.features.pool || false,
-      washingMachine: property?.features.washingMachine || false,
-    },
+    features: normalizePropertyFeatures(property?.features as Partial<Record<string, unknown>> | undefined),
     images: property?.images || [] as string[],
     archived: property?.archived ?? false,
     availableFrom: property?.availableFrom ?? null,
@@ -689,11 +681,14 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
         </div>
       </div>
 
-      {/* Features */}
+      {/* Features — tri-state: catalogue filters only treat “Yes” as having the amenity */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-gray-900">Features</h2>
-        
-        <div className="grid md:grid-cols-3 gap-4">
+        <h2 className="text-xl font-semibold text-gray-900">Features & amenities</h2>
+        <p className="text-sm text-gray-600">
+          <strong>No info yet</strong> means you are still waiting on the owner—different from <strong>No</strong> (confirmed absent). The public catalog only shows an amenity when set to Yes.
+        </p>
+
+        <div className="grid md:grid-cols-2 gap-4">
           {[
             { key: "bathtub", label: "Bathtub" },
             { key: "carPark", label: "Car park" },
@@ -707,23 +702,26 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
             { key: "pool", label: "Pool" },
             { key: "washingMachine", label: "Washing machine" },
           ].map((feature) => (
-            <label key={feature.key} className="flex items-center">
-              <input
-                type="checkbox"
-                checked={formData.features[feature.key as keyof typeof formData.features]}
+            <div key={feature.key} className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-gray-800">{feature.label}</label>
+              <select
+                value={formData.features[feature.key as keyof typeof formData.features]}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
                     features: {
                       ...formData.features,
-                      [feature.key]: e.target.checked,
+                      [feature.key]: e.target.value as FeatureTriState,
                     },
                   })
                 }
-                className="rounded border-gray-300 text-gray-900 focus:ring-gray-500"
-              />
-              <span className="ml-2 text-sm text-gray-700">{feature.label}</span>
-            </label>
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-gray-500 focus:border-gray-500 bg-white"
+              >
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+                <option value="unknown">No info yet</option>
+              </select>
+            </div>
           ))}
         </div>
       </div>

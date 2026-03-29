@@ -1,4 +1,5 @@
 import { Property } from "@/types/property";
+import { featureIsYes } from "@/lib/featureState";
 import { areas } from "@/types/areas";
 
 interface PropertyStructuredDataProps {
@@ -71,12 +72,12 @@ export default function PropertyStructuredData({ property, baseUrl, propertyUrl 
 
   // Accommodation schema (for real estate / lodging)
   const amenityFeature: { "@type": string; name: string }[] = [];
-  if (property.features.pool) amenityFeature.push({ "@type": "LodgingAmenityFeature", name: "Pool" });
-  if (property.features.highSpeedWifi) amenityFeature.push({ "@type": "LodgingAmenityFeature", name: "WiFi" });
-  if (property.features.bathtub) amenityFeature.push({ "@type": "LodgingAmenityFeature", name: "Bathtub" });
-  if (property.features.carPark) amenityFeature.push({ "@type": "LodgingAmenityFeature", name: "Parking" });
-  if (property.features.washingMachine) amenityFeature.push({ "@type": "LodgingAmenityFeature", name: "Washing machine" });
-  if (property.features.natureView) amenityFeature.push({ "@type": "LodgingAmenityFeature", name: "Nature view" });
+  if (featureIsYes(property.features.pool)) amenityFeature.push({ "@type": "LodgingAmenityFeature", name: "Pool" });
+  if (featureIsYes(property.features.highSpeedWifi)) amenityFeature.push({ "@type": "LodgingAmenityFeature", name: "WiFi" });
+  if (featureIsYes(property.features.bathtub)) amenityFeature.push({ "@type": "LodgingAmenityFeature", name: "Bathtub" });
+  if (featureIsYes(property.features.carPark)) amenityFeature.push({ "@type": "LodgingAmenityFeature", name: "Parking" });
+  if (featureIsYes(property.features.washingMachine)) amenityFeature.push({ "@type": "LodgingAmenityFeature", name: "Washing machine" });
+  if (featureIsYes(property.features.natureView)) amenityFeature.push({ "@type": "LodgingAmenityFeature", name: "Nature view" });
 
   const accommodationOffers =
     isSale && forSale != null

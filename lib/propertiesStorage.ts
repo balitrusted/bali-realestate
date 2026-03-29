@@ -2,6 +2,7 @@ import { readFile, writeFile } from "fs/promises";
 import { join } from "path";
 import { list, put } from "@vercel/blob";
 import type { Property } from "@/types/property";
+import { normalizePropertyFeatures } from "@/lib/featureState";
 import { parsePropertiesFile } from "@/lib/parseProperties";
 import { generatePropertiesFile } from "@/lib/generatePropertiesFile";
 
@@ -21,9 +22,16 @@ export function useBlobPersistence(): boolean {
   return !!process.env.BLOB_READ_WRITE_TOKEN && process.env.VERCEL === "1";
 }
 
+function withNormalizedFeatures(list: Property[]): Property[] {
+  return list.map((p) => ({
+    ...p,
+    features: normalizePropertyFeatures(p.features as Partial<Record<string, unknown>> | undefined),
+  }));
+}
+
 async function readPropertiesFromDisk(): Promise<Property[]> {
   const fileContent = await readFile(DATA_FILE, "utf-8");
-  return parsePropertiesFile(fileContent);
+  return withNormalizedFeatures(parsePropertiesFile(fileContent));
 }
 
 async function readPropertiesFromBlob(): Promise<Property[] | null> {
@@ -45,7 +53,7 @@ async function readPropertiesFromBlob(): Promise<Property[] | null> {
     const data: unknown = await res.json();
     if (!Array.isArray(data)) return null;
 
-    return data as Property[];
+    return withNormalizedFeatures(data as Property[]);
   } catch (e) {
     console.error("[propertiesStorage] blob read failed:", e);
     return null;

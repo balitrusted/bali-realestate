@@ -25,6 +25,7 @@ import { fileURLToPath } from "url";
 import { Property, PropertyType } from "../types/property";
 import type { MainArea, SubArea } from "../types/property";
 import { generatePropertiesFile } from "../lib/generatePropertiesFile";
+import { normalizePropertyFeatures, type FeatureTriState } from "../lib/featureState";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = join(__dirname, "..");
@@ -126,6 +127,16 @@ function bool(val: string): boolean {
   return false;
 }
 
+/** CSV cell → yes / no / no-info-yet (empty cell = unknown) */
+function csvFeature(val: string): FeatureTriState {
+  const raw = String(val).trim();
+  if (!raw || raw === "-" || raw === "?") return "unknown";
+  const v = raw.toLowerCase();
+  if (["no", "n", "false", "0", "off", "нет"].includes(v)) return "no";
+  if (bool(raw)) return "yes";
+  return "unknown";
+}
+
 function getStr(row: Record<string, string>, key: string): string {
   const k = key.toLowerCase().replace(/-/g, "_");
   return (row[k] ?? "").trim();
@@ -207,19 +218,19 @@ function rowToProperty(row: Record<string, string>, index: number): Property | n
       durationMin != null
         ? { min: durationMin, max: durationMax ?? undefined }
         : undefined,
-    features: {
-      bathtub: bool(getStr(row, "bathtub")),
-      carPark: bool(getStr(row, "car_parking")),
-      closedKitchen: bool(getStr(row, "closed_kitchen")),
-      desk: bool(getStr(row, "desk")),
-      enclosedLivingArea: bool(getStr(row, "enclosed_living_area")),
-      garage: bool(getStr(row, "garage")),
-      highSpeedWifi: bool(getStr(row, "high_speed_wifi")),
-      natureView: bool(getStr(row, "nature_view")),
-      petFriendly: bool(getStr(row, "pet_friendly")),
-      pool: bool(getStr(row, "pool")),
-      washingMachine: bool(getStr(row, "washing_machine")),
-    },
+    features: normalizePropertyFeatures({
+      bathtub: csvFeature(getStr(row, "bathtub")),
+      carPark: csvFeature(getStr(row, "car_parking")),
+      closedKitchen: csvFeature(getStr(row, "closed_kitchen")),
+      desk: csvFeature(getStr(row, "desk")),
+      enclosedLivingArea: csvFeature(getStr(row, "enclosed_living_area")),
+      garage: csvFeature(getStr(row, "garage")),
+      highSpeedWifi: csvFeature(getStr(row, "high_speed_wifi")),
+      natureView: csvFeature(getStr(row, "nature_view")),
+      petFriendly: csvFeature(getStr(row, "pet_friendly")),
+      pool: csvFeature(getStr(row, "pool")),
+      washingMachine: csvFeature(getStr(row, "washing_machine")),
+    }),
     images: [],
     order: order ?? index,
     createdAt: new Date().toISOString(),

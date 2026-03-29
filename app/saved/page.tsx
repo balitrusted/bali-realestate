@@ -6,6 +6,7 @@ import { useSaved } from "@/components/SavedProvider";
 import PropertyCard from "@/components/PropertyCard";
 import PriceText from "@/components/PriceText";
 import type { Property } from "@/types/property";
+import { featureIsYes } from "@/lib/featureState";
 import { areas } from "@/types/areas";
 import { MAX_COMPARE } from "@/lib/savedStore";
 
@@ -164,13 +165,13 @@ export default function SavedPage() {
                           {compareProps.map((p) => (
                             <td key={p.id} className="py-2 px-4">
                               {[
-                                p.features.pool && "Pool",
-                                p.features.bathtub && "Bathtub",
-                                p.features.natureView && "Nature view",
-                                p.features.closedKitchen && "Closed kitchen",
-                                p.features.petFriendly && "Pet friendly",
-              p.features.desk && "Desk",
-              p.features.carPark && "Car park",
+                                featureIsYes(p.features.pool) && "Pool",
+                                featureIsYes(p.features.bathtub) && "Bathtub",
+                                featureIsYes(p.features.natureView) && "Nature view",
+                                featureIsYes(p.features.closedKitchen) && "Closed kitchen",
+                                featureIsYes(p.features.petFriendly) && "Pet friendly",
+                                featureIsYes(p.features.desk) && "Desk",
+                                featureIsYes(p.features.carPark) && "Car park",
                               ]
                                 .filter(Boolean)
                                 .join(", ") || "—"}

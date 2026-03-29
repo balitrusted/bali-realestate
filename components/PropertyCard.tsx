@@ -3,6 +3,7 @@ import PropertyCardActions from "@/components/PropertyCardActions";
 import PropertyViewLink from "@/components/PropertyViewLink";
 import PriceText from "@/components/PriceText";
 import { Property } from "@/types/property";
+import { featureIsYes } from "@/lib/featureState";
 import { areas, subAreaNames, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
 import { getPropertyDisplayTitle } from "@/lib/propertyUtils";
 import { getPropertyImageAlt } from "@/lib/imageSeo";
@@ -47,7 +48,7 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
     // Premium/cozy design + standout bathroom/flow (e.g. Sayan #52)
     if (
       hasAny("cozy", "refined", "premium", "well balanced", "warm, modern") &&
-      (hasAny("double shower", "outdoor shower") || property.features.bathtub || hasAny("same level as the main living"))
+      (hasAny("double shower", "outdoor shower") || featureIsYes(property.features.bathtub) || hasAny("same level as the main living"))
     ) {
       return pick([
         `Cozy premium feel with thoughtful details and a well designed layout. Great for a comfortable ${stayPhrase} in ${loc}.`,
@@ -97,7 +98,7 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
       ]);
     }
 
-    if (property.features.enclosedLivingArea || property.features.closedKitchen) {
+    if (featureIsYes(property.features.enclosedLivingArea) || featureIsYes(property.features.closedKitchen)) {
       return pick([
         `Rare enclosed living setup - cooler, quieter and more comfortable for daily life. A solid choice for a ${stayPhrase} in ${loc}.`,
         `Enclosed living/kitchen - a real comfort upgrade in Bali. Great for a ${stayPhrase} where you want AC and less noise.`,
@@ -105,7 +106,7 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
       ]);
     }
 
-    if (hasAny("rice field", "rice-field") || property.features.natureView) {
+    if (hasAny("rice field", "rice-field") || featureIsYes(property.features.natureView)) {
       return pick([
         `Peaceful nature setting with open views - perfect for a calm, inspiring routine. A great ${stayPhrase} option in ${loc}.`,
         `Open views and a green atmosphere for a quieter pace. Lovely for a ${stayPhrase} in ${loc}.`,
@@ -113,7 +114,7 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
       ]);
     }
 
-    if (property.features.pool) {
+    if (featureIsYes(property.features.pool)) {
       return pick([
         `Private pool and a comfortable layout for relaxing at home. A practical ${stayPhrase} option in ${loc}.`,
         `Pool-focused setup for easy daily comfort. Great for a ${stayPhrase} where you want to enjoy your own space.`,
@@ -121,14 +122,14 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
       ]);
     }
 
-    if (property.features.washingMachine) {
+    if (featureIsYes(property.features.washingMachine)) {
       return pick([
         `Designed for everyday comfort with a rare washing machine on-site. Great for a ${stayPhrase} in ${loc}.`,
         `Rare bonus: washing machine at home - super practical for longer stays. A solid ${stayPhrase} option in ${loc}.`,
       ]);
     }
 
-    if (property.features.desk) {
+    if (featureIsYes(property.features.desk)) {
       return pick([
         `Convenient setup for remote work with a dedicated desk. A good ${stayPhrase} choice in ${loc}.`,
         `Work-friendly layout with a dedicated desk - great for remote work. Comfortable for a ${stayPhrase} in ${loc}.`,
@@ -151,17 +152,17 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
 
   // All features from import (same order as in CSV/admin)
   const featuresList: string[] = [];
-  if (property.features.bathtub) featuresList.push("bathtub");
-  if (property.features.carPark) featuresList.push("car park");
-  if (property.features.closedKitchen) featuresList.push("enclosed kitchen");
-  if (property.features.enclosedLivingArea) featuresList.push("enclosed living");
-  if (property.features.desk) featuresList.push("desk");
-  if (property.features.garage) featuresList.push("garage");
-  if (property.features.highSpeedWifi) featuresList.push("high-speed WiFi");
-  if (property.features.natureView) featuresList.push("nature view");
-  if (property.features.petFriendly) featuresList.push("pet friendly");
-  if (property.features.pool) featuresList.push("pool");
-  if (property.features.washingMachine) featuresList.push("washing machine");
+  if (featureIsYes(property.features.bathtub)) featuresList.push("bathtub");
+  if (featureIsYes(property.features.carPark)) featuresList.push("car park");
+  if (featureIsYes(property.features.closedKitchen)) featuresList.push("enclosed kitchen");
+  if (featureIsYes(property.features.enclosedLivingArea)) featuresList.push("enclosed living");
+  if (featureIsYes(property.features.desk)) featuresList.push("desk");
+  if (featureIsYes(property.features.garage)) featuresList.push("garage");
+  if (featureIsYes(property.features.highSpeedWifi)) featuresList.push("high-speed WiFi");
+  if (featureIsYes(property.features.natureView)) featuresList.push("nature view");
+  if (featureIsYes(property.features.petFriendly)) featuresList.push("pet friendly");
+  if (featureIsYes(property.features.pool)) featuresList.push("pool");
+  if (featureIsYes(property.features.washingMachine)) featuresList.push("washing machine");
 
   const mainImage = property.images && property.images.length > 0 
     ? property.images[0] 

@@ -1,4 +1,5 @@
 import { Property, PropertyType, MainArea, SubArea } from "@/types/property";
+import { featureIsYes } from "@/lib/featureState";
 import { loadFullPropertyList } from "@/lib/propertiesStorage";
 import { areas, subAreaNames } from "@/types/areas";
 
@@ -164,22 +165,22 @@ export function filterProperties(
       }
     } else if (segment.kind === "amenity") {
       const feat = amenityToFeature[segment.value as string];
-      if (feat) result = result.filter((p) => p.features[feat] === true);
+      if (feat) result = result.filter((p) => featureIsYes(p.features[feat]));
     }
   }
 
   // Query param feature filters (in addition to segment)
-  if (filters.hasBathtub) result = result.filter((p) => p.features.bathtub);
-  if (filters.hasCarPark) result = result.filter((p) => p.features.carPark);
-  if (filters.hasClosedKitchen) result = result.filter((p) => p.features.closedKitchen);
-  if (filters.hasDesk) result = result.filter((p) => p.features.desk);
-  if (filters.hasEnclosedLiving) result = result.filter((p) => p.features.enclosedLivingArea);
-  if (filters.hasGarage) result = result.filter((p) => p.features.garage);
-  if (filters.hasHighSpeedWifi) result = result.filter((p) => p.features.highSpeedWifi);
-  if (filters.hasNatureView) result = result.filter((p) => p.features.natureView);
-  if (filters.hasPetFriendly) result = result.filter((p) => p.features.petFriendly);
-  if (filters.hasPool) result = result.filter((p) => p.features.pool);
-  if (filters.hasWashingMachine) result = result.filter((p) => p.features.washingMachine);
+  if (filters.hasBathtub) result = result.filter((p) => featureIsYes(p.features.bathtub));
+  if (filters.hasCarPark) result = result.filter((p) => featureIsYes(p.features.carPark));
+  if (filters.hasClosedKitchen) result = result.filter((p) => featureIsYes(p.features.closedKitchen));
+  if (filters.hasDesk) result = result.filter((p) => featureIsYes(p.features.desk));
+  if (filters.hasEnclosedLiving) result = result.filter((p) => featureIsYes(p.features.enclosedLivingArea));
+  if (filters.hasGarage) result = result.filter((p) => featureIsYes(p.features.garage));
+  if (filters.hasHighSpeedWifi) result = result.filter((p) => featureIsYes(p.features.highSpeedWifi));
+  if (filters.hasNatureView) result = result.filter((p) => featureIsYes(p.features.natureView));
+  if (filters.hasPetFriendly) result = result.filter((p) => featureIsYes(p.features.petFriendly));
+  if (filters.hasPool) result = result.filter((p) => featureIsYes(p.features.pool));
+  if (filters.hasWashingMachine) result = result.filter((p) => featureIsYes(p.features.washingMachine));
 
   return result.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
 }

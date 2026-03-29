@@ -1,4 +1,15 @@
+import type { FeatureTriState, PropertyFeatureKey } from "@/lib/featureState";
+
 export type PropertyType = 'rent' | 'sale' | 'land' | 'business';
+
+export type { FeatureTriState, PropertyFeatureKey };
+
+/** Tri-state in admin; legacy `boolean` may still exist in old `data/properties.ts` until re-saved */
+export type FeatureValue = FeatureTriState | boolean;
+
+/** Omitted keys = treat as unknown after normalization */
+export type PropertyFeatures = Partial<Record<PropertyFeatureKey, FeatureValue>>;
+
 export type SubArea =
   | 'gentong'
   | 'kedewatan'
@@ -46,19 +57,8 @@ export interface Property {
     min: number; // months
     max?: number;
   };
-  features: {
-    bathtub: boolean;
-    carPark: boolean;
-    closedKitchen?: boolean;
-    desk: boolean;
-    enclosedLivingArea?: boolean;
-    garage?: boolean;
-    highSpeedWifi?: boolean;
-    natureView: boolean;
-    petFriendly?: boolean;
-    pool: boolean;
-    washingMachine?: boolean;
-  };
+  /** Per amenity: yes / no / unknown (owner not asked yet). Filters only match `yes`. Legacy booleans OK. */
+  features: PropertyFeatures;
   images: string[];
   order?: number; // For sorting - lower number = appears first
   /** When true, hidden from catalog and admin main list; direct URL still works; show "not available" + notify form */

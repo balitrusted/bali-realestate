@@ -1,4 +1,15 @@
 import { Property } from "@/types/property";
+import { PROPERTY_FEATURE_KEYS, type FeatureTriState } from "@/lib/featureState";
+
+function parseFeatureFromObjectString(objStr: string, key: string): FeatureTriState {
+  if (new RegExp(`${key}:\\s*"yes"`).test(objStr)) return "yes";
+  if (new RegExp(`${key}:\\s*"no"`).test(objStr)) return "no";
+  if (new RegExp(`${key}:\\s*"unknown"`).test(objStr)) return "unknown";
+  if (new RegExp(`${key}:\\s*true`).test(objStr)) return "yes";
+  /** Legacy `false` in TS file = unchecked → unknown, not “confirmed no” */
+  if (new RegExp(`${key}:\\s*false`).test(objStr)) return "unknown";
+  return "unknown";
+}
 
 // Parse properties from TypeScript file - improved version
 export function parsePropertiesFile(content: string): Property[] {
@@ -281,20 +292,10 @@ function parsePropertyObject(objStr: string): Property | null {
       }
     }
     
-    // Extract features
-    obj.features = {
-      bathtub: /bathtub:\s*true/.test(objStr),
-      carPark: /carPark:\s*true/.test(objStr),
-      desk: /desk:\s*true/.test(objStr),
-      natureView: /natureView:\s*true/.test(objStr),
-      pool: /pool:\s*true/.test(objStr),
-    };
-    if (/closedKitchen:\s*true/.test(objStr)) obj.features.closedKitchen = true;
-    if (/enclosedLivingArea:\s*true/.test(objStr)) obj.features.enclosedLivingArea = true;
-    if (/garage:\s*true/.test(objStr)) obj.features.garage = true;
-    if (/highSpeedWifi:\s*true/.test(objStr)) obj.features.highSpeedWifi = true;
-    if (/petFriendly:\s*true/.test(objStr)) obj.features.petFriendly = true;
-    if (/washingMachine:\s*true/.test(objStr)) obj.features.washingMachine = true;
+    // Extract features (tri-state strings or legacy booleans)
+    obj.features = Object.fromEntries(
+      PROPERTY_FEATURE_KEYS.map((k) => [k, parseFeatureFromObjectString(objStr, k)])
+    ) as Property["features"];
     
     // Extract images array - same logic
     const imagesMatch = objStr.match(/images:\s*\[([^\]]+)\]/);

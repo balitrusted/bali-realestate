@@ -1,4 +1,5 @@
 import type { Property } from "@/types/property";
+import { featureIsYes } from "@/lib/featureState";
 import { findSimilarProperties } from "@/lib/similarProperties";
 import { getPropertyBackNavigation, similarSectionReturnPath } from "@/lib/propertyViewNavigation";
 import PropertyBackNav from "@/components/PropertyBackNav";
@@ -46,17 +47,17 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
     : 0;
 
   const featuresList: string[] = [];
-  if (property.features.bathtub) featuresList.push("bathtub");
-  if (property.features.carPark) featuresList.push("car park");
-  if (property.features.closedKitchen) featuresList.push("closed kitchen");
-  if (property.features.desk) featuresList.push("desk");
-  if (property.features.enclosedLivingArea) featuresList.push("enclosed living area");
-  if (property.features.garage) featuresList.push("garage");
-  if (property.features.highSpeedWifi) featuresList.push("high-speed WiFi");
-  if (property.features.natureView) featuresList.push("nature view");
-  if (property.features.petFriendly) featuresList.push("pet friendly");
-  if (property.features.pool) featuresList.push("pool");
-  if (property.features.washingMachine) featuresList.push("washing machine");
+  if (featureIsYes(property.features.bathtub)) featuresList.push("bathtub");
+  if (featureIsYes(property.features.carPark)) featuresList.push("car park");
+  if (featureIsYes(property.features.closedKitchen)) featuresList.push("closed kitchen");
+  if (featureIsYes(property.features.desk)) featuresList.push("desk");
+  if (featureIsYes(property.features.enclosedLivingArea)) featuresList.push("enclosed living area");
+  if (featureIsYes(property.features.garage)) featuresList.push("garage");
+  if (featureIsYes(property.features.highSpeedWifi)) featuresList.push("high-speed WiFi");
+  if (featureIsYes(property.features.natureView)) featuresList.push("nature view");
+  if (featureIsYes(property.features.petFriendly)) featuresList.push("pet friendly");
+  if (featureIsYes(property.features.pool)) featuresList.push("pool");
+  if (featureIsYes(property.features.washingMachine)) featuresList.push("washing machine");
 
   const areaInfo = property.mainArea ? areas[property.mainArea] : null;
   const types = property.types ?? [];
