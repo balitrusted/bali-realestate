@@ -39,3 +39,11 @@ export function normalizePropertyFeatures(
     PROPERTY_FEATURE_KEYS.map((k) => [k, normalizeFeatureValue(f[k])])
   ) as Record<PropertyFeatureKey, FeatureTriState>;
 }
+
+/** Admin list: true if any amenity is still “unknown” (not yes/no confirmed). */
+export function propertyHasUnknownAmenities(
+  features: Partial<Record<PropertyFeatureKey, unknown>> | undefined
+): boolean {
+  if (!features) return true;
+  return PROPERTY_FEATURE_KEYS.some((k) => normalizeFeatureValue(features[k]) === "unknown");
+}

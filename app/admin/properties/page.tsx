@@ -21,6 +21,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Property } from "@/types/property";
+import { propertyHasUnknownAmenities } from "@/lib/featureState";
 import PropertyImageWithFallback from "@/components/PropertyImageWithFallback";
 import { getPropertyDisplayTitle, fixDescriptionDisplay } from "@/lib/propertyUtils";
 import { formatLocaleDate } from "@/lib/formatDate";
@@ -100,9 +101,25 @@ function SortablePropertyItem({ property }: { property: Property }) {
       )}
 
       <div className="flex-1 min-w-0">
-        <h3 className="font-semibold text-gray-900 truncate">
-          {property.internalName?.trim() || getPropertyDisplayTitle(property)}
-        </h3>
+        <div className="flex items-start gap-2 min-w-0">
+          <h3 className="font-semibold text-gray-900 truncate min-w-0 flex-1">
+            {property.internalName?.trim() || getPropertyDisplayTitle(property)}
+          </h3>
+          {amenitiesIncomplete ? (
+            <span
+              role="img"
+              aria-label="Incomplete amenities: some features still No info"
+              className="mt-0.5 inline-flex shrink-0 items-center gap-1 rounded-md bg-amber-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-900 ring-1 ring-amber-200/90 shadow-sm"
+              title="Some amenities are still “No info” — open Edit to complete"
+            >
+              <span
+                className="h-2 w-2 rounded-sm bg-amber-400 ring-1 ring-amber-300/80"
+                aria-hidden
+              />
+              <span className="hidden sm:inline">Amenities</span>
+            </span>
+          ) : null}
+        </div>
         {property.internalName?.trim() && (
           <p className="text-xs text-gray-500 truncate">{getPropertyDisplayTitle(property)}</p>
         )}
@@ -284,8 +301,16 @@ export default function AdminPropertiesPage() {
         </Link>
       </div>
 
-      <p className="text-gray-600 mb-6">
+      <p className="text-gray-600 mb-2">
         Drag properties to reorder them. Properties with lower order numbers appear first on the site.
+      </p>
+      <p className="text-sm text-gray-500 mb-6 flex flex-wrap items-center gap-2">
+        <span className="inline-flex items-center gap-1.5 rounded-md bg-amber-50/90 px-2 py-1 ring-1 ring-amber-200/80">
+          <span className="h-2 w-2 rounded-sm bg-amber-400 ring-1 ring-amber-300/80" aria-hidden />
+          <span>
+            <span className="font-medium text-amber-950">Amenities</span> — at least one feature is still “No info” (not confirmed with the owner).
+          </span>
+        </span>
       </p>
 
       {properties.length === 0 ? (
