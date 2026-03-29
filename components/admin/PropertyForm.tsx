@@ -696,7 +696,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
         </div>
 
         <div className="rounded-xl border border-stone-200 bg-stone-50/90 overflow-hidden shadow-inner">
-          <div className="flex flex-wrap gap-x-6 gap-y-2 px-4 py-2.5 border-b border-stone-200/90 bg-white/90 text-[11px] sm:text-xs text-stone-600">
+          <div className="flex flex-wrap gap-x-4 gap-y-1.5 px-3 py-2 border-b border-stone-200/90 bg-white/90 text-[11px] sm:text-xs text-stone-600">
             <span className="inline-flex items-center gap-2 font-medium">
               <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-500 ring-2 ring-emerald-200" aria-hidden />
               Yes → on site
@@ -734,7 +734,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
               const seg = (v: FeatureTriState, short: string, long: string) => {
                 const on = current === v;
                 const base =
-                  "min-w-[4.25rem] sm:min-w-[5rem] px-2 sm:px-3 py-2 text-xs sm:text-sm font-semibold rounded-md transition-all duration-150 border border-transparent";
+                  "min-w-[2.75rem] sm:min-w-[3.5rem] px-1.5 sm:px-2 py-1.5 text-xs font-semibold rounded-md transition-all duration-150 border border-transparent";
                 const active =
                   v === "yes"
                     ? "bg-emerald-600 text-white shadow-md shadow-emerald-900/15 ring-1 ring-emerald-700/30"
@@ -759,13 +759,13 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
               return (
                 <li
                   key={feature.key}
-                  className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 bg-white/70"
+                  className="flex flex-row flex-wrap items-center gap-x-2 gap-y-1 px-3 py-1.5 sm:px-3 sm:py-1.5 bg-white/70"
                 >
-                  <span className="text-sm font-medium text-gray-900 sm:w-[11rem] shrink-0 leading-snug">
+                  <span className="w-[8.25rem] sm:w-[9.25rem] shrink-0 text-xs sm:text-[13px] font-medium text-gray-900 leading-tight">
                     {feature.label}
                   </span>
                   <div
-                    className="inline-flex flex-wrap gap-1 rounded-lg bg-stone-100/90 p-1 ring-1 ring-stone-200/80 sm:max-w-none"
+                    className="inline-flex shrink-0 gap-0.5 rounded-md bg-stone-100/90 p-0.5 ring-1 ring-stone-200/80"
                     role="group"
                     aria-label={`${feature.label} status`}
                   >
