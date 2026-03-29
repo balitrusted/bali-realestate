@@ -22,8 +22,8 @@ export default function AddPropertyPage() {
   };
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Add New Property</h1>
+    <div className="mx-auto w-full max-w-4xl">
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Add New Property</h1>
       <PropertyForm onSave={handleSave} />
     </div>
   );

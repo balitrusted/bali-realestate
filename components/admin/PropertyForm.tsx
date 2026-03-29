@@ -311,7 +311,10 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
 
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
+    <form
+      onSubmit={handleSubmit}
+      className="w-full bg-white rounded-xl border border-gray-200 p-6 sm:p-8 shadow-sm space-y-8"
+    >
       {/* Basic Info */}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-gray-900">Basic Information</h2>
@@ -681,48 +684,99 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
         </div>
       </div>
 
-      {/* Features — tri-state: catalogue filters only treat “Yes” as having the amenity */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-gray-900">Features & amenities</h2>
-        <p className="text-sm text-gray-600">
-          <strong>No info yet</strong> means you are still waiting on the owner—different from <strong>No</strong> (confirmed absent). The public catalog only shows an amenity when set to Yes.
-        </p>
+      {/* Features — tri-state segmented controls (colour-coded) */}
+      <div className="space-y-3">
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 tracking-tight">Features & amenities</h2>
+          <p className="mt-1 text-sm text-gray-600 max-w-prose">
+            Only <strong className="text-emerald-800">Yes</strong> appears on the public listing. Use{" "}
+            <strong className="text-amber-900">No info</strong> while you wait for the owner;{" "}
+            <strong className="text-slate-700">No</strong> when you have confirmed it is not there.
+          </p>
+        </div>
 
-        <div className="grid md:grid-cols-2 gap-4">
-          {[
-            { key: "bathtub", label: "Bathtub" },
-            { key: "carPark", label: "Car park" },
-            { key: "closedKitchen", label: "Enclosed kitchen" },
-            { key: "desk", label: "Desk" },
-            { key: "enclosedLivingArea", label: "Enclosed living area" },
-            { key: "garage", label: "Garage" },
-            { key: "highSpeedWifi", label: "High-speed WiFi" },
-            { key: "natureView", label: "Nature view" },
-            { key: "petFriendly", label: "Pet friendly" },
-            { key: "pool", label: "Pool" },
-            { key: "washingMachine", label: "Washing machine" },
-          ].map((feature) => (
-            <div key={feature.key} className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-800">{feature.label}</label>
-              <select
-                value={formData.features[feature.key as keyof typeof formData.features]}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    features: {
-                      ...formData.features,
-                      [feature.key]: e.target.value as FeatureTriState,
-                    },
-                  })
-                }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-gray-500 focus:border-gray-500 bg-white"
-              >
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-                <option value="unknown">No info yet</option>
-              </select>
-            </div>
-          ))}
+        <div className="rounded-xl border border-stone-200 bg-stone-50/90 overflow-hidden shadow-inner">
+          <div className="flex flex-wrap gap-x-6 gap-y-2 px-4 py-2.5 border-b border-stone-200/90 bg-white/90 text-[11px] sm:text-xs text-stone-600">
+            <span className="inline-flex items-center gap-2 font-medium">
+              <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-500 ring-2 ring-emerald-200" aria-hidden />
+              Yes → on site
+            </span>
+            <span className="inline-flex items-center gap-2 font-medium">
+              <span className="h-2 w-2 shrink-0 rounded-full bg-slate-500 ring-2 ring-slate-200" aria-hidden />
+              No → confirmed absent
+            </span>
+            <span className="inline-flex items-center gap-2 font-medium">
+              <span className="h-2 w-2 shrink-0 rounded-full bg-amber-400 ring-2 ring-amber-100" aria-hidden />
+              No info → pending
+            </span>
+          </div>
+          <ul className="divide-y divide-stone-200/80">
+            {[
+              { key: "bathtub", label: "Bathtub" },
+              { key: "carPark", label: "Car park" },
+              { key: "closedKitchen", label: "Enclosed kitchen" },
+              { key: "desk", label: "Desk" },
+              { key: "enclosedLivingArea", label: "Enclosed living area" },
+              { key: "garage", label: "Garage" },
+              { key: "highSpeedWifi", label: "High-speed WiFi" },
+              { key: "natureView", label: "Nature view" },
+              { key: "petFriendly", label: "Pet friendly" },
+              { key: "pool", label: "Pool" },
+              { key: "washingMachine", label: "Washing machine" },
+            ].map((feature) => {
+              const current =
+                formData.features[feature.key as keyof typeof formData.features] ?? "unknown";
+              const set = (v: FeatureTriState) =>
+                setFormData({
+                  ...formData,
+                  features: { ...formData.features, [feature.key]: v },
+                });
+              const seg = (v: FeatureTriState, short: string, long: string) => {
+                const on = current === v;
+                const base =
+                  "min-w-[4.25rem] sm:min-w-[5rem] px-2 sm:px-3 py-2 text-xs sm:text-sm font-semibold rounded-md transition-all duration-150 border border-transparent";
+                const active =
+                  v === "yes"
+                    ? "bg-emerald-600 text-white shadow-md shadow-emerald-900/15 ring-1 ring-emerald-700/30"
+                    : v === "no"
+                      ? "bg-slate-600 text-white shadow-md shadow-slate-900/15 ring-1 ring-slate-700/30"
+                      : "bg-amber-100 text-amber-950 shadow-sm ring-1 ring-amber-300/80";
+                const idle =
+                  "text-stone-500 bg-white/0 hover:bg-white hover:text-stone-800 hover:shadow-sm border-stone-200/80";
+                return (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => set(v)}
+                    title={long}
+                    className={`${base} ${on ? active : idle}`}
+                  >
+                    <span className="sm:hidden">{short}</span>
+                    <span className="hidden sm:inline">{long}</span>
+                  </button>
+                );
+              };
+              return (
+                <li
+                  key={feature.key}
+                  className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 bg-white/70"
+                >
+                  <span className="text-sm font-medium text-gray-900 sm:w-[11rem] shrink-0 leading-snug">
+                    {feature.label}
+                  </span>
+                  <div
+                    className="inline-flex flex-wrap gap-1 rounded-lg bg-stone-100/90 p-1 ring-1 ring-stone-200/80 sm:max-w-none"
+                    role="group"
+                    aria-label={`${feature.label} status`}
+                  >
+                    {seg("yes", "Y", "Yes")}
+                    {seg("no", "N", "No")}
+                    {seg("unknown", "?", "No info")}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </div>
 
