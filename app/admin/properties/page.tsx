@@ -66,6 +66,8 @@ function SortablePropertyItem({ property }: { property: Property }) {
         : formatPrice(price.monthly ?? price.min ?? 0, price.currency || "IDR") + (price.monthly != null ? " / month" : "")
       : "Price not set";
 
+  const amenitiesIncomplete = propertyHasUnknownAmenities(property.features);
+
   return (
     <div
       ref={setNodeRef}
