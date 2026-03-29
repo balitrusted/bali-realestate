@@ -40,7 +40,11 @@ export function normalizePropertyFeatures(
   ) as Record<PropertyFeatureKey, FeatureTriState>;
 }
 
-/** Admin list: true if any amenity is still “unknown” (not yes/no confirmed). */
+/**
+ * Admin property list (`/admin/properties`): drive the small amber “Amenities” badge on each row
+ * when any feature is still “unknown” (owner not confirmed yet), so the team can scan the list without
+ * opening every listing. Not used on the public site.
+ */
 export function propertyHasUnknownAmenities(
   features: Partial<Record<PropertyFeatureKey, unknown>> | undefined
 ): boolean {

@@ -66,6 +66,7 @@ function SortablePropertyItem({ property }: { property: Property }) {
         : formatPrice(price.monthly ?? price.min ?? 0, price.currency || "IDR") + (price.monthly != null ? " / month" : "")
       : "Price not set";
 
+  /** Amber “Amenities” badge: see `propertyHasUnknownAmenities` in lib/featureState.ts */
   const amenitiesIncomplete = propertyHasUnknownAmenities(property.features);
 
   return (
@@ -303,16 +304,8 @@ export default function AdminPropertiesPage() {
         </Link>
       </div>
 
-      <p className="text-gray-600 mb-2">
+      <p className="text-gray-600 mb-6">
         Drag properties to reorder them. Properties with lower order numbers appear first on the site.
-      </p>
-      <p className="text-sm text-gray-500 mb-6 flex flex-wrap items-center gap-2">
-        <span className="inline-flex items-center gap-1.5 rounded-md bg-amber-50/90 px-2 py-1 ring-1 ring-amber-200/80">
-          <span className="h-2 w-2 rounded-sm bg-amber-400 ring-1 ring-amber-300/80" aria-hidden />
-          <span>
-            <span className="font-medium text-amber-950">Amenities</span> — at least one feature is still “No info” (not confirmed with the owner).
-          </span>
-        </span>
       </p>
 
       {properties.length === 0 ? (
