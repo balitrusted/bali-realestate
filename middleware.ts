@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getPropertyManualRedirect } from "@/lib/propertyRedirects";
+import { subAreaNames } from "@/types/areas";
+
+const UBUD_SUB_SLUGS = new Set(Object.keys(subAreaNames));
 
 /** First segment under `/properties` that is a catalog hub, not a listing slug. */
 const CATALOG_ROOT = new Set(["rent", "sale", "villas", "land", "business"]);
@@ -12,6 +15,21 @@ function normalizePathname(pathname: string): string {
 
 export function middleware(request: NextRequest) {
   const pathname = normalizePathname(request.nextUrl.pathname);
+
+  /** Canonical Ubud sub-area URLs: /properties/{type}/ubud/{subArea} instead of ?subArea= */
+  const ubudArea = pathname.match(/^\/properties\/(villas|rent|sale|land|business)\/ubud$/);
+  if (ubudArea) {
+    const raw = request.nextUrl.searchParams.get("subArea");
+    if (raw && !raw.includes(",")) {
+      const slug = raw.trim().toLowerCase();
+      if (UBUD_SUB_SLUGS.has(slug)) {
+        const url = request.nextUrl.clone();
+        url.pathname = `/properties/${ubudArea[1]}/ubud/${slug}`;
+        url.searchParams.delete("subArea");
+        return NextResponse.redirect(url, 301);
+      }
+    }
+  }
 
   const manual = getPropertyManualRedirect(pathname);
   if (manual) {

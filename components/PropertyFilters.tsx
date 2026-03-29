@@ -51,17 +51,22 @@ type PropertyFiltersState = {
 function buildFiltersFromSearchParams(
   searchParams: ReturnType<typeof useSearchParams>,
   defaultMainArea?: MainArea,
-  defaultType?: PropertyType
+  defaultType?: PropertyType,
+  pathSubArea?: SubArea
 ): PropertyFiltersState {
   return {
     mainArea: defaultMainArea || (searchParams.get("mainArea") as MainArea) || undefined,
     subArea: (() => {
       const subAreaParam = searchParams.get("subArea");
-      if (!subAreaParam) return [] as SubArea[];
-      return subAreaParam
-        .split(",")
-        .map((v) => v.trim())
-        .filter((v): v is SubArea => v in subAreaNames);
+      const fromQuery = subAreaParam
+        ? subAreaParam
+            .split(",")
+            .map((v) => v.trim())
+            .filter((v): v is SubArea => v in subAreaNames)
+        : ([] as SubArea[]);
+      if (fromQuery.length > 0) return fromQuery;
+      if (pathSubArea) return [pathSubArea];
+      return [] as SubArea[];
     })(),
     bedrooms: searchParams.get("bedrooms")
       ? searchParams
@@ -105,6 +110,11 @@ interface PropertyFiltersProps {
   baseVariant?: "villas" | "land" | "business";
   /** Total properties matching current URL filters (from server). */
   matchingCount: number;
+  /**
+   * When the URL path encodes a single Ubud sub-area (e.g. /properties/villas/ubud/gentong),
+   * pass it so filter chips stay in sync without ?subArea=.
+   */
+  pathSubArea?: SubArea;
 }
 
 export default function PropertyFilters({
@@ -116,6 +126,7 @@ export default function PropertyFilters({
   availableAmenityKeys,
   baseVariant,
   matchingCount,
+  pathSubArea,
 }: PropertyFiltersProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -124,13 +135,13 @@ export default function PropertyFilters({
 
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [filters, setFilters] = useState<PropertyFiltersState>(() =>
-    buildFiltersFromSearchParams(searchParams, defaultMainArea, defaultType)
+    buildFiltersFromSearchParams(searchParams, defaultMainArea, defaultType, pathSubArea)
   );
 
   // Keep filter state in sync with the URL (back/forward, Clear filters, navigation).
   useEffect(() => {
-    setFilters(buildFiltersFromSearchParams(searchParams, defaultMainArea, defaultType));
-  }, [searchKey, searchParams, defaultMainArea, defaultType]);
+    setFilters(buildFiltersFromSearchParams(searchParams, defaultMainArea, defaultType, pathSubArea));
+  }, [searchKey, searchParams, defaultMainArea, defaultType, pathSubArea]);
 
   // Restore open panel after navigation (e.g. area pill) so filters stay expanded.
   useEffect(() => {
@@ -171,6 +182,11 @@ export default function PropertyFilters({
   }, []);
 
   const clearFilters = useCallback(() => {
+    const mUbud = pathname.match(/^\/properties\/(villas|rent|sale|land|business)\/ubud\/([^/]+)$/);
+    if (mUbud && areas.ubud.subAreas?.includes(mUbud[2] as SubArea)) {
+      router.push(`/properties/${mUbud[1]}/ubud`, { scroll: false });
+      return;
+    }
     router.push(pathname, { scroll: false });
   }, [router, pathname]);
 
@@ -204,7 +220,6 @@ export default function PropertyFilters({
     const isTypeOnlyPath = !!matchTypeOnly;
     const pathType = matchSegment?.[1] ?? matchTypeOnly?.[1];
     const pathArea = matchSegment?.[2];
-    const pathSegment = matchSegment?.[3];
 
     const queryParams = new URLSearchParams();
     if (newFilters.mainArea) queryParams.set("mainArea", newFilters.mainArea);
@@ -225,8 +240,9 @@ export default function PropertyFilters({
     if (newFilters.maxPrice) queryParams.set("maxPrice", newFilters.maxPrice.toString());
 
     /** Drop redundant ?mainArea= when area is already in /properties/{type}/{area}/… */
-    const qsForPath = (pathname: string) => {
+    const qsForPath = (pathname: string, omitSubArea?: boolean) => {
       const qp = new URLSearchParams(queryParams.toString());
+      if (omitSubArea) qp.delete("subArea");
       const m = pathname.match(/^\/properties\/[^/]+\/([^/]+)(?:\/|$)/);
       if (m?.[1] && newFilters.mainArea === m[1]) {
         qp.delete("mainArea");
@@ -243,11 +259,35 @@ export default function PropertyFilters({
       }
       const newArea = newFilters.mainArea;
       if (newArea !== pathArea || newType !== pathType) {
-        router.push(`/properties/${newType}/${newArea}${qsForPath(`/properties/${newType}/${newArea}`)}`, {
-          scroll: false,
-        });
+        const dest =
+          newArea === "ubud" && newFilters.subArea.length === 1
+            ? `/properties/${newType}/ubud/${newFilters.subArea[0]}`
+            : `/properties/${newType}/${newArea}`;
+        const omitSub = newArea === "ubud" && newFilters.subArea.length === 1;
+        router.push(`${dest}${qsForPath(dest, omitSub)}`, { scroll: false });
         return;
       }
+
+      if (newArea === "ubud") {
+        if (newFilters.subArea.length === 1) {
+          const dest = `/properties/${newType}/ubud/${newFilters.subArea[0]}`;
+          router.push(`${dest}${qsForPath(dest, true)}`, { scroll: false });
+          return;
+        }
+        const dest = `/properties/${newType}/ubud`;
+        const qp = new URLSearchParams(queryParams.toString());
+        if (newFilters.subArea.length > 1) {
+          qp.set("subArea", newFilters.subArea.join(","));
+        } else {
+          qp.delete("subArea");
+        }
+        const m = dest.match(/^\/properties\/[^/]+\/([^/]+)(?:\/|$)/);
+        if (m?.[1] && newFilters.mainArea === m[1]) qp.delete("mainArea");
+        const s = qp.toString();
+        router.push(`${dest}${s ? `?${s}` : ""}`, { scroll: false });
+        return;
+      }
+
       router.push(`${currentPath}${qsForPath(currentPath)}`, { scroll: false });
       return;
     }
@@ -259,12 +299,12 @@ export default function PropertyFilters({
         return;
       }
       if (newFilters.mainArea) {
-        router.push(
-          `/properties/${newType}/${newFilters.mainArea}${qsForPath(`/properties/${newType}/${newFilters.mainArea}`)}`,
-          {
-            scroll: false,
-          }
-        );
+        const dest =
+          newFilters.mainArea === "ubud" && newFilters.subArea.length === 1
+            ? `/properties/${newType}/ubud/${newFilters.subArea[0]}`
+            : `/properties/${newType}/${newFilters.mainArea}`;
+        const omitSub = newFilters.mainArea === "ubud" && newFilters.subArea.length === 1;
+        router.push(`${dest}${qsForPath(dest, omitSub)}`, { scroll: false });
       } else {
         router.push(`/properties/${newType}${qsForPath(`/properties/${newType}`)}`, { scroll: false });
       }
@@ -272,12 +312,12 @@ export default function PropertyFilters({
     }
 
     if (newFilters.type && newFilters.mainArea) {
-      router.push(
-        `/properties/${newFilters.type}/${newFilters.mainArea}${qsForPath(`/properties/${newFilters.type}/${newFilters.mainArea}`)}`,
-        {
-          scroll: false,
-        }
-      );
+      const dest =
+        newFilters.mainArea === "ubud" && newFilters.subArea.length === 1
+          ? `/properties/${newFilters.type}/ubud/${newFilters.subArea[0]}`
+          : `/properties/${newFilters.type}/${newFilters.mainArea}`;
+      const omitSub = newFilters.mainArea === "ubud" && newFilters.subArea.length === 1;
+      router.push(`${dest}${qsForPath(dest, omitSub)}`, { scroll: false });
     } else if (newFilters.type) {
       router.push(`/properties/${newFilters.type}${qsForPath(`/properties/${newFilters.type}`)}`, { scroll: false });
     } else {
@@ -359,8 +399,14 @@ export default function PropertyFilters({
       minDuration: newAction === "Buy" ? undefined : filters.mainArea ? (filters.minDuration ?? 1) : undefined,
     };
     setFilters(newFilters);
-    if (filters.mainArea) router.push(`/properties/${newType}/${filters.mainArea}`, { scroll: false });
-    else updateURL(newFilters);
+    if (filters.mainArea) {
+      const a = filters.mainArea;
+      if (a === "ubud" && filters.subArea.length === 1) {
+        router.push(`/properties/${newType}/ubud/${filters.subArea[0]}`, { scroll: false });
+      } else {
+        router.push(`/properties/${newType}/${a}`, { scroll: false });
+      }
+    } else updateURL(newFilters);
   };
 
   const handleSubjectChange = (newSubject: Subject) => {
@@ -372,8 +418,14 @@ export default function PropertyFilters({
       minDuration: newType === "rent" ? (filters.mainArea ? (filters.minDuration ?? 1) : undefined) : undefined,
     };
     setFilters(newFilters);
-    if (filters.mainArea) router.push(`/properties/${newType}/${filters.mainArea}`, { scroll: false });
-    else updateURL(newFilters);
+    if (filters.mainArea) {
+      const a = filters.mainArea;
+      if (a === "ubud" && filters.subArea.length === 1) {
+        router.push(`/properties/${newType}/ubud/${filters.subArea[0]}`, { scroll: false });
+      } else {
+        router.push(`/properties/${newType}/${a}`, { scroll: false });
+      }
+    } else updateURL(newFilters);
   };
 
   /** Sub-area: empty array = any (no sub-area filter), same as bedrooms. */

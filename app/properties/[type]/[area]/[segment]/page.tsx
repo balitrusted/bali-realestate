@@ -24,7 +24,8 @@ import {
   getAvailableAmenityFilterKeys,
 } from "@/lib/propertiesCatalog";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
-import { buildTitle, buildH1, buildDescription, buildSeoText } from "@/lib/seoTemplates";
+import { buildTitle, buildH1, buildDescription, buildIntro, buildSeoText } from "@/lib/seoTemplates";
+import { ubudSubAreaFooterParagraphs } from "@/lib/ubudSubAreaContent";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import { subAreaNames } from "@/types/areas";
 import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
@@ -65,10 +66,18 @@ export async function generateMetadata({
   const all = await loadAllProperties();
   const filtered = filterProperties(all, { type: catalogType, mainArea }, parsed);
   const noIndex = filtered.length === 0 || mainArea !== "ubud";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://balitrusted.com";
+  const canonicalPath = `/properties/${type}/${area}/${segment}`;
+  const kwSub =
+    parsed.kind === "subArea" && subArea
+      ? `${subAreaNames[subArea]}, Ubud, Bali, villa rental, villa for sale, long-term rent`
+      : undefined;
 
   return {
     title: { absolute: buildTitle(catalogType, mainArea, subArea, parsed) },
     description: buildDescription(catalogType, mainArea, subArea, parsed),
+    alternates: { canonical: `${baseUrl}${canonicalPath}` },
+    ...(kwSub ? { keywords: kwSub } : {}),
     robots: noIndex ? { index: false, follow: true } : { index: true, follow: true },
   };
 }
@@ -126,7 +135,11 @@ export default async function PropertiesSegmentPage({
     notFound();
   }
 
-  const filters = parseQueryFilters(query, catalogType, mainArea);
+  const rawFilters = parseQueryFilters(query, catalogType, mainArea);
+  const filters: CatalogFilters = { ...rawFilters };
+  if (parsed.kind === "subArea") {
+    delete filters.subArea;
+  }
   const page = Math.max(1, parseInt(String(query.page || "1"), 10) || 1);
 
   const all = await loadAllProperties();
@@ -140,7 +153,8 @@ export default async function PropertiesSegmentPage({
   const basePath = `/properties/${catalogType}/${mainArea}/${segment}`;
 
   const searchParamsForPagination: Record<string, string> = { ...query } as Record<string, string>;
-  if (filters.subArea?.length) searchParamsForPagination.subArea = filters.subArea.join(",");
+  if (parsed.kind === "subArea") delete searchParamsForPagination.subArea;
+  else if (filters.subArea?.length) searchParamsForPagination.subArea = filters.subArea.join(",");
   if (filters.bedrooms?.length) searchParamsForPagination.bedrooms = filters.bedrooms.join(",");
   if (filters.minDuration) searchParamsForPagination.minDuration = String(filters.minDuration);
   if (filters.maxPrice) searchParamsForPagination.maxPrice = String(filters.maxPrice);
@@ -216,12 +230,20 @@ export default async function PropertiesSegmentPage({
           </div>
         )}
 
+        {areaInfo.image && parsed.kind === "subArea" && (
+          <p className="text-gray-600 mt-4 text-sm max-w-3xl leading-relaxed">
+            {buildIntro(catalogType, mainArea, parsed)}
+          </p>
+        )}
+
         {!areaInfo.image && (
           <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
             <h1 className="text-2xl md:text-4xl font-semibold tracking-tight text-gray-900 mb-2">
               {buildH1(catalogType, mainArea, subArea, parsed)}
             </h1>
-            <p className="text-gray-600 mt-4 text-sm max-w-3xl leading-relaxed">{areaInfo.description}</p>
+            <p className="text-gray-600 mt-4 text-sm max-w-3xl leading-relaxed">
+              {parsed.kind === "subArea" ? buildIntro(catalogType, mainArea, parsed) : areaInfo.description}
+            </p>
           </div>
         )}
 
@@ -232,6 +254,7 @@ export default async function PropertiesSegmentPage({
                 <PropertyFilters
                   defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
                   defaultMainArea={mainArea}
+                  pathSubArea={subArea}
                   allowedMainAreas={allowedMainAreas}
                   allowedSubAreas={allowedSubAreas}
                   allowedBedroomCounts={allowedBedroomCounts}
@@ -272,6 +295,7 @@ export default async function PropertiesSegmentPage({
                 <PropertyFilters
                   defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
                   defaultMainArea={mainArea}
+                  pathSubArea={subArea}
                   allowedMainAreas={allowedMainAreas}
                   allowedSubAreas={allowedSubAreas}
                   allowedBedroomCounts={allowedBedroomCounts}
@@ -302,7 +326,15 @@ export default async function PropertiesSegmentPage({
 
         {total > 0 && (
           <div className="mt-16 max-w-3xl text-gray-600 text-sm leading-relaxed">
-            {buildSeoText(catalogType, mainArea, subArea, parsed)}
+            {parsed.kind === "subArea" && subArea ? (
+              <div className="space-y-4">
+                {ubudSubAreaFooterParagraphs(subArea).map((para, i) => (
+                  <p key={i}>{para}</p>
+                ))}
+              </div>
+            ) : (
+              buildSeoText(catalogType, mainArea, subArea, parsed)
+            )}
           </div>
         )}
       </div>

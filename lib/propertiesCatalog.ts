@@ -6,7 +6,7 @@ import { areas, subAreaNames } from "@/types/areas";
 const PER_PAGE = 25;
 
 export const SEGMENT_TYPES = {
-  subArea: ["gentong", "kedewatan", "keliki", "kemenuh", "lodtunduh", "penestanan", "petulu", "sayan", "sukawati", "tegallalang"] as SubArea[],
+  subArea: ["gentong", "kedewatan", "keliki", "kemenuh", "lodtunduh", "mas", "penestanan", "petulu", "sayan", "sukawati", "tegallalang"] as SubArea[],
   bedroom: ["1-bedroom-villa", "2-bedroom-villa", "3-bedroom-villa", "4-bedroom-villa"] as const,
   payment: ["monthly", "yearly"] as const,
   amenity: [

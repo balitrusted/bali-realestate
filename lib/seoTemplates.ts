@@ -1,6 +1,7 @@
 import { PropertyType, MainArea } from "@/types/property";
 import { areas, subAreaNames } from "@/types/areas";
 import { SubArea } from "@/types/property";
+import { ubudSubAreaIntro } from "@/lib/ubudSubAreaContent";
 
 export type CatalogTypeForSeo = PropertyType | "villas";
 
@@ -58,7 +59,7 @@ export function buildTitle(
     return `${subject} with ${amenityLabel} for ${verb} in ${loc}${sub} | Balitrusted`;
   }
   if (segment?.kind === "subArea") {
-    return `${subject} for ${verb} in ${subAreaNames[subArea!]} | Balitrusted`;
+    return `${subject} for ${verb} in ${subAreaNames[subArea!]}, Ubud | Balitrusted`;
   }
   if (area) {
     return `${subject} for ${verb} in ${loc} | Balitrusted`;
@@ -110,7 +111,7 @@ export function buildH1(
     return `${subject} with ${amenityLabel} for ${verb} in ${loc}${sub}`;
   }
   if (segment?.kind === "subArea") {
-    return `${subject} for ${verb} in ${subAreaNames[subArea!]}`;
+    return `${subject} for ${verb} in ${subAreaNames[subArea!]}, Ubud`;
   }
   if (area) {
     return `${subject} for ${verb} in ${loc}`;
@@ -173,6 +174,9 @@ export function buildIntro(
     const amenityLabel = (segment.value as string).replace(/-/g, " ");
     return `${subject} with ${amenityLabel} in ${loc}.`;
   }
+  if (segment?.kind === "subArea" && area === "ubud") {
+    return ubudSubAreaIntro[segment.value as SubArea];
+  }
   return `Browse our curated selection in ${loc}.`;
 }
 
@@ -225,7 +229,9 @@ export function buildDescription(
     return `Find ${subject} with ${amenityLabel} in ${loc}. ${areaDesc || ""}`;
   }
   if (segment?.kind === "subArea") {
-    return `Discover ${subject} in ${subAreaNames[subArea!]}, ${loc}. ${areaDesc || ""}`;
+    const sa = subArea!;
+    const intro = ubudSubAreaIntro[sa];
+    return `${intro} Find ${subject} for ${type} in ${subAreaNames[sa]}, ${loc}. ${areaDesc || ""}`.trim();
   }
   if (area) {
     return areaDesc || `Find ${subject} in ${loc}. Browse our curated listings.`;
