@@ -26,6 +26,28 @@ export default function AdminArchivePage() {
     fetchArchived();
   }, []);
 
+  const handleDelete = async (property: Property) => {
+    if (
+      !confirm(
+        `Permanently delete "${getPropertyDisplayTitle(property)}"?\n\nThis cannot be undone. Use only if this listing should never appear on the site again.`
+      )
+    )
+      return;
+    try {
+      const res = await fetch(`/api/properties?id=${encodeURIComponent(property.id)}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setProperties((prev) => prev.filter((p) => p.id !== property.id));
+      } else {
+        alert("Failed to delete");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Failed to delete");
+    }
+  };
+
   const handleRestore = async (property: Property) => {
     if (!confirm(`Restore "${getPropertyDisplayTitle(property)}" to the main list?`)) return;
     try {
@@ -69,7 +91,8 @@ export default function AdminArchivePage() {
         </Link>
       </div>
       <p className="text-gray-600 mb-6">
-        Archived villas are hidden from the catalog and main list. Direct links still work; the page shows &quot;Not available&quot; and the notify form.
+        Archived villas are hidden from the catalog and main list. Direct links still work; the page shows &quot;Not available&quot; and the notify form.{" "}
+        <strong className="font-medium text-gray-800">Permanent delete</strong> is only available here (not on the main Properties list).
       </p>
       {properties.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
@@ -118,19 +141,27 @@ export default function AdminArchivePage() {
                   <span className="text-sm text-gray-600">{priceStr}</span>
                   <span className="text-xs text-gray-400 ml-2">Order: {property.order ?? 999}</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 shrink-0">
                   <button
+                    type="button"
                     onClick={() => handleRestore(property)}
-                    className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors text-sm"
+                    className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors text-sm whitespace-nowrap"
                   >
                     Restore
                   </button>
                   <Link
                     href={`/admin/properties/edit/${property.id}`}
-                    className="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors text-sm"
+                    className="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors text-sm text-center whitespace-nowrap"
                   >
                     Edit
                   </Link>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(property)}
+                    className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm whitespace-nowrap"
+                  >
+                    Delete permanently
+                  </button>
                 </div>
               </div>
             );

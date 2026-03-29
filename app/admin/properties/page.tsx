@@ -104,7 +104,7 @@ function SortablePropertyItem({ property }: { property: Property }) {
       )}
 
       <div className="flex-1 min-w-0">
-        <div className="flex items-start gap-2 min-w-0">
+        <div className="flex items-center gap-1.5 min-w-0">
           <h3 className="font-semibold text-gray-900 truncate min-w-0 flex-1">
             {property.internalName?.trim() || getPropertyDisplayTitle(property)}
           </h3>
@@ -112,15 +112,9 @@ function SortablePropertyItem({ property }: { property: Property }) {
             <span
               role="img"
               aria-label="Incomplete amenities: some features still No info"
-              className="mt-0.5 inline-flex shrink-0 items-center gap-1 rounded-md bg-amber-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-900 ring-1 ring-amber-200/90 shadow-sm"
-              title="Some amenities are still “No info” — open Edit to complete"
-            >
-              <span
-                className="h-2 w-2 rounded-sm bg-amber-400 ring-1 ring-amber-300/80"
-                aria-hidden
-              />
-              <span className="hidden sm:inline">Amenities</span>
-            </span>
+              className="inline-flex shrink-0 h-2.5 w-2.5 rounded-sm bg-amber-400 ring-2 ring-amber-200/90 shadow-sm"
+              title="Some amenities still “No info” — open Edit to complete"
+            />
           ) : null}
         </div>
         {property.internalName?.trim() && (
@@ -160,7 +154,7 @@ function SortablePropertyItem({ property }: { property: Property }) {
         <button
           type="button"
           onClick={async () => {
-            if (!confirm("Send this villa to archive?\n\nIt will disappear from the catalog and main list. You can restore it later from the Archive.")) return;
+            if (!confirm("Send this villa to archive?\n\nIt will disappear from the catalog and main list. You can restore or permanently delete it from Archive.")) return;
             try {
               const res = await fetch("/api/properties", {
                 method: "PUT",
@@ -176,22 +170,6 @@ function SortablePropertyItem({ property }: { property: Property }) {
           className="w-full px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors text-sm text-center whitespace-nowrap"
         >
           To archive
-        </button>
-        <button
-          onClick={async () => {
-            if (!confirm("Delete this property permanently?\n\nThis cannot be undone. The villa will be removed from the site.")) return;
-            try {
-              await fetch(`/api/properties?id=${property.id}`, {
-                method: "DELETE",
-              });
-              window.location.reload();
-            } catch (e) {
-              alert("Failed to delete");
-            }
-          }}
-          className="w-full px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm text-center whitespace-nowrap"
-        >
-          Delete
         </button>
       </div>
     </div>
