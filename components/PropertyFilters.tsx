@@ -452,19 +452,20 @@ export default function PropertyFilters({
       : FEATURES_OPTIONS;
   const isRent = action === "Rent";
 
+  /** Chip style aligned with primary actions (rounded-lg, not pill). */
   const pill = (selected: boolean, onClick: () => void, children: React.ReactNode, key?: string) => (
     <button
       key={key}
       type="button"
       onClick={onClick}
       className={`
-        px-3 py-1.5 text-sm font-medium rounded-full border transition-all duration-200 ease-out
-        active:scale-[0.97]
+        px-3 py-2 text-sm font-medium rounded-lg border transition-colors duration-150 ease-out
+        active:scale-[0.98]
         whitespace-nowrap leading-none
         ${
           selected
-            ? "bg-emerald-500 text-white border-emerald-500 shadow-sm hover:bg-emerald-600 hover:shadow"
-            : "bg-gray-100 text-gray-700 border-transparent hover:bg-gray-200 hover:border-gray-200"
+            ? "bg-emerald-600 text-white border-emerald-600 shadow-sm hover:bg-emerald-700"
+            : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400"
         }
       `}
     >
@@ -482,31 +483,31 @@ export default function PropertyFilters({
   // Lighter “card-style” shell rollback: `rounded-lg border border-gray-200 ... shadow-sm`;
   // older rollback: `p-2.5 md:p-3.5`; toggles `h-12 rounded-xl px-4`.
   return (
-    <div className="mb-2 rounded-2xl border-2 border-stone-300 bg-white px-3 py-2 shadow-md shadow-stone-200/50">
+    <div className="mb-2 mx-auto w-full max-w-3xl rounded-xl border border-stone-300 bg-white px-3 py-2.5 shadow-sm">
       {isCollapsed ? (
         <button
           type="button"
           onClick={openFilters}
-          className="w-full rounded-lg border border-emerald-200/90 bg-btn-hatch-emerald px-3 py-2 text-left transition-[transform,border-color,background-color] duration-200 hover:border-emerald-300 active:scale-[0.99] flex items-center justify-between"
+          className="w-full rounded-lg border border-emerald-200/90 bg-btn-hatch-emerald px-3 py-2.5 text-left transition-[transform,border-color,background-color] duration-200 hover:border-emerald-300 active:scale-[0.99] flex items-center justify-between"
           aria-expanded={false}
         >
-          <span className="text-sm font-semibold tracking-tight text-stone-900">{collapsedBase}</span>
-          <span className="text-xs text-stone-500">{activeFilterParamsCount > 0 ? `${activeFilterParamsCount} active` : "tap to open"}</span>
+          <span className="text-sm font-medium text-stone-900">{collapsedBase}</span>
+          <span className="text-xs font-normal text-stone-500">{activeFilterParamsCount > 0 ? `${activeFilterParamsCount} active` : "tap to open"}</span>
         </button>
       ) : (
         <div className="flex flex-col gap-2.5 md:gap-3">
           <button
             type="button"
             onClick={closeFilters}
-            className="w-full rounded-2xl border border-stone-200 px-3 py-2 text-left hover:border-stone-300 active:scale-[0.99] transition-[transform,border-color] duration-200 bg-btn-hatch flex items-center justify-between"
+            className="w-full rounded-lg border border-stone-200 px-3 py-2.5 text-left hover:border-stone-300 hover:bg-stone-50/80 active:scale-[0.99] transition-[transform,border-color,background-color] duration-200 bg-btn-hatch flex items-center justify-between"
             aria-expanded={true}
           >
-            <span className="text-sm font-semibold tracking-tight text-stone-900">Hide filters</span>
-            <span className="text-xs text-stone-500">tap to close</span>
+            <span className="text-sm font-medium text-stone-900">Hide filters</span>
+            <span className="text-xs font-normal text-stone-500">tap to close</span>
           </button>
 
           <p
-            className="px-1 text-sm font-medium text-stone-600"
+            className="px-0.5 text-sm font-normal text-stone-500"
             role="status"
             aria-live="polite"
           >
@@ -642,17 +643,19 @@ export default function PropertyFilters({
 
               {visibleFeatureOptions.length > 0 && (
                 <section className="pt-2 border-t border-gray-100">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Amenities</p>
-                  <div className="divide-y divide-gray-100 rounded-xl border border-gray-100 bg-gray-50/50 p-2 md:p-3">
-                    {visibleFeatureOptions.map(({ key, label }) => (
-                      <ToggleSwitch
-                        key={key}
-                        id={`filter-${String(key)}`}
-                        label={label}
-                        checked={!!filters[key]}
-                        onChange={(checked) => handleFeatureChange(key, checked)}
-                      />
-                    ))}
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Amenities</p>
+                  <div className="rounded-lg border border-gray-200 bg-gray-50/90 px-3 py-2">
+                    <div className="flex flex-wrap gap-x-5 gap-y-2">
+                      {visibleFeatureOptions.map(({ key, label }) => (
+                        <ToggleSwitch
+                          key={key}
+                          id={`filter-${String(key)}`}
+                          label={label}
+                          checked={!!filters[key]}
+                          onChange={(checked) => handleFeatureChange(key, checked)}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </section>
               )}
@@ -663,14 +666,14 @@ export default function PropertyFilters({
             <button
               type="button"
               onClick={scrollToListings}
-              className="flex-1 px-4 py-2.5 text-sm font-semibold rounded-xl bg-emerald-600 text-white border border-emerald-600 hover:bg-emerald-700 active:scale-[0.99] transition-all"
+              className="flex-1 px-4 py-2.5 text-sm font-semibold rounded-lg bg-emerald-600 text-white border border-emerald-600 hover:bg-emerald-700 active:scale-[0.99] transition-colors"
             >
               View results
             </button>
             <button
               type="button"
               onClick={clearFilters}
-              className="flex-1 px-4 py-2.5 text-sm font-medium rounded-xl border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 active:scale-[0.99] transition-all"
+              className="flex-1 px-4 py-2.5 text-sm font-medium rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 active:scale-[0.99] transition-colors"
             >
               Clear filters
             </button>

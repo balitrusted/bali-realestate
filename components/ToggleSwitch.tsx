@@ -15,9 +15,9 @@ export default function ToggleSwitch({
   return (
     <label
       htmlFor={id}
-      className="flex items-center justify-between gap-3 py-2.5 cursor-pointer group"
+      className="inline-flex w-auto max-w-full items-center gap-2.5 py-1.5 cursor-pointer group"
     >
-      <span className="text-sm font-medium text-gray-800 group-hover:text-gray-900">
+      <span className="text-sm font-normal text-gray-700 group-hover:text-gray-900">
         {label}
       </span>
       <button
