@@ -20,12 +20,13 @@ export function generatePropertiesFile(properties: Property[]): string {
     if (prop.internalName != null && prop.internalName !== "") {
       content += `${indent}${indent}internalName: ${JSON.stringify(prop.internalName)},\n`;
     }
-    content += `${indent}${indent}description: ${JSON.stringify(prop.description ?? "")},\n`;
-    content += `${indent}${indent}types: [${(prop.types || []).map(t => JSON.stringify(t)).join(", ")}],\n`;
-    content += `${indent}${indent}mainArea: ${JSON.stringify(prop.mainArea || 'ubud')},\n`;
+    /** Emit types & location before description so parseProperties' first `types:` match is never inside description text. */
+    content += `${indent}${indent}types: [${(prop.types || []).map((t) => JSON.stringify(t)).join(", ")}],\n`;
+    content += `${indent}${indent}mainArea: ${JSON.stringify(prop.mainArea || "ubud")},\n`;
     if (prop.subArea != null) {
       content += `${indent}${indent}subArea: ${JSON.stringify(prop.subArea)},\n`;
     }
+    content += `${indent}${indent}description: ${JSON.stringify(prop.description ?? "")},\n`;
     if (prop.exactLocation != null && prop.exactLocation !== "") {
       content += `${indent}${indent}exactLocation: ${JSON.stringify(prop.exactLocation)},\n`;
     }

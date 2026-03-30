@@ -1,6 +1,23 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { Property, PropertyType } from "@/types/property";
+
+const ALL_PROPERTY_TYPES: PropertyType[] = ["rent", "sale", "land", "business"];
+
+/** Dedupe, keep only valid flags; default rent when empty. */
+function normalizeTypesInput(input: unknown): PropertyType[] {
+  if (!Array.isArray(input)) return ["rent"];
+  const seen = new Set<PropertyType>();
+  const out: PropertyType[] = [];
+  for (const x of input) {
+    if (typeof x !== "string") continue;
+    const t = x as PropertyType;
+    if (!ALL_PROPERTY_TYPES.includes(t) || seen.has(t)) continue;
+    seen.add(t);
+    out.push(t);
+  }
+  return out.length > 0 ? out : ["rent"];
+}
 import { normalizePropertyFeatures } from "@/lib/featureState";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { loadFullPropertyList, persistPropertyList } from "@/lib/propertiesStorage";
@@ -111,16 +128,13 @@ export async function POST(request: Request) {
       };
     }
 
-    // Ensure types array
-    let types: PropertyType[] = [];
-    if (Array.isArray(property.types)) {
-      types = property.types;
-    } else if (property.type) {
-      // Fallback: single type
-      types = [property.type];
-    } else {
-      types = ['rent']; // Default
-    }
+    const types: PropertyType[] = normalizeTypesInput(
+      property.types !== undefined
+        ? property.types
+        : property.type !== undefined
+          ? [property.type]
+          : ["rent"]
+    );
 
     // Ensure mainArea
     const mainArea = property.mainArea || 'ubud';
@@ -206,15 +220,9 @@ export async function PUT(request: Request) {
         };
       }
 
-      // Ensure types array
-      let types: PropertyType[] = [];
-      if (Array.isArray(property.types)) {
-        types = property.types;
-      } else if (property.type) {
-        types = [property.type];
-      } else {
-        types = properties[index].types || ['rent'];
-      }
+      const types: PropertyType[] = normalizeTypesInput(
+        property.types !== undefined ? property.types : properties[index].types
+      );
 
       // Ensure mainArea; subArea is optional and can be cleared (null/undefined) for non-Ubud areas
       const mainArea = property.mainArea || properties[index].mainArea || 'ubud';

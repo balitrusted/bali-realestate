@@ -291,7 +291,7 @@ export function getAvailableAmenityFilterKeys(
 ): string[] {
   const list = filterProperties(properties, filtersSansAmenities, segment ?? undefined);
   return (Object.keys(featureKeyToProp) as string[]).filter((key) =>
-    list.some((p) => p.features[featureKeyToProp[key]] === true)
+    list.some((p) => featureIsYes(p.features[featureKeyToProp[key]]))
   );
 }
 
