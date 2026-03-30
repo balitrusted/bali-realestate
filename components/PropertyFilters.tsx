@@ -459,7 +459,7 @@ export default function PropertyFilters({
       type="button"
       onClick={onClick}
       className={`
-        px-3 py-2 text-sm font-medium rounded-lg border transition-colors duration-150 ease-out
+        px-3 py-2 text-sm font-normal rounded-lg border transition-colors duration-150 ease-out
         active:scale-[0.98]
         whitespace-nowrap leading-none
         ${
@@ -491,7 +491,7 @@ export default function PropertyFilters({
           className="w-full rounded-lg border border-emerald-200/90 bg-btn-hatch-emerald px-3 py-2.5 text-left transition-[transform,border-color,background-color] duration-200 hover:border-emerald-300 active:scale-[0.99] flex items-center justify-between"
           aria-expanded={false}
         >
-          <span className="text-sm font-medium text-stone-900">{collapsedBase}</span>
+          <span className="text-sm font-normal text-stone-800">{collapsedBase}</span>
           <span className="text-xs font-normal text-stone-500">{activeFilterParamsCount > 0 ? `${activeFilterParamsCount} active` : "tap to open"}</span>
         </button>
       ) : (
@@ -502,12 +502,12 @@ export default function PropertyFilters({
             className="w-full rounded-lg border border-stone-200 px-3 py-2.5 text-left hover:border-stone-300 hover:bg-stone-50/80 active:scale-[0.99] transition-[transform,border-color,background-color] duration-200 bg-btn-hatch flex items-center justify-between"
             aria-expanded={true}
           >
-            <span className="text-sm font-medium text-stone-900">Hide filters</span>
+            <span className="text-sm font-normal text-stone-800">Hide filters</span>
             <span className="text-xs font-normal text-stone-500">tap to close</span>
           </button>
 
           <p
-            className="px-0.5 text-sm font-normal text-stone-500"
+            className="px-0.5 text-xs font-normal text-stone-500"
             role="status"
             aria-live="polite"
           >
@@ -517,7 +517,7 @@ export default function PropertyFilters({
           {showVillasSpecificBlocks && (
             <>
               <section className="pt-2 border-t border-gray-100">
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Rent or buy</p>
+                <p className="text-xs font-normal text-stone-500 uppercase tracking-wide mb-1.5">Rent or buy</p>
                 <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
                   {pill(
                     !action,
@@ -536,7 +536,7 @@ export default function PropertyFilters({
 
               {isRent && (
                 <section className="pt-2 border-t border-gray-100">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Payment</p>
+                  <p className="text-xs font-normal text-stone-500 uppercase tracking-wide mb-1.5">Payment</p>
                   <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
                     {pill(!filters.minDuration || (filters.minDuration !== 1 && filters.minDuration !== 12), () => {
                       const newFilters = { ...filters, minDuration: undefined };
@@ -561,7 +561,7 @@ export default function PropertyFilters({
 
           {showSubjectBlock && (
             <section className="pt-2 border-t border-gray-100">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Type</p>
+              <p className="text-xs font-normal text-stone-500 uppercase tracking-wide mb-1.5">Type</p>
               <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
                 {pill(!subject, () => {
                   const newFilters = { ...filters, type: undefined };
@@ -576,7 +576,7 @@ export default function PropertyFilters({
           )}
 
           <section className="pt-2 border-t border-gray-100">
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Area</p>
+            <p className="text-xs font-normal text-stone-500 uppercase tracking-wide mb-1.5">Area</p>
             <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
               {pill(!filters.mainArea, () => {
                 const newFilters = { ...filters, mainArea: undefined, subArea: [] };
@@ -596,7 +596,7 @@ export default function PropertyFilters({
 
           {subAreaOptions.length > 0 && (
             <section className="pt-2 border-t border-gray-100">
-              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Sub-area</p>
+              <p className="text-xs font-normal text-stone-500 uppercase tracking-wide mb-1.5">Sub-area</p>
               <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
                 {pill(filters.subArea.length === 0, () => {
                   const newFilters = { ...filters, subArea: [] };
@@ -618,7 +618,7 @@ export default function PropertyFilters({
           {showVillasSpecificBlocks && (
             <>
               <section className="pt-2 border-t border-gray-100">
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Bedrooms</p>
+                <p className="text-xs font-normal text-stone-500 uppercase tracking-wide mb-1.5">Bedrooms</p>
                 <div className="flex gap-2 overflow-x-auto pb-1 md:overflow-visible md:flex-wrap md:pb-0">
                   {pill(
                     filters.bedrooms.length === 0,
@@ -643,7 +643,7 @@ export default function PropertyFilters({
 
               {visibleFeatureOptions.length > 0 && (
                 <section className="pt-2 border-t border-gray-100">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Amenities</p>
+                  <p className="text-xs font-normal text-stone-500 uppercase tracking-wide mb-1.5">Amenities</p>
                   <div className="divide-y divide-gray-100 rounded-lg border border-gray-200 bg-gray-50/90 p-2 md:p-3">
                     {visibleFeatureOptions.map(({ key, label }) => (
                       <ToggleSwitch
@@ -664,14 +664,14 @@ export default function PropertyFilters({
             <button
               type="button"
               onClick={scrollToListings}
-              className="flex-1 px-4 py-2.5 text-sm font-semibold rounded-lg bg-emerald-600 text-white border border-emerald-600 hover:bg-emerald-700 active:scale-[0.99] transition-colors"
+              className="flex-1 px-4 py-2.5 text-sm font-medium rounded-lg bg-emerald-600 text-white border border-emerald-600 hover:bg-emerald-700 active:scale-[0.99] transition-colors"
             >
               View results
             </button>
             <button
               type="button"
               onClick={clearFilters}
-              className="flex-1 px-4 py-2.5 text-sm font-medium rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 active:scale-[0.99] transition-colors"
+              className="flex-1 px-4 py-2.5 text-sm font-normal rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 active:scale-[0.99] transition-colors"
             >
               Clear filters
             </button>
