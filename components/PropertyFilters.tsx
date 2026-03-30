@@ -643,19 +643,17 @@ export default function PropertyFilters({
 
               {visibleFeatureOptions.length > 0 && (
                 <section className="pt-2 border-t border-gray-100">
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Amenities</p>
-                  <div className="rounded-lg border border-gray-200 bg-gray-50/90 px-3 py-2">
-                    <div className="flex flex-wrap gap-x-5 gap-y-2">
-                      {visibleFeatureOptions.map(({ key, label }) => (
-                        <ToggleSwitch
-                          key={key}
-                          id={`filter-${String(key)}`}
-                          label={label}
-                          checked={!!filters[key]}
-                          onChange={(checked) => handleFeatureChange(key, checked)}
-                        />
-                      ))}
-                    </div>
+                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1.5">Amenities</p>
+                  <div className="divide-y divide-gray-100 rounded-lg border border-gray-200 bg-gray-50/90 p-2 md:p-3">
+                    {visibleFeatureOptions.map(({ key, label }) => (
+                      <ToggleSwitch
+                        key={key}
+                        id={`filter-${String(key)}`}
+                        label={label}
+                        checked={!!filters[key]}
+                        onChange={(checked) => handleFeatureChange(key, checked)}
+                      />
+                    ))}
                   </div>
                 </section>
               )}
