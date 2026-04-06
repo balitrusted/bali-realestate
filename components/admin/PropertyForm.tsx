@@ -25,9 +25,17 @@ import {
   type FeatureTriState,
 } from "@/lib/featureState";
 import { areas, subAreaNames, SUBAREA_UNSPECIFIED_LABEL, isSubAreaOfMainArea } from "@/types/areas";
+import { getMergedAreaInfos } from "@/lib/mainAreaRegistry";
 import { fixVillaNumberDisplay, fixDescriptionDisplay } from "@/lib/propertyUtils";
 import { PriceInput } from "@/components/admin/PriceInput";
 import { ALLOWED_BEDROOM_COUNTS } from "@/lib/catalogBedrooms";
+
+function isLandOnlyListing(types: PropertyType[]): boolean {
+  return (
+    types.includes("land") &&
+    !types.some((t) => t === "rent" || t === "sale" || t === "business")
+  );
+}
 
 interface PropertyFormProps {
   property?: Property;
@@ -156,20 +164,22 @@ function SortableImageItem({ url, onDelete }: { url: string; onDelete: () => voi
 }
 
 export default function PropertyForm({ property, onSave }: PropertyFormProps) {
+  const initialTypes = property?.types || (["rent"] as PropertyType[]);
+  const landOnly = isLandOnlyListing(initialTypes);
   const [formData, setFormData] = useState({
     title: property?.title ?? "",
     villaNumber: fixVillaNumberDisplay(property?.villaNumber) ?? "",
     internalName: property?.internalName ?? "",
     description: fixDescriptionDisplay(property?.description) || "",
-    types: property?.types || ["rent"] as PropertyType[],
-    mainArea: property?.mainArea || "ubud" as MainArea,
+    types: initialTypes,
+    mainArea: property?.mainArea || "ubud",
     subArea: (property?.mainArea && property?.subArea && isSubAreaOfMainArea(property.mainArea, property.subArea))
       ? property.subArea
-      : (areas[property?.mainArea || "ubud"]?.subAreas?.[0] as SubArea | undefined),
+      : (areas[(property?.mainArea || "ubud") as keyof typeof areas]?.subAreas?.[0] as SubArea | undefined),
     exactLocation: property?.exactLocation ?? "",
     displayLocation: property?.displayLocation ?? "",
-    bedrooms: property?.bedrooms || 1,
-    bathrooms: property?.bathrooms || 1,
+    bedrooms: landOnly ? (property?.bedrooms ?? 0) : property?.bedrooms || 1,
+    bathrooms: landOnly ? (property?.bathrooms ?? 1) : property?.bathrooms || 1,
     priceMin: property?.price.min || 0,
     priceMonthly: property?.price.monthly ?? property?.price.min ?? undefined,
     priceYearly: property?.price.yearly ?? undefined,
@@ -181,6 +191,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
     images: property?.images || [] as string[],
     archived: property?.archived ?? false,
     availableFrom: property?.availableFrom ?? null,
+    order: property?.order,
   });
 
   const [newImageUrl, setNewImageUrl] = useState("");
@@ -196,6 +207,8 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const landOnly = isLandOnlyListing(formData.types);
+
     const propertyData = {
       ...formData,
       title: formData.title.trim() || undefined,
@@ -206,6 +219,8 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
       subArea: formData.subArea ?? null,
       exactLocation: formData.exactLocation.trim() || undefined,
       displayLocation: formData.displayLocation.trim() || undefined,
+      bedrooms: landOnly ? 0 : formData.bedrooms,
+      bathrooms: landOnly ? undefined : formData.bathrooms,
       price: {
         currency: formData.priceCurrency,
         min: formData.priceMonthly ?? formData.priceMin ?? 0,
@@ -217,7 +232,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
         min: formData.durationMin,
         max: formData.durationMax || undefined,
       },
-      order: property?.order ?? 999,
+      order: formData.order,
       archived: formData.archived,
       availableFrom: formData.availableFrom || null,
     };
@@ -361,6 +376,32 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
           <p className="text-xs text-gray-500 mt-1">For your reference in the admin panel only. Visitors never see this.</p>
         </div>
 
+        <div className="flex flex-col gap-2 pt-2 border-t border-gray-100 sm:flex-row sm:items-end sm:flex-wrap">
+          <div className="flex-1 min-w-[12rem]">
+            <label className="block text-sm font-medium text-gray-900 mb-1">
+              Sort order (catalog)
+            </label>
+            <input
+              type="number"
+              min={0}
+              step={1}
+              value={formData.order ?? ""}
+              onChange={(e) => {
+                const v = e.target.value;
+                setFormData({
+                  ...formData,
+                  order: v === "" ? undefined : Math.max(0, parseInt(v, 10) || 0),
+                });
+              }}
+              placeholder="auto (append to list)"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Lower numbers appear first. Leave empty for new listings — the server assigns the next position.
+            </p>
+          </div>
+        </div>
+
         <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
           <input
             type="checkbox"
@@ -451,17 +492,19 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
                   type="checkbox"
                   checked={formData.types.includes(type.value as PropertyType)}
                   onChange={(e) => {
-                    if (e.target.checked) {
-                      setFormData({
-                        ...formData,
-                        types: [...formData.types, type.value as PropertyType],
-                      });
-                    } else {
-                      setFormData({
-                        ...formData,
-                        types: formData.types.filter(t => t !== type.value),
-                      });
-                    }
+                    const nextTypes = e.target.checked
+                      ? [...formData.types, type.value as PropertyType]
+                      : formData.types.filter((t) => t !== type.value);
+                    const nextLandOnly = isLandOnlyListing(nextTypes);
+                    setFormData({
+                      ...formData,
+                      types: nextTypes,
+                      ...(nextLandOnly
+                        ? { bedrooms: 0, bathrooms: 1 }
+                        : formData.bedrooms === 0
+                          ? { bedrooms: 1, bathrooms: formData.bathrooms || 1 }
+                          : {}),
+                    });
                   }}
                   className="rounded border-gray-300 text-gray-900 focus:ring-gray-500"
                 />
@@ -479,20 +522,20 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
             <select
               value={formData.mainArea}
               onChange={(e) => {
-                const newMainArea = e.target.value as MainArea;
-                const areaInfo = areas[newMainArea];
+                const newMainArea = e.target.value;
+                const areaInfo = areas[newMainArea as keyof typeof areas];
                 const validSub = areaInfo?.subAreas?.length
-                  ? (isSubAreaOfMainArea(newMainArea, formData.subArea as SubArea) ? formData.subArea : areaInfo.subAreas[0])
+                  ? (isSubAreaOfMainArea(newMainArea as MainArea, formData.subArea as SubArea) ? formData.subArea : areaInfo.subAreas[0])
                   : undefined;
                 setFormData({
                   ...formData,
-                  mainArea: newMainArea,
+                  mainArea: newMainArea as MainArea,
                   subArea: validSub as SubArea | undefined,
                 });
               }}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
             >
-              {Object.values(areas).map((area) => (
+              {getMergedAreaInfos().map((area) => (
                 <option key={area.id} value={area.id}>
                   {area.nameEn}
                 </option>
@@ -509,8 +552,8 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
               onChange={(e) => setFormData({ ...formData, subArea: (e.target.value || undefined) as SubArea | undefined })}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
             >
-              {areas[formData.mainArea]?.subAreas ? (
-                areas[formData.mainArea].subAreas!.map((subArea) => (
+              {areas[formData.mainArea as keyof typeof areas]?.subAreas ? (
+                areas[formData.mainArea as keyof typeof areas].subAreas!.map((subArea) => (
                   <option key={subArea} value={subArea}>
                     {subAreaNames[subArea]}
                   </option>
@@ -551,7 +594,8 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
         </div>
       </div>
 
-      {/* Property Details */}
+      {/* Property Details — not applicable for land-only listings */}
+      {!isLandOnlyListing(formData.types) && (
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-gray-900">Property Details</h2>
         
@@ -585,6 +629,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
           </div>
         </div>
       </div>
+      )}
 
       {/* Price */}
       <div className="space-y-4">

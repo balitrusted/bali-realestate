@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   },
 };
 
-const POPULAR_AREAS = ["ubud", "sanur", "seminyak", "canggu"] as const;
+const POPULAR_AREAS = ["ubud", "sanur", "seminyak", "canggu", "kerobokan"] as const;
 
 /** Seeded shuffle so the homepage selection rotates daily without client randomness. */
 function shuffle<T>(arr: T[], daySeed: number): T[] {

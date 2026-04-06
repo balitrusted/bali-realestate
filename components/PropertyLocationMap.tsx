@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import maplibregl, { Map } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { MainArea, SubArea } from "@/types/property";
+import { AREA_DISTANCE_REFS } from "@/lib/areaDistanceCenters";
 
 type Props = {
   title: string;
@@ -61,13 +62,32 @@ function getUbudEta(mainArea: MainArea, coords: [number, number] | null, subArea
   return `Estimated to Ubud Center: by scooter ${scooterRange} · by car ${carRange}`;
 }
 
+/** Distance ranges to the area reference point (see `lib/areaDistanceCenters.ts`). */
+function getRegionalEta(mainArea: MainArea, coords: [number, number] | null): string | null {
+  if (mainArea === "ubud") return null;
+  const ref = AREA_DISTANCE_REFS[String(mainArea)];
+  if (!ref) return null;
+  if (!coords) {
+    return `Add coordinates above to see estimated time to ${ref.label}.`;
+  }
+  const anchor: [number, number] = [ref.lat, ref.lng];
+  const distKm = haversineKm(coords, anchor);
+  const carBaseMin = distKm / 24 * 60 + 5;
+  const scooterBaseMin = distKm / 30 * 60 + 4;
+  const carRange = toTimeRange(carBaseMin);
+  const scooterRange = toTimeRange(scooterBaseMin);
+  return `Estimated to ${ref.label}: by scooter ${scooterRange} · by car ${carRange}`;
+}
+
 export default function PropertyLocationMap({ title, areaLabel, displayLocation, mainArea, subArea }: Props) {
   const coords = parseLatLng(displayLocation);
   const [styleMode, setStyleMode] = useState<"streets" | "outdoor" | "satellite">("streets");
   const mapTilerKey = process.env.NEXT_PUBLIC_MAPTILER_KEY?.trim();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<Map | null>(null);
-  const eta = getUbudEta(mainArea, coords, subArea);
+  const etaUbud = getUbudEta(mainArea, coords, subArea);
+  const etaRegional = getRegionalEta(mainArea, coords);
+  const eta = etaUbud ?? etaRegional;
 
   useEffect(() => {
     if (!coords || !mapContainerRef.current) return;

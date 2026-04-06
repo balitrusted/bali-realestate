@@ -22,7 +22,15 @@ export type SubArea =
   | 'sayan'
   | 'sukawati'
   | 'tegallalang';
-export type MainArea = 'ubud' | 'canggu' | 'sanur' | 'seminyak' | 'tanah-lot';
+/** Built-in slugs + any extra slug from `data/catalog-structure.json` (admin-managed). */
+export type MainArea =
+  | "ubud"
+  | "canggu"
+  | "sanur"
+  | "seminyak"
+  | "tanah-lot"
+  | "kerobokan"
+  | (string & {});
 
 export interface Property {
   id: string;

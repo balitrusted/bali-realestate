@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 import { areas, subAreaNames } from "@/types/areas";
+import { getMergedAreaInfos } from "@/lib/mainAreaRegistry";
 import { ALLOWED_BEDROOM_COUNTS } from "@/lib/catalogBedrooms";
 import ToggleSwitch from "@/components/ToggleSwitch";
 
@@ -205,10 +206,12 @@ export default function PropertyFilters({
   const showSubjectBlock = !constrainedBase;
 
   const staticSubAreasForMain: SubArea[] =
-    filters.mainArea && areas[filters.mainArea]?.subAreas ? areas[filters.mainArea].subAreas || [] : [];
+    filters.mainArea && areas[filters.mainArea as keyof typeof areas]?.subAreas
+      ? areas[filters.mainArea as keyof typeof areas].subAreas || []
+      : [];
   const subAreaOptions: SubArea[] =
     allowedSubAreas !== undefined ? allowedSubAreas : staticSubAreasForMain;
-  const areaList = Object.values(areas);
+  const areaList = getMergedAreaInfos();
   const areasToShow =
     allowedMainAreas !== undefined
       ? areaList.filter((a) => allowedMainAreas.includes(a.id))

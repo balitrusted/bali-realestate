@@ -11,6 +11,11 @@ import CatalogStructuredData from "@/components/CatalogStructuredData";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 import { areas } from "@/types/areas";
 import {
+  isValidMainAreaSlug,
+  resolveAreaLabel,
+  resolveAreaSeoDescription,
+} from "@/lib/mainAreaRegistry";
+import {
   loadAllProperties,
   loadAllPropertiesForSlugIndex,
   filterProperties,
@@ -59,12 +64,12 @@ export async function generateMetadata({
   const { type, area } = await params;
   const mainArea = area as MainArea;
 
-  if (!VALID_TYPE_SLUGS.includes(type as (typeof VALID_TYPE_SLUGS)[number]) || !areas[mainArea]) {
+  if (!VALID_TYPE_SLUGS.includes(type as (typeof VALID_TYPE_SLUGS)[number]) || !isValidMainAreaSlug(area)) {
     return { title: "Properties Not Found" };
   }
 
   const catalogType = type as CatalogTypeForSeo;
-  const areaInfo = areas[mainArea];
+  const areaInfo = areas[mainArea as keyof typeof areas];
   const typeName = propertyTypeNames[type];
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://balitrusted.com";
   const canonicalPath = `/properties/${type}/${area}`;
@@ -75,8 +80,12 @@ export async function generateMetadata({
 
   return {
     title: { absolute: buildTitle(catalogType, mainArea) },
-    description: buildDescription(catalogType, mainArea) || areaInfo.seoDescription || areaInfo.description,
-    keywords: `${areaInfo.nameEn}, ${typeName}, Bali, real estate, ${type === "rent" ? "rental" : type === "sale" ? "sale" : type === "villas" ? "rent and sale" : "buy"}`,
+    description:
+      buildDescription(catalogType, mainArea) ||
+      areaInfo?.seoDescription ||
+      areaInfo?.description ||
+      resolveAreaSeoDescription(area),
+    keywords: `${areaInfo?.nameEn ?? area}, ${typeName}, Bali, real estate, ${type === "rent" ? "rental" : type === "sale" ? "sale" : type === "villas" ? "rent and sale" : "buy"}`,
     alternates: { canonical: `${baseUrl}${canonicalPath}` },
     robots: noIndex ? { index: false, follow: true } : { index: true, follow: true },
   };
@@ -124,12 +133,12 @@ export default async function PropertiesByTypeAndAreaPage({
 }) {
   const { type, area } = await params;
   const queryParams = await searchParams;
-  if (!VALID_TYPE_SLUGS.includes(type as (typeof VALID_TYPE_SLUGS)[number]) || !areas[area as MainArea]) {
+  if (!VALID_TYPE_SLUGS.includes(type as (typeof VALID_TYPE_SLUGS)[number]) || !isValidMainAreaSlug(area)) {
     notFound();
   }
   const catalogType = type as CatalogTypeForSeo;
   const mainArea = area as MainArea;
-  const areaInfo = areas[mainArea];
+  const areaInfo = areas[mainArea as keyof typeof areas];
   const filters = parseQueryFilters(queryParams, catalogType, mainArea);
   const page = Math.max(1, parseInt(String(queryParams.page || "1"), 10) || 1);
 
@@ -161,10 +170,12 @@ export default async function PropertiesByTypeAndAreaPage({
   if (queryParams.hasWashingMachine === "true") featureTexts.push("with washing machine");
   const featureText = featureTexts.length > 0 ? ` ${featureTexts.join(", ")}` : "";
 
+  const areaDisplayName = areaInfo?.nameEn ?? resolveAreaLabel(area);
+
   const heroBlurb =
     catalogType === "land" || catalogType === "business"
       ? buildIntro(catalogType, mainArea)
-      : areaInfo.description;
+      : areaInfo?.description ?? resolveAreaSeoDescription(area);
 
   const areaFooterParagraphs = buildTypeAreaFooterParagraphs(catalogType, mainArea);
 
@@ -199,15 +210,15 @@ export default async function PropertiesByTypeAndAreaPage({
         <CatalogStructuredData
           properties={sortedProperties}
           baseUrl={baseUrl}
-          listName={`${propertyTypeNames[catalogType]} in ${areaInfo.nameEn}`}
+          listName={`${propertyTypeNames[catalogType]} in ${areaDisplayName}`}
           allPropertiesForSlugs={allForSlugs}
         />
         {/* Area Header with Image */}
-        {areaInfo.image && (
+        {areaInfo?.image && (
           <div className="relative w-full h-64 md:h-96 mb-3 rounded-lg overflow-hidden">
             <Image
               src={areaInfo.image}
-              alt={areaInfo.nameEn}
+              alt={areaDisplayName}
               fill
               className="object-cover"
               sizes="100vw"
@@ -233,7 +244,7 @@ export default async function PropertiesByTypeAndAreaPage({
           </div>
         )}
         
-        {!areaInfo.image && (
+        {!areaInfo?.image && (
           <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
             <h1 className="text-2xl md:text-4xl font-semibold tracking-tight text-gray-900 mb-2">
               {buildH1(catalogType, mainArea)}

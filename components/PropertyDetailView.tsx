@@ -12,6 +12,7 @@ import PropertyDetailSimilar from "@/components/PropertyDetailSimilar";
 import PropertyDetailLeadButtons from "@/components/PropertyDetailLeadButtons";
 import PriceText from "@/components/PriceText";
 import { subAreaNames, areas, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
+import { resolveAreaLabel } from "@/lib/mainAreaRegistry";
 import { getPropertyDisplayTitle, fixDescriptionDisplay, fixVillaNumberDisplay } from "@/lib/propertyUtils";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { formatLocaleDate } from "@/lib/formatDate";
@@ -59,7 +60,12 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
   if (featureIsYes(property.features.pool)) featuresList.push("pool");
   if (featureIsYes(property.features.washingMachine)) featuresList.push("washing machine");
 
-  const areaInfo = property.mainArea ? areas[property.mainArea] : null;
+  const areaInfo = property.mainArea
+    ? areas[property.mainArea as keyof typeof areas]
+    : null;
+  const areaLabel = property.mainArea
+    ? areaInfo?.nameEn ?? resolveAreaLabel(property.mainArea)
+    : "Area";
   const types = property.types ?? [];
   const hasRent = types.includes("rent");
   const hasSale = types.includes("sale");
@@ -70,15 +76,19 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
   const headingTitle = (() => {
     const beds = property.bedrooms ?? 0;
     const bedLabel = beds === 1 ? "1 bed" : `${beds} bed`;
+    const showBeds = !hasLand || hasRent || hasSale || hasBusiness;
     if (property.villaNumber?.trim?.()) {
       const num = fixVillaNumberDisplay(property.villaNumber).trim().replace(/^#/, "");
-      return `Villa #${num} · ${bedLabel} · ${dealLabel}`;
+      return showBeds && beds > 0
+        ? `Villa #${num} · ${bedLabel} · ${dealLabel}`
+        : `Villa #${num} · ${dealLabel}`;
     }
     const explicitTitle = property.title?.trim();
     if (explicitTitle) return `${explicitTitle} · ${dealLabel}`;
-    return `${bedLabel} villa · ${dealLabel}`;
+    if (showBeds && beds > 0) return `${bedLabel} villa · ${dealLabel}`;
+    return `${dealLabel} property`;
   })();
-  const locationLabel = `${areaInfo?.nameEn || "Area"} • ${
+  const locationLabel = `${areaLabel} • ${
     property.subArea != null
       ? subAreaNames[property.subArea] || property.subArea
       : SUBAREA_UNSPECIFIED_LABEL

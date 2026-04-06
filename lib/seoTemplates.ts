@@ -1,6 +1,6 @@
-import { PropertyType, MainArea } from "@/types/property";
+import { PropertyType, MainArea, SubArea } from "@/types/property";
 import { areas, subAreaNames } from "@/types/areas";
-import { SubArea } from "@/types/property";
+import { resolveAreaLabel, resolveAreaSeoDescription } from "@/lib/mainAreaRegistry";
 import { ubudSubAreaIntro } from "@/lib/ubudSubAreaContent";
 
 export type CatalogTypeForSeo = PropertyType | "villas";
@@ -22,7 +22,7 @@ const subjectByType: Record<string, string> = {
   villas: "Villas",
 };
 
-const areaName = (a: MainArea) => areas[a]?.nameEn ?? a;
+const areaName = (a: MainArea) => resolveAreaLabel(String(a));
 
 export function buildTitle(
   type: CatalogTypeForSeo,
@@ -188,14 +188,14 @@ export function buildDescription(
 ): string {
   if (type === "villas" && !segment) {
     if (area) {
-      const areaDesc = areas[area]?.seoDescription ?? areas[area]?.description ?? "";
+      const areaDesc = area ? resolveAreaSeoDescription(String(area)) : "";
       return areaDesc || `Browse villas for rent and sale in ${areaName(area)}. Find your next home or investment.`;
     }
     return "Browse all villas for rent and for sale in Bali—one catalogue, regularly updated. Long-term rentals and purchase options across Ubud, Canggu, Sanur, Seminyak and more.";
   }
   if (type === "land" && !segment) {
     if (area) {
-      const areaDesc = areas[area]?.seoDescription ?? areas[area]?.description ?? "";
+      const areaDesc = area ? resolveAreaSeoDescription(String(area)) : "";
       return (
         areaDesc ||
         `Buy land in ${areaName(area)}. Curated land listings with context on building or holding plots—research land leasehold, land freehold, and land for lease in Bali with your lawyer before you transfer.`
@@ -205,7 +205,7 @@ export function buildDescription(
   }
   if (type === "business" && !segment) {
     if (area) {
-      const areaDesc = areas[area]?.seoDescription ?? areas[area]?.description ?? "";
+      const areaDesc = area ? resolveAreaSeoDescription(String(area)) : "";
       return (
         areaDesc ||
         `Buy a business in ${areaName(area)}. Commercial and hospitality listings in our Bali catalogue—verify licensing, leases, and operations with qualified advisers.`
@@ -215,7 +215,7 @@ export function buildDescription(
   }
   const subject = (subjectByType[type] ?? "villas").toLowerCase();
   const loc = area ? areaName(area) : "Bali";
-  const areaDesc = area ? areas[area]?.seoDescription ?? areas[area]?.description : "";
+  const areaDesc = area ? resolveAreaSeoDescription(String(area)) : "";
 
   if (segment?.kind === "bedroom") {
     return `Find ${segment.value} bedroom ${subject} for ${type} in ${loc}. ${areaDesc || `Browse our curated selection of properties in ${loc}.`}`;

@@ -1,5 +1,6 @@
-// Main areas (regions) for SEO and navigation
-export type MainArea = 'ubud' | 'canggu' | 'sanur' | 'seminyak' | 'tanah-lot';
+import type { MainArea } from "@/types/property";
+
+export type { MainArea };
 
 // Sub-areas (neighborhoods) within main areas
 export type SubArea =
@@ -59,6 +60,16 @@ export const areas: Record<MainArea, AreaInfo> = {
     description: 'Seminyak is a vibrant area known for beach clubs, restaurants, and upscale villas. Popular with expats and long-term visitors.',
     seoTitle: 'Seminyak - Villa Rentals and Sales',
     seoDescription: 'Find villas for rent and sale in Seminyak. Beachside and central options with modern amenities.',
+  },
+  kerobokan: {
+    id: "kerobokan",
+    name: "Kerobokan",
+    nameEn: "Kerobokan",
+    description:
+      "Kerobokan sits between Seminyak and Canggu—residential, practical, and close to both coast and daily services. Popular with long-term renters who want space and value while staying within reach of the south Bali hubs.",
+    seoTitle: "Kerobokan - Villa Rentals and Sales",
+    seoDescription:
+      "Browse villas and land for rent or sale in Kerobokan. Quiet residential pockets with quick access toward Seminyak, Canggu, and Denpasar.",
   },
   'tanah-lot': {
     id: 'tanah-lot',

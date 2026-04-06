@@ -28,6 +28,11 @@ import { buildTitle, buildH1, buildDescription, buildIntro, buildSeoText } from 
 import { ubudSubAreaFooterParagraphs } from "@/lib/ubudSubAreaContent";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import { subAreaNames } from "@/types/areas";
+import {
+  isValidMainAreaSlug,
+  resolveAreaLabel,
+  resolveAreaSeoDescription,
+} from "@/lib/mainAreaRegistry";
 import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 import Image from "next/image";
@@ -52,7 +57,7 @@ export async function generateMetadata({
   const { type, area, segment } = await params;
   const mainArea = area as MainArea;
 
-  if (!VALID_TYPE_SLUGS.includes(type as (typeof VALID_TYPE_SLUGS)[number]) || !areas[mainArea]) {
+  if (!VALID_TYPE_SLUGS.includes(type as (typeof VALID_TYPE_SLUGS)[number]) || !isValidMainAreaSlug(area)) {
     return { title: "Properties Not Found" };
   }
 
@@ -124,7 +129,7 @@ export default async function PropertiesSegmentPage({
 }) {
   const { type, area, segment } = await params;
   const query = await searchParams;
-  if (!VALID_TYPE_SLUGS.includes(type as (typeof VALID_TYPE_SLUGS)[number]) || !areas[area as MainArea]) {
+  if (!VALID_TYPE_SLUGS.includes(type as (typeof VALID_TYPE_SLUGS)[number]) || !isValidMainAreaSlug(area)) {
     notFound();
   }
   const catalogType = type as CatalogTypeForSeo;
@@ -149,7 +154,8 @@ export default async function PropertiesSegmentPage({
   const { items, total, totalPages, page: currentPage } = paginate(filtered, page);
 
   const subArea = parsed.kind === "subArea" ? (parsed.value as SubArea) : undefined;
-  const areaInfo = areas[mainArea];
+  const areaInfo = areas[mainArea as keyof typeof areas];
+  const areaDisplayName = areaInfo?.nameEn ?? resolveAreaLabel(area);
   const basePath = `/properties/${catalogType}/${mainArea}/${segment}`;
 
   const searchParamsForPagination: Record<string, string> = { ...query } as Record<string, string>;
@@ -210,11 +216,11 @@ export default async function PropertiesSegmentPage({
             allPropertiesForSlugs={allForSlugs}
           />
         )}
-        {areaInfo.image && (
+        {areaInfo?.image && (
           <div className="relative w-full h-64 md:h-96 mb-3 rounded-lg overflow-hidden">
             <Image
               src={areaInfo.image}
-              alt={areaInfo.nameEn}
+              alt={areaDisplayName}
               fill
               className="object-cover"
               sizes="100vw"
@@ -230,19 +236,21 @@ export default async function PropertiesSegmentPage({
           </div>
         )}
 
-        {areaInfo.image && parsed.kind === "subArea" && (
+        {areaInfo?.image && parsed.kind === "subArea" && (
           <p className="text-gray-600 mt-4 text-sm max-w-3xl leading-relaxed">
             {buildIntro(catalogType, mainArea, parsed)}
           </p>
         )}
 
-        {!areaInfo.image && (
+        {!areaInfo?.image && (
           <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
             <h1 className="text-2xl md:text-4xl font-semibold tracking-tight text-gray-900 mb-2">
               {buildH1(catalogType, mainArea, subArea, parsed)}
             </h1>
             <p className="text-gray-600 mt-4 text-sm max-w-3xl leading-relaxed">
-              {parsed.kind === "subArea" ? buildIntro(catalogType, mainArea, parsed) : areaInfo.description}
+              {parsed.kind === "subArea"
+                ? buildIntro(catalogType, mainArea, parsed)
+                : areaInfo?.description ?? resolveAreaSeoDescription(area)}
             </p>
           </div>
         )}

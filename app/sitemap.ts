@@ -5,13 +5,14 @@ import { getBlogPosts } from '@/lib/blogData'
 import { loadAllProperties, filterProperties, parseSegment, SEGMENT_TYPES } from '@/lib/propertiesCatalog'
 import { buildPropertySlugIndex } from '@/lib/propertySlug'
 import type { PropertyType, MainArea } from '@/types/property'
+import { getAllMainAreaSlugs } from '@/lib/mainAreaRegistry'
 
 // Use env or localhost so site works before domain is connected
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
 
 type CatalogTypeSlug = PropertyType | 'villas'
 const propertyTypes: CatalogTypeSlug[] = ['rent', 'sale', 'villas', 'land', 'business']
-const mainAreas = ['ubud', 'canggu', 'sanur', 'seminyak', 'tanah-lot'] as const
+const mainAreas = getAllMainAreaSlugs()
 const guideCategories = ['rent', 'buy', 'land', 'legal', 'ubud', 'areas', 'risks']
 
 const segmentSlugs = [

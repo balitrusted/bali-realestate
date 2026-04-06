@@ -22,6 +22,14 @@ import { normalizePropertyFeatures } from "@/lib/featureState";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { loadFullPropertyList, persistPropertyList } from "@/lib/propertiesStorage";
 import { normalizeVillaNumberKey } from "@/lib/propertyUtils";
+import { isValidMainAreaSlug } from "@/lib/mainAreaRegistry";
+
+function isLandOnlyTypes(types: PropertyType[]): boolean {
+  return (
+    types.includes("land") &&
+    !types.some((t) => t === "rent" || t === "sale" || t === "business")
+  );
+}
 
 function findVillaNumberConflict(
   properties: Property[],
@@ -117,10 +125,25 @@ export async function POST(request: Request) {
     // Read current properties
     const properties = await loadFullPropertyList();
 
+    const types: PropertyType[] = normalizeTypesInput(
+      property.types !== undefined
+        ? property.types
+        : property.type !== undefined
+          ? [property.type]
+          : ["rent"]
+    );
+    const landOnly = isLandOnlyTypes(types);
+
     // Validate property data
-    if (!property.villaNumber?.trim() || !property.bedrooms) {
+    if (!property.villaNumber?.trim()) {
       return NextResponse.json(
-        { error: "Missing required fields: villaNumber, bedrooms" },
+        { error: "Missing required fields: villaNumber" },
+        { status: 400 }
+      );
+    }
+    if (!landOnly && (!property.bedrooms || property.bedrooms < 1)) {
+      return NextResponse.json(
+        { error: "Missing required fields: bedrooms" },
         { status: 400 }
       );
     }
@@ -153,16 +176,14 @@ export async function POST(request: Request) {
       };
     }
 
-    const types: PropertyType[] = normalizeTypesInput(
-      property.types !== undefined
-        ? property.types
-        : property.type !== undefined
-          ? [property.type]
-          : ["rent"]
-    );
-
     // Ensure mainArea
-    const mainArea = property.mainArea || 'ubud';
+    const mainArea = property.mainArea || "ubud";
+    if (!isValidMainAreaSlug(mainArea)) {
+      return NextResponse.json(
+        { error: "Invalid or unknown main area. Add the area in Admin → Catalog structure, or use a built-in slug." },
+        { status: 400 }
+      );
+    }
 
     // Add new property
     const newProperty: Property = {
@@ -176,8 +197,8 @@ export async function POST(request: Request) {
       ...(property.subArea != null && { subArea: property.subArea }),
       exactLocation: property.exactLocation?.trim() || undefined,
       displayLocation: property.displayLocation?.trim() || undefined,
-      bedrooms: property.bedrooms,
-      bathrooms: property.bathrooms,
+      bedrooms: landOnly ? 0 : property.bedrooms,
+      bathrooms: landOnly ? undefined : property.bathrooms,
       price: property.price,
       duration: property.duration,
       features: normalizePropertyFeatures(property.features),
@@ -268,10 +289,33 @@ export async function PUT(request: Request) {
       const types: PropertyType[] = normalizeTypesInput(
         property.types !== undefined ? property.types : properties[index].types
       );
+      const landOnly = isLandOnlyTypes(types);
 
       // Ensure mainArea; subArea is optional and can be cleared (null/undefined) for non-Ubud areas
-      const mainArea = property.mainArea || properties[index].mainArea || 'ubud';
-      const subArea = property.hasOwnProperty('subArea') ? (property.subArea || undefined) : properties[index].subArea;
+      const mainArea = property.mainArea || properties[index].mainArea || "ubud";
+      if (!isValidMainAreaSlug(mainArea)) {
+        return NextResponse.json(
+          {
+            error:
+              "Invalid or unknown main area. Add the area in Admin → Catalog structure, or use a built-in slug.",
+          },
+          { status: 400 }
+        );
+      }
+      const subArea = property.hasOwnProperty("subArea")
+        ? property.subArea || undefined
+        : properties[index].subArea;
+
+      const nextBedrooms = landOnly
+        ? 0
+        : property.bedrooms !== undefined
+          ? property.bedrooms
+          : properties[index].bedrooms;
+      const nextBathrooms = landOnly
+        ? undefined
+        : property.bathrooms !== undefined
+          ? property.bathrooms
+          : properties[index].bathrooms;
 
       properties[index] = {
         ...properties[index],
@@ -279,6 +323,8 @@ export async function PUT(request: Request) {
         types: types,
         mainArea: mainArea,
         subArea: subArea,
+        bedrooms: nextBedrooms,
+        bathrooms: nextBathrooms,
         price: property.price,
         features: normalizePropertyFeatures(
           property.features ?? properties[index].features

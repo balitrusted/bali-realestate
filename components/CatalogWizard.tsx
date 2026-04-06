@@ -5,11 +5,12 @@ import { useCallback, useMemo, useState } from "react";
 import { PropertyType, MainArea } from "@/types/property";
 import { areas } from "@/types/areas";
 import { ALLOWED_BEDROOM_COUNTS } from "@/lib/catalogBedrooms";
+import { getAllMainAreaSlugs } from "@/lib/mainAreaRegistry";
 
 type Subject = "villas" | "land" | "business";
 const VALID_TYPES: PropertyType[] = ["rent", "sale", "land", "business"];
 const PATH_TYPE_SLUGS = ["rent", "sale", "land", "business", "villas"] as const;
-const MAIN_AREAS: MainArea[] = ["ubud", "canggu", "sanur", "seminyak", "tanah-lot"];
+const MAIN_AREAS = getAllMainAreaSlugs() as MainArea[];
 const AMENITY_OPTIONS: { key: string; label: string }[] = [
   { key: "hasPool", label: "Pool" },
   { key: "hasBathtub", label: "Bathtub" },

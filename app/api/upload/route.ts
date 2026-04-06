@@ -59,7 +59,7 @@ export async function POST(request: Request) {
       const propertyContext = {
         villaNumber: villaNumber?.trim() || undefined,
         bedrooms: bedrooms != null ? Number(bedrooms) : 1,
-        mainArea: (mainArea?.trim() || "ubud") as "ubud" | "canggu" | "sanur" | "seminyak" | "tanah-lot",
+        mainArea: (mainArea?.trim() || "ubud") as import("@/types/property").MainArea,
         subArea: (subArea?.trim() || undefined) as
           | "gentong"
           | "kedewatan"

@@ -128,8 +128,9 @@ export default function AdminCatalogStructurePage() {
       <h1 className="text-2xl font-bold text-gray-900">Catalog structure</h1>
       <p className="text-sm text-gray-600">
         Parameters and sub-parameters used in the property catalog (SEO slugs). Data is stored in{" "}
-        <code className="rounded bg-gray-200 px-1">data/catalog-structure.json</code>. The site
-        currently uses built-in lists; this file is used for reference and future override.
+        <code className="rounded bg-gray-200 px-1">data/catalog-structure.json</code>.{" "}
+        <strong>Areas</strong> you add here (slug + English name) are merged with built-in regions and
+        appear in the property form main area dropdown and in URL validation — no code deploy needed.
       </p>
 
       {/* Types */}
