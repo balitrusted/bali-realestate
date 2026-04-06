@@ -47,7 +47,10 @@ async function readPropertiesFromBlob(): Promise<Property[] | null> {
     const match = blobs.find((b) => b.pathname === PROPERTIES_CATALOG_BLOB_PATH) ?? blobs[0];
     if (!match) return null;
 
-    const res = await fetch(match.downloadUrl, { cache: "no-store" });
+    const res = await fetch(match.downloadUrl, {
+      cache: "no-store",
+      headers: { Pragma: "no-cache" },
+    });
     if (!res.ok) return null;
 
     const data: unknown = await res.json();

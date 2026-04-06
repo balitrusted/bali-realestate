@@ -27,12 +27,17 @@ import { getPropertyDisplayTitle, fixDescriptionDisplay } from "@/lib/propertyUt
 import { formatLocaleDate } from "@/lib/formatDate";
 import { subAreaNames, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
 
+type MutationListsPayload = {
+  properties?: Property[];
+  archivedProperties?: Property[];
+};
+
 function SortablePropertyItem({
   property,
-  onArchived,
+  applyListsFromMutation,
 }: {
   property: Property;
-  onArchived: () => void | Promise<void>;
+  applyListsFromMutation: (payload: MutationListsPayload) => void | Promise<void>;
 }) {
   const {
     attributes,
@@ -168,8 +173,24 @@ function SortablePropertyItem({
                 cache: "no-store",
                 body: JSON.stringify({ action: "update", property: { ...property, archived: true } }),
               });
-              if (res.ok) await onArchived();
-              else alert("Failed");
+              let payload: MutationListsPayload = {};
+              try {
+                payload = await res.json();
+              } catch {
+                /* ignore */
+              }
+              if (res.ok) {
+                await applyListsFromMutation(payload);
+              } else {
+                const msg =
+                  typeof payload === "object" &&
+                  payload &&
+                  "error" in payload &&
+                  typeof (payload as { error?: string }).error === "string"
+                    ? (payload as { error: string }).error
+                    : "Failed";
+                alert(msg);
+              }
             } catch (e) {
               alert("Failed");
             }
@@ -223,9 +244,20 @@ export default function AdminPropertiesPage() {
     }
   }, [loading, properties, searchParams, router]);
 
+  const applyListsFromMutation = (payload: MutationListsPayload) => {
+    if (Array.isArray(payload.properties)) {
+      setProperties(payload.properties.filter((p) => p?.id));
+      return;
+    }
+    void fetchProperties();
+  };
+
   const fetchProperties = async () => {
     try {
-      const response = await fetch("/api/properties", { cache: "no-store" });
+      const response = await fetch(
+        `/api/properties?_=${Date.now()}`,
+        { cache: "no-store" }
+      );
       const data = await response.json();
       
       // Validate and filter properties
@@ -257,7 +289,7 @@ export default function AdminPropertiesPage() {
       // Update order in backend
       const newOrder = newProperties.map((p) => p.id);
       try {
-        await fetch("/api/properties", {
+        const res = await fetch("/api/properties", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           cache: "no-store",
@@ -266,8 +298,15 @@ export default function AdminPropertiesPage() {
             newOrder,
           }),
         });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && Array.isArray(data.properties)) {
+          setProperties(data.properties.filter((p: Property) => p?.id));
+        } else if (!res.ok) {
+          fetchProperties();
+        }
       } catch (error) {
         console.error("Error updating order:", error);
+        fetchProperties();
       }
     }
   };
@@ -318,7 +357,7 @@ export default function AdminPropertiesPage() {
               <SortablePropertyItem
                 key={property.id}
                 property={property}
-                onArchived={fetchProperties}
+                applyListsFromMutation={applyListsFromMutation}
               />
             ))}
           </SortableContext>

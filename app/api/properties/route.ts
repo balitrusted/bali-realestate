@@ -55,6 +55,73 @@ function findVillaNumberConflict(
   );
 }
 
+function hasValidPrice(p: Property): boolean {
+  return !!(
+    p?.price &&
+    (typeof p.price.min === "number" ||
+      typeof p.price.monthly === "number" ||
+      typeof p.price.yearly === "number" ||
+      typeof p.price.forSale === "number")
+  );
+}
+
+/** Main + archive lists with slugs from an in-memory full list (avoids stale Blob reads after persist). */
+function buildListsWithSlugs(fullList: Property[]): {
+  properties: Array<Property & { publicSlug: string }>;
+  archivedProperties: Array<Property & { publicSlug: string }>;
+} {
+  const valid = fullList.filter((p) => p && p.id && hasValidPrice(p));
+  const slugIdx = buildPropertySlugIndex(valid);
+  const sortFn = (a: Property, b: Property) =>
+    (a.order ?? 999) - (b.order ?? 999);
+  const main = valid
+    .filter((p) => p.archived !== true)
+    .sort(sortFn)
+    .map((p) => ({ ...p, publicSlug: slugIdx.segmentFor(p) }));
+  const archived = valid
+    .filter((p) => p.archived === true)
+    .sort(sortFn)
+    .map((p) => ({ ...p, publicSlug: slugIdx.segmentFor(p) }));
+  return { properties: main, archivedProperties: archived };
+}
+
+function getPropertiesForRequest(
+  fullList: Property[],
+  searchParams: URLSearchParams
+): { properties: Array<Property & { publicSlug: string }> } {
+  const archiveFilter = searchParams.get("archived");
+  const idsParam = searchParams.get("ids");
+
+  let validProperties = fullList.filter((p) => p && p.id && hasValidPrice(p));
+
+  if (archiveFilter === "true") {
+    validProperties = validProperties.filter((p) => p.archived === true);
+  } else if (archiveFilter === "false" || !archiveFilter) {
+    validProperties = validProperties.filter((p) => p.archived !== true);
+  }
+
+  if (idsParam?.trim()) {
+    const ids = idsParam.split(",").map((s) => s.trim()).filter(Boolean);
+    const idSet = new Set(ids);
+    validProperties = validProperties.filter(
+      (p) => p.id != null && idSet.has(String(p.id))
+    );
+  }
+
+  const sorted = [...validProperties].sort(
+    (a, b) => (a.order ?? 999) - (b.order ?? 999)
+  );
+
+  const allForSlugs = fullList.filter((p) => p && p.id && hasValidPrice(p));
+  const slugIdx = buildPropertySlugIndex(allForSlugs);
+  const withSlugs = sorted.map((p) => ({
+    ...p,
+    publicSlug: slugIdx.segmentFor(p),
+  }));
+
+  return { properties: withSlugs };
+}
+
 // Check authentication
 async function checkAuth() {
   const cookieStore = await cookies();
@@ -65,57 +132,8 @@ async function checkAuth() {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const archiveFilter = searchParams.get("archived"); // "true" | "false" | null (all for admin)
-    const idsParam = searchParams.get("ids"); // "1,2,3" for saved/compare lists
-
-    const properties = await loadFullPropertyList();
-
-    // Validate and filter properties
-    let validProperties = properties.filter((p) => {
-      const hasPrice = p?.price && (
-        typeof p.price.min === 'number' ||
-        typeof p.price.monthly === 'number' ||
-        typeof p.price.yearly === 'number' ||
-        typeof p.price.forSale === 'number'
-      );
-      return p && p.id && hasPrice;
-    });
-
-    if (archiveFilter === "true") {
-      validProperties = validProperties.filter((p) => p.archived === true);
-    } else if (archiveFilter === "false" || !archiveFilter) {
-      validProperties = validProperties.filter((p) => p.archived !== true);
-    }
-
-    if (idsParam?.trim()) {
-      const ids = idsParam.split(",").map((s) => s.trim()).filter(Boolean);
-      const idSet = new Set(ids);
-      validProperties = validProperties.filter((p) => p.id != null && idSet.has(String(p.id)));
-    }
-
-    // Sort by order field
-    const sorted = [...validProperties].sort((a, b) => {
-      const orderA = a.order ?? 999;
-      const orderB = b.order ?? 999;
-      return orderA - orderB;
-    });
-
-    const allForSlugs = properties.filter((p) => {
-      const hasPrice = p?.price && (
-        typeof p.price.min === "number" ||
-        typeof p.price.monthly === "number" ||
-        typeof p.price.yearly === "number" ||
-        typeof p.price.forSale === "number"
-      );
-      return p && p.id && hasPrice;
-    });
-    const slugIdx = buildPropertySlugIndex(allForSlugs);
-    const withSlugs = sorted.map((p) => ({
-      ...p,
-      publicSlug: slugIdx.segmentFor(p),
-    }));
-
-    return apiJson({ properties: withSlugs });
+    const fullList = await loadFullPropertyList();
+    return apiJson(getPropertiesForRequest(fullList, searchParams));
   } catch (error) {
     console.error("Error reading properties:", error);
     return apiJson(
@@ -226,7 +244,10 @@ export async function POST(request: Request) {
 
     await persistPropertyList(properties);
 
-    return apiJson({ property: newProperty });
+    return apiJson({
+      property: newProperty,
+      ...buildListsWithSlugs(properties),
+    });
   } catch (error) {
     console.error("Error creating property:", error);
     return apiJson(
@@ -347,7 +368,10 @@ export async function PUT(request: Request) {
 
     await persistPropertyList(properties);
 
-    return apiJson({ success: true });
+    return apiJson({
+      success: true,
+      ...buildListsWithSlugs(properties),
+    });
   } catch (error) {
     console.error("Error updating properties:", error);
     const message =
@@ -376,7 +400,10 @@ export async function DELETE(request: Request) {
 
     await persistPropertyList(properties);
 
-    return apiJson({ success: true });
+    return apiJson({
+      success: true,
+      ...buildListsWithSlugs(properties),
+    });
   } catch (error) {
     console.error("Error deleting property:", error);
     return apiJson(

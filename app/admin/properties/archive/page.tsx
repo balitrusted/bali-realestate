@@ -13,7 +13,7 @@ export default function AdminArchivePage() {
   useEffect(() => {
     const fetchArchived = async () => {
       try {
-        const res = await fetch("/api/properties?archived=true", {
+        const res = await fetch(`/api/properties?archived=true&_=${Date.now()}`, {
           cache: "no-store",
         });
         const data = await res.json();
@@ -40,8 +40,15 @@ export default function AdminArchivePage() {
         method: "DELETE",
         cache: "no-store",
       });
+      const data = await res.json().catch(() => ({}));
       if (res.ok) {
-        setProperties((prev) => prev.filter((p) => p.id !== property.id));
+        if (Array.isArray(data.archivedProperties)) {
+          setProperties(
+            data.archivedProperties.filter((p: Property) => p?.id)
+          );
+        } else {
+          setProperties((prev) => prev.filter((p) => p.id !== property.id));
+        }
       } else {
         alert("Failed to delete");
       }
@@ -63,8 +70,15 @@ export default function AdminArchivePage() {
           property: { ...property, archived: false },
         }),
       });
+      const data = await res.json().catch(() => ({}));
       if (res.ok) {
-        setProperties((prev) => prev.filter((p) => p.id !== property.id));
+        if (Array.isArray(data.archivedProperties)) {
+          setProperties(
+            data.archivedProperties.filter((p: Property) => p?.id)
+          );
+        } else {
+          setProperties((prev) => prev.filter((p) => p.id !== property.id));
+        }
       } else {
         alert("Failed to restore");
       }
