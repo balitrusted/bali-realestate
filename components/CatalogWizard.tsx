@@ -4,7 +4,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import { PropertyType, MainArea } from "@/types/property";
 import { areas } from "@/types/areas";
-import { ALLOWED_BEDROOM_COUNTS } from "@/lib/propertiesCatalog";
+import { ALLOWED_BEDROOM_COUNTS } from "@/lib/catalogBedrooms";
 
 type Subject = "villas" | "land" | "business";
 const VALID_TYPES: PropertyType[] = ["rent", "sale", "land", "business"];

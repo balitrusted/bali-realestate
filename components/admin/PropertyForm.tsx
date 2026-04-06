@@ -27,7 +27,7 @@ import {
 import { areas, subAreaNames, SUBAREA_UNSPECIFIED_LABEL, isSubAreaOfMainArea } from "@/types/areas";
 import { fixVillaNumberDisplay, fixDescriptionDisplay } from "@/lib/propertyUtils";
 import { PriceInput } from "@/components/admin/PriceInput";
-import { ALLOWED_BEDROOM_COUNTS } from "@/lib/propertiesCatalog";
+import { ALLOWED_BEDROOM_COUNTS } from "@/lib/catalogBedrooms";
 
 interface PropertyFormProps {
   property?: Property;

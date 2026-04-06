@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 import { areas, subAreaNames } from "@/types/areas";
-import { ALLOWED_BEDROOM_COUNTS } from "@/lib/propertiesCatalog";
+import { ALLOWED_BEDROOM_COUNTS } from "@/lib/catalogBedrooms";
 import ToggleSwitch from "@/components/ToggleSwitch";
 
 const FILTERS_SESSION_KEY = "balitrusted-property-filters-open";

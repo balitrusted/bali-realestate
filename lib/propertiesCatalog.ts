@@ -2,24 +2,15 @@ import { Property, PropertyType, MainArea, SubArea } from "@/types/property";
 import { featureIsYes } from "@/lib/featureState";
 import { loadFullPropertyList } from "@/lib/propertiesStorage";
 import { areas, subAreaNames } from "@/types/areas";
+import { BEDROOM_SEGMENT_SLUGS } from "@/lib/catalogBedrooms";
 
 const PER_PAGE = 25;
 
-/** Bedroom counts supported in catalog URLs, filters, and admin. */
-export const ALLOWED_BEDROOM_COUNTS = [1, 2, 3, 4, 5, 6, 7, 8] as const;
+export { ALLOWED_BEDROOM_COUNTS } from "@/lib/catalogBedrooms";
 
 export const SEGMENT_TYPES = {
   subArea: ["gentong", "kedewatan", "keliki", "kemenuh", "lodtunduh", "mas", "penestanan", "petulu", "sayan", "sukawati", "tegallalang"] as SubArea[],
-  bedroom: [
-    "1-bedroom-villa",
-    "2-bedroom-villa",
-    "3-bedroom-villa",
-    "4-bedroom-villa",
-    "5-bedroom-villa",
-    "6-bedroom-villa",
-    "7-bedroom-villa",
-    "8-bedroom-villa",
-  ] as const,
+  bedroom: BEDROOM_SEGMENT_SLUGS,
   payment: ["monthly", "yearly"] as const,
   amenity: [
     "pool",
