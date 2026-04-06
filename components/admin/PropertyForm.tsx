@@ -26,6 +26,8 @@ import {
 } from "@/lib/featureState";
 import { areas, subAreaNames, SUBAREA_UNSPECIFIED_LABEL, isSubAreaOfMainArea } from "@/types/areas";
 import { fixVillaNumberDisplay, fixDescriptionDisplay } from "@/lib/propertyUtils";
+import { PriceInput } from "@/components/admin/PriceInput";
+import { ALLOWED_BEDROOM_COUNTS } from "@/lib/propertiesCatalog";
 
 interface PropertyFormProps {
   property?: Property;
@@ -563,7 +565,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
               onChange={(e) => setFormData({ ...formData, bedrooms: parseInt(e.target.value) })}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
             >
-              {[1, 2, 3, 4].map((n) => (
+              {ALLOWED_BEDROOM_COUNTS.map((n) => (
                 <option key={n} value={n}>{n}</option>
               ))}
             </select>
@@ -595,14 +597,12 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
             <label className="block text-sm font-medium text-gray-900 mb-2">
               Price (monthly) *
             </label>
-            <input
-              type="number"
-              min="0"
-              value={formData.priceMonthly ?? formData.priceMin ?? ""}
-              onChange={(e) => {
-                const v = e.target.value ? parseInt(e.target.value) : undefined;
-                setFormData({ ...formData, priceMonthly: v, priceMin: v ?? 0 });
-              }}
+            <PriceInput
+              value={formData.priceMonthly ?? formData.priceMin}
+              onValueChange={(v) =>
+                setFormData({ ...formData, priceMonthly: v, priceMin: v ?? 0 })
+              }
+              currency={formData.priceCurrency}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
             />
           </div>
@@ -610,11 +610,10 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
             <label className="block text-sm font-medium text-gray-900 mb-2">
               Price (yearly)
             </label>
-            <input
-              type="number"
-              min="0"
-              value={formData.priceYearly ?? ""}
-              onChange={(e) => setFormData({ ...formData, priceYearly: e.target.value ? parseInt(e.target.value) : undefined })}
+            <PriceInput
+              value={formData.priceYearly}
+              onValueChange={(v) => setFormData({ ...formData, priceYearly: v })}
+              currency={formData.priceCurrency}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
               placeholder="Optional – shows discount %"
             />
@@ -623,11 +622,10 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
             <label className="block text-sm font-medium text-gray-900 mb-2">
               Price (for sale)
             </label>
-            <input
-              type="number"
-              min="0"
-              value={formData.priceForSale ?? ""}
-              onChange={(e) => setFormData({ ...formData, priceForSale: e.target.value ? parseInt(e.target.value) : undefined })}
+            <PriceInput
+              value={formData.priceForSale}
+              onValueChange={(v) => setFormData({ ...formData, priceForSale: v })}
+              currency={formData.priceCurrency}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
               placeholder="For objects on sale"
             />

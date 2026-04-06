@@ -5,9 +5,21 @@ import { areas, subAreaNames } from "@/types/areas";
 
 const PER_PAGE = 25;
 
+/** Bedroom counts supported in catalog URLs, filters, and admin. */
+export const ALLOWED_BEDROOM_COUNTS = [1, 2, 3, 4, 5, 6, 7, 8] as const;
+
 export const SEGMENT_TYPES = {
   subArea: ["gentong", "kedewatan", "keliki", "kemenuh", "lodtunduh", "mas", "penestanan", "petulu", "sayan", "sukawati", "tegallalang"] as SubArea[],
-  bedroom: ["1-bedroom-villa", "2-bedroom-villa", "3-bedroom-villa", "4-bedroom-villa"] as const,
+  bedroom: [
+    "1-bedroom-villa",
+    "2-bedroom-villa",
+    "3-bedroom-villa",
+    "4-bedroom-villa",
+    "5-bedroom-villa",
+    "6-bedroom-villa",
+    "7-bedroom-villa",
+    "8-bedroom-villa",
+  ] as const,
   payment: ["monthly", "yearly"] as const,
   amenity: [
     "pool",
@@ -45,7 +57,8 @@ export function parseSegment(segment: string, mainArea: MainArea, propertyType: 
     return { kind: "subArea", value: segment };
   }
   if (SEGMENT_TYPES.bedroom.includes(segment as (typeof SEGMENT_TYPES.bedroom)[number])) {
-    const num = parseInt(segment.charAt(0), 10);
+    const m = segment.match(/^(\d+)-bedroom-villa$/);
+    const num = m ? parseInt(m[1], 10) : parseInt(segment.charAt(0), 10);
     return { kind: "bedroom", value: num };
   }
   if (SEGMENT_TYPES.payment.includes(segment as (typeof SEGMENT_TYPES.payment)[number]) && (propertyType === "rent" || propertyType === "villas")) {

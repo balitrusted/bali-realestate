@@ -17,7 +17,14 @@ export default function AddPropertyPage() {
     if (response.ok) {
       router.push("/admin/properties");
     } else {
-      alert("Error saving property");
+      let detail = `HTTP ${response.status}`;
+      try {
+        const data = await response.json();
+        if (data?.error) detail = data.error;
+      } catch {
+        /* ignore */
+      }
+      alert(detail);
     }
   };
 

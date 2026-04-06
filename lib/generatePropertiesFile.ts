@@ -1,6 +1,16 @@
 import { Property } from "@/types/property";
 import { normalizePropertyFeatures, PROPERTY_FEATURE_KEYS } from "@/lib/featureState";
 
+/** IDR/USD amounts are whole rupiah/cents in admin; avoid float tails in generated TS. */
+function toIntegerPrice(n: unknown): number {
+  if (typeof n === "number" && Number.isFinite(n)) return Math.round(n);
+  if (typeof n === "string" && n.trim() !== "") {
+    const v = Number(n);
+    return Number.isFinite(v) ? Math.round(v) : 0;
+  }
+  return 0;
+}
+
 export function generatePropertiesFile(properties: Property[]): string {
   const indent = "  ";
   let content = `import { Property } from "@/types/property";\n\n`;
@@ -39,16 +49,18 @@ export function generatePropertiesFile(properties: Property[]): string {
     }
     content += `${indent}${indent}price: {\n`;
     content += `${indent}${indent}${indent}currency: ${JSON.stringify(prop.price?.currency || "IDR")},\n`;
-    const minVal = prop.price?.min ?? prop.price?.monthly ?? prop.price?.forSale ?? 0;
+    const minVal = toIntegerPrice(
+      prop.price?.min ?? prop.price?.monthly ?? prop.price?.forSale ?? 0
+    );
     content += `${indent}${indent}${indent}min: ${minVal},\n`;
     if (prop.price?.monthly != null) {
-      content += `${indent}${indent}${indent}monthly: ${prop.price.monthly},\n`;
+      content += `${indent}${indent}${indent}monthly: ${toIntegerPrice(prop.price.monthly)},\n`;
     }
     if (prop.price?.yearly != null) {
-      content += `${indent}${indent}${indent}yearly: ${prop.price.yearly},\n`;
+      content += `${indent}${indent}${indent}yearly: ${toIntegerPrice(prop.price.yearly)},\n`;
     }
     if (prop.price?.forSale != null) {
-      content += `${indent}${indent}${indent}forSale: ${prop.price.forSale},\n`;
+      content += `${indent}${indent}${indent}forSale: ${toIntegerPrice(prop.price.forSale)},\n`;
     }
     content += `${indent}${indent}},\n`;
     if (prop.duration) {

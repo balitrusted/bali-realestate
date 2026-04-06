@@ -30,6 +30,13 @@ export function fixVillaNumberDisplay(text: string | undefined): string {
   return text.replace(new RegExp(REPLACEMENT_CHAR, "g"), "A");
 }
 
+/** Normalize villa number for uniqueness checks (trim, encoding fix, case-insensitive). */
+export function normalizeVillaNumberKey(v: string | undefined): string {
+  const s = (v ?? "").trim();
+  if (!s) return "";
+  return fixVillaNumberDisplay(s).toLowerCase();
+}
+
 /**
  * Display title for a property. If title is set — use it. Otherwise build short line from params.
  * Examples: "Villa #50 · 2 bed · Lodtunduh" or "2-bed villa · Lodtunduh".

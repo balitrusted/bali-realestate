@@ -15,7 +15,7 @@ export const blogPosts: BlogPost[] = [
 <p>Most villas in Ubud are priced based on a combination of location, privacy, design, and how “finished” the living experience feels. Two villas with the same number of bedrooms can fall into completely different price categories depending on whether they are surrounded by jungle, located near a busy road, or tucked away in a quiet residential pocket.</p>
 <p>This is why understanding the general price structure is more useful than focusing on specific listings too early.</p>
 <h2>How bedroom count shifts the range</h2>
-<p>For a one-bedroom villa, the monthly cost usually starts somewhere in the lower range and gradually increases depending on comfort, design, and location. Simpler villas in areas like Mas or <a href="/properties/rent/ubud/gentong">Gentong</a> can feel very reasonable, while more refined spaces closer to central Ubud or with better views naturally move higher.</p>
+<p>For a one-bedroom villa, the monthly cost usually starts somewhere in the lower range and gradually increases depending on comfort, design, and location. Simpler villas in areas like <a href="/properties/rent/ubud/mas">Mas</a> or <a href="/properties/rent/ubud/gentong">Gentong</a> can feel very reasonable, while more refined spaces closer to central Ubud or with better views naturally move higher.</p>
 <p>Two-bedroom villas introduce another layer of flexibility. They are often chosen by couples who need a separate workspace or by people sharing a space. In this category, the variation becomes even more noticeable — not only because of size, but because of layout, land size, and overall atmosphere.</p>
 <p>Larger villas or those designed with a stronger architectural identity tend to move into a more premium range, especially if they offer open views, complete privacy, or a more curated living environment.</p>
 <h2>Monthly vs yearly rental</h2>
@@ -25,7 +25,7 @@ export const blogPosts: BlogPost[] = [
 <p>If you want to get a real sense of what is currently available across different price levels, it is useful to browse the current listings rather than relying only on general estimates: <a href="/properties/rent/ubud">Ubud rental villas on Balitrusted</a>.</p>
 <h2>How area shapes the price</h2>
 <p>The area you choose also has a direct impact on pricing.</p>
-<p>More central or well-known areas like <a href="/properties/rent/ubud/penestanan">Penestanan</a> tend to sit in a slightly higher range due to their balance of convenience and atmosphere. <a href="/properties/rent/ubud/gentong">Gentong</a> and Mas often offer better value, especially for longer stays, while still providing a strong connection to Ubud’s lifestyle. <a href="/properties/rent/ubud/lodtunduh">Lodtunduh</a>, with its larger plots and more spacious villas, can vary depending on the level of privacy and design.</p>
+<p>More central or well-known areas like <a href="/properties/rent/ubud/penestanan">Penestanan</a> tend to sit in a slightly higher range due to their balance of convenience and atmosphere. <a href="/properties/rent/ubud/gentong">Gentong</a> and <a href="/properties/rent/ubud/mas">Mas</a> often offer better value, especially for longer stays, while still providing a strong connection to Ubud’s lifestyle. <a href="/properties/rent/ubud/lodtunduh">Lodtunduh</a>, with its larger plots and more spacious villas, can vary depending on the level of privacy and design.</p>
 <p>These differences are subtle, but over time they shape how comfortable a place feels — and whether the price feels justified.</p>
 <h2>Hidden costs and day-to-day reality</h2>
 <p>There are also hidden aspects of cost that are easy to overlook at first.</p>
@@ -42,7 +42,7 @@ export const blogPosts: BlogPost[] = [
     published: true,
     publishedAt: "2026-03-27T12:00:00.000Z",
     createdAt: "2026-03-27T12:00:00.000Z",
-    updatedAt: "2026-03-27T12:00:00.000Z",
+    updatedAt: "2026-03-31T12:00:00.000Z",
     seoTitle: "How Much Does It Cost to Rent a Villa in Ubud? A Practical Rent Guide",
     seoDescription:
       "Understand Ubud villa rent ranges: what moves price by bedrooms and area, monthly vs yearly savings, hidden costs, and how to browse real listings.",

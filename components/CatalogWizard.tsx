@@ -4,12 +4,12 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import { PropertyType, MainArea } from "@/types/property";
 import { areas } from "@/types/areas";
+import { ALLOWED_BEDROOM_COUNTS } from "@/lib/propertiesCatalog";
 
 type Subject = "villas" | "land" | "business";
 const VALID_TYPES: PropertyType[] = ["rent", "sale", "land", "business"];
 const PATH_TYPE_SLUGS = ["rent", "sale", "land", "business", "villas"] as const;
 const MAIN_AREAS: MainArea[] = ["ubud", "canggu", "sanur", "seminyak", "tanah-lot"];
-const BEDROOMS = [1, 2, 3, 4] as const;
 const AMENITY_OPTIONS: { key: string; label: string }[] = [
   { key: "hasPool", label: "Pool" },
   { key: "hasBathtub", label: "Bathtub" },
@@ -258,7 +258,7 @@ export default function CatalogWizard({ availableMainAreas }: CatalogWizardProps
           </button>
         </div>
         <div className="flex flex-wrap gap-2">
-          {BEDROOMS.map((b) => (
+          {ALLOWED_BEDROOM_COUNTS.map((b) => (
             <button
               key={b}
               type="button"

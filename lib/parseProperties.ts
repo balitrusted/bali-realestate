@@ -130,6 +130,53 @@ export function parsePropertiesFile(content: string): Property[] {
   }
 }
 
+/** Slice `    price: { ... }` so price regexes never match text inside `description`. */
+function extractTopLevelPriceBlock(objStr: string): string | null {
+  const marker = "    price: {";
+  const start = objStr.indexOf(marker);
+  if (start === -1) return null;
+  const openIdx = start + marker.length - 1;
+  let depth = 0;
+  let inStr = false;
+  let strCh = "";
+  let esc = false;
+  for (let i = openIdx; i < objStr.length; i++) {
+    const c = objStr[i];
+    if (inStr) {
+      if (esc) {
+        esc = false;
+        continue;
+      }
+      if (c === "\\") {
+        esc = true;
+        continue;
+      }
+      if (c === strCh) inStr = false;
+      continue;
+    }
+    if (c === '"' || c === "'" || c === "`") {
+      inStr = true;
+      strCh = c;
+      continue;
+    }
+    if (c === "{") depth++;
+    else if (c === "}") {
+      depth--;
+      if (depth === 0) return objStr.slice(start, i + 1);
+    }
+  }
+  return null;
+}
+
+const PRICE_NUM_RE = "([0-9]+(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?)";
+
+function parseRoundedPriceInt(m: RegExpMatchArray | null): number | undefined {
+  if (!m) return undefined;
+  const v = parseFloat(m[1]);
+  if (!Number.isFinite(v)) return undefined;
+  return Math.round(v);
+}
+
 // Parse a single property object from string - improved regex-based version
 function parsePropertyObject(objStr: string): Property | null {
   try {
@@ -266,19 +313,32 @@ function parsePropertyObject(objStr: string): Property | null {
     const bathroomsMatch = objStr.match(/bathrooms:\s*(\d+)/);
     if (bathroomsMatch) obj.bathrooms = parseInt(bathroomsMatch[1]);
     
-    // Extract price (currency, min/max, monthly/yearly)
-    const priceCurrencyMatch = objStr.match(/currency:\s*"([^"]+)"/);
-    const priceMinMatch = objStr.match(/price:\s*\{[\s\S]*?min:\s*(\d+)/);
-    const priceMonthlyMatch = objStr.match(/monthly:\s*(\d+)/);
-    const priceYearlyMatch = objStr.match(/yearly:\s*(\d+)/);
-    const priceForSaleMatch = objStr.match(/forSale:\s*(\d+)/);
+    // Extract price only from the real `price: { }` block (not from description text)
+    const priceBlock = extractTopLevelPriceBlock(objStr) ?? objStr;
+    const priceCurrencyMatch = priceBlock.match(/currency:\s*"([^"]+)"/);
+    const priceMinMatch = priceBlock.match(
+      new RegExp(`min:\\s*${PRICE_NUM_RE}`)
+    );
+    const priceMonthlyMatch = priceBlock.match(
+      new RegExp(`monthly:\\s*${PRICE_NUM_RE}`)
+    );
+    const priceYearlyMatch = priceBlock.match(
+      new RegExp(`yearly:\\s*${PRICE_NUM_RE}`)
+    );
+    const priceForSaleMatch = priceBlock.match(
+      new RegExp(`forSale:\\s*${PRICE_NUM_RE}`)
+    );
     obj.price = {
       currency: priceCurrencyMatch ? priceCurrencyMatch[1] : "IDR",
     };
-    if (priceMinMatch) obj.price.min = parseInt(priceMinMatch[1]);
-    if (priceMonthlyMatch) obj.price.monthly = parseInt(priceMonthlyMatch[1]);
-    if (priceYearlyMatch) obj.price.yearly = parseInt(priceYearlyMatch[1]);
-    if (priceForSaleMatch) obj.price.forSale = parseInt(priceForSaleMatch[1]);
+    const minParsed = parseRoundedPriceInt(priceMinMatch);
+    if (minParsed !== undefined) obj.price.min = minParsed;
+    const monthlyParsed = parseRoundedPriceInt(priceMonthlyMatch);
+    if (monthlyParsed !== undefined) obj.price.monthly = monthlyParsed;
+    const yearlyParsed = parseRoundedPriceInt(priceYearlyMatch);
+    if (yearlyParsed !== undefined) obj.price.yearly = yearlyParsed;
+    const forSaleParsed = parseRoundedPriceInt(priceForSaleMatch);
+    if (forSaleParsed !== undefined) obj.price.forSale = forSaleParsed;
     
     // Extract duration
     const durationMinMatch = objStr.match(/duration:\s*\{[\s\S]*?min:\s*(\d+)/);

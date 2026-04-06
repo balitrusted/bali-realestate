@@ -21,6 +21,19 @@ function normalizeTypesInput(input: unknown): PropertyType[] {
 import { normalizePropertyFeatures } from "@/lib/featureState";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { loadFullPropertyList, persistPropertyList } from "@/lib/propertiesStorage";
+import { normalizeVillaNumberKey } from "@/lib/propertyUtils";
+
+function findVillaNumberConflict(
+  properties: Property[],
+  key: string,
+  excludeId?: string
+): Property | undefined {
+  if (!key) return undefined;
+  return properties.find(
+    (p) =>
+      p.id !== excludeId && normalizeVillaNumberKey(p.villaNumber) === key
+  );
+}
 
 // Check authentication
 async function checkAuth() {
@@ -109,6 +122,18 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: "Missing required fields: villaNumber, bedrooms" },
         { status: 400 }
+      );
+    }
+
+    const villaKey = normalizeVillaNumberKey(property.villaNumber);
+    const duplicate = findVillaNumberConflict(properties, villaKey);
+    if (duplicate) {
+      return NextResponse.json(
+        {
+          error:
+            "This villa number is already used by another listing. Choose a different number.",
+        },
+        { status: 409 }
       );
     }
 
@@ -204,6 +229,26 @@ export async function PUT(request: Request) {
           { status: 404 }
         );
       }
+
+      const merged = { ...properties[index], ...property } as Property;
+      const nextVillaKey = normalizeVillaNumberKey(merged.villaNumber);
+      if (nextVillaKey) {
+        const duplicate = findVillaNumberConflict(
+          properties,
+          nextVillaKey,
+          String(merged.id)
+        );
+        if (duplicate) {
+          return NextResponse.json(
+            {
+              error:
+                "This villa number is already used by another listing. Choose a different number.",
+            },
+            { status: 409 }
+          );
+        }
+      }
+
       // Ensure price structure (supports min/max or monthly/yearly)
       const hasAnyPrice = property.price && (
         typeof property.price.min === 'number' ||

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 import { areas, subAreaNames } from "@/types/areas";
+import { ALLOWED_BEDROOM_COUNTS } from "@/lib/propertiesCatalog";
 import ToggleSwitch from "@/components/ToggleSwitch";
 
 const FILTERS_SESSION_KEY = "balitrusted-property-filters-open";
@@ -73,7 +74,7 @@ function buildFiltersFromSearchParams(
           .get("bedrooms")!
           .split(",")
           .map((v) => Number(v))
-          .filter((n) => [1, 2, 3, 4].includes(n))
+          .filter((n) => (ALLOWED_BEDROOM_COUNTS as readonly number[]).includes(n))
       : ([] as number[]),
     type: defaultType || (searchParams.get("type") as PropertyType) || undefined,
     hasBathtub: searchParams.get("hasBathtub") === "true",
@@ -342,11 +343,10 @@ export default function PropertyFilters({
     updateURL(newFilters);
   };
 
-  const BEDROOMS_OPTIONS = [1, 2, 3, 4] as const;
   const bedroomOptions =
     allowedBedroomCounts !== undefined
-      ? BEDROOMS_OPTIONS.filter((b) => allowedBedroomCounts.includes(b))
-      : [...BEDROOMS_OPTIONS];
+      ? ALLOWED_BEDROOM_COUNTS.filter((b) => allowedBedroomCounts.includes(b))
+      : [...ALLOWED_BEDROOM_COUNTS];
   const handleBedroomChange = (beds: number, checked: boolean) => {
     const newBedrooms = checked
       ? (() => {
