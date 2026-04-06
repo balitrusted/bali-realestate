@@ -24,6 +24,18 @@ import { loadFullPropertyList, persistPropertyList } from "@/lib/propertiesStora
 import { normalizeVillaNumberKey } from "@/lib/propertyUtils";
 import { isValidMainAreaSlug } from "@/lib/mainAreaRegistry";
 
+/** Admin and catalog must never serve stale JSON from edge/browser caches. */
+export const dynamic = "force-dynamic";
+
+function apiJson(data: unknown, init?: ResponseInit) {
+  const headers = new Headers(init?.headers);
+  headers.set(
+    "Cache-Control",
+    "private, no-store, no-cache, must-revalidate, max-age=0"
+  );
+  return NextResponse.json(data, { ...init, headers });
+}
+
 function isLandOnlyTypes(types: PropertyType[]): boolean {
   return (
     types.includes("land") &&
@@ -103,10 +115,10 @@ export async function GET(request: Request) {
       publicSlug: slugIdx.segmentFor(p),
     }));
 
-    return NextResponse.json({ properties: withSlugs });
+    return apiJson({ properties: withSlugs });
   } catch (error) {
     console.error("Error reading properties:", error);
-    return NextResponse.json(
+    return apiJson(
       { error: "Failed to read properties", properties: [] },
       { status: 500 }
     );
@@ -116,7 +128,7 @@ export async function GET(request: Request) {
 // POST - Create new property
 export async function POST(request: Request) {
   if (!(await checkAuth())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return apiJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -136,13 +148,13 @@ export async function POST(request: Request) {
 
     // Validate property data
     if (!property.villaNumber?.trim()) {
-      return NextResponse.json(
+      return apiJson(
         { error: "Missing required fields: villaNumber" },
         { status: 400 }
       );
     }
     if (!landOnly && (!property.bedrooms || property.bedrooms < 1)) {
-      return NextResponse.json(
+      return apiJson(
         { error: "Missing required fields: bedrooms" },
         { status: 400 }
       );
@@ -151,7 +163,7 @@ export async function POST(request: Request) {
     const villaKey = normalizeVillaNumberKey(property.villaNumber);
     const duplicate = findVillaNumberConflict(properties, villaKey);
     if (duplicate) {
-      return NextResponse.json(
+      return apiJson(
         {
           error:
             "This villa number is already used by another listing. Choose a different number.",
@@ -179,7 +191,7 @@ export async function POST(request: Request) {
     // Ensure mainArea
     const mainArea = property.mainArea || "ubud";
     if (!isValidMainAreaSlug(mainArea)) {
-      return NextResponse.json(
+      return apiJson(
         { error: "Invalid or unknown main area. Add the area in Admin → Catalog structure, or use a built-in slug." },
         { status: 400 }
       );
@@ -214,10 +226,10 @@ export async function POST(request: Request) {
 
     await persistPropertyList(properties);
 
-    return NextResponse.json({ property: newProperty });
+    return apiJson({ property: newProperty });
   } catch (error) {
     console.error("Error creating property:", error);
-    return NextResponse.json(
+    return apiJson(
       { error: "Failed to create property" },
       { status: 500 }
     );
@@ -227,7 +239,7 @@ export async function POST(request: Request) {
 // PUT - Update property or reorder
 export async function PUT(request: Request) {
   if (!(await checkAuth())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return apiJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -245,7 +257,7 @@ export async function PUT(request: Request) {
       // Update single property
       const index = properties.findIndex((p) => p.id === property.id);
       if (index === -1) {
-        return NextResponse.json(
+        return apiJson(
           { error: `Property not found in data file: ${String(property.id)}` },
           { status: 404 }
         );
@@ -260,7 +272,7 @@ export async function PUT(request: Request) {
           String(merged.id)
         );
         if (duplicate) {
-          return NextResponse.json(
+          return apiJson(
             {
               error:
                 "This villa number is already used by another listing. Choose a different number.",
@@ -294,7 +306,7 @@ export async function PUT(request: Request) {
       // Ensure mainArea; subArea is optional and can be cleared (null/undefined) for non-Ubud areas
       const mainArea = property.mainArea || properties[index].mainArea || "ubud";
       if (!isValidMainAreaSlug(mainArea)) {
-        return NextResponse.json(
+        return apiJson(
           {
             error:
               "Invalid or unknown main area. Add the area in Admin → Catalog structure, or use a built-in slug.",
@@ -335,19 +347,19 @@ export async function PUT(request: Request) {
 
     await persistPropertyList(properties);
 
-    return NextResponse.json({ success: true });
+    return apiJson({ success: true });
   } catch (error) {
     console.error("Error updating properties:", error);
     const message =
       error instanceof Error ? error.message : "Failed to update properties";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return apiJson({ error: message }, { status: 500 });
   }
 }
 
 // DELETE - Delete property
 export async function DELETE(request: Request) {
   if (!(await checkAuth())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return apiJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -355,7 +367,7 @@ export async function DELETE(request: Request) {
     const id = searchParams.get("id");
 
     if (!id) {
-      return NextResponse.json({ error: "ID required" }, { status: 400 });
+      return apiJson({ error: "ID required" }, { status: 400 });
     }
 
     let properties = await loadFullPropertyList();
@@ -364,10 +376,10 @@ export async function DELETE(request: Request) {
 
     await persistPropertyList(properties);
 
-    return NextResponse.json({ success: true });
+    return apiJson({ success: true });
   } catch (error) {
     console.error("Error deleting property:", error);
-    return NextResponse.json(
+    return apiJson(
       { error: "Failed to delete property" },
       { status: 500 }
     );

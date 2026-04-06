@@ -13,7 +13,9 @@ export default function AdminArchivePage() {
   useEffect(() => {
     const fetchArchived = async () => {
       try {
-        const res = await fetch("/api/properties?archived=true");
+        const res = await fetch("/api/properties?archived=true", {
+          cache: "no-store",
+        });
         const data = await res.json();
         setProperties((data.properties || []).filter((p: Property) => p?.id));
       } catch (e) {
@@ -36,6 +38,7 @@ export default function AdminArchivePage() {
     try {
       const res = await fetch(`/api/properties?id=${encodeURIComponent(property.id)}`, {
         method: "DELETE",
+        cache: "no-store",
       });
       if (res.ok) {
         setProperties((prev) => prev.filter((p) => p.id !== property.id));
@@ -54,6 +57,7 @@ export default function AdminArchivePage() {
       const res = await fetch("/api/properties", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
+        cache: "no-store",
         body: JSON.stringify({
           action: "update",
           property: { ...property, archived: false },

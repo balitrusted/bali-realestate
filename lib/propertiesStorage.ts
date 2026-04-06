@@ -85,7 +85,7 @@ export async function persistPropertyList(properties: Property[]): Promise<void>
       access: "public",
       addRandomSuffix: false,
       contentType: "application/json",
-      cacheControlMaxAge: 120,
+      cacheControlMaxAge: 0,
     });
     return;
   }

@@ -13,7 +13,7 @@ export default function EditPropertyPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/properties`)
+    fetch(`/api/properties`, { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         let prop = data.properties.find((p: Property) => p.id === id);
@@ -30,6 +30,7 @@ export default function EditPropertyPage() {
     const response = await fetch("/api/properties", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
+      cache: "no-store",
       body: JSON.stringify({
         action: "update",
         property: { ...updatedProperty, id: property?.id ?? id },
@@ -37,6 +38,7 @@ export default function EditPropertyPage() {
     });
 
     if (response.ok) {
+      router.refresh();
       const targetId = property?.id ?? id;
       router.push(targetId ? `/admin/properties?scrollTo=${encodeURIComponent(targetId)}` : "/admin/properties");
     } else {

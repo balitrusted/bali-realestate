@@ -33,7 +33,7 @@ export default function SavedPage() {
       return;
     }
     setLoading(true);
-    fetch(`/api/properties?ids=${allIds.join(",")}`)
+    fetch(`/api/properties?ids=${allIds.join(",")}`, { cache: "no-store" })
       .then((res) => res.json())
       .then((data: { properties?: ListedProperty[] }) => {
         const list = (data.properties ?? []).filter((p): p is ListedProperty => Boolean(p.publicSlug));

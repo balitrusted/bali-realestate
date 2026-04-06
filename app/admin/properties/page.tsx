@@ -27,7 +27,13 @@ import { getPropertyDisplayTitle, fixDescriptionDisplay } from "@/lib/propertyUt
 import { formatLocaleDate } from "@/lib/formatDate";
 import { subAreaNames, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
 
-function SortablePropertyItem({ property }: { property: Property }) {
+function SortablePropertyItem({
+  property,
+  onArchived,
+}: {
+  property: Property;
+  onArchived: () => void | Promise<void>;
+}) {
   const {
     attributes,
     listeners,
@@ -159,9 +165,10 @@ function SortablePropertyItem({ property }: { property: Property }) {
               const res = await fetch("/api/properties", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
+                cache: "no-store",
                 body: JSON.stringify({ action: "update", property: { ...property, archived: true } }),
               });
-              if (res.ok) window.location.reload();
+              if (res.ok) await onArchived();
               else alert("Failed");
             } catch (e) {
               alert("Failed");
@@ -218,7 +225,7 @@ export default function AdminPropertiesPage() {
 
   const fetchProperties = async () => {
     try {
-      const response = await fetch("/api/properties");
+      const response = await fetch("/api/properties", { cache: "no-store" });
       const data = await response.json();
       
       // Validate and filter properties
@@ -253,6 +260,7 @@ export default function AdminPropertiesPage() {
         await fetch("/api/properties", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
+          cache: "no-store",
           body: JSON.stringify({
             action: "reorder",
             newOrder,
@@ -307,9 +315,10 @@ export default function AdminPropertiesPage() {
             strategy={verticalListSortingStrategy}
           >
             {properties.map((property) => (
-              <SortablePropertyItem 
-                key={property.id} 
-                property={property} 
+              <SortablePropertyItem
+                key={property.id}
+                property={property}
+                onArchived={fetchProperties}
               />
             ))}
           </SortableContext>

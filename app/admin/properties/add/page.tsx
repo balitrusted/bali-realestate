@@ -11,6 +11,7 @@ export default function AddPropertyPage() {
     const response = await fetch("/api/properties", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      cache: "no-store",
       body: JSON.stringify(property),
     });
 
