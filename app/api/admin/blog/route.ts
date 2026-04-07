@@ -85,6 +85,9 @@ export async function POST(request: Request) {
       updatedAt: now,
       seoTitle: body.seoTitle ? String(body.seoTitle).trim() : undefined,
       seoDescription: body.seoDescription ? String(body.seoDescription).trim() : undefined,
+      ogTitle: body.ogTitle ? String(body.ogTitle).trim() : undefined,
+      ogDescription: body.ogDescription ? String(body.ogDescription).trim() : undefined,
+      canonicalUrl: body.canonicalUrl ? String(body.canonicalUrl).trim() : undefined,
     };
 
     const next = [...existing, newPost];
@@ -147,6 +150,19 @@ export async function PUT(request: Request) {
             ? String(body.seoDescription).trim()
             : undefined
           : prev.seoDescription,
+      ogTitle: body.ogTitle !== undefined ? (body.ogTitle ? String(body.ogTitle).trim() : undefined) : prev.ogTitle,
+      ogDescription:
+        body.ogDescription !== undefined
+          ? body.ogDescription
+            ? String(body.ogDescription).trim()
+            : undefined
+          : prev.ogDescription,
+      canonicalUrl:
+        body.canonicalUrl !== undefined
+          ? body.canonicalUrl
+            ? String(body.canonicalUrl).trim()
+            : undefined
+          : prev.canonicalUrl,
     };
 
     const next = [...existing];

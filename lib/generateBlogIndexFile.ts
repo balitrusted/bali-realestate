@@ -30,6 +30,15 @@ export function generateBlogIndexFile(posts: BlogPost[]): string {
     if (p.seoDescription) {
       c += `${ind}${ind}seoDescription: ${JSON.stringify(p.seoDescription)},\n`;
     }
+    if (p.ogTitle) {
+      c += `${ind}${ind}ogTitle: ${JSON.stringify(p.ogTitle)},\n`;
+    }
+    if (p.ogDescription) {
+      c += `${ind}${ind}ogDescription: ${JSON.stringify(p.ogDescription)},\n`;
+    }
+    if (p.canonicalUrl) {
+      c += `${ind}${ind}canonicalUrl: ${JSON.stringify(p.canonicalUrl)},\n`;
+    }
     c += `${ind}}${i < posts.length - 1 ? "," : ""}\n`;
   });
   c += `];\n`;

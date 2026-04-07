@@ -7,6 +7,7 @@ import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Underline from "@tiptap/extension-underline";
 import { ParagraphWithClass } from "@/lib/tiptap/paragraphWithClass";
+import { buildBlogAutofill } from "@/lib/blogAutofill";
 import type { BlogPost } from "@/types/blog";
 
 interface BlogPostFormProps {
@@ -41,7 +42,11 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
     publishedAtLocal: post?.publishedAt ? toDatetimeLocalValue(post.publishedAt) : "",
     seoTitle: post?.seoTitle ?? "",
     seoDescription: post?.seoDescription ?? "",
+    ogTitle: post?.ogTitle ?? "",
+    ogDescription: post?.ogDescription ?? "",
+    canonicalUrl: post?.canonicalUrl ?? "",
   });
+  const [rawDraft, setRawDraft] = useState("");
 
   const [showImageModal, setShowImageModal] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
@@ -97,31 +102,80 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
     }
   }, [formData.title, post]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  type FormState = typeof formData;
+
+  function mergeAutofillDraft(prev: FormState, draft: ReturnType<typeof buildBlogAutofill>): FormState {
+    return {
+      ...prev,
+      title: draft.title || prev.title,
+      slug: draft.slug || prev.slug,
+      summary: draft.summary || prev.summary,
+      location: draft.location || prev.location,
+      tags: draft.tags.join(", "),
+      seoTitle: draft.seoTitle || prev.seoTitle,
+      seoDescription: draft.seoDescription || prev.seoDescription,
+      ogTitle: draft.ogTitle || prev.ogTitle,
+      ogDescription: draft.ogDescription || prev.ogDescription,
+      canonicalUrl: draft.canonicalUrl || prev.canonicalUrl,
+      content: draft.contentHtml || prev.content,
+    };
+  }
+
+  function formStateToSavePayload(fd: FormState): Record<string, unknown> {
     const publishedAtIso =
-      formData.publishedAtLocal && formData.publishedAtLocal.length >= 10
-        ? new Date(formData.publishedAtLocal).toISOString()
+      fd.publishedAtLocal && fd.publishedAtLocal.length >= 10
+        ? new Date(fd.publishedAtLocal).toISOString()
         : post?.publishedAt || new Date().toISOString();
 
-    onSave({
+    return {
       ...(post ? { id: post.id, createdAt: post.createdAt } : {}),
-      title: formData.title.trim(),
-      slug: formData.slug.trim(),
-      summary: formData.summary.trim(),
-      content: formData.content,
-      location: formData.location,
-      tags: formData.tags
+      title: fd.title.trim(),
+      slug: fd.slug.trim(),
+      summary: fd.summary.trim(),
+      content: fd.content,
+      location: fd.location,
+      tags: fd.tags
         .split(",")
         .map((t) => t.trim())
         .filter(Boolean),
-      author: formData.author.trim(),
-      published: formData.published,
+      author: fd.author.trim(),
+      published: fd.published,
       publishedAt: publishedAtIso,
-      seoTitle: formData.seoTitle.trim() || undefined,
-      seoDescription: formData.seoDescription.trim() || undefined,
-      featuredImage: formData.featuredImage.trim() || undefined,
-    });
+      seoTitle: fd.seoTitle.trim() || undefined,
+      seoDescription: fd.seoDescription.trim() || undefined,
+      ogTitle: fd.ogTitle.trim() || undefined,
+      ogDescription: fd.ogDescription.trim() || undefined,
+      canonicalUrl: fd.canonicalUrl.trim() || undefined,
+      featuredImage: fd.featuredImage.trim() || undefined,
+    };
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(formStateToSavePayload(formData));
+  };
+
+  const handleAutofillFromDraft = () => {
+    if (!rawDraft.trim()) {
+      alert("Paste a draft text first.");
+      return;
+    }
+    const draft = buildBlogAutofill(rawDraft);
+    const next = mergeAutofillDraft(formData, draft);
+    setFormData(next);
+    editor?.commands.setContent(draft.contentHtml);
+  };
+
+  const handleAutofillAndSaveDraft = () => {
+    if (!rawDraft.trim()) {
+      alert("Paste a draft text first.");
+      return;
+    }
+    const draft = buildBlogAutofill(rawDraft);
+    const next = { ...mergeAutofillDraft(formData, draft), published: false };
+    setFormData(next);
+    editor?.commands.setContent(draft.contentHtml);
+    onSave(formStateToSavePayload(next));
   };
 
   const addImage = () => setShowImageModal(true);
@@ -206,6 +260,44 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
   return (
     <>
       <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-4 rounded-lg border border-amber-200 bg-amber-50/60 p-4">
+          <h2 className="text-xl font-semibold text-gray-900">Quick import from draft</h2>
+          <p className="text-sm text-gray-700">
+            Paste raw text or markdown (from any assistant). The form auto-fills title, slug, summary, body HTML, SEO fields, and rewrites obvious placeholder links to Balitrusted paths where possible.{" "}
+            “Autofill &amp; save as draft” also turns off Published and saves immediately (same API as the main save button, but unpublished).
+          </p>
+          <textarea
+            rows={8}
+            value={rawDraft}
+            onChange={(e) => setRawDraft(e.target.value)}
+            className="w-full rounded-md border border-gray-300 px-4 py-2 font-mono text-sm focus:border-gray-500 focus:ring-gray-500"
+            placeholder={"Title: ...\nSEO Title: ...\nSEO Description: ...\nTags: ubud, villa\n\n# Heading\nYour draft text..."}
+          />
+          <div className="flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={handleAutofillFromDraft}
+              className="rounded-md bg-amber-600 px-4 py-2 text-white transition-colors hover:bg-amber-700"
+            >
+              Autofill fields from draft
+            </button>
+            <button
+              type="button"
+              onClick={handleAutofillAndSaveDraft}
+              className="rounded-md bg-gray-900 px-4 py-2 text-white transition-colors hover:bg-gray-800"
+            >
+              Autofill &amp; save as draft
+            </button>
+            <button
+              type="button"
+              onClick={() => setRawDraft("")}
+              className="rounded-md bg-white px-4 py-2 text-gray-700 ring-1 ring-gray-300 transition-colors hover:bg-gray-50"
+            >
+              Clear draft
+            </button>
+          </div>
+        </div>
+
         <div className="space-y-4">
           <h2 className="text-xl font-semibold text-gray-900">Basic Information</h2>
 
@@ -491,6 +583,34 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
               value={formData.seoDescription}
               onChange={(e) => setFormData({ ...formData, seoDescription: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-900 mb-2">OG title (optional)</label>
+            <input
+              type="text"
+              value={formData.ogTitle}
+              onChange={(e) => setFormData({ ...formData, ogTitle: e.target.value })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-900 mb-2">OG description (optional)</label>
+            <textarea
+              rows={3}
+              value={formData.ogDescription}
+              onChange={(e) => setFormData({ ...formData, ogDescription: e.target.value })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-900 mb-2">Canonical URL (optional)</label>
+            <input
+              type="text"
+              value={formData.canonicalUrl}
+              onChange={(e) => setFormData({ ...formData, canonicalUrl: e.target.value })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+              placeholder="/blog/post-slug"
             />
           </div>
         </div>

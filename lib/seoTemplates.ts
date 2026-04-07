@@ -24,6 +24,13 @@ const subjectByType: Record<string, string> = {
 
 const areaName = (a: MainArea) => resolveAreaLabel(String(a));
 
+const UBUD_RENT_BEDROOM_LABELS: Record<number, string> = {
+  1: "1 Bedroom Villas for Rent in Ubud",
+  2: "2 Bedroom Villas for Rent in Ubud",
+  3: "3 Bedroom Villas for Rent in Ubud",
+  4: "4 Bedroom Villas for Rent in Ubud",
+};
+
 export function buildTitle(
   type: CatalogTypeForSeo,
   area?: MainArea,
@@ -48,6 +55,11 @@ export function buildTitle(
   const sub = subArea ? ` in ${subAreaNames[subArea]}` : "";
 
   if (segment?.kind === "bedroom") {
+    if (type === "rent" && area === "ubud") {
+      const n = Number(segment.value);
+      const custom = UBUD_RENT_BEDROOM_LABELS[n];
+      if (custom) return `${custom} | Monthly & Yearly | Balitrusted`;
+    }
     return `${segment.value} Bedroom ${subject} for ${verb} in ${loc}${sub} | Balitrusted`;
   }
   if (segment?.kind === "payment") {
@@ -100,6 +112,11 @@ export function buildH1(
   const sub = subArea ? ` in ${subAreaNames[subArea]}` : "";
 
   if (segment?.kind === "bedroom") {
+    if (type === "rent" && area === "ubud") {
+      const n = Number(segment.value);
+      const custom = UBUD_RENT_BEDROOM_LABELS[n];
+      if (custom) return custom;
+    }
     return `${segment.value} Bedroom ${subject} for ${verb} in ${loc}${sub}`;
   }
   if (segment?.kind === "payment") {
@@ -164,6 +181,12 @@ export function buildIntro(
     return `Find ${subject} for ${typeLabels[type]?.toLowerCase() ?? type} in ${loc}. Use filters to narrow your search.`;
   }
   if (segment?.kind === "bedroom") {
+    if (type === "rent" && area === "ubud") {
+      const n = Number(segment.value);
+      if (n >= 1 && n <= 4) {
+        return `Browse ${n}-bedroom villas for long-term rent in Ubud. Compare monthly and yearly options, then narrow by sub-area and amenities like pool, enclosed living, bathtub, and nature view.`;
+      }
+    }
     return `${segment.value} bedroom ${subject} in ${loc}. Browse listings and filter by amenities.`;
   }
   if (segment?.kind === "payment") {
@@ -218,6 +241,12 @@ export function buildDescription(
   const areaDesc = area ? resolveAreaSeoDescription(String(area)) : "";
 
   if (segment?.kind === "bedroom") {
+    if (type === "rent" && area === "ubud") {
+      const n = Number(segment.value);
+      if (n >= 1 && n <= 4) {
+        return `Find ${n}-bedroom villas for rent in Ubud. Explore monthly and yearly rental options across Penestanan, Lodtunduh, Petulu, and other Ubud areas. Filter by pool, enclosed kitchen, and more to match your long-term stay needs.`;
+      }
+    }
     return `Find ${segment.value} bedroom ${subject} for ${type} in ${loc}. ${areaDesc || `Browse our curated selection of properties in ${loc}.`}`;
   }
   if (segment?.kind === "payment") {

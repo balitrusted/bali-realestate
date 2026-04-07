@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, type MutableRefObject } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -35,9 +35,11 @@ type MutationListsPayload = {
 function SortablePropertyItem({
   property,
   applyListsFromMutation,
+  archiveInFlightRef,
 }: {
   property: Property;
   applyListsFromMutation: (payload: MutationListsPayload) => void | Promise<void>;
+  archiveInFlightRef: MutableRefObject<boolean>;
 }) {
   const {
     attributes,
@@ -166,6 +168,8 @@ function SortablePropertyItem({
           type="button"
           onClick={async () => {
             if (!confirm("Send this villa to archive?\n\nIt will disappear from the catalog and main list. You can restore or permanently delete it from Archive.")) return;
+            if (archiveInFlightRef.current) return;
+            archiveInFlightRef.current = true;
             try {
               const res = await fetch("/api/properties", {
                 method: "PUT",
@@ -193,6 +197,8 @@ function SortablePropertyItem({
               }
             } catch (e) {
               alert("Failed");
+            } finally {
+              archiveInFlightRef.current = false;
             }
           }}
           className="w-full px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors text-sm text-center whitespace-nowrap"
@@ -212,6 +218,7 @@ export default function AdminPropertiesPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const scrollDoneRef = useRef(false);
+  const archiveInFlightRef = useRef(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -358,6 +365,7 @@ export default function AdminPropertiesPage() {
                 key={property.id}
                 property={property}
                 applyListsFromMutation={applyListsFromMutation}
+                archiveInFlightRef={archiveInFlightRef}
               />
             ))}
           </SortableContext>

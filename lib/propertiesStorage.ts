@@ -73,6 +73,21 @@ export async function loadFullPropertyList(): Promise<Property[]> {
 }
 
 /**
+ * Serialize read→modify→write so concurrent PUTs on one Node instance cannot drop each other's changes.
+ * Different Vercel serverless instances still race; for a hard guarantee use a DB or Redis lock.
+ */
+let catalogWriteChain: Promise<unknown> = Promise.resolve();
+
+export function runExclusiveCatalogWrite<T>(fn: () => Promise<T>): Promise<T> {
+  const next = catalogWriteChain.then(() => fn());
+  catalogWriteChain = next.then(
+    () => undefined,
+    () => undefined
+  );
+  return next as Promise<T>;
+}
+
+/**
  * Round-trip through TS generator + parser so stored JSON matches on-disk shape (no stray form fields).
  */
 function normalizeForPersistence(properties: Property[]): Property[] {

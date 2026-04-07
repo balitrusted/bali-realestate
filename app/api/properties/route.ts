@@ -20,7 +20,11 @@ function normalizeTypesInput(input: unknown): PropertyType[] {
 }
 import { normalizePropertyFeatures } from "@/lib/featureState";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
-import { loadFullPropertyList, persistPropertyList } from "@/lib/propertiesStorage";
+import {
+  loadFullPropertyList,
+  persistPropertyList,
+  runExclusiveCatalogWrite,
+} from "@/lib/propertiesStorage";
 import { normalizeVillaNumberKey } from "@/lib/propertyUtils";
 import { isValidMainAreaSlug } from "@/lib/mainAreaRegistry";
 
@@ -151,7 +155,8 @@ export async function POST(request: Request) {
 
   try {
     const property: any = await request.json();
-    
+
+    return await runExclusiveCatalogWrite(async () => {
     // Read current properties
     const properties = await loadFullPropertyList();
 
@@ -248,6 +253,7 @@ export async function POST(request: Request) {
       property: newProperty,
       ...buildListsWithSlugs(properties),
     });
+    });
   } catch (error) {
     console.error("Error creating property:", error);
     return apiJson(
@@ -264,7 +270,10 @@ export async function PUT(request: Request) {
   }
 
   try {
-    const { action, property, newOrder } = await request.json();
+    const body = await request.json();
+
+    return await runExclusiveCatalogWrite(async () => {
+    const { action, property, newOrder } = body;
 
     let properties = await loadFullPropertyList();
 
@@ -372,6 +381,7 @@ export async function PUT(request: Request) {
       success: true,
       ...buildListsWithSlugs(properties),
     });
+    });
   } catch (error) {
     console.error("Error updating properties:", error);
     const message =
@@ -394,6 +404,7 @@ export async function DELETE(request: Request) {
       return apiJson({ error: "ID required" }, { status: 400 });
     }
 
+    return await runExclusiveCatalogWrite(async () => {
     let properties = await loadFullPropertyList();
 
     properties = properties.filter((p) => p.id !== id);
@@ -403,6 +414,7 @@ export async function DELETE(request: Request) {
     return apiJson({
       success: true,
       ...buildListsWithSlugs(properties),
+    });
     });
   } catch (error) {
     console.error("Error deleting property:", error);

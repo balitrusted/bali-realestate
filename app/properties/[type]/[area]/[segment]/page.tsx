@@ -77,12 +77,16 @@ export async function generateMetadata({
     parsed.kind === "subArea" && subArea
       ? `${subAreaNames[subArea]}, Ubud, Bali, villa rental, villa for sale, long-term rent`
       : undefined;
+  const kwBedroom =
+    parsed.kind === "bedroom" && Number.isFinite(Number(parsed.value)) && mainArea === "ubud" && catalogType === "rent"
+      ? `${String(parsed.value)} bedroom villa rent Ubud, Ubud long-term rental, monthly villa Ubud, yearly villa Ubud`
+      : undefined;
 
   return {
     title: { absolute: buildTitle(catalogType, mainArea, subArea, parsed) },
     description: buildDescription(catalogType, mainArea, subArea, parsed),
     alternates: { canonical: `${baseUrl}${canonicalPath}` },
-    ...(kwSub ? { keywords: kwSub } : {}),
+    ...((kwSub || kwBedroom) ? { keywords: kwSub || kwBedroom } : {}),
     robots: noIndex ? { index: false, follow: true } : { index: true, follow: true },
   };
 }

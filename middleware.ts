@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getPropertyManualRedirect } from "@/lib/propertyRedirects";
 import { subAreaNames } from "@/types/areas";
+import { SEO_BEDROOM_COUNTS, bedroomSegmentSlug } from "@/lib/catalogBedrooms";
 
 const UBUD_SUB_SLUGS = new Set(Object.keys(subAreaNames));
 
@@ -15,6 +16,26 @@ function normalizePathname(pathname: string): string {
 
 export function middleware(request: NextRequest) {
   const pathname = normalizePathname(request.nextUrl.pathname);
+
+  /** Canonical bedroom SEO URLs (rent/Ubud): /properties/rent/ubud/1-bedroom-villa */
+  const ubudRent = pathname === "/properties/rent/ubud";
+  if (ubudRent) {
+    const rawBedrooms = request.nextUrl.searchParams.get("bedrooms");
+    const bedroomParts = rawBedrooms?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
+    const keys = Array.from(request.nextUrl.searchParams.keys());
+    const allowedKeys = new Set(["bedrooms", "page"]);
+    const hasOnlyAllowedKeys = keys.every((k) => allowedKeys.has(k));
+
+    if (bedroomParts.length === 1 && hasOnlyAllowedKeys) {
+      const count = Number(bedroomParts[0]);
+      if ((SEO_BEDROOM_COUNTS as readonly number[]).includes(count)) {
+        const url = request.nextUrl.clone();
+        url.pathname = `/properties/rent/ubud/${bedroomSegmentSlug(count)}`;
+        url.searchParams.delete("bedrooms");
+        return NextResponse.redirect(url, 301);
+      }
+    }
+  }
 
   /** Canonical Ubud sub-area URLs: /properties/{type}/ubud/{subArea} instead of ?subArea= */
   const ubudArea = pathname.match(/^\/properties\/(villas|rent|sale|land|business)\/ubud$/);

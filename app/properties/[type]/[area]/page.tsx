@@ -42,6 +42,7 @@ import {
 } from "@/lib/seoTemplates";
 import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
 import Image from "next/image";
+import { SEO_BEDROOM_COUNTS, bedroomSegmentSlug } from "@/lib/catalogBedrooms";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -178,6 +179,13 @@ export default async function PropertiesByTypeAndAreaPage({
       : areaInfo?.description ?? resolveAreaSeoDescription(area);
 
   const areaFooterParagraphs = buildTypeAreaFooterParagraphs(catalogType, mainArea);
+  const rentUbudBedroomLinks =
+    catalogType === "rent" && mainArea === "ubud"
+      ? SEO_BEDROOM_COUNTS.map((n) => ({
+          count: n,
+          href: `/properties/rent/ubud/${bedroomSegmentSlug(n)}`,
+        }))
+      : [];
 
   const basePath = `/properties/${catalogType}/${mainArea}`;
   const searchParamsForPagination: Record<string, string> = { ...queryParams } as Record<string, string>;
@@ -255,6 +263,23 @@ export default async function PropertiesByTypeAndAreaPage({
               </p>
             )}
             <p className="text-gray-600 mt-4 text-sm max-w-3xl leading-relaxed">{heroBlurb}</p>
+          </div>
+        )}
+
+        {rentUbudBedroomLinks.length > 0 && (
+          <div className="mb-4 rounded-2xl border border-emerald-100 bg-emerald-50/40 p-4">
+            <p className="text-sm font-medium text-emerald-900 mb-2">Browse Ubud rentals by bedroom count</p>
+            <div className="flex flex-wrap gap-2">
+              {rentUbudBedroomLinks.map((l) => (
+                <Link
+                  key={l.count}
+                  href={l.href}
+                  className="inline-flex items-center rounded-full border border-emerald-200 bg-white px-3 py-1.5 text-xs font-medium text-emerald-900 hover:bg-emerald-100"
+                >
+                  {l.count}-bedroom rentals
+                </Link>
+              ))}
+            </div>
           </div>
         )}
 

@@ -14,4 +14,7 @@ export interface BlogPost {
   updatedAt: string;
   seoTitle?: string;
   seoDescription?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  canonicalUrl?: string;
 }

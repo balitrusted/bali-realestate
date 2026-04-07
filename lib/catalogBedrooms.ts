@@ -16,3 +16,10 @@ export const BEDROOM_SEGMENT_SLUGS = [
 /** Same order as BEDROOM_SEGMENT_SLUGS (derived so slugs stay the single source). */
 export const ALLOWED_BEDROOM_COUNTS: readonly number[] =
   BEDROOM_SEGMENT_SLUGS.map((slug) => parseInt(slug.split("-")[0], 10));
+
+/** SEO landing pages currently planned only for 1..4 bedrooms. */
+export const SEO_BEDROOM_COUNTS = [1, 2, 3, 4] as const;
+
+export function bedroomSegmentSlug(count: number): string {
+  return `${count}-bedroom-villa`;
+}
