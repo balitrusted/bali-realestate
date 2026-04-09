@@ -7,6 +7,11 @@ function getBlobStoreBaseUrl(): string | undefined {
   return process.env.BLOB_STORE_URL?.trim().replace(/\/$/, "");
 }
 
+function appendCacheBuster(url: string): string {
+  const sep = url.includes("?") ? "&" : "?";
+  return `${url}${sep}v=${Date.now()}`;
+}
+
 function clampFutureIso(iso?: string): string | undefined {
   if (!iso) return iso;
   const t = Date.parse(iso);
@@ -58,7 +63,7 @@ function dedupeBlogPostsBySlug(posts: BlogPost[], bundledLocalIds: Set<string>):
 async function fetchBlobPosts(): Promise<BlogPost[] | null> {
   const baseUrl = getBlobStoreBaseUrl();
   if (baseUrl) {
-    const res = await fetch(`${baseUrl}/${BLOB_KEY}`, { cache: "no-store" });
+    const res = await fetch(appendCacheBuster(`${baseUrl}/${BLOB_KEY}`), { cache: "no-store" });
     if (res.ok) {
       const data: unknown = await res.json();
       if (Array.isArray(data)) return data as BlogPost[];
@@ -67,7 +72,7 @@ async function fetchBlobPosts(): Promise<BlogPost[] | null> {
   const { blobs } = await list({ prefix: BLOB_KEY, limit: 5 });
   const match = blobs?.find((b) => b.pathname === BLOB_KEY);
   if (match?.url) {
-    const res = await fetch(match.url, { cache: "no-store" });
+    const res = await fetch(appendCacheBuster(match.url), { cache: "no-store" });
     if (res.ok) {
       const data: unknown = await res.json();
       if (Array.isArray(data)) return data as BlogPost[];

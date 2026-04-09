@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next'
 import { getArticles } from '@/lib/articlesData'
 import { loadFullPropertyList } from '@/lib/propertiesStorage'
 import { getBlogPosts } from '@/lib/blogData'
+import { getGlossaryTerms } from '@/lib/glossaryData'
 import { loadAllProperties, filterProperties, parseSegment, SEGMENT_TYPES } from '@/lib/propertiesCatalog'
 import { buildPropertySlugIndex } from '@/lib/propertySlug'
 import type { PropertyType, MainArea } from '@/types/property'
@@ -47,6 +48,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.75,
+    },
+    {
+      url: `${baseUrl}/properties/map`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.72,
+    },
+    {
+      url: `${baseUrl}/glossary`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.65,
     },
     {
       url: `${baseUrl}/site-map`,
@@ -198,5 +211,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Error loading blog posts for sitemap:', error)
   }
 
-  return [...staticPages, ...propertyPages, ...guideCategoryPages, ...propertyDetailPages, ...articlePages, ...blogPages]
+  let glossaryPages: MetadataRoute.Sitemap = []
+  try {
+    const terms = await getGlossaryTerms()
+    glossaryPages = terms
+      .filter((t) => t.slug)
+      .map((term) => ({
+        url: `${baseUrl}/glossary/${term.slug}`,
+        lastModified: term.updatedAt ? new Date(term.updatedAt) : new Date(term.createdAt),
+        changeFrequency: 'monthly' as const,
+        priority: 0.55,
+      }))
+  } catch (error) {
+    console.error('Error loading glossary for sitemap:', error)
+  }
+
+  return [...staticPages, ...propertyPages, ...guideCategoryPages, ...propertyDetailPages, ...articlePages, ...blogPages, ...glossaryPages]
 }

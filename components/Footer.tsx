@@ -25,10 +25,26 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  href="/properties/map"
+                  className="inline-block py-1 text-gray-600 hover:text-gray-900 touch-manipulation"
+                >
+                  Property map
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/guides"
                   className="inline-block py-1 text-gray-600 hover:text-gray-900 touch-manipulation"
                 >
                   Knowledge Base
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/glossary"
+                  className="inline-block py-1 text-gray-600 hover:text-gray-900 touch-manipulation"
+                >
+                  Glossary
                 </Link>
               </li>
               <li>

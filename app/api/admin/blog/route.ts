@@ -74,6 +74,9 @@ export async function POST(request: Request) {
       slug: slugRaw,
       title: String(body.title || "").trim() || "Untitled",
       summary: String(body.summary || "").trim(),
+      introHighlight: body.introHighlight ? String(body.introHighlight).trim() : undefined,
+      ctaLabel: body.ctaLabel ? String(body.ctaLabel).trim() : undefined,
+      ctaUrl: body.ctaUrl ? String(body.ctaUrl).trim() : undefined,
       content: String(body.content || ""),
       location: parseLocation(String(body.location || "ubud")),
       tags: parseTags(body.tags),
@@ -132,6 +135,24 @@ export async function PUT(request: Request) {
       slug: slugNext,
       title: body.title != null ? String(body.title).trim() : prev.title,
       summary: body.summary != null ? String(body.summary).trim() : prev.summary,
+      introHighlight:
+        body.introHighlight !== undefined
+          ? body.introHighlight
+            ? String(body.introHighlight).trim()
+            : undefined
+          : prev.introHighlight,
+      ctaLabel:
+        body.ctaLabel !== undefined
+          ? body.ctaLabel
+            ? String(body.ctaLabel).trim()
+            : undefined
+          : prev.ctaLabel,
+      ctaUrl:
+        body.ctaUrl !== undefined
+          ? body.ctaUrl
+            ? String(body.ctaUrl).trim()
+            : undefined
+          : prev.ctaUrl,
       content: body.content != null ? String(body.content) : prev.content,
       location: body.location != null ? parseLocation(String(body.location)) : prev.location,
       tags: body.tags != null ? parseTags(body.tags) : prev.tags,

@@ -10,87 +10,23 @@ import { blogReadingMinutes } from "@/lib/blogHub";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-function decodeAndStripHtml(s: string): string {
-  return s
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;/gi, "'")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function normalizeForCompare(s: string): string {
-  return decodeAndStripHtml(s)
-    .toLowerCase()
-    .replace(/[.,!?;:()[\]{}"']/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-type ParagraphPick = { raw: string; normalized: string; idx: number };
-
-function splitParagraphTexts(html: string): ParagraphPick[] {
-  const parts = html.match(/<p\b[^>]*>[\s\S]*?<\/p>/gi) || [];
-  return parts
-    .map((p, idx) => ({
-      raw: decodeAndStripHtml(p),
-      normalized: normalizeForCompare(p),
-      idx,
-    }))
-    .filter((p) => p.raw.length > 0);
-}
-
-function scoreSummaryCandidate(raw: string, normalized: string, idx: number, total: number): number {
-  let score = 0;
-  const words = raw.split(/\s+/).length;
-  if (words >= 10 && words <= 45) score += 3;
-  if (words > 45) score += 1;
-
-  // Intro should usually come from body, not first/last transitional paragraphs.
-  if (idx > 0 && idx < total - 1) score += 2;
-  if (idx === 0 || idx === total - 1) score -= 2;
-
-  // Penalize transitional/opening connectors that read awkwardly as top summary.
-  if (/^(another|also|and|but|because|this|that|in the end|finally|moreover|however)\b/i.test(raw)) {
-    score -= 4;
-  }
-  if (/^(when people|at first|one of the first)\b/i.test(raw)) {
-    score -= 2;
-  }
-
-  // Reward thesis-like signals (usually best as article lead summary).
-  if (/\b(what most people|there is no single|in the end|depends|balance|the key|matters)\b/i.test(normalized)) {
-    score += 5;
-  }
-  if (/\b(long-term|villa|ubud|lifestyle|experience)\b/i.test(normalized)) {
-    score += 1;
-  }
-  return score;
-}
-
-function displaySummary(summary: string | undefined, html: string): string {
-  const paragraphs = splitParagraphTexts(html);
-  if (paragraphs.length === 0) return summary?.trim() || "";
-
-  const firstParagraph = paragraphs[0].normalized;
-  const current = normalizeForCompare(summary || "");
-
-  // If summary is missing or duplicates the first paragraph, pick a paragraph from the middle.
-  if (!current || firstParagraph.startsWith(current) || current.startsWith(firstParagraph)) {
-    const ranked = paragraphs
-      .map((p) => ({
-        ...p,
-        score: scoreSummaryCandidate(p.raw, p.normalized, p.idx, paragraphs.length),
-      }))
-      .sort((a, b) => b.score - a.score || a.idx - b.idx);
-    return ranked[0]?.raw || summary?.trim() || "";
-  }
-
-  return summary!.trim();
+function BlogPostCta({ label, href }: { label: string; href: string }) {
+  const trimmed = href.trim();
+  const isAbsolute = /^https?:\/\//i.test(trimmed);
+  const inner = isAbsolute ? (
+    <a href={trimmed} rel="noopener noreferrer">
+      {label}
+    </a>
+  ) : (
+    <Link href={trimmed.startsWith("/") ? trimmed : `/${trimmed}`}>
+      {label}
+    </Link>
+  );
+  return (
+    <div className="prose prose-article max-w-none mt-8">
+      <p className="final-cta">{inner}</p>
+    </div>
+  );
 }
 
 async function getBlogPost(slug: string) {
@@ -130,7 +66,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     .filter((p) => p.slug !== slug)
     .sort((a, b) => +new Date(b.updatedAt) - +new Date(a.updatedAt))
     .slice(0, 40);
-  const summaryText = displaySummary(post.summary, post.content);
+
+  const introHighlight = post.introHighlight?.trim() ?? "";
+  const ctaLabel = post.ctaLabel?.trim() ?? "";
+  const ctaUrl = post.ctaUrl?.trim() ?? "";
+  const showCta = Boolean(ctaLabel && ctaUrl);
 
   return (
     <div className="min-h-screen bg-white">
@@ -161,12 +101,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 </div>
               ) : null}
 
-              {summaryText ? (
+              {introHighlight ? (
                 <p className="mb-8 rounded-2xl border border-emerald-100 bg-emerald-50/60 px-5 py-4 text-[1.05rem] leading-relaxed text-emerald-950">
-                  {summaryText}
+                  {introHighlight}
                 </p>
               ) : null}
               <ArticleContent content={post.content} />
+              {showCta ? <BlogPostCta label={ctaLabel} href={ctaUrl} /> : null}
             </article>
 
             <div className="mt-12 pt-8 border-t border-gray-200">

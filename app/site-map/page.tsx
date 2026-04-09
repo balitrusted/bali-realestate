@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { areas } from "@/types/areas";
+import { getGlossaryTerms } from "@/lib/glossaryData";
 
 export const metadata = {
   title: "Sitemap",
-  description: "Full sitemap of Balitrusted: property catalog, villas for rent and sale, knowledge base, Q&A, and main pages.",
+  description:
+    "Full sitemap of Balitrusted: property catalog, map, glossary, villas for rent and sale, knowledge base, Q&A, and main pages.",
 };
 
 const propertyTypes = [
@@ -29,7 +31,9 @@ const mainAreas = [
   { value: "sanur", label: areas.sanur.nameEn },
 ];
 
-export default function SitemapPage() {
+export default async function SitemapPage() {
+  const glossaryTerms = await getGlossaryTerms();
+
   return (
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-12">
@@ -110,6 +114,43 @@ export default function SitemapPage() {
                   </div>
                 ))}
               </div>
+              <ul className="mt-4 space-y-2">
+                <li>
+                  <Link href="/properties/map" className="text-gray-700 hover:text-gray-900 hover:underline">
+                    Property map
+                  </Link>
+                  <span className="text-sm text-gray-500 ml-2">— listings with coordinates, same filters as catalog</span>
+                </li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">
+                Glossary
+              </h2>
+              <ul className="space-y-2 mb-4">
+                <li>
+                  <Link href="/glossary" className="text-gray-700 hover:text-gray-900 hover:underline">
+                    Glossary hub (A–Z)
+                  </Link>
+                </li>
+              </ul>
+              {glossaryTerms.length > 0 ? (
+                <ul className="space-y-1.5 text-sm columns-1 sm:columns-2 gap-x-8">
+                  {glossaryTerms.map((t) => (
+                    <li key={t.id} className="break-inside-avoid">
+                      <Link
+                        href={`/glossary/${t.slug}`}
+                        className="text-gray-600 hover:text-gray-900 hover:underline"
+                      >
+                        {t.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-gray-500">No published terms yet.</p>
+              )}
             </section>
 
             <section>

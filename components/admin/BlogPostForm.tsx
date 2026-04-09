@@ -45,6 +45,9 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
     ogTitle: post?.ogTitle ?? "",
     ogDescription: post?.ogDescription ?? "",
     canonicalUrl: post?.canonicalUrl ?? "",
+    introHighlight: post?.introHighlight ?? "",
+    ctaLabel: post?.ctaLabel ?? "",
+    ctaUrl: post?.ctaUrl ?? "",
   });
   const [rawDraft, setRawDraft] = useState("");
 
@@ -147,6 +150,9 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
       ogDescription: fd.ogDescription.trim() || undefined,
       canonicalUrl: fd.canonicalUrl.trim() || undefined,
       featuredImage: fd.featuredImage.trim() || undefined,
+      introHighlight: fd.introHighlight.trim() || undefined,
+      ctaLabel: fd.ctaLabel.trim() || undefined,
+      ctaUrl: fd.ctaUrl.trim() || undefined,
     };
   }
 
@@ -362,6 +368,20 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
               placeholder="Short intro shown on the blog hub…"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-900 mb-2">Intro highlight (green block on post page)</label>
+            <textarea
+              rows={3}
+              value={formData.introHighlight}
+              onChange={(e) => setFormData({ ...formData, introHighlight: e.target.value })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+              placeholder="Plain text only. Leave empty to hide the green box — article body only."
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Optional. Plain text above the article. Leave empty for no green box. (Hub listing still uses Summary below.)
+            </p>
           </div>
 
           <div>
@@ -637,6 +657,35 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
                 />
                 <span className="ml-2 text-sm text-gray-700">Published (visible on /blog)</span>
               </label>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold text-gray-900">End-of-post CTA (optional)</h2>
+          <p className="text-sm text-gray-600">
+            Green button like “Explore all Ubud rental villas”. Both fields required to show; leave empty for no button.
+          </p>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">Button label</label>
+              <input
+                type="text"
+                value={formData.ctaLabel}
+                onChange={(e) => setFormData({ ...formData, ctaLabel: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+                placeholder="e.g. Explore all yearly villas in Ubud"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">Button URL</label>
+              <input
+                type="text"
+                value={formData.ctaUrl}
+                onChange={(e) => setFormData({ ...formData, ctaUrl: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+                placeholder="/properties/rent/ubud/yearly"
+              />
             </div>
           </div>
         </div>

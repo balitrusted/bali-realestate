@@ -5,6 +5,8 @@ import maplibregl, { Map } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { MainArea, SubArea } from "@/types/property";
 import { AREA_DISTANCE_REFS } from "@/lib/areaDistanceCenters";
+import { parseLatLng } from "@/lib/mapGeo";
+import { loadStyleForMap, type MapTilerStyleVariant } from "@/lib/mapStyleResolve";
 
 type Props = {
   title: string;
@@ -13,15 +15,6 @@ type Props = {
   mainArea: MainArea;
   subArea?: SubArea;
 };
-
-function parseLatLng(raw?: string): [number, number] | null {
-  if (!raw) return null;
-  const parts = raw.split(",").map((p) => Number(p.trim()));
-  if (parts.length !== 2 || !Number.isFinite(parts[0]) || !Number.isFinite(parts[1])) return null;
-  const [lat, lng] = parts;
-  if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return null;
-  return [lat, lng];
-}
 
 function haversineKm(a: [number, number], b: [number, number]): number {
   const toRad = (x: number) => (x * Math.PI) / 180;
@@ -90,53 +83,57 @@ export default function PropertyLocationMap({ title, areaLabel, displayLocation,
   const eta = etaUbud ?? etaRegional;
 
   useEffect(() => {
-    if (!coords || !mapContainerRef.current) return;
+    const el = mapContainerRef.current;
+    if (!coords || !el) return;
+
+    let cancelled = false;
+    const [lat, lng] = coords;
+    const variant: MapTilerStyleVariant =
+      styleMode === "outdoor" ? "outdoor" : styleMode === "satellite" ? "satellite" : "streets";
 
     if (mapInstanceRef.current) {
-      mapInstanceRef.current.remove();
+      try {
+        mapInstanceRef.current.remove();
+      } catch {
+        /* ignore */
+      }
       mapInstanceRef.current = null;
     }
 
-    const [lat, lng] = coords;
-    const mapTilerStyle =
-      mapTilerKey && styleMode === "outdoor"
-        ? `https://api.maptiler.com/maps/outdoor-v2/style.json?key=${mapTilerKey}`
-        : mapTilerKey && styleMode === "satellite"
-          ? `https://api.maptiler.com/maps/hybrid/style.json?key=${mapTilerKey}`
-          : mapTilerKey
-            ? `https://api.maptiler.com/maps/streets-v2/style.json?key=${mapTilerKey}`
-            : null;
-    const fallbackRasterStyle = {
-      version: 8 as const,
-      sources: {
-        osm: {
-          type: "raster" as const,
-          tiles: ["https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"],
-          tileSize: 256,
-          attribution: "&copy; OpenStreetMap contributors",
-          maxzoom: 19,
-        },
-      },
-      layers: [{ id: "osm-raster", type: "raster" as const, source: "osm" }],
+    const run = async () => {
+      const style = await loadStyleForMap(mapTilerKey, variant);
+      if (cancelled || mapContainerRef.current !== el) return;
+
+      const map = new maplibregl.Map({
+        container: el,
+        style,
+        center: [lng, lat],
+        zoom: 15,
+      });
+      if (cancelled || mapContainerRef.current !== el) {
+        map.remove();
+        return;
+      }
+
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+
+      const popup = new maplibregl.Popup({ offset: 18 }).setHTML(
+        `<div style="font-size:12px"><strong>${title}</strong><br/>${areaLabel}</div>`
+      );
+      new maplibregl.Marker({ color: "#047857" }).setLngLat([lng, lat]).setPopup(popup).addTo(map);
+
+      mapInstanceRef.current = map;
     };
 
-    const map = new maplibregl.Map({
-      container: mapContainerRef.current,
-      style: mapTilerStyle || fallbackRasterStyle,
-      center: [lng, lat],
-      zoom: 15,
-    });
+    void run();
 
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
-
-    const popup = new maplibregl.Popup({ offset: 18 }).setHTML(
-      `<div style="font-size:12px"><strong>${title}</strong><br/>${areaLabel}</div>`
-    );
-    new maplibregl.Marker({ color: "#047857" }).setLngLat([lng, lat]).setPopup(popup).addTo(map);
-
-    mapInstanceRef.current = map;
     return () => {
-      map.remove();
+      cancelled = true;
+      try {
+        mapInstanceRef.current?.remove();
+      } catch {
+        /* ignore */
+      }
       mapInstanceRef.current = null;
     };
   }, [coords, title, areaLabel, styleMode, mapTilerKey]);

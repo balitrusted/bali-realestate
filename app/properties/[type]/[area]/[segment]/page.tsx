@@ -36,6 +36,8 @@ import {
 import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 import Image from "next/image";
+import CatalogMapLink from "@/components/CatalogMapLink";
+import { mergeSegmentIntoCatalogFilters } from "@/lib/parseCatalogSearchParams";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -190,6 +192,7 @@ export default async function PropertiesSegmentPage({
   );
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://balitrusted.com";
+  const mapFilters = mergeSegmentIntoCatalogFilters(filters, parsed);
 
   const segmentLabel =
     parsed.kind === "bedroom"
@@ -206,12 +209,15 @@ export default async function PropertiesSegmentPage({
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <link rel="canonical" href={`${baseUrl}${basePath}`} />
-        <CatalogBreadcrumb
-          type={catalogType as "rent" | "sale" | "villas" | "land" | "business"}
-          area={mainArea}
-          segmentLabel={segmentLabel ?? undefined}
-          className="mb-3"
-        />
+        <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+          <CatalogBreadcrumb
+            type={catalogType as "rent" | "sale" | "villas" | "land" | "business"}
+            area={mainArea}
+            segmentLabel={segmentLabel ?? undefined}
+            className="mb-0"
+          />
+          <CatalogMapLink filters={mapFilters} />
+        </div>
         {items.length > 0 && (
           <CatalogStructuredData
             properties={items}

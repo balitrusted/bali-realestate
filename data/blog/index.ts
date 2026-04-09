@@ -37,6 +37,8 @@ export const blogPosts: BlogPost[] = [
     seoTitle: "Best Villas in Ubud for Long-Term Stay | Balitrusted",
     seoDescription:
       "How to pick a long-term villa in Ubud: one vs two bedrooms, outdoor space, and neighborhood fit — with listings by bedroom count.",
+    introHighlight:
+      "Long-term Ubud villas are less about photos and more about daily rhythm — bedrooms, outdoor space, and how each area matches the life you want.",
   },
   {
     id: "blog-2026-03-27-ubud-villa-rent-costs",
@@ -69,8 +71,7 @@ export const blogPosts: BlogPost[] = [
 <h2>Finding the right balance</h2>
 <p>In the end, the cost of renting a villa in Ubud is less about finding the lowest number and more about finding the right balance between price and how the place supports your daily life.</p>
 <p>For some, that balance is simplicity and affordability. For others, it is privacy, space, and a sense of retreat.</p>
-<p>And once you start looking at villas through that lens, the pricing begins to make much more sense.</p>
-<p class="final-cta"><a href="/properties/rent/ubud">Browse Ubud rental villas by area and price →</a></p>`,
+<p>And once you start looking at villas through that lens, the pricing begins to make much more sense.</p>`,
     location: "ubud",
     tags: ["ubud", "rent", "pricing", "villa", "long-term rental"],
     author: "Balitrusted Team",
@@ -81,6 +82,10 @@ export const blogPosts: BlogPost[] = [
     seoTitle: "How Much Does It Cost to Rent a Villa in Ubud? A Practical Rent Guide",
     seoDescription:
       "Understand Ubud villa rent ranges: what moves price by bedrooms and area, monthly vs yearly savings, hidden costs, and how to browse real listings.",
+    introHighlight:
+      "Why Ubud villa rents vary so much, how monthly vs yearly changes the math, what areas do to price, and hidden costs that matter after you move in.",
+    ctaLabel: "Browse Ubud rental villas by area and price →",
+    ctaUrl: "/properties/rent/ubud",
   },
   {
     id: "blog-2026-03-26-ubud-rent-guide",
@@ -118,8 +123,7 @@ export const blogPosts: BlogPost[] = [
 <p>This is why choosing a villa in Ubud is rarely just about aesthetics. It is about small details that shape your daily life - internet stability, airflow, privacy, and how the space feels during long periods of staying inside.</p>
 <h2>Final thought</h2>
 <p>In the end, renting a villa in Ubud is less about finding the perfect property and more about finding the right balance between comfort, location, and rhythm of life. Most people do not get it perfect on the first try - and that is normal. Ubud is a place where you adjust, not just choose.</p>
-<p>And once you understand what kind of life you want here, the rest becomes surprisingly simple.</p>
-<p class="final-cta"><a href="/properties/rent/ubud">Explore all Ubud rental villas →</a></p>`,
+<p>And once you understand what kind of life you want here, the rest becomes surprisingly simple.</p>`,
     location: "ubud",
     tags: ["ubud", "rent", "long-term rental", "villa"],
     author: "Balitrusted Team",
@@ -130,6 +134,10 @@ export const blogPosts: BlogPost[] = [
     seoTitle: "How to Rent a Villa in Ubud: Monthly vs Yearly, Areas, and Real-Life Tips",
     seoDescription:
       "Practical Ubud rental guide: monthly vs yearly villas, how areas differ, and what to check before signing.",
+    introHighlight:
+      "A practical, human guide to choosing the right rental rhythm in Ubud: monthly vs yearly, area differences, and details that matter in daily life.",
+    ctaLabel: "Explore all Ubud rental villas →",
+    ctaUrl: "/properties/rent/ubud",
   },
   {
     id: "blog-2026-03-26-ubud-areas-guide",
@@ -156,8 +164,7 @@ export const blogPosts: BlogPost[] = [
 <p>Choosing between these areas is rarely a logical exercise. People often arrive with one idea, and then shift after spending time inside each environment. What seemed ideal on paper can feel different in reality, and vice versa.</p>
 <p>That is why the best approach is not to decide everything in advance, but to understand the character of each area and let that guide the choice of villa.</p>
 <h2>Final thought</h2>
-<p>In the end, Ubud is not about finding the best place to live. It is about finding the place where your daily rhythm starts to feel natural without effort. And once that happens, everything else - including the villa itself - becomes much easier to choose.</p>
-<p class="final-cta"><a href="/properties/rent/ubud">See all Ubud long-term rentals →</a></p>`,
+<p>In the end, Ubud is not about finding the best place to live. It is about finding the place where your daily rhythm starts to feel natural without effort. And once that happens, everything else - including the villa itself - becomes much easier to choose.</p>`,
     location: "ubud",
     tags: ["ubud", "areas", "rent", "long-term rental"],
     author: "Balitrusted Team",
@@ -168,5 +175,9 @@ export const blogPosts: BlogPost[] = [
     seoTitle: "Where to Live in Ubud: Best Areas for Long-Term Villa Rentals",
     seoDescription:
       "Compare Penestanan, Gentong, Petulu, and Lodtunduh for long-term villa rentals in Ubud and choose the right daily rhythm.",
+    introHighlight:
+      "A practical breakdown of Ubud neighborhoods for long-term villa rentals, and how area rhythm affects daily life more than listing photos.",
+    ctaLabel: "See all Ubud long-term rentals →",
+    ctaUrl: "/properties/rent/ubud",
   },
 ];

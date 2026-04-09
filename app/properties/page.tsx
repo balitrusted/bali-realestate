@@ -6,6 +6,7 @@ import CatalogListingDivider from "@/components/CatalogListingDivider";
 import TopPageNumbers from "@/components/TopPageNumbers";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import Link from "next/link";
+import CatalogMapLink from "@/components/CatalogMapLink";
 import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
 import {
   loadAllProperties,
@@ -117,7 +118,10 @@ export default async function PropertiesCatalogPage({
   return (
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-8">
-        <CatalogBreadcrumb className="mb-3" />
+        <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+          <CatalogBreadcrumb className="mb-0" />
+          <CatalogMapLink filters={effectiveFilters} />
+        </div>
         <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
           <h1 className="text-2xl md:text-4xl font-semibold tracking-tight text-gray-900 mb-2">
             All properties

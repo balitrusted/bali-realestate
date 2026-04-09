@@ -81,7 +81,8 @@ export interface CatalogFilters {
   hasPetFriendly?: boolean;
   hasPool?: boolean;
   hasWashingMachine?: boolean;
-  minDuration?: number; // 12 = yearly
+  /** Payment flavor for rent: 12 = listings with yearly rent price; 1 = listings with monthly rent price. */
+  minDuration?: number;
   maxPrice?: number;
 }
 
@@ -92,6 +93,18 @@ function hasValidPrice(p: Property): boolean {
       typeof p.price.monthly === "number" ||
       typeof p.price.yearly === "number" ||
       typeof p.price.forSale === "number")
+  );
+}
+
+function propertyHasYearlyRentPrice(p: Property): boolean {
+  return (
+    !!p.types?.includes("rent") && typeof p.price?.yearly === "number" && p.price.yearly > 0
+  );
+}
+
+function propertyHasMonthlyRentPrice(p: Property): boolean {
+  return (
+    !!p.types?.includes("rent") && typeof p.price?.monthly === "number" && p.price.monthly > 0
   );
 }
 
@@ -144,9 +157,9 @@ export function filterProperties(
     result = result.filter((p) => filters.bedrooms!.includes(p.bedrooms));
   }
   if (filters.minDuration === 12) {
-    result = result.filter((p) => (p.duration?.min ?? 1) >= 12);
+    result = result.filter((p) => propertyHasYearlyRentPrice(p));
   } else if (filters.minDuration === 1) {
-    result = result.filter((p) => (p.duration?.min ?? 12) < 12);
+    result = result.filter((p) => propertyHasMonthlyRentPrice(p));
   }
   if (filters.maxPrice) {
     result = result.filter((p) => {
@@ -163,9 +176,9 @@ export function filterProperties(
       result = result.filter((p) => p.bedrooms === segment.value);
     } else if (segment.kind === "payment") {
       if (segment.value === "yearly") {
-        result = result.filter((p) => (p.duration?.min ?? 1) >= 12);
+        result = result.filter((p) => propertyHasYearlyRentPrice(p));
       } else {
-        result = result.filter((p) => (p.duration?.min ?? 12) < 12);
+        result = result.filter((p) => propertyHasMonthlyRentPrice(p));
       }
     } else if (segment.kind === "amenity") {
       const feat = amenityToFeature[segment.value as string];

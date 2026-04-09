@@ -32,6 +32,7 @@ import {
 } from "@/lib/propertiesCatalog";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import Link from "next/link";
+import CatalogMapLink from "@/components/CatalogMapLink";
 import {
   buildH1,
   buildSeoText,
@@ -210,11 +211,14 @@ export default async function PropertiesByTypeAndAreaPage({
   return (
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-8">
-        <CatalogBreadcrumb
-          type={catalogType as "rent" | "sale" | "villas" | "land" | "business"}
-          area={mainArea}
-          className="mb-3"
-        />
+        <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+          <CatalogBreadcrumb
+            type={catalogType as "rent" | "sale" | "villas" | "land" | "business"}
+            area={mainArea}
+            className="mb-0"
+          />
+          <CatalogMapLink filters={filters} />
+        </div>
         <CatalogStructuredData
           properties={sortedProperties}
           baseUrl={baseUrl}

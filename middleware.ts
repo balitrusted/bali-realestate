@@ -9,6 +9,9 @@ const UBUD_SUB_SLUGS = new Set(Object.keys(subAreaNames));
 /** First segment under `/properties` that is a catalog hub, not a listing slug. */
 const CATALOG_ROOT = new Set(["rent", "sale", "villas", "land", "business"]);
 
+/** Single-segment routes under `/properties/...` that are not listing slug rewrites. */
+const PROPERTIES_RESERVED_SEGMENTS = new Set(["p", "map"]);
+
 function normalizePathname(pathname: string): string {
   if (pathname.length > 1 && pathname.endsWith("/")) return pathname.slice(0, -1);
   return pathname;
@@ -70,7 +73,7 @@ export function middleware(request: NextRequest) {
   const one = pathname.match(/^\/properties\/([^/]+)$/);
   if (one) {
     const seg = one[1];
-    if (seg !== "p" && !CATALOG_ROOT.has(seg)) {
+    if (!PROPERTIES_RESERVED_SEGMENTS.has(seg) && !CATALOG_ROOT.has(seg)) {
       const url = request.nextUrl.clone();
       url.pathname = `/properties/p/${seg}`;
       return NextResponse.rewrite(url);

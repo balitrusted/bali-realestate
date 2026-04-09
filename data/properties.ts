@@ -355,6 +355,7 @@ export const properties: Property[] = [
     },
     images: ["https://2hli4xtzchlvkn3f.public.blob.vercel-storage.com/properties/villa-2beds-71-tanah_lot-gentong-1-wpFbo4xPfWQFTDEOdpE2h5QgFeqRM9.jpg", "https://2hli4xtzchlvkn3f.public.blob.vercel-storage.com/properties/villa-2beds-71-tanah_lot-gentong-2-vEXwS1uV7c8AcP8d00jzvoT1EMa4cU.jpg", "https://2hli4xtzchlvkn3f.public.blob.vercel-storage.com/properties/villa-2beds-71-tanah_lot-gentong-3-tOWyt3E5z6VT2tB6XTTs0ocqHGMb66.jpg", "https://2hli4xtzchlvkn3f.public.blob.vercel-storage.com/properties/villa-2beds-71-tanah_lot-gentong-4-sOltvBmwCCDPMzT4ZdjDl0Bg5y0yTg.jpg", "https://2hli4xtzchlvkn3f.public.blob.vercel-storage.com/properties/villa-2beds-71-tanah_lot-gentong-5-g9kL6sbEtD7VxrPbeHaOCvn1B4hlQS.jpg", "https://2hli4xtzchlvkn3f.public.blob.vercel-storage.com/properties/villa-2beds-71-tanah_lot-gentong-6-XulgEyKMYMMMB2ybYogzl5GyEhnqsK.jpg", "https://2hli4xtzchlvkn3f.public.blob.vercel-storage.com/properties/villa-2beds-71-tanah_lot-gentong-7-JiQw6ULaFTqQttmrHPzyay5kod0Zix.jpg", "https://2hli4xtzchlvkn3f.public.blob.vercel-storage.com/properties/villa-2beds-71-tanah_lot-gentong-8-ZZnIkLmFmZF7euZV7idMOYnxBRh3eF.jpg", "https://2hli4xtzchlvkn3f.public.blob.vercel-storage.com/properties/villa-2beds-71-tanah_lot-gentong-9-9i7UkhgYfmAQPvEuzCX9u5nLa9bk6X.jpg"],
     order: 10,
+    archived: true,
     createdAt: "2026-02-05T18:22:13.621Z",
     updatedAt: "2026-02-06T16:35:07.295Z",
   },

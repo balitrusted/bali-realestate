@@ -9,6 +9,7 @@ interface PropertyImageWithFallbackProps {
   fill?: boolean;
   className?: string;
   sizes?: string;
+  loading?: "eager" | "lazy";
   /** For fixed-size (e.g. admin thumb) */
   width?: number;
   height?: number;
@@ -21,6 +22,7 @@ export default function PropertyImageWithFallback({
   fill,
   className,
   sizes,
+  loading = "lazy",
   width,
   height,
   placeholderText = "No photo",
@@ -58,6 +60,8 @@ export default function PropertyImageWithFallback({
         alt={alt}
         className={className}
         style={style}
+        loading={loading}
+        decoding="async"
         onError={() => setFailed(true)}
       />
     );
@@ -71,6 +75,8 @@ export default function PropertyImageWithFallback({
         fill
         className={className}
         sizes={sizes}
+        loading={loading}
+        decoding="async"
         onError={() => setFailed(true)}
       />
     );
@@ -84,6 +90,8 @@ export default function PropertyImageWithFallback({
       height={height ?? 300}
       className={className}
       sizes={sizes}
+      loading={loading}
+      decoding="async"
       onError={() => setFailed(true)}
     />
   );

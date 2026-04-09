@@ -132,6 +132,9 @@ export default function AdminLayout({
               <Link href="/admin/blog" className="text-gray-700 hover:text-gray-900">
                 Blog
               </Link>
+              <Link href="/admin/glossary" className="text-gray-700 hover:text-gray-900">
+                Glossary
+              </Link>
               <AdminNavLinkWithBadge href="/admin/comments" count={badgeCounts.commentsPending}>
                 Comments
               </AdminNavLinkWithBadge>

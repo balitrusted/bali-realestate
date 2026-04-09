@@ -23,8 +23,14 @@ export default function Header() {
             <Link href="/properties" className="text-gray-700 hover:text-gray-900">
               Properties
             </Link>
+            <Link href="/properties/map" className="text-gray-700 hover:text-gray-900">
+              Map
+            </Link>
             <Link href="/guides" className="text-gray-700 hover:text-gray-900">
               Knowledge Base
+            </Link>
+            <Link href="/glossary" className="text-gray-700 hover:text-gray-900">
+              Glossary
             </Link>
             <Link href="/blog" className="text-gray-700 hover:text-gray-900">
               Blog
@@ -71,8 +77,14 @@ export default function Header() {
             <Link href="/properties" className="py-3 text-gray-700 hover:text-gray-900" onClick={() => setMobileMenuOpen(false)}>
               Properties
             </Link>
+            <Link href="/properties/map" className="py-3 text-gray-700 hover:text-gray-900" onClick={() => setMobileMenuOpen(false)}>
+              Map
+            </Link>
             <Link href="/guides" className="py-3 text-gray-700 hover:text-gray-900" onClick={() => setMobileMenuOpen(false)}>
               Knowledge Base
+            </Link>
+            <Link href="/glossary" className="py-3 text-gray-700 hover:text-gray-900" onClick={() => setMobileMenuOpen(false)}>
+              Glossary
             </Link>
             <Link href="/blog" className="py-3 text-gray-700 hover:text-gray-900" onClick={() => setMobileMenuOpen(false)}>
               Blog

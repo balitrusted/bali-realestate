@@ -23,6 +23,7 @@ import {
 } from "@/lib/propertiesCatalog";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import Link from "next/link";
+import CatalogMapLink from "@/components/CatalogMapLink";
 import {
   buildTitle,
   buildH1,
@@ -163,10 +164,13 @@ export default async function PropertiesByTypePage({
   return (
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-8">
-        <CatalogBreadcrumb
-          type={catalogType as "rent" | "sale" | "villas" | "land" | "business"}
-          className="mb-3"
-        />
+        <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+          <CatalogBreadcrumb
+            type={catalogType as "rent" | "sale" | "villas" | "land" | "business"}
+            className="mb-0"
+          />
+          <CatalogMapLink filters={filters} />
+        </div>
         <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
           <h1 className="text-2xl md:text-4xl font-semibold tracking-tight text-gray-900 mb-2">
             {buildH1(catalogType)}

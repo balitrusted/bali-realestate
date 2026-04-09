@@ -39,6 +39,15 @@ export function generateBlogIndexFile(posts: BlogPost[]): string {
     if (p.canonicalUrl) {
       c += `${ind}${ind}canonicalUrl: ${JSON.stringify(p.canonicalUrl)},\n`;
     }
+    if (p.introHighlight) {
+      c += `${ind}${ind}introHighlight: ${JSON.stringify(p.introHighlight)},\n`;
+    }
+    if (p.ctaLabel) {
+      c += `${ind}${ind}ctaLabel: ${JSON.stringify(p.ctaLabel)},\n`;
+    }
+    if (p.ctaUrl) {
+      c += `${ind}${ind}ctaUrl: ${JSON.stringify(p.ctaUrl)},\n`;
+    }
     c += `${ind}}${i < posts.length - 1 ? "," : ""}\n`;
   });
   c += `];\n`;
