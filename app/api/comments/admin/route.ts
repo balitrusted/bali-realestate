@@ -1,57 +1,11 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { readFile, writeFile } from "fs/promises";
-import { join } from "path";
-import { Comment } from "@/types/article";
-
-const DATA_FILE = join(process.cwd(), "data", "comments.ts");
+import { getAllComments, persistComments } from "@/lib/commentsPersistence";
 
 // Check authentication
 async function checkAuth() {
   const cookieStore = await cookies();
   return cookieStore.get("admin-auth")?.value === "true";
-}
-
-// Generate comments file content (same as in route.ts)
-function generateCommentsFile(comments: Comment[]): string {
-  const indent = "  ";
-  let content = `import { Comment } from "@/types/article";\n\n`;
-  content += `// Comments data\n`;
-  content += `// This file is auto-generated. Manual edits may be overwritten.\n`;
-  content += `export const comments: Comment[] = [\n`;
-
-  comments.forEach((comment, index) => {
-    content += `${indent}{\n`;
-    content += `${indent}${indent}id: ${JSON.stringify(comment.id)},\n`;
-    content += `${indent}${indent}articleId: ${JSON.stringify(comment.articleId)},\n`;
-    if (comment.parentId) {
-      content += `${indent}${indent}parentId: ${JSON.stringify(comment.parentId)},\n`;
-    }
-    content += `${indent}${indent}authorName: ${JSON.stringify(comment.authorName)},\n`;
-    content += `${indent}${indent}authorEmail: ${JSON.stringify(comment.authorEmail)},\n`;
-    if (comment.authorWebsite) {
-      content += `${indent}${indent}authorWebsite: ${JSON.stringify(comment.authorWebsite)},\n`;
-    }
-    content += `${indent}${indent}content: ${JSON.stringify(comment.content)},\n`;
-    content += `${indent}${indent}approved: ${comment.approved},\n`;
-    content += `${indent}${indent}createdAt: ${JSON.stringify(comment.createdAt)},\n`;
-    if (comment.updatedAt) {
-      content += `${indent}${indent}updatedAt: ${JSON.stringify(comment.updatedAt)},\n`;
-    }
-    if (comment.upvotes !== undefined) {
-      content += `${indent}${indent}upvotes: ${comment.upvotes},\n`;
-    }
-    if (comment.downvotes !== undefined) {
-      content += `${indent}${indent}downvotes: ${comment.downvotes},\n`;
-    }
-    if (comment.userVotes && Object.keys(comment.userVotes).length > 0) {
-      content += `${indent}${indent}userVotes: ${JSON.stringify(comment.userVotes)},\n`;
-    }
-    content += `${indent}}${index < comments.length - 1 ? "," : ""}\n`;
-  });
-
-  content += `];\n`;
-  return content;
 }
 
 // GET - Get all comments (admin only)
@@ -61,7 +15,7 @@ export async function GET() {
   }
 
   try {
-    const { comments } = await import("@/data/comments");
+    const comments = await getAllComments();
     return NextResponse.json({ comments });
   } catch (error) {
     console.error("Error reading comments:", error);
@@ -77,34 +31,34 @@ export async function PUT(request: Request) {
 
   try {
     const { id, approved } = await request.json();
-    
+
     if (!id) {
       return NextResponse.json({ error: "ID required" }, { status: 400 });
     }
 
-    const { comments: existingComments } = await import("@/data/comments");
-    const index = existingComments.findIndex(c => c.id === id);
-    
+    const existingComments = await getAllComments();
+    const index = existingComments.findIndex((c) => c.id === id);
+
     if (index === -1) {
       return NextResponse.json({ error: "Comment not found" }, { status: 404 });
     }
 
-    existingComments[index] = {
-      ...existingComments[index],
-      approved: approved === true,
-      updatedAt: new Date().toISOString(),
-    };
+    const updated = existingComments.map((c, i) =>
+      i === index
+        ? {
+            ...c,
+            approved: approved === true,
+            updatedAt: new Date().toISOString(),
+          }
+        : c
+    );
 
-    const newContent = generateCommentsFile(existingComments);
-    await writeFile(DATA_FILE, newContent, "utf-8");
+    await persistComments(updated);
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error updating comment:", error);
-    return NextResponse.json(
-      { error: "Failed to update comment" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to update comment" }, { status: 500 });
   }
 }
 
@@ -122,18 +76,14 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "ID required" }, { status: 400 });
     }
 
-    const { comments: existingComments } = await import("@/data/comments");
-    const filtered = existingComments.filter(c => c.id !== id);
+    const existingComments = await getAllComments();
+    const filtered = existingComments.filter((c) => c.id !== id);
 
-    const newContent = generateCommentsFile(filtered);
-    await writeFile(DATA_FILE, newContent, "utf-8");
+    await persistComments(filtered);
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting comment:", error);
-    return NextResponse.json(
-      { error: "Failed to delete comment" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to delete comment" }, { status: 500 });
   }
 }

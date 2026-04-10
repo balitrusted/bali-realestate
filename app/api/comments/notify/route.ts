@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getArticles } from "@/lib/articlesData";
+import { getAllBlogPosts } from "@/lib/blogPostsPersistence";
 import { sendEmail } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
@@ -10,10 +11,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing comment data" }, { status: 400 });
     }
 
-    const articles = await getArticles();
-    const article = articles.find((a) => a.id === parentComment.articleId);
-    const articleTitle = article?.title || "Article";
-    const articleUrl = `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/guides/${article?.category || "ubud"}/${article?.slug || ""}`;
+    let articleTitle = "Article";
+    let articleUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
+    if (String(parentComment.articleId).startsWith("blog:")) {
+      const blogId = String(parentComment.articleId).slice("blog:".length);
+      const posts = await getAllBlogPosts();
+      const post = posts.find((p) => p.id === blogId);
+      articleTitle = post?.title || "Blog post";
+      articleUrl = `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/blog/${post?.slug || ""}`;
+    } else {
+      const articles = await getArticles();
+      const article = articles.find((a) => a.id === parentComment.articleId);
+      articleTitle = article?.title || "Article";
+      articleUrl = `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/guides/${article?.category || "ubud"}/${article?.slug || ""}`;
+    }
 
     const subject = `New reply to your comment on "${articleTitle}"`;
     const textBody = `

@@ -1,4 +1,5 @@
 import type { Article } from "@/types/article";
+import { getAllComments } from "@/lib/commentsPersistence";
 
 /** Ordered hub categories — keep in sync with routes `/guides/[slug]` */
 export const GUIDE_CATEGORIES = [
@@ -39,10 +40,10 @@ export function articlePreview(article: Article, maxLen = 158): string {
   return `${one.slice(0, maxLen).trim()}…`;
 }
 
-/** Approved comments per article (local `data/comments`; safe if file missing). */
+/** Approved comments per article (bundled + Blob when enabled). */
 export async function getApprovedCommentCountsByArticleId(): Promise<Map<string, number>> {
   try {
-    const { comments } = await import("@/data/comments");
+    const comments = await getAllComments();
     const map = new Map<string, number>();
     for (const c of comments) {
       if (!c.approved) continue;

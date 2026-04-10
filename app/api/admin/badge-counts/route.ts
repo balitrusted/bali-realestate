@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { getRequests } from "@/lib/requestsData";
 import { getNotifyUnreadCount } from "@/lib/adminBadgeState";
+import { getAllComments } from "@/lib/commentsPersistence";
 
 export const dynamic = "force-dynamic";
 
@@ -16,8 +17,8 @@ export async function GET() {
   }
 
   try {
-    const { comments } = await import("@/data/comments");
-    const commentsPending = (comments || []).filter((c) => !c.approved).length;
+    const comments = await getAllComments();
+    const commentsPending = comments.filter((c) => !c.approved).length;
 
     const siteRequests = await getRequests();
     const requestsNew = siteRequests.filter((r) => (r.status || "new") === "new").length;
