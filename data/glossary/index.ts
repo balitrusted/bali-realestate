@@ -168,4 +168,172 @@ export const glossaryTerms: GlossaryTerm[] = [
     seoDescription: "What recurring estate fees cover and what to verify before renting or buying in a cluster.",
     relatedGuideUrl: "/guides/rent",
   },
+  {
+    id: "glossary-green-zone-jalur-hijau",
+    slug: "green-zone-jalur-hijau-bali",
+    title: "Green Zone (Jalur Hijau)",
+    category: "legal",
+    summary:
+      "Protected agricultural or conservation land where construction is restricted; high compliance and demolition risk if a villa sits on the wrong zoning.",
+    content: `<p>The <strong>Green Zone</strong> (<em>Jalur Hijau</em>) refers to protected agricultural or conservation land where construction is strictly limited or prohibited under Indonesian spatial planning. In and around Ubud, marketing rarely spells this out—but a wrong classification can mean enforcement, disputes, or loss of the structure.</p>
+<p>Buying or long-term renting on land that is not aligned with the approved use carries a real risk that improvements could be challenged. Always verify zoning and the chain of permits (including how current regulations like <strong>ITR</strong> / spatial plans are applied locally) before you commit—not only the agent’s map pin.</p>
+<p>This entry is orientation, not legal advice; use a qualified notary and, where needed, a zoning or land-use specialist for your specific plot.</p>`,
+    published: true,
+    createdAt: "2026-04-10T12:00:00.000Z",
+    updatedAt: "2026-04-10T12:00:00.000Z",
+    seoTitle: "Green Zone (Jalur Hijau) Bali — zoning risk | Balitrusted glossary",
+    seoDescription:
+      "What Green Zones mean for Ubud villas, why illegal builds happen, and why ITR/zoning checks matter before rent or purchase.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-pyramids-of-chi",
+    slug: "pyramids-of-chi-keliki-landmark",
+    title: "Pyramids of Chi (location landmark)",
+    category: "living",
+    summary:
+      "A major sound-healing center in Keliki, north of Ubud; “near Pyramids of Chi” is now a common way to position listings.",
+    content: `<p><strong>Pyramids of Chi</strong> is a well-known sound-healing and wellness center in <strong>Keliki</strong>, north of Ubud. In property descriptions, “near Pyramids of Chi” has become a shorthand for a quieter, greener band above the busiest central corridors.</p>
+<p>Listings in this orbit often appeal to people who want distance from core traffic while staying within reach of Ubud. Expect a mix of jungle, views, and winding access roads—verify drive times in real conditions, not only straight-line distance.</p>`,
+    published: true,
+    createdAt: "2026-04-10T12:00:00.000Z",
+    updatedAt: "2026-04-10T12:00:00.000Z",
+    seoTitle: "Pyramids of Chi — Ubud area landmark | Balitrusted glossary",
+    seoDescription: "Why Keliki’s Pyramids of Chi appears in villa listings and what it implies for location and vibe.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-monkey-forest-access",
+    slug: "monkey-forest-access-ubud",
+    title: "Monkey Forest access (Ubud)",
+    category: "living",
+    summary:
+      "Living near the Sacred Monkey Forest means jungle atmosphere—and regular visits from macaques that affect doors, roofs, and gardens.",
+    content: `<p>The <strong>Sacred Monkey Forest Sanctuary</strong> is a defining landmark of Ubud. Villas nearby can feel uniquely “in the jungle,” but they share the forest edge with long-tailed <strong>macaques</strong>.</p>
+<p>For owners and managers, that often means extra attention to roofs, gutters, gardens, and anything left outdoors. For guests and long-term renters, it means habits like closing windows and terrace doors, securing food, and expecting occasional bold visitors—not a flaw in the villa, but part of the ecology.</p>
+<p>If you love the backdrop, budget time and maintenance for monkey-smart design; if you want zero wildlife drama, distance from the core sanctuary fringe may suit you better.</p>`,
+    published: true,
+    createdAt: "2026-04-10T12:00:00.000Z",
+    updatedAt: "2026-04-10T12:00:00.000Z",
+    seoTitle: "Living near Ubud Monkey Forest | Balitrusted glossary",
+    seoDescription: "What Monkey Forest proximity means for maintenance, security, and daily villa life.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-campuhan-ridge-walk",
+    slug: "campuhan-ridge-walk-ubud-views",
+    title: "Campuhan Ridge Walk (premium views)",
+    category: "living",
+    summary:
+      "Ubud’s famous ridge trail; villas with ridge outlooks or northern end positions often trade at a premium for stable views and breeze.",
+    content: `<p>The <strong>Campuhan Ridge Walk</strong> is one of Ubud’s iconic scenic paths. Villas that overlook the ridge—or sit toward its northern stretches (e.g. toward <strong>Bangkiang Sidem</strong>)—often command higher rents and sale attention because the “postcard” view and cooling airflow are part of daily life.</p>
+<p>“Premium” here is subjective: confirm what is actually visible from the living areas and pool, how access works (steps, parking, walks), and whether any future builds could alter sightlines. Ridge adjacency still competes with the same zoning and neighbor rules as everywhere else.</p>`,
+    published: true,
+    createdAt: "2026-04-10T12:00:00.000Z",
+    updatedAt: "2026-04-10T12:00:00.000Z",
+    seoTitle: "Campuhan Ridge Walk & villa views | Balitrusted glossary",
+    seoDescription: "Why ridge-walk proximity matters for views, breeze, and pricing in the Ubud micro-market.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-rice-field-view-sawah",
+    slug: "rice-field-view-sawah-buffer",
+    title: "Rice field view (sawah)",
+    category: "living",
+    summary:
+      "The most requested Ubud feature—but open fields can be built on unless protected or controlled; ask about what protects your view.",
+    content: `<p>A <strong>rice field view</strong> (<em>sawah</em>) is the top request in many Ubud searches. Marketing photos lean hard on open paddies—but <strong>views are not always permanent</strong>.</p>
+<p>Unless the land in front is in a protected category, under long-term control of the same owner/lessor as the villa, or otherwise unlikely to be built out, tomorrow’s view can be a wall or a new roofline. Always ask about the <strong>buffer</strong>: who owns the plot you’re looking over, what can be built there under local rules, and whether any agreement restricts height or use.</p>
+<p>Pair this with our note on <a href="/glossary/green-zone-jalur-hijau-bali">Green Zones</a>: “protected” can be real—or overstated in chat. Verify rather than assume.</p>`,
+    published: true,
+    createdAt: "2026-04-10T12:00:00.000Z",
+    updatedAt: "2026-04-10T12:00:00.000Z",
+    seoTitle: "Rice field view (sawah) — will it last? | Balitrusted glossary",
+    seoDescription: "Why sawah views in Ubud listings need a buffer-zone reality check before you rent or buy.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-melasti",
+    slug: "melasti-ceremony-bali-road-closures",
+    title: "Melasti (ceremonial impact)",
+    category: "living",
+    summary:
+      "Major Hindu purification processions toward the water; in Ubud, Melasti can mean hours of road closure—part of normal life, not an emergency.",
+    content: `<p><strong>Melasti</strong> is a Hindu purification ritual featuring large processions to the sea or other water sources. In Bali—and around Ubud—such <strong>ceremonies can close roads completely</strong> for a period, sometimes for hours, as communities move together in dress and protocol.</p>
+<p>For long-term renters and owners, the practical lesson is calendar awareness: your commute, grocery run, or airport timing may need a buffer on big ceremony days. This is usually predictable locally (ask staff or neighbors), not arbitrary “Bali chaos,” but it is part of living in a place where religion and public space overlap.</p>`,
+    published: true,
+    createdAt: "2026-04-10T12:00:00.000Z",
+    updatedAt: "2026-04-10T12:00:00.000Z",
+    seoTitle: "Melasti ceremonies & traffic in Bali | Balitrusted glossary",
+    seoDescription: "What Melasti is and why processions can affect roads and access around Ubud.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-canang-sari",
+    slug: "canang-sari-daily-offerings",
+    title: "Canang sari (daily offerings)",
+    category: "living",
+    summary:
+      "Small leaf trays with flowers and incense at gates and paths; part of daily life in villas—treat them with respect.",
+    content: `<p><strong>Canang sari</strong> are small, hand-made palm-leaf trays with flowers, rice, and often incense, placed daily at homes, shops, and pathways across Bali. In villas you will usually see staff renew them as part of upkeep and blessing the space.</p>
+<p>For residents and guests, the etiquette is simple: <strong>avoid stepping on offerings</strong>, especially when incense is burning—it reads as disrespect toward neighbors and the <strong>banjar</strong> community fabric. Step around them; when in doubt, ask staff where foot traffic should go.</p>
+<p>Treating offerings as normal background—not clutter—usually correlates with a property that is well integrated locally.</p>`,
+    published: true,
+    createdAt: "2026-04-10T12:00:00.000Z",
+    updatedAt: "2026-04-10T12:00:00.000Z",
+    seoTitle: "Canang sari — Bali daily offerings | Balitrusted glossary",
+    seoDescription: "What canang sari are and why not to step on offerings at a villa or on the street.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-scooter-access-only",
+    slug: "scooter-access-only-ubud-villas",
+    title: "Scooter access only",
+    category: "living",
+    summary:
+      "Many Ubud fringe villas are down narrow gang paths—no car—peaceful, but plan for scooters and logistics.",
+    content: `<p><strong>Scooter access only</strong> is common in Ubud’s quieter edges—think steep lanes in <strong>Penestanan</strong>, pockets of <strong>Kutuh Kelod</strong>, and similar “last mile” situations. Cars cannot pass the final narrow <em>gang</em> (alley), so you park farther out and finish on two wheels or on foot.</p>
+<p>The tradeoff is real: less traffic noise and more privacy, but luggage moves slower, big furniture deliveries need planning, and guests who won’t ride scooters should know the drill before booking.</p>
+<p>Always confirm where the nearest car drop-off is, whether nights feel safe walking that last segment, and how staff handle groceries and heavy bags.</p>`,
+    published: true,
+    createdAt: "2026-04-10T12:00:00.000Z",
+    updatedAt: "2026-04-10T12:00:00.000Z",
+    seoTitle: "Scooter-only access villas in Ubud | Balitrusted glossary",
+    seoDescription: "What scooter access only means for Penestanan-style paths, peace, and logistics.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-jungle-view-vs-river-view",
+    slug: "jungle-view-vs-river-view-bali",
+    title: "Jungle view vs. river view",
+    category: "living",
+    summary:
+      "Both sound exotic; jungle tends to privacy and humidity/insects, river to soundscape and often trickier terrain and foundations.",
+    content: `<p>Listings love <strong>jungle view</strong> and <strong>river view</strong> equally—but they describe different daily experiences.</p>
+<p><strong>Jungle-facing</strong> homes often get dense tropical canopy: excellent privacy and a cocooned feel, but also higher humidity management and more insect and leaf litter maintenance unless the building is detailed for it.</p>
+<p><strong>River-adjacent</strong> homes (for example toward the <strong>Ayung</strong>) can offer a premium soundscape and cooler air movement, yet slopes, erosion, flood lines, and foundation complexity matter more than on a flat rice plot. Engineering and insurance realities should be part of due diligence on purchases; renters should ask about access in wet season and any history of high water.</p>`,
+    published: true,
+    createdAt: "2026-04-10T12:00:00.000Z",
+    updatedAt: "2026-04-10T12:00:00.000Z",
+    seoTitle: "Jungle view vs river view villas | Balitrusted glossary",
+    seoDescription: "How jungle and river outlooks differ for comfort, maintenance, and land in Bali.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-tegalalang-investment",
+    slug: "tegalalang-rice-terraces-investment",
+    title: "Tegalalang (investment zone)",
+    category: "finance",
+    summary:
+      "North of Ubud center, UNESCO-famous terraces; cooler air, larger plots, and growing upscale resort and eco-villa interest.",
+    content: `<p><strong>Tegalalang</strong>, north of Ubud center, is internationally known for its rice terraces (including UNESCO-recognized cultural landscape framing). The district has become a magnet for <strong>boutique resorts</strong>, eco-style villas, and buyers who want cooler nights and more breathing room than the dense central ring.</p>
+<p>Compared with cramped center plots, Tegalalang can offer relatively more land per dollar—though prices have risen with visibility. “Investment zone” is not a guarantee: success still depends on title quality, infrastructure, staffing, and whether your exit audience is tourism, long-stay nomads, or local demand.</p>
+<p>Use this label as a geography cue, then run the same financial and legal checks you would anywhere else in Bali.</p>`,
+    published: true,
+    createdAt: "2026-04-10T12:00:00.000Z",
+    updatedAt: "2026-04-10T12:00:00.000Z",
+    seoTitle: "Tegalalang — Ubud north investment context | Balitrusted glossary",
+    seoDescription: "Why Tegalalang attracts high-end projects, larger plots, and long-term land interest north of Ubud.",
+    relatedGuideUrl: "/guides/land",
+  },
 ];
