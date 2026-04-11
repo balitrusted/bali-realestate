@@ -23,6 +23,42 @@ function normalizeArticleDates(article: Article): Article {
 }
 
 /**
+ * Raw array from Blob JSON only (no merge with bundled). Used after admin saves to verify writes.
+ */
+export async function readArticlesBlobRaw(): Promise<Article[] | null> {
+  if (!process.env.BLOB_READ_WRITE_TOKEN) return null;
+  try {
+    const baseUrl = getBlobStoreBaseUrl();
+    const bust = (u: string) => `${u}${u.includes("?") ? "&" : "?"}t=${Date.now()}`;
+    if (baseUrl) {
+      const res = await fetch(bust(`${baseUrl}/${BLOB_KEY}`), {
+        cache: "no-store",
+        headers: { Pragma: "no-cache", "Cache-Control": "no-cache" },
+      });
+      if (res.ok) {
+        const data: unknown = await res.json();
+        if (Array.isArray(data)) return (data as Article[]).map(normalizeArticleDates);
+      }
+    }
+    const { blobs } = await list({ prefix: BLOB_KEY, limit: 1 });
+    const match = blobs?.find((b) => b.pathname === BLOB_KEY);
+    if (match?.url) {
+      const res = await fetch(bust(match.url), {
+        cache: "no-store",
+        headers: { Pragma: "no-cache", "Cache-Control": "no-cache" },
+      });
+      if (res.ok) {
+        const data: unknown = await res.json();
+        if (Array.isArray(data)) return (data as Article[]).map(normalizeArticleDates);
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+  return null;
+}
+
+/**
  * Get articles: from Vercel Blob if present, else from bundled data/articles.
  */
 export async function getArticles(): Promise<Article[]> {
@@ -34,31 +70,7 @@ export async function getArticles(): Promise<Article[]> {
   // This prevents “why did my text change not show?” when Blob contains older data.
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     try {
-      const blobArticles = await (async (): Promise<Article[] | null> => {
-        const baseUrl = getBlobStoreBaseUrl();
-
-        // Prefer direct fetch (no list()) to avoid Advanced Requests.
-        if (baseUrl) {
-          const res = await fetch(`${baseUrl}/${BLOB_KEY}`, { cache: "no-store" });
-          if (res.ok) {
-            const data = await res.json();
-            if (Array.isArray(data)) return data as Article[];
-          }
-        }
-
-        // Fallback: locate the blob URL via list() (only if base URL is missing).
-        const { blobs } = await list({ prefix: BLOB_KEY, limit: 1 });
-        const match = blobs?.find((b) => b.pathname === BLOB_KEY);
-        if (match?.url) {
-          const res = await fetch(match.url, { cache: "no-store" });
-          if (res.ok) {
-            const data = await res.json();
-            if (Array.isArray(data)) return data as Article[];
-          }
-        }
-
-        return null;
-      })();
+      const blobArticles = await readArticlesBlobRaw();
 
       if (blobArticles && Array.isArray(blobArticles) && blobArticles.length > 0) {
         const normalizedBlobArticles = blobArticles.map(normalizeArticleDates);
@@ -100,5 +112,6 @@ export async function saveArticlesToBlob(articles: Article[]): Promise<void> {
     access: "public",
     contentType: "application/json",
     addRandomSuffix: false,
+    cacheControlMaxAge: 0,
   });
 }

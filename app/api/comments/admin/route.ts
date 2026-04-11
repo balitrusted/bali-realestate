@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { getAllComments, persistComments } from "@/lib/commentsPersistence";
+import { MutationHttpError } from "@/lib/blobJsonOptimisticWrite";
+import { getAllComments, mutateCommentsWithRetry } from "@/lib/commentsPersistence";
 
 // Check authentication
 async function checkAuth() {
@@ -36,27 +37,31 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: "ID required" }, { status: 400 });
     }
 
-    const existingComments = await getAllComments();
-    const index = existingComments.findIndex((c) => c.id === id);
+    await mutateCommentsWithRetry((existingComments) => {
+      const index = existingComments.findIndex((c) => c.id === id);
 
-    if (index === -1) {
-      return NextResponse.json({ error: "Comment not found" }, { status: 404 });
-    }
+      if (index === -1) {
+        throw new MutationHttpError(
+          NextResponse.json({ error: "Comment not found" }, { status: 404 })
+        );
+      }
 
-    const updated = existingComments.map((c, i) =>
-      i === index
-        ? {
-            ...c,
-            approved: approved === true,
-            updatedAt: new Date().toISOString(),
-          }
-        : c
-    );
-
-    await persistComments(updated);
+      return existingComments.map((c, i) =>
+        i === index
+          ? {
+              ...c,
+              approved: approved === true,
+              updatedAt: new Date().toISOString(),
+            }
+          : c
+      );
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    if (error instanceof MutationHttpError) {
+      return error.response;
+    }
     console.error("Error updating comment:", error);
     return NextResponse.json({ error: "Failed to update comment" }, { status: 500 });
   }
@@ -76,13 +81,21 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "ID required" }, { status: 400 });
     }
 
-    const existingComments = await getAllComments();
-    const filtered = existingComments.filter((c) => c.id !== id);
-
-    await persistComments(filtered);
+    await mutateCommentsWithRetry((existingComments) => {
+      const filtered = existingComments.filter((c) => c.id !== id);
+      if (filtered.length === existingComments.length) {
+        throw new MutationHttpError(
+          NextResponse.json({ error: "Comment not found" }, { status: 404 })
+        );
+      }
+      return filtered;
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    if (error instanceof MutationHttpError) {
+      return error.response;
+    }
     console.error("Error deleting comment:", error);
     return NextResponse.json({ error: "Failed to delete comment" }, { status: 500 });
   }

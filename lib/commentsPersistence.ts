@@ -2,6 +2,7 @@ import { join } from "path";
 import { writeFile } from "fs/promises";
 import { list, put } from "@vercel/blob";
 import type { Comment } from "@/types/article";
+import { stableArraySignature, writeBlobJsonArrayWithRetry } from "@/lib/blobJsonOptimisticWrite";
 
 const BLOB_KEY = "data/comments.json";
 const DATA_FILE = join(process.cwd(), "data", "comments.ts");
@@ -63,7 +64,8 @@ export function generateCommentsFile(comments: Comment[]): string {
   return content;
 }
 
-async function fetchBlobComments(): Promise<Comment[] | null> {
+/** Raw comments JSON from Blob (for verification after saves). */
+export async function readCommentsFromBlobRaw(): Promise<Comment[] | null> {
   const baseUrl = getBlobStoreBaseUrl();
   if (baseUrl) {
     const res = await fetch(appendCacheBuster(`${baseUrl}/${BLOB_KEY}`), { cache: "no-store" });
@@ -95,7 +97,7 @@ export async function getAllComments(): Promise<Comment[]> {
   }
 
   try {
-    const blobComments = await fetchBlobComments();
+    const blobComments = await readCommentsFromBlobRaw();
     if (blobComments && blobComments.length > 0) {
       const byId = new Map<string, Comment>();
       const score = commentRecencyScore;
@@ -128,9 +130,31 @@ export async function persistComments(comments: Comment[]): Promise<void> {
       access: "public",
       contentType: "application/json",
       addRandomSuffix: false,
+      cacheControlMaxAge: 0,
     });
     return;
   }
 
   await writeFile(DATA_FILE, generateCommentsFile(comments), "utf-8");
+}
+
+const verifyCommentsBlobWrite = process.env.BLOB_READ_WRITE_TOKEN
+  ? async (written: Comment[]) => {
+      const blob = await readCommentsFromBlobRaw();
+      return (
+        blob !== null && stableArraySignature(blob) === stableArraySignature(written)
+      );
+    }
+  : undefined;
+
+/** Serialize concurrent comment writes (public submit, votes, admin moderation). */
+export async function mutateCommentsWithRetry(
+  mutate: (draft: Comment[]) => Comment[] | Promise<Comment[]>
+): Promise<Comment[]> {
+  return writeBlobJsonArrayWithRetry({
+    read: getAllComments,
+    write: persistComments,
+    verifyAfterWrite: verifyCommentsBlobWrite,
+    mutate,
+  });
 }

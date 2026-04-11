@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { sendToAdmin } from "@/lib/email";
+import { MutationHttpError } from "@/lib/blobJsonOptimisticWrite";
 import { getRequests, addRequest, updateRequest, type SiteRequest } from "@/lib/requestsData";
 
 export const dynamic = "force-dynamic";
@@ -42,11 +43,11 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "id required" }, { status: 400 });
     }
     const updated = await updateRequest(id, { status, comment });
-    if (!updated) {
-      return NextResponse.json({ error: "Request not found" }, { status: 404 });
-    }
     return NextResponse.json({ request: updated });
   } catch (error) {
+    if (error instanceof MutationHttpError) {
+      return error.response;
+    }
     console.error("Request PATCH error:", error);
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }

@@ -3,7 +3,16 @@ import { cookies } from "next/headers";
 import { writeFile } from "fs/promises";
 import { join } from "path";
 import { Article } from "@/types/article";
-import { getArticles, saveArticlesToBlob } from "@/lib/articlesData";
+import {
+  getArticles,
+  readArticlesBlobRaw,
+  saveArticlesToBlob,
+} from "@/lib/articlesData";
+import {
+  MutationHttpError,
+  stableArraySignature,
+  writeBlobJsonArrayWithRetry,
+} from "@/lib/blobJsonOptimisticWrite";
 
 const DATA_FILE = join(process.cwd(), "data", "articles.ts");
 
@@ -68,6 +77,23 @@ function generateArticlesFile(articles: Article[]): string {
   return content;
 }
 
+async function persistArticles(articles: Article[]): Promise<void> {
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    await saveArticlesToBlob(articles);
+  } else {
+    await writeFile(DATA_FILE, generateArticlesFile(articles), "utf-8");
+  }
+}
+
+const verifyArticlesBlobWrite = process.env.BLOB_READ_WRITE_TOKEN
+  ? async (written: Article[]) => {
+      const blob = await readArticlesBlobRaw();
+      return (
+        blob !== null && stableArraySignature(blob) === stableArraySignature(written)
+      );
+    }
+  : undefined;
+
 // GET - Get all articles (public can see published, admin sees all)
 export async function GET(request: Request) {
   try {
@@ -104,53 +130,60 @@ export async function POST(request: Request) {
 
   try {
     const articleData: any = await request.json();
-    const existingArticles = await getArticles();
-    
-    // Generate slug from title if not provided
-    const slug = articleData.slug || articleData.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
-    
-    // Check if slug already exists
-    if (existingArticles.some(a => a.slug === slug && a.category === articleData.category)) {
-      return NextResponse.json(
-        { error: "Article with this slug already exists in this category" },
-        { status: 400 }
-      );
-    }
-    
-    const newArticle: Article = {
-      id: articleData.id || `article-${Date.now()}`,
-      title: articleData.title,
-      slug,
-      category: articleData.category,
-      content: articleData.content || "",
-      excerpt: articleData.excerpt,
-      featuredImage: articleData.featuredImage,
-      images: articleData.images || [],
-      tags: articleData.tags || [],
-      author: articleData.author || "Admin",
-      published: articleData.published || false,
-      publishedAt: articleData.published ? new Date().toISOString() : undefined,
-      createdAt: articleData.createdAt || new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      seoTitle: articleData.seoTitle,
-      seoDescription: articleData.seoDescription,
-      seoKeywords: articleData.seoKeywords || [],
-      allowComments: articleData.allowComments !== false,
-      commentCount: 0,
-    };
-    
-    const updatedArticles = [...existingArticles, newArticle];
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
-      await saveArticlesToBlob(updatedArticles);
-    } else {
-      const newContent = generateArticlesFile(updatedArticles);
-      await writeFile(DATA_FILE, newContent, "utf-8");
-    }
+
+    let newArticle!: Article;
+    await writeBlobJsonArrayWithRetry({
+      read: getArticles,
+      write: persistArticles,
+      verifyAfterWrite: verifyArticlesBlobWrite,
+      mutate: (existingArticles) => {
+        const slug =
+          articleData.slug ||
+          articleData.title
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)/g, "");
+
+        if (existingArticles.some((a) => a.slug === slug && a.category === articleData.category)) {
+          throw new MutationHttpError(
+            NextResponse.json(
+              { error: "Article with this slug already exists in this category" },
+              { status: 400 }
+            )
+          );
+        }
+
+        newArticle = {
+          id: articleData.id || `article-${Date.now()}`,
+          title: articleData.title,
+          slug,
+          category: articleData.category,
+          content: articleData.content || "",
+          excerpt: articleData.excerpt,
+          featuredImage: articleData.featuredImage,
+          images: articleData.images || [],
+          tags: articleData.tags || [],
+          author: articleData.author || "Admin",
+          published: articleData.published || false,
+          publishedAt: articleData.published ? new Date().toISOString() : undefined,
+          createdAt: articleData.createdAt || new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          seoTitle: articleData.seoTitle,
+          seoDescription: articleData.seoDescription,
+          seoKeywords: articleData.seoKeywords || [],
+          allowComments: articleData.allowComments !== false,
+          commentCount: 0,
+        };
+
+        return [...existingArticles, newArticle];
+      },
+    });
+
     return NextResponse.json({ article: newArticle });
   } catch (error) {
+    if (error instanceof MutationHttpError) {
+      return error.response;
+    }
     console.error("Error creating article:", error);
     return NextResponse.json(
       { error: "Failed to create article" },
@@ -167,28 +200,37 @@ export async function PUT(request: Request) {
 
   try {
     const articleData: any = await request.json();
-    const existingArticles = await getArticles();
 
-    const index = existingArticles.findIndex((a) => a.id === articleData.id);
-    if (index === -1) {
-      return NextResponse.json({ error: "Article not found" }, { status: 404 });
-    }
+    let updatedArticle!: Article;
+    await writeBlobJsonArrayWithRetry({
+      read: getArticles,
+      write: persistArticles,
+      verifyAfterWrite: verifyArticlesBlobWrite,
+      mutate: (existingArticles) => {
+        const index = existingArticles.findIndex((a) => a.id === articleData.id);
+        if (index === -1) {
+          throw new MutationHttpError(
+            NextResponse.json({ error: "Article not found" }, { status: 404 })
+          );
+        }
 
-    const updatedArticle: Article = {
-      ...existingArticles[index],
-      ...articleData,
-      updatedAt: new Date().toISOString(),
-    };
+        updatedArticle = {
+          ...existingArticles[index],
+          ...articleData,
+          updatedAt: new Date().toISOString(),
+        };
 
-    existingArticles[index] = updatedArticle;
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
-      await saveArticlesToBlob(existingArticles);
-    } else {
-      const newContent = generateArticlesFile(existingArticles);
-      await writeFile(DATA_FILE, newContent, "utf-8");
-    }
+        const next = [...existingArticles];
+        next[index] = updatedArticle;
+        return next;
+      },
+    });
+
     return NextResponse.json({ article: updatedArticle });
   } catch (error) {
+    if (error instanceof MutationHttpError) {
+      return error.response;
+    }
     console.error("Error updating article:", error);
     return NextResponse.json(
       { error: "Failed to update article" },
@@ -211,17 +253,18 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "ID required" }, { status: 400 });
     }
 
-    const existingArticles = await getArticles();
-    const filtered = existingArticles.filter((a) => a.id !== id);
+    await writeBlobJsonArrayWithRetry({
+      read: getArticles,
+      write: persistArticles,
+      verifyAfterWrite: verifyArticlesBlobWrite,
+      mutate: (existingArticles) => existingArticles.filter((a) => a.id !== id),
+    });
 
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
-      await saveArticlesToBlob(filtered);
-    } else {
-      const newContent = generateArticlesFile(filtered);
-      await writeFile(DATA_FILE, newContent, "utf-8");
-    }
     return NextResponse.json({ success: true });
   } catch (error) {
+    if (error instanceof MutationHttpError) {
+      return error.response;
+    }
     console.error("Error deleting article:", error);
     return NextResponse.json(
       { error: "Failed to delete article" },

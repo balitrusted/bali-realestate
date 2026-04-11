@@ -3,7 +3,7 @@ import { Comment } from "@/types/article";
 import { sendToAdmin } from "@/lib/email";
 import { getArticles } from "@/lib/articlesData";
 import { getAllBlogPosts } from "@/lib/blogPostsPersistence";
-import { getAllComments, persistComments } from "@/lib/commentsPersistence";
+import { getAllComments, mutateCommentsWithRetry } from "@/lib/commentsPersistence";
 
 // GET - Get comments for an article (only approved)
 export async function GET(request: Request) {
@@ -83,8 +83,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
     }
 
-    const existingComments = await getAllComments();
-
     const newComment: Comment = {
       id: `comment-${Date.now()}`,
       articleId: commentData.articleId,
@@ -100,14 +98,18 @@ export async function POST(request: Request) {
       userVotes: {},
     };
 
-    const updatedComments = [...existingComments, newComment];
-    await persistComments(updatedComments);
+    let parentComment: Comment | undefined;
+    await mutateCommentsWithRetry(async (existingComments) => {
+      if (commentData.parentId) {
+        parentComment = existingComments.find((c) => c.id === commentData.parentId);
+      }
+      return [...existingComments, newComment];
+    });
 
     // Send email notification if this is a reply (to the comment author)
     if (commentData.parentId) {
       try {
-        const parentComment = existingComments.find((c) => c.id === commentData.parentId);
-        if (parentComment && parentComment.authorEmail) {
+        if (parentComment?.authorEmail) {
           fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/comments/notify`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },

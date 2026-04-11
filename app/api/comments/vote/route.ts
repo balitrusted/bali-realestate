@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Comment } from "@/types/article";
-import { getAllComments, persistComments } from "@/lib/commentsPersistence";
+import { MutationHttpError } from "@/lib/blobJsonOptimisticWrite";
+import { mutateCommentsWithRetry } from "@/lib/commentsPersistence";
 
 // POST - Vote on a comment
 export async function POST(request: NextRequest) {
@@ -18,64 +19,69 @@ export async function POST(request: NextRequest) {
     const forwarded = request.headers.get("x-forwarded-for");
     const ip = forwarded ? forwarded.split(",")[0] : request.headers.get("x-real-ip") || "anonymous";
 
-    const allComments = await getAllComments();
-    const commentIndex = allComments.findIndex((c) => c.id === commentId);
+    let updatedComment!: Comment;
+    let userVoteOut: "up" | "down" | null = null;
 
-    if (commentIndex === -1) {
-      return NextResponse.json({ error: "Comment not found" }, { status: 404 });
-    }
+    await mutateCommentsWithRetry((allComments) => {
+      const commentIndex = allComments.findIndex((c) => c.id === commentId);
 
-    const comment = allComments[commentIndex];
-    const userVotes = { ...(comment.userVotes || {}) };
-    const previousVote = userVotes[ip];
+      if (commentIndex === -1) {
+        throw new MutationHttpError(
+          NextResponse.json({ error: "Comment not found" }, { status: 404 })
+        );
+      }
 
-    // Initialize counts if not present
-    let upvotes = comment.upvotes || 0;
-    let downvotes = comment.downvotes || 0;
+      const comment = allComments[commentIndex];
+      const userVotes = { ...(comment.userVotes || {}) };
+      const previousVote = userVotes[ip];
 
-    // Handle vote changes
-    if (previousVote === voteType) {
-      // User is removing their vote
-      if (voteType === "up") {
-        upvotes = Math.max(0, upvotes - 1);
+      let upvotes = comment.upvotes || 0;
+      let downvotes = comment.downvotes || 0;
+
+      if (previousVote === voteType) {
+        if (voteType === "up") {
+          upvotes = Math.max(0, upvotes - 1);
+        } else {
+          downvotes = Math.max(0, downvotes - 1);
+        }
+        delete userVotes[ip];
       } else {
-        downvotes = Math.max(0, downvotes - 1);
-      }
-      delete userVotes[ip];
-    } else {
-      // User is changing or adding a vote
-      if (previousVote === "up") {
-        upvotes = Math.max(0, upvotes - 1);
-      } else if (previousVote === "down") {
-        downvotes = Math.max(0, downvotes - 1);
+        if (previousVote === "up") {
+          upvotes = Math.max(0, upvotes - 1);
+        } else if (previousVote === "down") {
+          downvotes = Math.max(0, downvotes - 1);
+        }
+
+        if (voteType === "up") {
+          upvotes += 1;
+        } else {
+          downvotes += 1;
+        }
+        userVotes[ip] = voteType;
       }
 
-      if (voteType === "up") {
-        upvotes += 1;
-      } else {
-        downvotes += 1;
-      }
-      userVotes[ip] = voteType;
-    }
+      updatedComment = {
+        ...comment,
+        upvotes,
+        downvotes,
+        userVotes,
+        updatedAt: new Date().toISOString(),
+      };
 
-    // Update comment
-    const updatedComment: Comment = {
-      ...comment,
-      upvotes,
-      downvotes,
-      userVotes,
-      updatedAt: new Date().toISOString(),
-    };
+      userVoteOut = userVotes[ip] || null;
 
-    const next = allComments.map((c, i) => (i === commentIndex ? updatedComment : c));
-    await persistComments(next);
+      return allComments.map((c, i) => (i === commentIndex ? updatedComment : c));
+    });
 
     return NextResponse.json({
       success: true,
       comment: updatedComment,
-      userVote: userVotes[ip] || null,
+      userVote: userVoteOut,
     });
   } catch (error) {
+    if (error instanceof MutationHttpError) {
+      return error.response;
+    }
     console.error("Error voting on comment:", error);
     return NextResponse.json({ error: "Failed to vote on comment" }, { status: 500 });
   }

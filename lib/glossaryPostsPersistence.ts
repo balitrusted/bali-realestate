@@ -37,7 +37,8 @@ function dedupeGlossaryBySlug(terms: GlossaryTerm[], bundledLocalIds: Set<string
   return Array.from(bySlug.values());
 }
 
-async function fetchBlobTerms(): Promise<GlossaryTerm[] | null> {
+/** Raw terms from Blob JSON only (for verification after admin saves). */
+export async function readGlossaryTermsFromBlobRaw(): Promise<GlossaryTerm[] | null> {
   const baseUrl = getBlobStoreBaseUrl();
   if (baseUrl) {
     const res = await fetch(appendCacheBuster(`${baseUrl}/${BLOB_KEY}`), { cache: "no-store" });
@@ -68,7 +69,7 @@ export async function getAllGlossaryTerms(): Promise<GlossaryTerm[]> {
   }
 
   try {
-    const blobTerms = await fetchBlobTerms();
+    const blobTerms = await readGlossaryTermsFromBlobRaw();
     if (blobTerms && blobTerms.length > 0) {
       const score = (t: GlossaryTerm) => termRecencyScore(t);
       const byId = new Map<string, GlossaryTerm>();
@@ -96,5 +97,6 @@ export async function saveGlossaryTermsToBlob(terms: GlossaryTerm[]): Promise<vo
     access: "public",
     contentType: "application/json",
     addRandomSuffix: false,
+    cacheControlMaxAge: 0,
   });
 }

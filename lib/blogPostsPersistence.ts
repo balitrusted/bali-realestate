@@ -60,7 +60,8 @@ function dedupeBlogPostsBySlug(posts: BlogPost[], bundledLocalIds: Set<string>):
   return Array.from(bySlug.values());
 }
 
-async function fetchBlobPosts(): Promise<BlogPost[] | null> {
+/** Raw posts JSON from Blob (for verification after admin saves). */
+export async function readBlogPostsFromBlobRaw(): Promise<BlogPost[] | null> {
   const baseUrl = getBlobStoreBaseUrl();
   if (baseUrl) {
     const res = await fetch(appendCacheBuster(`${baseUrl}/${BLOB_KEY}`), { cache: "no-store" });
@@ -94,7 +95,7 @@ export async function getAllBlogPosts(): Promise<BlogPost[]> {
   }
 
   try {
-    const blobPosts = await fetchBlobPosts();
+    const blobPosts = await readBlogPostsFromBlobRaw();
     if (blobPosts && blobPosts.length > 0) {
       const normalizedBlob = blobPosts.map(normalizeBlogPost);
       const score = (p: BlogPost) => postRecencyScore(p);
@@ -123,5 +124,6 @@ export async function saveBlogPostsToBlob(posts: BlogPost[]): Promise<void> {
     access: "public",
     contentType: "application/json",
     addRandomSuffix: false,
+    cacheControlMaxAge: 0,
   });
 }

@@ -1,4 +1,6 @@
+import { NextResponse } from "next/server";
 import { list, put } from "@vercel/blob";
+import { MutationHttpError, writeBlobJsonArrayWithRetry } from "@/lib/blobJsonOptimisticWrite";
 
 const BLOB_KEY = "data/requests.json";
 const getBlobStoreBaseUrl = () => process.env.BLOB_STORE_URL?.trim().replace(/\/$/, "");
@@ -69,6 +71,7 @@ async function writeToBlob(requests: SiteRequest[]): Promise<void> {
     access: "public",
     contentType: "application/json",
     addRandomSuffix: false,
+    cacheControlMaxAge: 0,
   });
 }
 
@@ -102,9 +105,17 @@ export async function getRequests(): Promise<SiteRequest[]> {
 
 /** Append one request. Saves to Blob on Vercel, else to file. */
 export async function addRequest(request: SiteRequest): Promise<void> {
-  const requests = (await getRequests()).map(normalizeRequest);
-  requests.push({ ...request, status: "new" });
-  await saveRequests(requests);
+  await writeBlobJsonArrayWithRetry({
+    read: getRequests,
+    write: saveRequests,
+    mutate: (requests) => {
+      if (requests.some((r) => r.id === request.id)) {
+        return requests.map(normalizeRequest);
+      }
+      requests.push({ ...request, status: "new" });
+      return requests.map(normalizeRequest);
+    },
+  });
 }
 
 /** Save full list (used after update). */
@@ -119,16 +130,30 @@ export async function saveRequests(requests: SiteRequest[]): Promise<void> {
   }
 }
 
-/** Update one request (status and/or comment). */
+/** Update one request (status and/or comment). Throws MutationHttpError(404) if missing. */
 export async function updateRequest(
   id: string,
   patch: { status?: RequestStatus; comment?: string }
-): Promise<SiteRequest | null> {
-  const requests = (await getRequests()).map(normalizeRequest);
-  const index = requests.findIndex((r) => r.id === id);
-  if (index === -1) return null;
-  if (patch.status !== undefined) requests[index].status = patch.status;
-  if (patch.comment !== undefined) requests[index].comment = patch.comment;
-  await saveRequests(requests);
-  return requests[index];
+): Promise<SiteRequest> {
+  let result!: SiteRequest;
+  await writeBlobJsonArrayWithRetry({
+    read: getRequests,
+    write: saveRequests,
+    mutate: (requests) => {
+      const index = requests.findIndex((r) => r.id === id);
+      if (index === -1) {
+        throw new MutationHttpError(
+          NextResponse.json({ error: "Request not found" }, { status: 404 })
+        );
+      }
+      const row = { ...requests[index] };
+      if (patch.status !== undefined) row.status = patch.status;
+      if (patch.comment !== undefined) row.comment = patch.comment;
+      const normalized = normalizeRequest(row);
+      requests[index] = normalized;
+      result = normalized;
+      return requests.map(normalizeRequest);
+    },
+  });
+  return result;
 }
