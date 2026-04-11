@@ -22,12 +22,18 @@ import { normalizePropertyFeatures } from "@/lib/featureState";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import {
   loadFullPropertyList,
+  normalizePropertyListForPersistence,
   persistPropertyList,
   runExclusiveCatalogWrite,
+  withNormalizedCatalogFeatures,
 } from "@/lib/propertiesStorage";
 import { normalizeVillaNumberKey } from "@/lib/propertyUtils";
 import { isValidMainAreaSlug } from "@/lib/mainAreaRegistry";
-import { MutationHttpError, writeBlobJsonArrayWithRetry } from "@/lib/blobJsonOptimisticWrite";
+import {
+  MutationHttpError,
+  stableArraySignature,
+  writeBlobJsonArrayWithRetry,
+} from "@/lib/blobJsonOptimisticWrite";
 
 /** Admin and catalog must never serve stale JSON from edge/browser caches. */
 export const dynamic = "force-dynamic";
@@ -39,6 +45,15 @@ function apiJson(data: unknown, init?: ResponseInit) {
     "private, no-store, no-cache, must-revalidate, max-age=0"
   );
   return NextResponse.json(data, { ...init, headers });
+}
+
+/** `persistPropertyList` normalizes via TS round-trip; compare that shape after read. */
+async function verifyPropertyCatalogWrite(written: Property[]): Promise<boolean> {
+  const after = await loadFullPropertyList();
+  const expected = withNormalizedCatalogFeatures(
+    normalizePropertyListForPersistence(written)
+  );
+  return stableArraySignature(after) === stableArraySignature(expected);
 }
 
 function isLandOnlyTypes(types: PropertyType[]): boolean {
@@ -162,6 +177,7 @@ export async function POST(request: Request) {
       const finalList = await writeBlobJsonArrayWithRetry({
         read: loadFullPropertyList,
         write: persistPropertyList,
+        verifyAfterWrite: verifyPropertyCatalogWrite,
         mutate: async (properties) => {
           const types: PropertyType[] = normalizeTypesInput(
             property.types !== undefined
@@ -291,6 +307,7 @@ export async function PUT(request: Request) {
       const finalList = await writeBlobJsonArrayWithRetry({
         read: loadFullPropertyList,
         write: persistPropertyList,
+        verifyAfterWrite: verifyPropertyCatalogWrite,
         mutate: async (properties) => {
           if (action === "reorder") {
             return newOrder.map((id: string, index: number) => {
@@ -444,6 +461,7 @@ export async function DELETE(request: Request) {
       const finalList = await writeBlobJsonArrayWithRetry({
         read: loadFullPropertyList,
         write: persistPropertyList,
+        verifyAfterWrite: verifyPropertyCatalogWrite,
         mutate: async (properties) => properties.filter((p) => p.id !== id),
       });
 

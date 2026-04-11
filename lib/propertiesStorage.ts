@@ -22,7 +22,8 @@ export function useBlobPersistence(): boolean {
   return !!process.env.BLOB_READ_WRITE_TOKEN && process.env.VERCEL === "1";
 }
 
-function withNormalizedFeatures(list: Property[]): Property[] {
+/** Same normalization applied in `readPropertiesFromBlob` / disk read before use. */
+export function withNormalizedCatalogFeatures(list: Property[]): Property[] {
   return list.map((p) => ({
     ...p,
     features: normalizePropertyFeatures(p.features as Partial<Record<string, unknown>> | undefined),
@@ -31,7 +32,7 @@ function withNormalizedFeatures(list: Property[]): Property[] {
 
 async function readPropertiesFromDisk(): Promise<Property[]> {
   const fileContent = await readFile(DATA_FILE, "utf-8");
-  return withNormalizedFeatures(parsePropertiesFile(fileContent));
+  return withNormalizedCatalogFeatures(parsePropertiesFile(fileContent));
 }
 
 async function readPropertiesFromBlob(): Promise<Property[] | null> {
@@ -56,7 +57,7 @@ async function readPropertiesFromBlob(): Promise<Property[] | null> {
     const data: unknown = await res.json();
     if (!Array.isArray(data)) return null;
 
-    return withNormalizedFeatures(data as Property[]);
+    return withNormalizedCatalogFeatures(data as Property[]);
   } catch (e) {
     console.error("[propertiesStorage] blob read failed:", e);
     return null;
@@ -89,14 +90,15 @@ export function runExclusiveCatalogWrite<T>(fn: () => Promise<T>): Promise<T> {
 
 /**
  * Round-trip through TS generator + parser so stored JSON matches on-disk shape (no stray form fields).
+ * Exported so admin API can verify Blob writes against the same shape `persistPropertyList` stores.
  */
-function normalizeForPersistence(properties: Property[]): Property[] {
+export function normalizePropertyListForPersistence(properties: Property[]): Property[] {
   const ts = generatePropertiesFile(properties);
   return parsePropertiesFile(ts);
 }
 
 export async function persistPropertyList(properties: Property[]): Promise<void> {
-  const normalized = normalizeForPersistence(properties);
+  const normalized = normalizePropertyListForPersistence(properties);
 
   if (useBlobPersistence()) {
     await put(PROPERTIES_CATALOG_BLOB_PATH, JSON.stringify(normalized), {
