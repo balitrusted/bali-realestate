@@ -64,7 +64,10 @@ function dedupeBlogPostsBySlug(posts: BlogPost[], bundledLocalIds: Set<string>):
 export async function readBlogPostsFromBlobRaw(): Promise<BlogPost[] | null> {
   const baseUrl = getBlobStoreBaseUrl();
   if (baseUrl) {
-    const res = await fetch(appendCacheBuster(`${baseUrl}/${BLOB_KEY}`), { cache: "no-store" });
+    const res = await fetch(appendCacheBuster(`${baseUrl}/${BLOB_KEY}`), {
+      cache: "no-store",
+      headers: { Pragma: "no-cache", "Cache-Control": "no-cache" },
+    });
     if (res.ok) {
       const data: unknown = await res.json();
       if (Array.isArray(data)) return data as BlogPost[];
@@ -73,7 +76,10 @@ export async function readBlogPostsFromBlobRaw(): Promise<BlogPost[] | null> {
   const { blobs } = await list({ prefix: BLOB_KEY, limit: 5 });
   const match = blobs?.find((b) => b.pathname === BLOB_KEY);
   if (match?.url) {
-    const res = await fetch(appendCacheBuster(match.url), { cache: "no-store" });
+    const res = await fetch(appendCacheBuster(match.url), {
+      cache: "no-store",
+      headers: { Pragma: "no-cache", "Cache-Control": "no-cache" },
+    });
     if (res.ok) {
       const data: unknown = await res.json();
       if (Array.isArray(data)) return data as BlogPost[];

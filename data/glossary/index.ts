@@ -71,19 +71,19 @@ export const glossaryTerms: GlossaryTerm[] = [
   },
   {
     id: "glossary-kitas",
-    slug: "kitas-kitap-indonesia",
-    title: "KITAS & KITAP",
+    slug: "kitap-permanent-stay-permit-indonesia",
+    title: "KITAP",
     category: "documents",
     summary:
-      "Stay permits tied to work, investment, retirement, or family routes—different from a short tourist stamp.",
-    content: `<p><strong>KITAS</strong> (Kartu Izin Tinggal Terbatas) is a limited stay permit in a passport, often linked to employment, business, retirement, or family sponsorship depending on the index.</p>
-<p><strong>KITAP</strong> is a long-term/permanent-class permit available after longer residence under qualifying routes.</p>
-<p>Landlords sometimes ask about visa type because it correlates with how long you can lawfully stay and whether certain utility or bank workflows are smoother. Rules change; confirm with an immigration advisor for your situation.</p>`,
+      "A more permanent-class stay permit in Indonesia, typically available after longer residence under qualifying immigration routes.",
+    content: `<p><strong>KITAP</strong> is a longer-term or permanent-class stay permit in Indonesia, generally available only after a qualifying period under specific immigration pathways.</p>
+<p>Compared with <strong>KITAS</strong>, which is a limited stay permit, KITAP signals a deeper and more stable residence status. In practice, it can make long-term life in Indonesia feel more settled, depending on the holder's legal route.</p>
+<p>For property life, KITAP may matter because it reassures landlords, banks, and service providers that the holder is not operating on a short tourist-style basis. Always confirm current eligibility and rights with an immigration specialist, because rules evolve over time.</p>`,
     published: true,
     createdAt: "2026-04-09T10:00:00.000Z",
-    updatedAt: "2026-04-09T10:00:00.000Z",
-    seoTitle: "KITAS and KITAP — Indonesia stay permits | Balitrusted glossary",
-    seoDescription: "What KITAS and KITAP refer to and why landlords may ask.",
+    updatedAt: "2026-04-15T12:30:00.000Z",
+    seoTitle: "KITAP — Indonesia permanent stay permit | Balitrusted glossary",
+    seoDescription: "What KITAP means in Indonesia and how it differs from the more temporary KITAS route.",
     relatedGuideUrl: "/guides/rent",
   },
   {
@@ -335,5 +335,365 @@ export const glossaryTerms: GlossaryTerm[] = [
     seoTitle: "Tegalalang — Ubud north investment context | Balitrusted glossary",
     seoDescription: "Why Tegalalang attracts high-end projects, larger plots, and long-term land interest north of Ubud.",
     relatedGuideUrl: "/guides/land",
+  },
+  {
+    id: "glossary-itr-informasi-tata-ruang",
+    slug: "itr-informasi-tata-ruang-bali",
+    title: "ITR (Informasi Tata Ruang)",
+    category: "documents",
+    summary:
+      "A local spatial planning document showing what a plot can legally be used for, making it the first zoning check before any Bali property deal.",
+    content: `<p><strong>ITR</strong> (<em>Informasi Tata Ruang</em>) is a spatial planning document issued by local government. In plain language, it tells you what a specific plot is meant for under current planning rules: residential, commercial, tourism, agricultural protection, green belt, and so on.</p>
+<p>For Bali real estate, checking the ITR is one of the first mandatory due-diligence steps. It helps answer the most basic question: <strong>can this land legally support the use being marketed to you?</strong></p>
+<p>Do not rely only on agent statements, map pins, or neighboring villas. A beautiful plot without the right spatial use can create permit, financing, resale, or enforcement risk later.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "ITR (Informasi Tata Ruang) in Bali | Balitrusted glossary",
+    seoDescription:
+      "What ITR means in Bali property, why it is the first zoning check, and how it protects buyers and renters from the wrong land use.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-topography-land-level",
+    slug: "topography-land-level-ubud",
+    title: "Topography (land level)",
+    category: "other",
+    summary:
+      "In hilly Ubud, slope affects views, drainage, retaining walls, engineering complexity, and total construction cost.",
+    content: `<p><strong>Topography</strong> means the physical shape and level of the land. In Ubud this matters a lot because many plots sit on slopes, ravines, ridges, or stepped terrain rather than flat suburban-style ground.</p>
+<p>Steeper land can offer stronger views and better privacy, but it often requires <strong>retaining walls</strong>, drainage planning, geotechnical review, and more complex foundations. That can materially increase build cost and future maintenance.</p>
+<p>When comparing plots, never compare only price per are. Compare usable building area, access, cut-and-fill needs, and engineering implications too.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Topography and land slope in Ubud | Balitrusted glossary",
+    seoDescription:
+      "Why land slope matters in Ubud and how steep plots affect views, retaining walls, and real construction cost.",
+    relatedGuideUrl: "/guides/land",
+  },
+  {
+    id: "glossary-electricity-kva",
+    slug: "electricity-kva-pln-bali",
+    title: "Electricity (KVA)",
+    category: "living",
+    summary:
+      "Power capacity in Indonesia is measured in KVA, and many modern villas need an upgrade to support ACs, pumps, and appliances.",
+    content: `<p>In Indonesia, electrical capacity is commonly discussed in <strong>KVA</strong>. This number affects how much load a villa can handle at once: air conditioners, pool pumps, water heaters, ovens, office gear, and other appliances.</p>
+<p>Many villas in Bali need upgrades to higher capacity levels such as <strong>7,700</strong> or <strong>11,000 KVA</strong> to support modern living without nuisance trips. Capacity changes are handled through <strong>PLN</strong>, the state electricity company, and usually involve a fee and process time.</p>
+<p>For renters, insufficient power becomes a daily comfort problem. For buyers and developers, it should be part of technical due diligence, not an afterthought.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Electricity KVA in Bali villas | Balitrusted glossary",
+    seoDescription:
+      "What KVA means in Indonesia, why villas often need PLN upgrades, and how power capacity affects comfort and operations.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-well-water-sumur-bor",
+    slug: "well-water-sumur-bor-bali",
+    title: "Well water (sumur bor)",
+    category: "living",
+    summary:
+      "A deep drilled well is the main water source for many Ubud villas, often paired with filtration or RO for better quality.",
+    content: `<p><strong>Sumur bor</strong> means a drilled well. In many Ubud villas, this is the primary water source instead of a municipal-style network.</p>
+<p>Water quality can vary by depth, season, minerals, and local conditions. For better guest comfort and long-term usability, many villas add professional filtration systems or <strong>reverse osmosis (RO)</strong> for selected taps.</p>
+<p>When renting or buying, ask not only “is there water?” but also how it is filtered, whether pressure is stable, and what the real experience is for showers, skin, hair, and appliances.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Well water (sumur bor) in Bali villas | Balitrusted glossary",
+    seoDescription:
+      "How drilled wells work in Ubud, why filtration matters, and what to verify about villa water quality.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-pajak-tax-bali-property",
+    slug: "pajak-tax-bali-property",
+    title: "Pajak (tax)",
+    category: "finance",
+    summary:
+      "Property deals and rentals in Indonesia involve different taxes, including transfer taxes and income-based withholding on rental earnings.",
+    content: `<p><strong>Pajak</strong> simply means tax. In Bali real estate, buyers, sellers, and owners all face different tax obligations depending on the transaction.</p>
+<p>Examples often discussed include <strong>BPHTB</strong> (a transfer tax generally associated with the buyer), <strong>PPh</strong> (income tax generally associated with the seller), and rental-income taxation such as <strong>10% withholding</strong> in certain structures.</p>
+<p>The exact setup depends on deal structure, ownership form, and advice from your notary or tax professional. Never assume “tax included” means all obligations disappeared.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Pajak: Bali property taxes explained | Balitrusted glossary",
+    seoDescription:
+      "A practical overview of Bali property taxes, including transfer taxes and rental income tax considerations.",
+    relatedGuideUrl: "/guides/buy",
+  },
+  {
+    id: "glossary-penestanan",
+    slug: "penestanan-ubud-neighborhood",
+    title: "Penestanan",
+    category: "living",
+    summary:
+      "An artist-focused village just west of central Ubud, loved for atmosphere and expat life but often limited to scooter or foot access.",
+    content: `<p><strong>Penestanan</strong> is one of Ubud’s best-known villages, just west of the center. It is famous for its artistic feel, quiet lanes, cafe culture, and strong expat presence.</p>
+<p>The tradeoff is access: many homes are reached through narrow pedestrian or scooter paths rather than full car roads. That is part of the charm for some people and a deal-breaker for others.</p>
+<p>If a listing says “Penestanan,” confirm the last-mile logistics, parking, and night-time walkability rather than assuming all parts of the village function the same way.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Penestanan neighborhood guide | Balitrusted glossary",
+    seoDescription:
+      "What Penestanan means in Ubud real estate, from artist-village charm to scooter-access tradeoffs.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-sayan",
+    slug: "sayan-ubud-neighborhood",
+    title: "Sayan",
+    category: "living",
+    summary:
+      "A premium Ubud area known for Ayung gorge views, world-class resorts, and some of the island’s most luxurious private estates.",
+    content: `<p><strong>Sayan</strong> is one of the most prestigious addresses in the wider Ubud market. It is associated with dramatic ravine landscapes, lush greenery, and landmark hospitality such as the Four Seasons.</p>
+<p>Because of its topography and brand halo, Sayan often attracts luxury villas and estate-style homes. Pricing, maintenance, and design expectations tend to sit above more mainstream village markets.</p>
+<p>When someone calls Sayan the “Beverly Hills of Ubud,” they usually mean a combination of landscape prestige, privacy, and premium positioning rather than city-style density.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Sayan, Ubud — premium neighborhood context | Balitrusted glossary",
+    seoDescription:
+      "Why Sayan is considered a high-end Ubud location and what that means for views, privacy, and villa pricing.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-mas-peliatan",
+    slug: "mas-peliatan-ubud-neighborhood",
+    title: "Mas / Peliatan",
+    category: "living",
+    summary:
+      "Traditional villages south and east of Ubud center, known for woodcarving heritage, better road access, and growing villa development.",
+    content: `<p><strong>Mas</strong> and <strong>Peliatan</strong> sit south and east of central Ubud and are deeply associated with traditional Balinese arts, especially woodcarving.</p>
+<p>For real estate, these areas attract attention because they can offer a more authentic village feel while still giving better road access than some of the tighter central and ridge-side pockets.</p>
+<p>They are increasingly relevant for villa development, long-stay rentals, and buyers who want connectivity without being in the busiest tourist core.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Mas and Peliatan in Ubud | Balitrusted glossary",
+    seoDescription:
+      "How Mas and Peliatan combine traditional Balinese identity with practical road access and growing villa demand.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-tebongkang",
+    slug: "tebongkang-ubud-neighborhood",
+    title: "Tebongkang",
+    category: "living",
+    summary:
+      "A flatter, more car-accessible area west of Ubud that is gaining attention for family-friendly villa living and local pricing.",
+    content: `<p><strong>Tebongkang</strong> is an increasingly practical west-Ubud area for people who want easier car access, flatter land, and day-to-day convenience.</p>
+<p>Compared with more romantic but logistically difficult pockets, Tebongkang often appeals to families and longer-stay residents who care about supermarkets, schools, and regular driving routes.</p>
+<p>It is often described as offering a more local price point while still being close enough to Ubud amenities to feel connected.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Tebongkang area guide | Balitrusted glossary",
+    seoDescription:
+      "Why Tebongkang is rising for family villas near Ubud, with flatter land and easier access than many hill villages.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-nyuh-kuning",
+    slug: "nyuh-kuning-ubud-neighborhood",
+    title: "Nyuh Kuning",
+    category: "living",
+    summary:
+      "A highly regarded village behind the Monkey Forest, known for beauty, community feel, and unusually quiet, well-kept streets.",
+    content: `<p><strong>Nyuh Kuning</strong> sits directly behind the Monkey Forest and is widely considered one of Bali’s most attractive and orderly villages.</p>
+<p>It is known for a strong sense of community, well-maintained public spaces, and a notably calm street atmosphere. That combination makes it popular with long-stay renters who want charm without constant central-Ubud bustle.</p>
+<p>As always, micro-location matters, but “Nyuh Kuning” is generally a positive signal for people prioritizing lifestyle and walkability.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Nyuh Kuning in Ubud | Balitrusted glossary",
+    seoDescription:
+      "Why Nyuh Kuning is so admired in Ubud and what makes it attractive for long-stay villa living.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-odalan",
+    slug: "odalan-bali-temple-anniversary",
+    title: "Odalan",
+    category: "living",
+    summary:
+      "A temple anniversary ceremony held every 210 days, often visible or audible near villas with shrines or nearby temples.",
+    content: `<p><strong>Odalan</strong> is the anniversary celebration of a Balinese temple, usually observed every 210 days according to the local calendar.</p>
+<p>Because temples and shrines are woven into daily life, renters and guests may experience decorations, offerings, traditional music, or ceremony activity very close to home during an odalan period.</p>
+<p>This is not “special event noise” in the tourist sense; it is part of normal community and spiritual life in Bali.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Odalan temple anniversary in Bali | Balitrusted glossary",
+    seoDescription:
+      "What odalan means in Bali and why villa guests may experience ceremonies close to home.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-banten",
+    slug: "banten-balinese-offerings",
+    title: "Banten",
+    category: "living",
+    summary:
+      "A general term for Balinese offerings made from palm leaves, flowers, and other elements to maintain spiritual balance.",
+    content: `<p><strong>Banten</strong> is a broad term for ritual offerings in Balinese Hindu practice. They can range from small daily arrangements to more elaborate ceremonial forms.</p>
+<p>In villa life, staff may place banten around entrances, shrines, and key areas of the property as part of normal spiritual upkeep. This is not decoration in a hotel-design sense, but part of the local religious framework.</p>
+<p>Understanding that helps residents relate respectfully to the space they are living in.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Banten offerings in Bali | Balitrusted glossary",
+    seoDescription:
+      "What banten means in Balinese daily life and why offerings are part of villa maintenance and community balance.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-pura",
+    slug: "pura-balinese-temple",
+    title: "Pura (temple)",
+    category: "living",
+    summary:
+      "A Balinese Hindu temple, with major implications for ceremony life and even practical development limits such as building height.",
+    content: `<p><strong>Pura</strong> means temple in the Balinese Hindu context. Temples exist at village, family, and regional levels, and they shape both spiritual and practical life around a property.</p>
+<p>For developers, one commonly referenced rule of thumb in Bali is that a building should not rise above the nearest village temple or roughly above coconut-tree height, often discussed around <strong>15 meters</strong>. Exact application depends on local regulation and context, but the principle reflects how sacred hierarchy shapes the built environment.</p>
+<p>For residents, proximity to a pura often means access to beautiful culture as well as ceremony rhythm and occasional traffic changes.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Pura (Balinese temple) explained | Balitrusted glossary",
+    seoDescription:
+      "What a pura is in Bali and why temples influence culture, ceremonies, and even development constraints.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-pemangku",
+    slug: "pemangku-balinese-priest",
+    title: "Pemangku",
+    category: "living",
+    summary:
+      "A Balinese lay priest who leads ceremonies and is often invited to bless a villa before occupation or opening.",
+    content: `<p><strong>Pemangku</strong> is a Balinese lay priest who leads and supports temple ceremonies within family or village contexts.</p>
+<p>In property life, it is common to invite a pemangku for blessing or cleansing ceremonies, especially before moving into a new villa, opening a new rental, or marking an important milestone.</p>
+<p>This reflects how property in Bali is not treated only as a physical asset, but also as a place that enters social and spiritual life.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Pemangku in Bali villa life | Balitrusted glossary",
+    seoDescription:
+      "Who a pemangku is and why villa owners often invite one before opening or occupying a property.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-gotong-royong",
+    slug: "gotong-royong-bali-community",
+    title: "Gotong Royong",
+    category: "living",
+    summary:
+      "A traditional principle of mutual cooperation that helps explain why good community participation matters in Bali property life.",
+    content: `<p><strong>Gotong Royong</strong> is the Indonesian idea of mutual cooperation: neighbors helping one another and contributing to shared community needs.</p>
+<p>In the context of living in Bali, it means more than being “nice.” It means respecting the local community, participating appropriately, and understanding that harmony is built through contribution, not only contracts.</p>
+<p>For owners and long-term renters, this can affect everything from social goodwill to how smoothly practical issues are solved over time.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Gotong Royong in Bali | Balitrusted glossary",
+    seoDescription:
+      "Why the Indonesian idea of mutual cooperation matters for villa owners, tenants, and community harmony in Bali.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-banjar-fee",
+    slug: "banjar-fee-bali-villa",
+    title: "Banjar fee",
+    category: "finance",
+    summary:
+      "A recurring local contribution to the community that can support security, waste management, and ceremonial costs.",
+    content: `<p>A <strong>banjar fee</strong> is a recurring payment made to the local community structure. The exact amount and arrangement vary by area and by whether the payer is an owner, tenant, or business operator.</p>
+<p>These contributions often support practical and social functions such as security, garbage handling, and local ceremonial life.</p>
+<p>When comparing villas, ask whether a banjar fee exists, how often it is paid, and whether it is included in rent or handled separately.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Banjar fee in Bali villas | Balitrusted glossary",
+    seoDescription:
+      "What a banjar fee usually covers in Bali and why owners or tenants may pay it separately from rent.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-internet-fiber-optic",
+    slug: "internet-fiber-optic-bali",
+    title: "Internet fiber optic",
+    category: "living",
+    summary:
+      "Fast fiber internet is a major decision factor for long-stay renters, but coverage still varies a lot by micro-location.",
+    content: `<p><strong>Fiber optic internet</strong> is one of the biggest practical filters for long-stay renters, especially remote workers and digital nomads.</p>
+<p>Even in Ubud, availability is highly location-specific. Some areas have strong service from providers like <strong>Biznet</strong> or <strong>GlobalXtreme</strong>, while others still rely on weaker setups or patchwork solutions.</p>
+<p>If a listing mentions fiber readiness, verify the actual provider, installed line status, backup options, and real-world speed rather than assuming “internet available” means remote-work quality.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Fiber optic internet in Ubud villas | Balitrusted glossary",
+    seoDescription:
+      "Why fiber internet matters so much in Bali rentals and what to verify about Biznet, GlobalXtreme, or other providers.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-laundry-kiloan",
+    slug: "laundry-kiloan-bali",
+    title: "Laundry (kiloan)",
+    category: "living",
+    summary:
+      "A low-cost wash-and-fold service priced by weight, making external laundry a normal part of everyday Bali life.",
+    content: `<p><strong>Kiloan laundry</strong> is a common Bali service where clothes are washed, dried, and folded for a very low price per kilogram.</p>
+<p>Because the service is so normal and accessible, many long-stay residents rely on outside laundry rather than using large in-villa washing setups for every load.</p>
+<p>For property decisions, this means a villa without a huge laundry room is not always a practical problem the way it might be elsewhere.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Laundry kiloan in Bali | Balitrusted glossary",
+    seoDescription:
+      "What kiloan laundry means in Bali and why many expats rely on it instead of heavy in-house washing setups.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-gojek-grab",
+    slug: "gojek-grab-ubud-transport",
+    title: "Gojek / Grab",
+    category: "living",
+    summary:
+      "Indonesia’s main ride-hailing and delivery apps, with some Ubud areas restricting pickups in favor of local transport groups.",
+    content: `<p><strong>Gojek</strong> and <strong>Grab</strong> are the dominant ride-hailing and delivery apps used across Bali for transport, food, and errands.</p>
+<p>In parts of Ubud, local transport arrangements may limit app-based pickups even though drop-offs are usually allowed. That means a villa can be app-friendly in one direction but not the other.</p>
+<p>For daily life, this affects convenience more than legality: always ask how food delivery, scooter rides, and guest pickups actually work in that exact area.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "Gojek and Grab in Ubud | Balitrusted glossary",
+    seoDescription:
+      "How Gojek and Grab work in Bali and why some Ubud zones still restrict app-based pickups.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-kitas-visa",
+    slug: "kitas-visa-long-stay-bali",
+    title: "KITAS (KITAS visa)",
+    category: "documents",
+    summary:
+      "A limited stay permit often relevant for foreigners signing longer leases or operating a formal business structure in Indonesia.",
+    content: `<p><strong>KITAS</strong> is a limited stay permit for foreigners in Indonesia. Different KITAS routes exist depending on work, investment, retirement, family, or other legal grounds.</p>
+<p>In practical Bali property life, having a KITAS can make certain longer-term arrangements easier, especially leases beyond short tourist-style stays or business setups such as a <strong>PMA</strong> used to manage operations.</p>
+<p>Visa and immigration rules change over time, so use this term as orientation and confirm current requirements for your own case.</p>`,
+    published: true,
+    createdAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-04-15T12:00:00.000Z",
+    seoTitle: "KITAS for Bali long stays | Balitrusted glossary",
+    seoDescription:
+      "What KITAS means for foreigners in Bali and why it often matters for longer leases or business structures.",
+    relatedGuideUrl: "/guides/rent",
   },
 ];

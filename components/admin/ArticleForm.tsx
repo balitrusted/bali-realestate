@@ -11,7 +11,7 @@ import { Article } from "@/types/article";
 
 interface ArticleFormProps {
   article?: Article;
-  onSave: (article: any) => void;
+  onSave: (article: any) => Promise<void>;
 }
 
 const categories = [
@@ -46,6 +46,7 @@ export default function ArticleForm({ article, onSave }: ArticleFormProps) {
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -100,8 +101,9 @@ export default function ArticleForm({ article, onSave }: ArticleFormProps) {
     }
   }, [formData.title, article]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (saving || uploadingImage) return;
     
     const articleData = {
       ...formData,
@@ -109,8 +111,13 @@ export default function ArticleForm({ article, onSave }: ArticleFormProps) {
       tags: formData.tags.split(",").map(t => t.trim()).filter(Boolean),
       seoKeywords: formData.seoKeywords.split(",").map(k => k.trim()).filter(Boolean),
     };
-    
-    onSave(articleData);
+
+    try {
+      setSaving(true);
+      await onSave(articleData);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const addImage = () => {
@@ -435,7 +442,7 @@ export default function ArticleForm({ article, onSave }: ArticleFormProps) {
                 type="file"
                 accept="image/*"
                 onChange={handleImageUpload}
-                disabled={uploadingImage}
+                disabled={uploadingImage || saving}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
                 id="image-upload"
               />
@@ -568,9 +575,10 @@ export default function ArticleForm({ article, onSave }: ArticleFormProps) {
       <div className="flex gap-4 pt-4 border-t border-gray-200">
         <button
           type="submit"
-          className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
+          disabled={saving || uploadingImage}
+          className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          {article ? "Update Article" : "Create Article"}
+          {saving ? (article ? "Updating..." : "Creating...") : article ? "Update Article" : "Create Article"}
         </button>
       </div>
     </form>

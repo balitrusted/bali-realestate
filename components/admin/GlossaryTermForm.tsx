@@ -6,7 +6,7 @@ import { GLOSSARY_CATEGORY_ORDER, glossaryCategoryLabel } from "@/lib/glossaryHu
 
 interface GlossaryTermFormProps {
   term?: GlossaryTerm;
-  onSave: (payload: Record<string, unknown>) => void;
+  onSave: (payload: Record<string, unknown>) => Promise<void>;
 }
 
 export default function GlossaryTermForm({ term, onSave }: GlossaryTermFormProps) {
@@ -22,6 +22,7 @@ export default function GlossaryTermForm({ term, onSave }: GlossaryTermFormProps
     relatedGuideUrl: term?.relatedGuideUrl ?? "",
     relatedBlogUrl: term?.relatedBlogUrl ?? "",
   });
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!term && formData.title) {
@@ -33,20 +34,26 @@ export default function GlossaryTermForm({ term, onSave }: GlossaryTermFormProps
     }
   }, [term, formData.title]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({
-      title: formData.title,
-      slug: formData.slug,
-      category: formData.category,
-      summary: formData.summary,
-      content: formData.content,
-      published: formData.published,
-      seoTitle: formData.seoTitle || undefined,
-      seoDescription: formData.seoDescription || undefined,
-      relatedGuideUrl: formData.relatedGuideUrl || undefined,
-      relatedBlogUrl: formData.relatedBlogUrl || undefined,
-    });
+    if (saving) return;
+    try {
+      setSaving(true);
+      await onSave({
+        title: formData.title,
+        slug: formData.slug,
+        category: formData.category,
+        summary: formData.summary,
+        content: formData.content,
+        published: formData.published,
+        seoTitle: formData.seoTitle || undefined,
+        seoDescription: formData.seoDescription || undefined,
+        relatedGuideUrl: formData.relatedGuideUrl || undefined,
+        relatedBlogUrl: formData.relatedBlogUrl || undefined,
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -158,9 +165,10 @@ export default function GlossaryTermForm({ term, onSave }: GlossaryTermFormProps
       </div>
       <button
         type="submit"
-        className="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
+        disabled={saving}
+        className="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
       >
-        Save
+        {saving ? (term ? "Updating..." : "Creating...") : "Save"}
       </button>
     </form>
   );

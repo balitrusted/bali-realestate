@@ -12,7 +12,7 @@ import type { BlogPost } from "@/types/blog";
 
 interface BlogPostFormProps {
   post?: BlogPost;
-  onSave: (payload: Record<string, unknown>) => void;
+  onSave: (payload: Record<string, unknown>) => Promise<void>;
 }
 
 const locations: { value: BlogPost["location"]; label: string }[] = [
@@ -56,6 +56,7 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -156,9 +157,15 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
     };
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formStateToSavePayload(formData));
+    if (saving || uploadingImage) return;
+    try {
+      setSaving(true);
+      await onSave(formStateToSavePayload(formData));
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleAutofillFromDraft = () => {
@@ -172,16 +179,22 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
     editor?.commands.setContent(draft.contentHtml);
   };
 
-  const handleAutofillAndSaveDraft = () => {
+  const handleAutofillAndSaveDraft = async () => {
     if (!rawDraft.trim()) {
       alert("Paste a draft text first.");
       return;
     }
+    if (saving || uploadingImage) return;
     const draft = buildBlogAutofill(rawDraft);
     const next = { ...mergeAutofillDraft(formData, draft), published: false };
     setFormData(next);
     editor?.commands.setContent(draft.contentHtml);
-    onSave(formStateToSavePayload(next));
+    try {
+      setSaving(true);
+      await onSave(formStateToSavePayload(next));
+    } finally {
+      setSaving(false);
+    }
   };
 
   const addImage = () => setShowImageModal(true);
@@ -283,16 +296,18 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
             <button
               type="button"
               onClick={handleAutofillFromDraft}
-              className="rounded-md bg-amber-600 px-4 py-2 text-white transition-colors hover:bg-amber-700"
+              disabled={saving || uploadingImage}
+              className="rounded-md bg-amber-600 px-4 py-2 text-white transition-colors hover:bg-amber-700 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               Autofill fields from draft
             </button>
             <button
               type="button"
               onClick={handleAutofillAndSaveDraft}
-              className="rounded-md bg-gray-900 px-4 py-2 text-white transition-colors hover:bg-gray-800"
+              disabled={saving || uploadingImage}
+              className="rounded-md bg-gray-900 px-4 py-2 text-white transition-colors hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Autofill &amp; save as draft
+              {saving ? "Saving..." : "Autofill & save as draft"}
             </button>
             <button
               type="button"
@@ -528,7 +543,7 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
                   type="file"
                   accept="image/*"
                   onChange={handleImageUpload}
-                  disabled={uploadingImage}
+                  disabled={uploadingImage || saving}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
                   id="blog-editor-image-upload"
                 />
@@ -691,8 +706,12 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
         </div>
 
         <div className="flex gap-4 pt-4 border-t border-gray-200">
-          <button type="submit" className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors">
-            {post ? "Update post" : "Create post"}
+          <button
+            type="submit"
+            disabled={saving || uploadingImage}
+            className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {saving ? (post ? "Updating..." : "Creating...") : post ? "Update post" : "Create post"}
           </button>
         </div>
       </form>
