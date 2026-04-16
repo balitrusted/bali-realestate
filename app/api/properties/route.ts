@@ -439,7 +439,9 @@ export async function PUT(request: Request) {
                 apiJson({ error: "No properties selected" }, { status: 400 })
               );
             }
-            const missingId = ids.find((id) => !properties.some((p) => p.id === id));
+            const missingId = ids.find(
+              (id: string) => !properties.some((p) => p.id === id)
+            );
             if (missingId) {
               throw new MutationHttpError(
                 apiJson(
