@@ -38,7 +38,6 @@ export default function EditPropertyPage() {
     });
 
     if (response.ok) {
-      router.refresh();
       const targetId = property?.id ?? id;
       router.push(targetId ? `/admin/properties?scrollTo=${encodeURIComponent(targetId)}` : "/admin/properties");
     } else {

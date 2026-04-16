@@ -39,7 +39,7 @@ function isLandOnlyListing(types: PropertyType[]): boolean {
 
 interface PropertyFormProps {
   property?: Property;
-  onSave: (property: any) => void;
+  onSave: (property: any) => Promise<void>;
 }
 
 function SortableImageItem({ url, onDelete }: { url: string; onDelete: () => void }) {
@@ -196,6 +196,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
 
   const [newImageUrl, setNewImageUrl] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -204,8 +205,9 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
     })
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (saving || uploading) return;
 
     const landOnly = isLandOnlyListing(formData.types);
 
@@ -237,7 +239,12 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
       availableFrom: formData.availableFrom || null,
     };
 
-    onSave(propertyData);
+    try {
+      setSaving(true);
+      await onSave(propertyData);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleAddImage = () => {
@@ -841,7 +848,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
               accept="image/*"
               multiple
               onChange={handleFileUpload}
-              disabled={uploading}
+              disabled={uploading || saving}
               className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-900 file:text-white hover:file:bg-gray-800 file:cursor-pointer disabled:opacity-50"
             />
             {uploading && (
@@ -861,6 +868,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
                 onChange={(e) => setNewImageUrl(e.target.value)}
                 placeholder="Paste image URL here (e.g., from Cloudinary, ImgBB, etc.)"
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+                disabled={saving}
                 onKeyPress={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
@@ -871,7 +879,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
               <button
                 type="button"
                 onClick={handleAddImage}
-                disabled={!newImageUrl.trim()}
+                disabled={!newImageUrl.trim() || saving}
                 className="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Add URL
@@ -908,9 +916,10 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
       <div className="flex gap-4 pt-4 border-t border-gray-200">
         <button
           type="submit"
-          className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
+          disabled={saving || uploading}
+          className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Save Property
+          {saving ? "Saving..." : uploading ? "Uploading images..." : "Save Property"}
         </button>
       </div>
     </form>

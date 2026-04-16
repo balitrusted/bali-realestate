@@ -75,6 +75,115 @@ function findVillaNumberConflict(
   );
 }
 
+function updateSingleProperty(
+  properties: Property[],
+  property: any
+): Property[] {
+  const index = properties.findIndex((p) => p.id === property.id);
+  if (index === -1) {
+    throw new MutationHttpError(
+      apiJson(
+        { error: `Property not found in data file: ${String(property.id)}` },
+        { status: 404 }
+      )
+    );
+  }
+
+  const merged = { ...properties[index], ...property } as Property;
+  const nextVillaKey = normalizeVillaNumberKey(merged.villaNumber);
+  if (nextVillaKey) {
+    const duplicate = findVillaNumberConflict(
+      properties,
+      nextVillaKey,
+      String(merged.id)
+    );
+    if (duplicate) {
+      throw new MutationHttpError(
+        apiJson(
+          {
+            error:
+              "This villa number is already used by another listing. Choose a different number.",
+          },
+          { status: 409 }
+        )
+      );
+    }
+  }
+
+  const hasAnyPrice =
+    property.price &&
+    (typeof property.price.min === "number" ||
+      typeof property.price.monthly === "number" ||
+      typeof property.price.forSale === "number");
+  if (!hasAnyPrice) {
+    property.price = {
+      currency: property.priceCurrency || properties[index].price?.currency || "IDR",
+      min:
+        property.price?.min ??
+        property.price?.monthly ??
+        property.price?.forSale ??
+        property.priceMin ??
+        properties[index].price?.min ??
+        0,
+      monthly: property.price?.monthly ?? properties[index].price?.monthly,
+      yearly: property.price?.yearly ?? properties[index].price?.yearly,
+      forSale:
+        property.price?.forSale ??
+        properties[index].price?.forSale ??
+        property.priceForSale,
+    };
+  }
+
+  const types: PropertyType[] = normalizeTypesInput(
+    property.types !== undefined ? property.types : properties[index].types
+  );
+  const landOnly = isLandOnlyTypes(types);
+
+  const mainArea = property.mainArea || properties[index].mainArea || "ubud";
+  if (!isValidMainAreaSlug(mainArea)) {
+    throw new MutationHttpError(
+      apiJson(
+        {
+          error:
+            "Invalid or unknown main area. Add the area in Admin → Catalog structure, or use a built-in slug.",
+        },
+        { status: 400 }
+      )
+    );
+  }
+  const subArea = property.hasOwnProperty("subArea")
+    ? property.subArea || undefined
+    : properties[index].subArea;
+
+  const nextBedrooms = landOnly
+    ? 0
+    : property.bedrooms !== undefined
+      ? property.bedrooms
+      : properties[index].bedrooms;
+  const nextBathrooms = landOnly
+    ? undefined
+    : property.bathrooms !== undefined
+      ? property.bathrooms
+      : properties[index].bathrooms;
+
+  properties[index] = {
+    ...properties[index],
+    ...property,
+    types: types,
+    mainArea: mainArea,
+    subArea: subArea,
+    bedrooms: nextBedrooms,
+    bathrooms: nextBathrooms,
+    price: property.price,
+    features: normalizePropertyFeatures(
+      property.features ?? properties[index].features
+    ),
+    updatedAt: new Date().toISOString(),
+  };
+
+  return properties;
+}
+
 function hasValidPrice(p: Property): boolean {
   return !!(
     p?.price &&
@@ -317,107 +426,31 @@ export async function PUT(request: Request) {
           }
 
           if (action === "update" && property) {
-            const index = properties.findIndex((p) => p.id === property.id);
-            if (index === -1) {
+            return updateSingleProperty(properties, property);
+          }
+
+          if (action === "bulkArchive" && Array.isArray(body.ids)) {
+            const ids = body.ids
+              .map((id: unknown) => String(id))
+              .filter(Boolean);
+            const idSet = new Set(ids);
+            if (idSet.size === 0) {
+              throw new MutationHttpError(
+                apiJson({ error: "No properties selected" }, { status: 400 })
+              );
+            }
+            const missingId = ids.find((id) => !properties.some((p) => p.id === id));
+            if (missingId) {
               throw new MutationHttpError(
                 apiJson(
-                  { error: `Property not found in data file: ${String(property.id)}` },
+                  { error: `Property not found in data file: ${missingId}` },
                   { status: 404 }
                 )
               );
             }
-
-            const merged = { ...properties[index], ...property } as Property;
-            const nextVillaKey = normalizeVillaNumberKey(merged.villaNumber);
-            if (nextVillaKey) {
-              const duplicate = findVillaNumberConflict(
-                properties,
-                nextVillaKey,
-                String(merged.id)
-              );
-              if (duplicate) {
-                throw new MutationHttpError(
-                  apiJson(
-                    {
-                      error:
-                        "This villa number is already used by another listing. Choose a different number.",
-                    },
-                    { status: 409 }
-                  )
-                );
-              }
+            for (const id of ids) {
+              updateSingleProperty(properties, { id, archived: true });
             }
-
-            const hasAnyPrice =
-              property.price &&
-              (typeof property.price.min === "number" ||
-                typeof property.price.monthly === "number" ||
-                typeof property.price.forSale === "number");
-            if (!hasAnyPrice) {
-              property.price = {
-                currency: property.priceCurrency || properties[index].price?.currency || "IDR",
-                min:
-                  property.price?.min ??
-                  property.price?.monthly ??
-                  property.price?.forSale ??
-                  property.priceMin ??
-                  properties[index].price?.min ??
-                  0,
-                monthly: property.price?.monthly ?? properties[index].price?.monthly,
-                yearly: property.price?.yearly ?? properties[index].price?.yearly,
-                forSale:
-                  property.price?.forSale ??
-                  properties[index].price?.forSale ??
-                  property.priceForSale,
-              };
-            }
-
-            const types: PropertyType[] = normalizeTypesInput(
-              property.types !== undefined ? property.types : properties[index].types
-            );
-            const landOnly = isLandOnlyTypes(types);
-
-            const mainArea = property.mainArea || properties[index].mainArea || "ubud";
-            if (!isValidMainAreaSlug(mainArea)) {
-              throw new MutationHttpError(
-                apiJson(
-                  {
-                    error:
-                      "Invalid or unknown main area. Add the area in Admin → Catalog structure, or use a built-in slug.",
-                  },
-                  { status: 400 }
-                )
-              );
-            }
-            const subArea = property.hasOwnProperty("subArea")
-              ? property.subArea || undefined
-              : properties[index].subArea;
-
-            const nextBedrooms = landOnly
-              ? 0
-              : property.bedrooms !== undefined
-                ? property.bedrooms
-                : properties[index].bedrooms;
-            const nextBathrooms = landOnly
-              ? undefined
-              : property.bathrooms !== undefined
-                ? property.bathrooms
-                : properties[index].bathrooms;
-
-            properties[index] = {
-              ...properties[index],
-              ...property,
-              types: types,
-              mainArea: mainArea,
-              subArea: subArea,
-              bedrooms: nextBedrooms,
-              bathrooms: nextBathrooms,
-              price: property.price,
-              features: normalizePropertyFeatures(
-                property.features ?? properties[index].features
-              ),
-              updatedAt: new Date().toISOString(),
-            };
             return properties;
           }
 

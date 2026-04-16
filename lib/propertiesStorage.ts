@@ -48,9 +48,11 @@ async function readPropertiesFromBlob(): Promise<Property[] | null> {
     const match = blobs.find((b) => b.pathname === PROPERTIES_CATALOG_BLOB_PATH) ?? blobs[0];
     if (!match) return null;
 
-    const res = await fetch(match.downloadUrl, {
+    const downloadUrl = match.downloadUrl;
+    const urlWithCacheBust = `${downloadUrl}${downloadUrl.includes("?") ? "&" : "?"}t=${Date.now()}`;
+    const res = await fetch(urlWithCacheBust, {
       cache: "no-store",
-      headers: { Pragma: "no-cache" },
+      headers: { Pragma: "no-cache", "Cache-Control": "no-cache" },
     });
     if (!res.ok) return null;
 
