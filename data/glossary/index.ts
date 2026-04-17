@@ -696,4 +696,184 @@ export const glossaryTerms: GlossaryTerm[] = [
       "What KITAS means for foreigners in Bali and why it often matters for longer leases or business structures.",
     relatedGuideUrl: "/guides/rent",
   },
+  {
+    id: "glossary-alang-alang-thatched-roof",
+    slug: "alang-alang-thatched-roof-bali",
+    title: "Alang-alang (thatched roof)",
+    category: "other",
+    summary:
+      "A traditional Balinese thatched roof made from dried cogon grass, prized for ventilation and tropical character but needing periodic replacement.",
+    content: `<p><strong>Alang-alang</strong> is a traditional thatched roof made from dried <strong>cogon grass</strong>. It is one of the most recognizable “tropical Bali” design signatures because it breathes well and softens sound compared with hard roofing.</p>
+<p>The tradeoff is maintenance: alang-alang typically needs replacement or serious refurbishment on a multi-year cycle, often discussed in the <strong>5–10 year</strong> range depending on climate exposure, slope detail, and quality of installation.</p>
+<p>When a listing highlights alang-alang, ask whether it is decorative only or the primary weatherproof roof, and what the owner’s maintenance plan looks like in practice.</p>`,
+    published: true,
+    createdAt: "2026-04-17T10:00:00.000Z",
+    updatedAt: "2026-04-17T10:00:00.000Z",
+    seoTitle: "Alang-alang thatched roof in Bali villas | Balitrusted glossary",
+    seoDescription:
+      "What alang-alang roofing is, why it feels so tropical, and what maintenance expectations look like for Bali villas.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-joglo-traditional-house",
+    slug: "joglo-traditional-javanese-villa",
+    title: "Joglo",
+    category: "other",
+    summary:
+      "A traditional Javanese wooden house form with a tall pyramid-like roof, often repurposed into luxury open-plan living in Ubud villas.",
+    content: `<p>A <strong>Joglo</strong> is a traditional Javanese wooden house typology, famous for its tall central roof structure and strong timber joinery. In Bali’s luxury market, you will often see <strong>converted Joglos</strong> or new builds that borrow the Joglo roof massing to create dramatic, open-plan living rooms.</p>
+<p>Because the roof is a major architectural statement, Joglo-style spaces photograph extremely well. They also tend to feel airy when paired with Bali’s indoor-outdoor lifestyle.</p>
+<p>When evaluating a “Joglo villa,” confirm whether the structure is genuinely antique timber, a modern reproduction, and what the engineering and termite-prevention program looks like for the specific build quality.</p>`,
+    published: true,
+    createdAt: "2026-04-17T10:00:00.000Z",
+    updatedAt: "2026-04-17T10:00:00.000Z",
+    seoTitle: "Joglo architecture in Bali villas | Balitrusted glossary",
+    seoDescription:
+      "What a Joglo is, why it appears in luxury Ubud villas, and what buyers and renters should verify about timber quality.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-gladak-teak-house",
+    slug: "gladak-antique-teak-guest-house",
+    title: "Gladak",
+    category: "other",
+    summary:
+      "A smaller antique wooden house, often teak, reused as a guest pavilion or standalone bedroom suite on a larger villa plot.",
+    content: `<p><strong>Gladak</strong> refers to a smaller antique wooden house, commonly built from teak. On larger villa compounds, owners often place a gladak as a <strong>guest house</strong>, studio, or standalone bedroom suite separate from the main pavilion.</p>
+<p>Design-wise, it delivers a rustic, historical atmosphere that reads as “Bali heritage” even when the main villa is contemporary concrete and glass.</p>
+<p>Practically, check insulation, airflow, bathroom routing, and whether the structure meets your comfort expectations for long-stay guests versus short photo-friendly stays.</p>`,
+    published: true,
+    createdAt: "2026-04-17T10:00:00.000Z",
+    updatedAt: "2026-04-17T10:00:00.000Z",
+    seoTitle: "Gladak guest house style in Bali | Balitrusted glossary",
+    seoDescription:
+      "What a gladak is in Bali villa design and how antique teak pavilions are used as guest suites.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-batu-candi-volcanic-stone",
+    slug: "batu-candi-volcanic-stone-bali",
+    title: "Batu candi (volcanic stone)",
+    category: "other",
+    summary:
+      "A dark volcanic stone popular for pool decks and wet areas because it feels natural, durable, and grippy underfoot when finished correctly.",
+    content: `<p><strong>Batu candi</strong> is a dark <strong>volcanic stone</strong> (often described as lava stone) widely used in Bali for pool decks, stepping paths, feature walls, and bathrooms.</p>
+<p>Its appeal is aesthetic and practical: it looks grounded and tropical, and when properly finished it can be <strong>non-slip</strong> around water compared with polished marble in wet zones.</p>
+<p>Quality varies by quarry, cut, sealing, and installation. If a listing brags about batu candi, it is still worth checking whether surfaces are comfortable for bare feet, whether sealing is maintained, and whether detailing avoids sharp edges at pool transitions.</p>`,
+    published: true,
+    createdAt: "2026-04-17T10:00:00.000Z",
+    updatedAt: "2026-04-17T10:00:00.000Z",
+    seoTitle: "Batu candi volcanic stone in Bali villas | Balitrusted glossary",
+    seoDescription:
+      "What batu candi is, where it is used in Bali villa design, and why it is popular around pools and bathrooms.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-palimanan-stone-sandstone",
+    slug: "palimanan-stone-sandstone-bali",
+    title: "Palimanan stone",
+    category: "other",
+    summary:
+      "A light cream sandstone used for carvings and cladding that brightens exteriors and reads as clean tropical elegance.",
+    content: `<p><strong>Palimanan stone</strong> is a light-colored sandstone, often cream or white, widely used in Bali for carved panels, wall cladding, gates, and garden features.</p>
+<p>Visually, it makes exteriors feel brighter and more “resort clean” than darker stone palettes, which is why it shows up heavily in tropical contemporary villas.</p>
+<p>Like any porous stone, performance depends on detailing, sealing, and cleaning routines—especially in humid jungle microclimates where algae and staining can appear if water sits on surfaces.</p>`,
+    published: true,
+    createdAt: "2026-04-17T10:00:00.000Z",
+    updatedAt: "2026-04-17T10:00:00.000Z",
+    seoTitle: "Palimanan stone in Bali villa design | Balitrusted glossary",
+    seoDescription:
+      "What Palimanan sandstone is and why Bali villas use it for bright exterior cladding and carved details.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-open-living-bali-villa",
+    slug: "open-living-bali-villa-design",
+    title: "Open living",
+    category: "other",
+    summary:
+      "A Bali signature layout where living, dining, and kitchen flow toward the garden or pool with minimal separation from nature.",
+    content: `<p><strong>Open living</strong> is an architectural approach where the main lounge, dining, and kitchen areas open directly toward the garden, terrace, or pool, often with large sliding glass or minimal wall barriers.</p>
+<p>This is the core “Bali lifestyle” promise: you cook, eat, and relax while still feeling connected to breeze, sound, and greenery.</p>
+<p>Tradeoffs are real: insects, rain splash, noise from storms, and cooling load management. Good design uses roof overhangs, screens, drainage, and spatial zoning so open living stays comfortable year-round, not only in dry-season photos.</p>`,
+    published: true,
+    createdAt: "2026-04-17T10:00:00.000Z",
+    updatedAt: "2026-04-17T10:00:00.000Z",
+    seoTitle: "Open living design in Bali villas | Balitrusted glossary",
+    seoDescription:
+      "What open living means in Bali architecture, why it is desirable, and what comfort tradeoffs to expect.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-en-suite-bathroom-bali",
+    slug: "en-suite-bathroom-semi-open-bali",
+    title: "En-suite bathroom",
+    category: "other",
+    summary:
+      "A bedroom-connected bathroom, often semi-open in Bali so shower or tub areas feel integrated with tropical gardens.",
+    content: `<p>An <strong>en-suite bathroom</strong> is a bathroom accessed directly from a bedroom without passing through shared corridors.</p>
+<p>In Bali, en-suites are frequently designed as <strong>semi-open</strong> experiences: a roofed vanity and WC zone may be fully enclosed, while the shower or bathtub sits under sky, partial roof, or garden screening.</p>
+<p>That design reads luxurious in photos, but privacy, humidity, insects, and night lighting matter for daily living. Always check how “open” the wet zone really is, and whether shutters or blinds exist where you want them.</p>`,
+    published: true,
+    createdAt: "2026-04-17T10:00:00.000Z",
+    updatedAt: "2026-04-17T10:00:00.000Z",
+    seoTitle: "En-suite bathrooms in Bali villas | Balitrusted glossary",
+    seoDescription:
+      "What en-suite means in Bali and why semi-open tropical bathroom layouts are so common.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-infinity-pool-ubud",
+    slug: "infinity-pool-ubud-jungle-view",
+    title: "Infinity pool",
+    category: "other",
+    summary:
+      "A pool edge designed so water visually meets the horizon, often aligned with jungle or sawah views in Ubud listings.",
+    content: `<p>An <strong>infinity pool</strong> (often called a <strong>vanishing edge</strong> pool) uses a lowered catch basin so water appears to spill into the horizon. In Ubud marketing, it is frequently composed to merge visually with <strong>jungle canopy</strong> or <strong>rice fields</strong>.</p>
+<p>The effect is powerful for photography and guest experience, but engineering matters: edge detailing, pump systems, overflow maintenance, and safe walking lines around the wet edge.</p>
+<p>When comparing listings, confirm whether the “infinity” view is stable across seasons and whether the edge faces the view you actually use during the day, not only the hero camera angle.</p>`,
+    published: true,
+    createdAt: "2026-04-17T10:00:00.000Z",
+    updatedAt: "2026-04-17T10:00:00.000Z",
+    seoTitle: "Infinity pool design in Ubud villas | Balitrusted glossary",
+    seoDescription:
+      "What an infinity pool is, why it sells Ubud views, and what practical pool engineering details still matter.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-terrazzo-bali-interiors",
+    slug: "terrazzo-flooring-bali-villas",
+    title: "Terrazzo",
+    category: "other",
+    summary:
+      "A composite stone-and-cement material popular for cool, smooth surfaces on floors, tubs, and countertops in tropical villas.",
+    content: `<p><strong>Terrazzo</strong> is a composite finish made from chips of marble, quartz, or other stone set into a cementitious binder, then ground smooth.</p>
+<p>In Bali interiors, terrazzo is popular because it feels <strong>cool underfoot</strong>, reads modern, and can be shaped into integrated sinks, bathtubs, benches, and floors with fewer grout lines than tile grids.</p>
+<p>Quality depends on mix design, sealing, slip resistance in wet areas, and crack repair standards. If a listing highlights terrazzo, ask whether surfaces are honed for barefoot comfort and how hot-sun exposure is handled outdoors.</p>`,
+    published: true,
+    createdAt: "2026-04-17T10:00:00.000Z",
+    updatedAt: "2026-04-17T10:00:00.000Z",
+    seoTitle: "Terrazzo finishes in Bali villas | Balitrusted glossary",
+    seoDescription:
+      "What terrazzo is, why Bali villas use it for floors and bathrooms, and what quality cues matter.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-bale-bengong-pavilion",
+    slug: "bale-bengong-garden-pavilion-bali",
+    title: "Bale bengong",
+    category: "other",
+    summary:
+      "A raised garden pavilion for lounging and views, a classic Balinese outdoor room and a strong luxury rental feature.",
+    content: `<p><strong>Bale bengong</strong> is a raised wooden pavilion with a roof, traditionally used as an outdoor room for relaxing, reading, napping, or enjoying views across a garden, rice field, or pool.</p>
+<p>In luxury rentals, a well-placed bale is a major lifestyle selling point because it signals “slow Bali time”: shade, breeze, and a framed view without needing a full indoor living room.</p>
+<p>When evaluating a listing, check cushion quality, rain protection, mosquito practicality at dusk, and whether the bale orientation matches the view you care about during real hours of use.</p>`,
+    published: true,
+    createdAt: "2026-04-17T10:00:00.000Z",
+    updatedAt: "2026-04-17T10:00:00.000Z",
+    seoTitle: "Bale bengong pavilion in Bali gardens | Balitrusted glossary",
+    seoDescription:
+      "What a bale bengong is and why garden pavilions are a signature luxury feature in Bali villa design.",
+    relatedGuideUrl: "/guides/ubud",
+  },
 ];
