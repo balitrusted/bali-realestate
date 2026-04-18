@@ -1,6 +1,12 @@
 import { Property } from "@/types/property";
 import { subAreaNames } from "@/types/areas";
 
+/** Land-only listing (not combined with rent/sale/business on the same card). */
+export function isPureLandListing(property: Pick<Property, "types">): boolean {
+  const t = property.types ?? [];
+  return t.includes("land") && !t.includes("rent") && !t.includes("sale") && !t.includes("business");
+}
+
 /** Replacement character (U+FFFD) appears when CSV was read with wrong encoding. */
 const REPLACEMENT_CHAR = "\uFFFD";
 
@@ -39,7 +45,7 @@ export function normalizeVillaNumberKey(v: string | undefined): string {
 
 /**
  * Display title for a property. If title is set — use it. Otherwise build short line from params.
- * Examples: "Villa #50 · 2 bed · Lodtunduh" or "2-bed villa · Lodtunduh".
+ * Examples: "Villa #50 · 2 bed · Lodtunduh", "Land #34 · Lodtunduh", or "2-bed villa · Lodtunduh".
  */
 export function getPropertyDisplayTitle(property: Property): string {
   const t = property.title?.trim();
@@ -51,6 +57,9 @@ export function getPropertyDisplayTitle(property: Property): string {
 
   if (property.villaNumber?.trim?.()) {
     const num = fixVillaNumberDisplay(property.villaNumber).trim().replace(/^#/, "");
+    if (isPureLandListing(property)) {
+      return areaName ? `Land #${num} · ${areaName}` : `Land #${num}`;
+    }
     return areaName ? `Villa #${num} · ${bedLabel} · ${areaName}` : `Villa #${num} · ${bedLabel}`;
   }
   return areaName ? `${bedLabel} villa · ${areaName}` : `${bedLabel} villa`;

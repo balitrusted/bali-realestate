@@ -9,6 +9,7 @@ import type { Property } from "@/types/property";
 import { featureIsYes } from "@/lib/featureState";
 import { areas } from "@/types/areas";
 import { MAX_COMPARE } from "@/lib/savedStore";
+import { isPureLandListing } from "@/lib/propertyUtils";
 
 type ListedProperty = Property & { publicSlug: string };
 
@@ -110,7 +111,10 @@ export default function SavedPage() {
                                   href={`/properties/${p.publicSlug ?? p.id}`}
                                   className="underline hover:no-underline line-clamp-2"
                                 >
-                                  {p.title?.trim() || `Villa #${p.villaNumber ?? p.id} · ${p.bedrooms} bed`}
+                                  {p.title?.trim() ||
+                                    (isPureLandListing(p)
+                                      ? `Land #${p.villaNumber ?? p.id}`
+                                      : `Villa #${p.villaNumber ?? p.id} · ${p.bedrooms} bed`)}
                                 </Link>
                                 <button
                                   type="button"

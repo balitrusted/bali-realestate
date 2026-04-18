@@ -1,9 +1,13 @@
 import type { Property } from "@/types/property";
-import { getPropertyDisplayTitle } from "@/lib/propertyUtils";
+import { getPropertyDisplayTitle, isPureLandListing } from "@/lib/propertyUtils";
 import { areas, subAreaNames } from "@/types/areas";
 
-/** Short line for map pin (Villa #n · X beds). */
+/** Short line for map pin (Villa #n · X beds, or Land #n). */
 export function mapPinShortLabel(property: Property): string {
+  if (isPureLandListing(property) && property.villaNumber?.trim()) {
+    const n = property.villaNumber.trim().replace(/^#/, "");
+    return `Land #${n}`;
+  }
   const beds = property.bedrooms ?? 0;
   const bedWord = beds === 1 ? "bed" : "beds";
   if (property.villaNumber?.trim()) {

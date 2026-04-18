@@ -13,7 +13,12 @@ import PropertyDetailLeadButtons from "@/components/PropertyDetailLeadButtons";
 import PriceText from "@/components/PriceText";
 import { subAreaNames, areas, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
 import { resolveAreaLabel } from "@/lib/mainAreaRegistry";
-import { getPropertyDisplayTitle, fixDescriptionDisplay, fixVillaNumberDisplay } from "@/lib/propertyUtils";
+import {
+  getPropertyDisplayTitle,
+  fixDescriptionDisplay,
+  fixVillaNumberDisplay,
+  isPureLandListing,
+} from "@/lib/propertyUtils";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { formatLocaleDate } from "@/lib/formatDate";
 
@@ -74,6 +79,10 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
   const showAvailability = hasRent && !hasLand && !hasBusiness;
   const dealLabel = hasRent ? "Rent" : hasSale ? "Buy" : hasLand ? "Land" : hasBusiness ? "Business" : "Listing";
   const headingTitle = (() => {
+    if (isPureLandListing(property) && property.villaNumber?.trim?.()) {
+      const num = fixVillaNumberDisplay(property.villaNumber).trim().replace(/^#/, "");
+      return `Land #${num}`;
+    }
     const beds = property.bedrooms ?? 0;
     const bedLabel = beds === 1 ? "1 bed" : `${beds} bed`;
     const showBeds = !hasLand || hasRent || hasSale || hasBusiness;
@@ -141,6 +150,12 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
                     <span className="text-lg font-normal text-gray-500 ml-2">· for sale</span>
                   </p>
                 )}
+                {(monthly == null || monthly <= 0) && yearly != null && yearly > 0 && !isSale && (
+                  <p className="text-3xl font-semibold text-gray-900">
+                    <PriceText amount={yearly} sourceCurrency={p.currency} />
+                    <span className="text-lg font-normal text-gray-500 ml-2">/ year</span>
+                  </p>
+                )}
                 {monthly != null && monthly > 0 && (
                   <>
                     {forSale != null && isSale && <div className="mt-2" />}
@@ -180,21 +195,23 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
                 </div>
               )}
 
-              <div className="mb-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-3">Details</h2>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <span className="text-sm text-gray-600">Bedrooms</span>
-                    <p className="text-lg font-semibold text-gray-900">{property.bedrooms}</p>
-                  </div>
-                  {property.bathrooms && (
+              {!isPureLandListing(property) && (
+                <div className="mb-6">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-3">Details</h2>
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <span className="text-sm text-gray-600">Bathrooms</span>
-                      <p className="text-lg font-semibold text-gray-900">{property.bathrooms}</p>
+                      <span className="text-sm text-gray-600">Bedrooms</span>
+                      <p className="text-lg font-semibold text-gray-900">{property.bedrooms}</p>
                     </div>
-                  )}
+                    {property.bathrooms && (
+                      <div>
+                        <span className="text-sm text-gray-600">Bathrooms</span>
+                        <p className="text-lg font-semibold text-gray-900">{property.bathrooms}</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {featuresList.length > 0 && (
                 <div className="mb-6">

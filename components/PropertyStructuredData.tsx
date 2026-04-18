@@ -1,6 +1,7 @@
 import { Property } from "@/types/property";
 import { featureIsYes } from "@/lib/featureState";
 import { areas } from "@/types/areas";
+import { getPropertyDisplayTitle } from "@/lib/propertyUtils";
 import { parseLatLng } from "@/lib/mapGeo";
 
 interface PropertyStructuredDataProps {
@@ -59,7 +60,7 @@ function offerMerchantFields(baseUrl: string) {
 export default function PropertyStructuredData({ property, baseUrl, propertyUrl }: PropertyStructuredDataProps) {
   const areaInfo = property.mainArea ? areas[property.mainArea as keyof typeof areas] : null;
   const areaName = areaInfo?.nameEn || property.mainArea || "Bali";
-  const displayTitle = property.title || `Villa ${property.villaNumber || property.id}`;
+  const displayTitle = getPropertyDisplayTitle(property);
 
   const p = property.price;
   const monthly = p.monthly ?? p.min;
@@ -99,7 +100,7 @@ export default function PropertyStructuredData({ property, baseUrl, propertyUrl 
       availability: property.archived ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
       ...extraOffer,
     };
-  } else if (monthly != null) {
+  } else if (monthly != null && monthly > 0) {
     accommodationOffers = {
       "@type": "Offer" as const,
       price: monthly,

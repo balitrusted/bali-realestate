@@ -1010,9 +1010,7 @@ export const properties: Property[] = [
     bathrooms: 1,
     price: {
       currency: "IDR",
-      min: 8200000,
-      monthly: 8200000,
-      forSale: 8200000,
+      yearly: 98400000,
     },
     duration: {
       min: 1,
@@ -1027,7 +1025,7 @@ export const properties: Property[] = [
     images: ["https://2hli4xtzchlvkn3f.public.blob.vercel-storage.com/properties/land-34-ubud-lodtunduh-1-40at9hsOsGyLKgjXqvqHMApb4E3rzP.jpg", "https://2hli4xtzchlvkn3f.public.blob.vercel-storage.com/properties/land-34-ubud-lodtunduh-2-RZZDasZ93nGYR00R8ITzZkrNejcQ3d.jpg", "https://2hli4xtzchlvkn3f.public.blob.vercel-storage.com/properties/land-34-ubud-lodtunduh-3-0mgtrNggKM5aWvqoQSSq3OnPitSqFB.jpg", "https://2hli4xtzchlvkn3f.public.blob.vercel-storage.com/properties/land-34-ubud-lodtunduh-4-Ea9gx2tCNCFQB3uegwBxg2BF89l03R.jpg", "https://2hli4xtzchlvkn3f.public.blob.vercel-storage.com/properties/land-34-ubud-lodtunduh-5-MtNJrOd9ejBqttRhpz21nfnhir5gmU.jpg", "https://2hli4xtzchlvkn3f.public.blob.vercel-storage.com/properties/land-34-ubud-lodtunduh-6-vkB4U3qaw8abrTHKHJHAkCPt0vwYJw.jpg", "https://2hli4xtzchlvkn3f.public.blob.vercel-storage.com/properties/land-34-ubud-lodtunduh-7-JK2o09TIgnHqs78WcyeGU33AAisTyS.jpg"],
     order: 30,
     createdAt: "2026-02-05T18:22:13.622Z",
-    updatedAt: "2026-02-08T19:06:04.415Z",
+    updatedAt: "2026-04-18T12:30:00.000Z",
   },
   {
     id: "prop-44-31",
