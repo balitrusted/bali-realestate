@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   },
 };
 
-const POPULAR_AREAS = ["ubud", "sanur", "seminyak", "canggu", "kerobokan"] as const;
+const POPULAR_AREAS = ["ubud", "sanur", "seminyak", "kerobokan"] as const;
 
 /** Seeded shuffle so the homepage selection rotates daily without client randomness. */
 function shuffle<T>(arr: T[], daySeed: number): T[] {
@@ -318,7 +318,7 @@ export default async function Home() {
               Balitrusted was created to simplify the search for long-term villa rentals in Bali. Our platform brings together verified listings from local agents and property owners, making it easier for international residents, remote workers and long-term visitors to find a comfortable home on the island.
             </p>
             <p className="text-gray-700 leading-relaxed">
-              We focus on villas suitable for long-term living, especially in popular areas such as Ubud, Sanur and Canggu. These locations offer different lifestyles — from peaceful jungle surroundings to vibrant coastal communities.
+              We focus on villas suitable for long-term living, especially in popular areas such as Ubud, Sanur, Seminyak, and Kerobokan. These locations offer different lifestyles — from peaceful jungle surroundings to calmer coastal pockets.
             </p>
             <p className="text-gray-700 leading-relaxed">
               Each listing includes detailed information about the property, location, price and availability. Our goal is to create a transparent and reliable catalog of villas where tenants can browse available homes and owners can reach international renters.

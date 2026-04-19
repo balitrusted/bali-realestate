@@ -97,9 +97,9 @@ export async function POST(request: NextRequest) {
       if (!emailTrim && !whatsappTrim) {
         return NextResponse.json({ error: "Email or phone is required" }, { status: 400 });
       }
-    } else if (!isCatalogFeedback && !emailTrim) {
+    } else if (!isCatalogFeedback && !emailTrim && !whatsappTrim) {
       return NextResponse.json(
-        { error: "Email is required" },
+        { error: "Email or WhatsApp is required" },
         { status: 400 }
       );
     }

@@ -1,7 +1,9 @@
 "use client";
 
 import type { ComponentPropsWithoutRef } from "react";
+import type { SupportedCurrency } from "@/lib/currency";
 
+/** Admin forms historically used IDR/USD only; formatting supports the full site currency set. */
 export type AdminPriceCurrency = "IDR" | "USD";
 
 /** Keep only digits; undefined if empty */
@@ -14,10 +16,11 @@ export function parseDigitsToInt(raw: string): number | undefined {
 
 export function formatPriceDigits(
   n: number | undefined,
-  currency: AdminPriceCurrency
+  currency: SupportedCurrency | AdminPriceCurrency
 ): string {
   if (n === undefined || n === null || Number.isNaN(n)) return "";
-  return n.toLocaleString(currency === "IDR" ? "id-ID" : "en-US");
+  const locale = currency === "IDR" ? "id-ID" : "en-US";
+  return n.toLocaleString(locale, { maximumFractionDigits: 0, useGrouping: true });
 }
 
 type PriceInputProps = Omit<
@@ -26,7 +29,7 @@ type PriceInputProps = Omit<
 > & {
   value: number | undefined;
   onValueChange: (v: number | undefined) => void;
-  currency: AdminPriceCurrency;
+  currency: SupportedCurrency | AdminPriceCurrency;
 };
 
 /**
