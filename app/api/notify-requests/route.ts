@@ -62,7 +62,9 @@ export async function POST(request: Request) {
       </ul>
       <p><em>Balitrusted</em></p>
     `;
-    sendToAdmin(subject, html).catch((err) => console.error("Notify-request email failed:", err));
+    void sendToAdmin(subject, html).then((r) => {
+      if (!r.success) console.error("Notify-request email failed:", r.error);
+    });
 
     try {
       await writeRequests(requests);

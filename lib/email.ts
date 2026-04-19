@@ -52,5 +52,9 @@ export async function sendToAdmin(subject: string, html: string): Promise<{ succ
     console.warn("ADMIN_EMAIL not set, admin notification not sent:", subject);
     return { success: false, error: "Admin email not configured" };
   }
-  return sendEmail({ to: ADMIN_EMAIL, subject, html });
+  const result = await sendEmail({ to: ADMIN_EMAIL, subject, html });
+  if (!result.success) {
+    console.error("[email] sendToAdmin failed:", result.error ?? "unknown", "| to:", ADMIN_EMAIL, "| subject:", subject);
+  }
+  return result;
 }

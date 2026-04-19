@@ -167,7 +167,9 @@ export async function POST(request: NextRequest) {
     lines.push(`<p><em>Balitrusted</em></p>`);
 
     const subject = `[Balitrusted] New request: ${typeLabel} – ${siteRequest.name}`;
-    sendToAdmin(subject, lines.join("\n")).catch((err) => console.error("Request email failed:", err));
+    void sendToAdmin(subject, lines.join("\n")).then((r) => {
+      if (!r.success) console.error("Request email failed:", r.error);
+    });
 
     return NextResponse.json({ success: true, id });
   } catch (error) {
