@@ -33,15 +33,32 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
       .replace(/\s+/g, " ")
       .trim();
 
+    const isGenericLeadSentence = (s: string) => {
+      const t = s.toLowerCase();
+      return (
+        /^one bedroom\b/.test(t) ||
+        /^two bedroom\b/.test(t) ||
+        /^three bedroom\b/.test(t) ||
+        /^four bedroom\b/.test(t) ||
+        /^five bedroom\b/.test(t) ||
+        /^villa for rent\b/.test(t) ||
+        /^apartment\b/.test(t) ||
+        /^land\b/.test(t) ||
+        /for rent in\b/.test(t) ||
+        /area[,.\s]/.test(t)
+      );
+    };
+
     // Prefer real listing text so cards stay unique and never empty
     // when owners provide meaningful descriptions.
     if (cleanDesc) {
-      const firstSentence = cleanDesc
+      const sentences = cleanDesc
         .split(/(?<=[.!?])\s+/)
-        .map((s) => s.trim())
-        .find((s) => s.length >= 24);
+        .map((s) => s.trim().replace(/^[-•]\s*/, ""))
+        .filter((s) => s.length >= 24);
 
-      const candidate = (firstSentence || cleanDesc).replace(/^[-•]\s*/, "").trim();
+      const firstNonGeneric = sentences.find((s) => !isGenericLeadSentence(s));
+      const candidate = (firstNonGeneric || cleanDesc).trim();
       if (candidate) {
         return candidate.length > 190 ? `${candidate.slice(0, 187).trimEnd()}…` : candidate;
       }
