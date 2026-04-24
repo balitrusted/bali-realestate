@@ -5,7 +5,7 @@ import PriceText from "@/components/PriceText";
 import { Property } from "@/types/property";
 import { featureIsYes } from "@/lib/featureState";
 import { areas, subAreaNames, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
-import { getPropertyDisplayTitle, isPureLandListing } from "@/lib/propertyUtils";
+import { fixDescriptionDisplay, getPropertyDisplayTitle, isPureLandListing } from "@/lib/propertyUtils";
 import { getPropertyImageAlt } from "@/lib/imageSeo";
 
 interface PropertyCardProps {
@@ -29,7 +29,25 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
   const mainAreaLabel = property.mainArea ? (areas[property.mainArea]?.nameEn || property.mainArea) : null;
 
   const buildTeaser = (): string | null => {
-    const text = `${property.title ?? ""}\n${property.description ?? ""}`.toLowerCase();
+    const cleanDesc = fixDescriptionDisplay(property.description || "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    // Prefer real listing text so cards stay unique and never empty
+    // when owners provide meaningful descriptions.
+    if (cleanDesc) {
+      const firstSentence = cleanDesc
+        .split(/(?<=[.!?])\s+/)
+        .map((s) => s.trim())
+        .find((s) => s.length >= 24);
+
+      const candidate = (firstSentence || cleanDesc).replace(/^[-•]\s*/, "").trim();
+      if (candidate) {
+        return candidate.length > 190 ? `${candidate.slice(0, 187).trimEnd()}…` : candidate;
+      }
+    }
+
+    const text = `${property.title ?? ""}\n${cleanDesc}`.toLowerCase();
     const loc = mainAreaLabel ?? "Bali";
     const isRent = property.types?.includes("rent");
     const stayPhrase = isRent ? "long-term stay" : "property";

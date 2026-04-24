@@ -33,6 +33,25 @@ export default function SiteSearch({ className = "" }: { className?: string }) {
   const [hits, setHits] = useState<SearchHit[]>([]);
   const [active, setActive] = useState(-1);
 
+  const trackQuery = useCallback(
+    (query: string, source: "site_search_submit" | "site_search_suggestion_click", propertyId?: string) => {
+      const q = query.trim();
+      if (!q) return;
+      void fetch("/api/search/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+        body: JSON.stringify({
+          query: q,
+          source,
+          propertyId,
+          path: typeof window !== "undefined" ? window.location.pathname + window.location.search : undefined,
+        }),
+      }).catch(() => {});
+    },
+    []
+  );
+
   const runSearch = useCallback(async (query: string) => {
     if (!query) {
       setHits([]);
@@ -68,6 +87,7 @@ export default function SiteSearch({ className = "" }: { className?: string }) {
   const goFull = () => {
     const t = q.trim();
     if (!t) return;
+    trackQuery(t, "site_search_submit");
     setOpen(false);
     router.push(`/search?q=${encodeURIComponent(t)}`);
   };
@@ -90,6 +110,7 @@ export default function SiteSearch({ className = "" }: { className?: string }) {
     } else if (e.key === "Enter") {
       if (active >= 0 && hits[active]) {
         e.preventDefault();
+        trackQuery(q, "site_search_suggestion_click", hits[active].id);
         router.push(hits[active].href);
         setOpen(false);
         setQ("");
@@ -155,6 +176,7 @@ export default function SiteSearch({ className = "" }: { className?: string }) {
                   i === active ? "bg-emerald-50" : ""
                 }`}
                 onClick={() => {
+                  trackQuery(q, "site_search_suggestion_click", h.id);
                   setOpen(false);
                   setQ("");
                 }}

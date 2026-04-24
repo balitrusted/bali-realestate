@@ -4,6 +4,7 @@ import { loadAllProperties, loadAllPropertiesForSlugIndex } from "@/lib/properti
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { rankPropertiesForSearch } from "@/lib/propertySearch";
 import PropertyCard from "@/components/PropertyCard";
+import SearchQueryTracker from "@/components/SearchQueryTracker";
 import SiteSearch from "@/components/SiteSearch";
 
 const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://balitrusted.com";
@@ -45,6 +46,7 @@ export default async function SearchPage({
   return (
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
+        {q && <SearchQueryTracker query={q} />}
         <h1 className="text-2xl font-semibold text-gray-900 mb-2">Search properties</h1>
         <p className="text-sm text-gray-600 mb-4">
           Type area, bedrooms (e.g. <span className="font-medium">2 bedroom ubud</span>), villa number, or words from a

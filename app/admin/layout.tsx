@@ -150,6 +150,9 @@ export default function AdminLayout({
               <AdminNavLinkWithBadge href="/admin/notify-requests" count={badgeCounts.notifyNew}>
                 Notify requests
               </AdminNavLinkWithBadge>
+              <Link href="/admin/search-queries" className="text-gray-700 hover:text-gray-900">
+                Search history
+              </Link>
               <Link
                 href="/admin/catalog-structure"
                 className="text-gray-700 hover:text-gray-900"

@@ -7,13 +7,13 @@ export const glossaryTerms: GlossaryTerm[] = [
     title: "IMB / building permit (Izin Mendirikan Bangunan)",
     category: "legal",
     summary:
-      "A legacy permit regime for built structures in Indonesia. New projects now use different licensing, but older listings still reference IMB history.",
-    content: `<p><strong>IMB</strong> (Izin Mendirikan Bangunan) was the traditional building permit in Indonesia. For Bali villas, buyers and long-term renters sometimes still see IMB mentioned in due diligence, especially on older properties.</p>
-<p>Regulations have evolved: new construction and significant changes may require permits under updated rules (including PB UMKU / “PBG” style licensing depending on period and local interpretation). What matters in practice is whether the structure on the land is documented in a way your notary and engineer accept for your use case—not only the old three letters “IMB.”</p>
-<p>Always verify current paperwork with a qualified notary and, where needed, a structural survey—not only the marketing description.</p>`,
+      "The key building permit framework in Indonesia (transitioned from IMB toward PBG). It defines legal building use and is critical for risk control.",
+    content: `<p><strong>IMB</strong> (Izin Mendirikan Bangunan) was the classic building permit in Indonesia. New regulation has shifted this framework toward <strong>PBG</strong> (Persetujuan Bangunan Gedung), but in Bali transactions both terms still appear side by side because many properties were approved under older rules.</p>
+<p>This permit chain is crucial because it helps confirm <strong>what the building is legally allowed to be used for</strong> (for example, private residence versus commercial accommodation). A villa without valid permit history can face fines, operational blocks, or major friction with local authorities.</p>
+<p>Practical due diligence is not just “IMB yes/no.” Check permit consistency with zoning, actual built form, and intended use model (long-term rent, short-term tourism, owner occupancy). A qualified notary and technical advisor should verify the full paper trail before payment.</p>`,
     published: true,
     createdAt: "2026-04-09T10:00:00.000Z",
-    updatedAt: "2026-04-09T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
     seoTitle: "IMB building permit Bali — glossary | Balitrusted",
     seoDescription:
       "What IMB meant for Bali property, how licensing changed, and why due diligence still references it.",
@@ -125,12 +125,13 @@ export const glossaryTerms: GlossaryTerm[] = [
     title: "Banjar",
     category: "living",
     summary:
-      "Local neighborhood council beneath the desa—often involved in ceremonies, noise norms, and dispute mediation.",
-    content: `<p>A <strong>banjar</strong> is a community governance layer in Bali, under the village (<em>desa adat</em> structures vary by area). Practically, it can affect everything from ceremony noise schedules to how conflicts with neighbors are mediated.</p>
-<p>For renters, good relations with staff and neighbors—and awareness of major temple/event calendars—prevent many frictions that no contract clause will elegantly solve.</p>`,
+      "The local community council in Bali with real day-to-day influence on villa operations, neighborhood norms, and practical social permission.",
+    content: `<p>A <strong>banjar</strong> is Bali’s local community council and social governance unit. It has real influence over neighborhood life: ceremonies, noise expectations, social conduct, and how local issues get resolved in practice.</p>
+<p>For owners, developers, and operators, <strong>banjar coordination</strong> usually means respectful communication, participation in local expectations, and payment of agreed local contributions where applicable. In Bali operations, this relationship often matters as much as formal paperwork.</p>
+<p>A good relationship with the banjar is often described by experienced operators as practical “insurance”: fewer avoidable conflicts, smoother project execution, and better long-term acceptance inside the community.</p>`,
     published: true,
     createdAt: "2026-04-09T10:00:00.000Z",
-    updatedAt: "2026-04-09T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
     seoTitle: "What is a banjar in Bali? | Balitrusted glossary",
     seoDescription: "Intro to banjar-level community life and why it matters for long-term renters.",
     relatedGuideUrl: "/guides/ubud",
@@ -1274,6 +1275,1144 @@ export const glossaryTerms: GlossaryTerm[] = [
     updatedAt: "2026-04-18T12:00:00.000Z",
     seoTitle: "Ulin ironwood for outdoor Bali builds — glossary | Balitrusted",
     seoDescription: "What ulin ironwood is and why it is used for exterior timber in Bali.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-global-lease",
+    slug: "global-lease-villa-complex-bali",
+    title: "Global Lease",
+    category: "legal",
+    summary:
+      "A master lease over a large plot that is later split into individual villa interests; common in managed villa compounds.",
+    content: `<p>A <strong>Global Lease</strong> is a legal structure where one larger plot is leased under a master agreement, then subdivided into smaller villa lots or unit rights for end buyers/tenants.</p>
+<p>In many Bali “villa complexes,” your unit sits under this umbrella. The critical legal point is whether your individual lease right is clearly carved out, documented, and aligned with the master lease conditions.</p>
+<p>Before signing, confirm term synchronization (master lease vs your unit lease), renewal mechanics, and registration details with a notary. If the master structure is weak, individual owners can face avoidable risk later.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "Global Lease in Bali villa complexes — glossary | Balitrusted",
+    seoDescription: "How global lease structures work and what to verify before buying in a villa compound.",
+    relatedGuideUrl: "/guides/buy",
+  },
+  {
+    id: "glossary-yellow-zone-pemukiman",
+    slug: "yellow-zone-pemukiman-bali-zoning",
+    title: "Yellow Zone (Pemukiman)",
+    category: "legal",
+    summary:
+      "Residential zoning in Bali spatial plans, typically the target zone for standard long-term villa living and non-tourism use.",
+    content: `<p>The <strong>Yellow Zone</strong> (<em>Pemukiman</em>) in Bali spatial planning is generally designated for residential use. If your goal is long-term living or non-daily rental residence, this is usually the preferred zoning context.</p>
+<p>Buying or developing in a non-residential zone can block permit approvals, financing, and legal operational certainty. Marketing claims should never replace formal zoning verification.</p>
+<p>Always request zoning confirmation (ITR/related documents) and match it against the intended use model before paying deposit or construction costs.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "Yellow Zone (Pemukiman) Bali — glossary | Balitrusted",
+    seoDescription: "What Yellow Zone means in Bali zoning and why it matters for residential villa use.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-pink-zone-pariwisata",
+    slug: "pink-zone-pariwisata-bali-tourism-zoning",
+    title: "Pink Zone (Pariwisata)",
+    category: "legal",
+    summary:
+      "Tourism-designated zoning where legal short-term villa rental licensing is typically possible.",
+    content: `<p>The <strong>Pink Zone</strong> (<em>Pariwisata</em>) is Bali’s tourism-oriented zoning category. If your investment model depends on daily/short-stay guests, this zone is usually the legal starting point.</p>
+<p>In most cases, short-term rental licensing pathways (such as Pondok Wisata-style operations) are expected to align with tourism zoning. Outside the right zone, high headline yields can be legally fragile.</p>
+<p>Before underwriting returns, verify zoning, permit pathway, and tax obligations with your notary and licensing advisor.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "Pink Zone (Pariwisata) Bali — glossary | Balitrusted",
+    seoDescription: "Why tourism zoning is critical for legal short-term villa rental strategy in Bali.",
+    relatedGuideUrl: "/guides/buy",
+  },
+  {
+    id: "glossary-pondok-wisata",
+    slug: "pondok-wisata-license-bali",
+    title: "Pondok Wisata",
+    category: "documents",
+    summary:
+      "A key operating license path for daily villa/home-stay rental activity in Bali.",
+    content: `<p><strong>Pondok Wisata</strong> is a licensing framework commonly used for home-stay and private villa operations targeting daily guests. In practical terms, it is one of the most important compliance checkpoints for short-term rental models.</p>
+<p>Operating daily rentals without the required legal setup can expose owners/operators to enforcement risk from local authorities, including restrictions on operations.</p>
+<p>Because licensing interpretations can evolve, always validate current requirements for your specific location and business model before launch.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "Pondok Wisata license in Bali — glossary | Balitrusted",
+    seoDescription: "What Pondok Wisata is and why short-term villa operators must treat it seriously.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-lease-extension-clause",
+    slug: "lease-extension-clause-bali",
+    title: "Lease Extension Clause",
+    category: "legal",
+    summary:
+      "Contract language that controls how a lease can be extended after expiry; one of the highest-impact lines in leasehold deals.",
+    content: `<p>A <strong>lease extension clause</strong> defines how a lease can continue after the initial term. For leasehold investors, this can be more important than interior finishes or short-term yield assumptions.</p>
+<p>Favorable formats include fixed-price extension formulas or capped market mechanisms. Vague “to be discussed later” language can create major uncertainty at renewal time.</p>
+<p>Before signing, negotiate extension mechanics early and make sure terms are explicit, enforceable, and understood by all parties.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "Lease extension clauses in Bali leasehold deals | Balitrusted",
+    seoDescription: "Why extension wording is critical in long-term Bali leasehold contracts.",
+    relatedGuideUrl: "/guides/buy",
+  },
+  {
+    id: "glossary-nominee-agreement-risk",
+    slug: "nominee-agreement-risk-bali",
+    title: "Nominee Agreement",
+    category: "legal",
+    summary:
+      "A high-risk legacy structure where a local name is used to hold land for a foreign party.",
+    content: `<p>A <strong>Nominee Agreement</strong> is an older structure where a foreign investor informally relies on an Indonesian citizen’s name to hold freehold rights. It became common historically but remains legally fragile.</p>
+<p>The core risk is enforceability: when control depends on side agreements rather than robust title structure, disputes can become difficult and costly.</p>
+<p>Modern investors usually prefer stronger legal pathways (for example, properly structured Hak Pakai or PMA-based setups where applicable) instead of nominee dependence.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "Nominee agreement risk in Bali property | Balitrusted glossary",
+    seoDescription: "Why nominee structures are considered high-risk and what safer alternatives investors use.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-right-of-first-refusal",
+    slug: "right-of-first-refusal-lease-protection",
+    title: "Right of First Refusal",
+    category: "legal",
+    summary:
+      "A clause giving the current tenant/investor first opportunity to buy or extend before third parties.",
+    content: `<p><strong>Right of First Refusal (ROFR)</strong> gives an existing tenant or leaseholder the first chance to match an offer before the property is sold or re-leased to someone else.</p>
+<p>For long-term residents and leasehold investors, this clause can protect sunk investment in fit-out, branding, and local operations.</p>
+<p>To be effective, ROFR wording should define notice period, offer format, response window, and what happens if terms are disputed.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "Right of First Refusal in Bali leases — glossary | Balitrusted",
+    seoDescription: "How ROFR clauses protect tenants and lease investors in property contracts.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-land-notary-ppat",
+    slug: "land-notary-ppat-bali",
+    title: "Land Notary (PPAT)",
+    category: "documents",
+    summary:
+      "A government-authorized land deed official for legally binding transfer documents and registration workflow.",
+    content: `<p><strong>PPAT</strong> (<em>Pejabat Pembuat Akta Tanah</em>) is the specialized official authorized to create land transfer deeds in Indonesia.</p>
+<p>In practice, PPAT handles critical transaction steps: preparing deed formalities, checking administrative consistency, and guiding registration with land authorities.</p>
+<p>Not every legal notary workflow is identical to PPAT authority, so buyers should verify that the right licensed professional is handling the land-right transaction stage.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "Land Notary (PPAT) in Bali transactions | Balitrusted glossary",
+    seoDescription: "What PPAT does in Indonesian land transfers and why this role is transaction-critical.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-sinking-fund-contribution",
+    slug: "sinking-fund-contribution-villa-complex",
+    title: "Sinking Fund Contribution",
+    category: "finance",
+    summary:
+      "A recurring owner contribution to a reserve fund for major future repairs in managed projects.",
+    content: `<p>A <strong>sinking fund</strong> is a pooled reserve collected from owners in managed compounds or strata-style projects to pay for large future capital works.</p>
+<p>Typical uses include roof replacement, road resurfacing, pump system renewal, facade upgrades, and other non-routine major expenses.</p>
+<p>A healthy sinking fund supports long-term asset quality and can reduce sudden special levies later. Always ask for budget transparency and reserve adequacy.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "Sinking fund contributions in villa projects | Balitrusted glossary",
+    seoDescription: "How sinking funds work and why they matter for long-term property value.",
+    relatedGuideUrl: "/guides/buy",
+  },
+  {
+    id: "glossary-building-management-system-bms",
+    slug: "building-management-system-bms-smart-villa",
+    title: "Building Management System (BMS)",
+    category: "living",
+    summary:
+      "A centralized digital control layer for lighting, climate, pumps, and security in smart villas.",
+    content: `<p>A <strong>Building Management System (BMS)</strong> is a digital control system that coordinates core building functions such as AC, lighting schedules, pool equipment, access, and alarms.</p>
+<p>In premium Bali villas, BMS integration can improve comfort consistency, energy efficiency, and remote management quality for absentee owners.</p>
+<p>For buyers, the key checks are service support, replacement parts availability, and whether local technicians can maintain the system long-term.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "BMS for smart villas in Bali — glossary | Balitrusted",
+    seoDescription: "What a Building Management System does and why it is a premium villa feature.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-mold-prevention-construction",
+    slug: "mold-prevention-construction-bali",
+    title: "Mold Prevention Construction",
+    category: "living",
+    summary:
+      "Humidity-adapted design and materials that reduce mold risk in tropical villas.",
+    content: `<p><strong>Mold prevention construction</strong> refers to design and finishing choices made specifically for high-humidity climates such as Ubud: ventilation strategy, moisture barriers, wall detailing, and mold-resistant coatings.</p>
+<p>Without these measures, even attractive new villas can quickly develop odor, staining, and tenant comfort complaints.</p>
+<p>Serious listings should explain what has been done technically, not only claim “no mold.” This detail improves buyer trust and long-term rentability.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "Mold prevention construction for Bali villas | Balitrusted glossary",
+    seoDescription: "How tropical construction choices reduce mold risk in humid Bali environments.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-soakaway-drainage",
+    slug: "soakaway-drainage-system-bali",
+    title: "Soakaway (Drainage)",
+    category: "living",
+    summary:
+      "A subsurface gravel pit system that slows rainwater absorption and helps prevent flooding around villas.",
+    content: `<p>A <strong>soakaway</strong> is an underground drainage feature, usually a gravel-filled pit or chamber, designed to let stormwater infiltrate the ground gradually.</p>
+<p>In Bali’s heavy rain cycles, proper soakaway design helps protect gardens, pathways, and pool surroundings from standing water and erosion.</p>
+<p>When reviewing a villa, ask how site drainage is engineered overall—not only where the water “goes” in dry season.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "Soakaway drainage in Bali villas — glossary | Balitrusted",
+    seoDescription: "Why soakaway systems are important for tropical rain and flood prevention.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-deep-well-ro-filtration",
+    slug: "deep-well-filtration-ro-system-bali",
+    title: "Deep Well Filtration (RO System)",
+    category: "living",
+    summary:
+      "A high-spec water treatment setup that can make villa tap water suitable for direct drinking.",
+    content: `<p>Many Bali villas rely on well water, but quality can vary. <strong>RO (Reverse Osmosis)</strong> filtration is considered a premium treatment standard because it removes a broad range of dissolved contaminants.</p>
+<p>A robust deep-well + RO setup can allow safe drinking water from dedicated taps, reducing bottled-water dependence and improving tenant comfort.</p>
+<p>Check service schedule, membrane replacement cost, and test records if potable-water quality is a key selling point.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "Deep well RO filtration in Bali villas | Balitrusted glossary",
+    seoDescription: "How reverse osmosis systems improve well-water quality in Bali properties.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-internet-redundancy",
+    slug: "internet-redundancy-villa-connectivity",
+    title: "Internet Redundancy",
+    category: "living",
+    summary:
+      "Dual-provider internet setup (e.g., fiber + backup line) to maintain uptime when one network fails.",
+    content: `<p><strong>Internet redundancy</strong> means running two independent connectivity paths—commonly fiber plus a secondary provider (or satellite backup)—so work can continue when one service drops.</p>
+<p>For digital nomads and remote teams, this can be a decisive feature and often justifies higher occupancy or rent rates.</p>
+<p>Ask whether failover is automatic, what speeds are realistic, and who supports troubleshooting on-site.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "Internet redundancy for Bali villas — glossary | Balitrusted",
+    seoDescription: "Why dual-provider internet is a major feature for remote workers in Bali.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-cctv-perimeter-security",
+    slug: "cctv-perimeter-security-villa-bali",
+    title: "CCTV & Perimeter Security",
+    category: "living",
+    summary:
+      "Camera and boundary-lighting systems that support remote monitoring and lock-and-leave ownership.",
+    content: `<p><strong>CCTV and perimeter security</strong> usually include remote-view cameras, motion lighting, gate controls, and strategic blind-spot coverage.</p>
+<p>Even in generally safe areas, these systems matter for owners who leave villas empty between stays and want confidence in remote monitoring.</p>
+<p>Quality depends on camera placement, night visibility, retention settings, and secure app access—not only camera count.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "CCTV and perimeter security in Bali villas | Balitrusted glossary",
+    seoDescription: "How perimeter security setups improve peace of mind for villa owners and tenants.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-semi-open-living",
+    slug: "semi-open-living-ubud-villa-design",
+    title: "Semi-Open Living",
+    category: "living",
+    summary:
+      "A hybrid layout with large openings that can be closed, balancing tropical airflow with night-time comfort.",
+    content: `<p><strong>Semi-open living</strong> is a Bali design compromise between fully open pavilions and fully enclosed interiors. Large sliding or folding glass systems let you open to nature by day and close at night.</p>
+<p>This layout helps reduce mosquito exposure, humidity intrusion, and noise when needed while preserving indoor-outdoor lifestyle appeal.</p>
+<p>In Ubud especially, semi-open execution can significantly improve comfort and rentability compared with permanently exposed layouts.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "Semi-open living design in Ubud villas | Balitrusted glossary",
+    seoDescription: "Why semi-open layouts are popular for balancing tropical feel and practical comfort.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-insect-protection-screening",
+    slug: "insect-protection-screening-villa",
+    title: "Insect Protection (Screening)",
+    category: "living",
+    summary:
+      "Mosquito screens and insect barriers that materially improve comfort in jungle and tropical settings.",
+    content: `<p><strong>Insect screening</strong> means integrated mosquito and bug barriers on windows, doors, vents, and sometimes outdoor seating transitions.</p>
+<p>In Ubud and other lush areas, this is not a cosmetic detail: it has direct impact on sleep quality, AC usage patterns, and guest satisfaction.</p>
+<p>High-quality, discreet systems are a practical value-add that can improve long-stay appeal and reduce complaints.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "Insect screening for Bali villas — glossary | Balitrusted",
+    seoDescription: "Why proper mosquito/insect protection is a major comfort factor in tropical rentals.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-off-street-parking",
+    slug: "off-street-parking-ubud-villa-access",
+    title: "Off-Street Parking",
+    category: "living",
+    summary:
+      "Private car parking within or beside the property boundary, a key advantage over scooter-only access homes.",
+    content: `<p><strong>Off-street parking</strong> means dedicated private parking space that is not dependent on public road shoulders or distant lots.</p>
+<p>In Ubud, many central properties are scooter-access only. Car-access plus private parking is a strong competitive advantage, especially for families, older guests, and long-stay residents.</p>
+<p>When listings claim parking, verify turning radius, road width, and practical access in real traffic conditions.</p>`,
+    published: true,
+    createdAt: "2026-04-21T10:00:00.000Z",
+    updatedAt: "2026-04-21T10:00:00.000Z",
+    seoTitle: "Off-street parking for Bali villas | Balitrusted glossary",
+    seoDescription: "Why private car parking is a major differentiator in Ubud and central Bali micro-locations.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-honda-scoopy",
+    slug: "honda-scoopy-bali-scooter",
+    title: "Honda Scoopy",
+    category: "living",
+    summary:
+      "A light 110cc scooter with retro styling, popular for easy riding through tight village lanes in Bali.",
+    content: `<p>The <strong>Honda Scoopy</strong> is one of Bali’s most common scooters, especially in dense areas like Ubud where narrow lanes and frequent parking maneuvers matter more than top speed.</p>
+<p>Its low weight and approachable handling make it a favorite for newer riders and short daily commutes. For solo local mobility, it is often the easiest scooter platform to live with.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Honda Scoopy in Bali — glossary | Balitrusted",
+    seoDescription: "Why the Honda Scoopy is so popular for daily riding in Bali.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-honda-vario-125",
+    slug: "honda-vario-125-bali",
+    title: "Honda Vario 125",
+    category: "living",
+    summary:
+      "A practical step-up scooter with more power than a Scoopy while staying slim and affordable.",
+    content: `<p><strong>Honda Vario 125</strong> is widely seen as the next practical step after entry-level scooters. It keeps a compact profile while offering stronger hill performance and smoother overtaking than 110cc class bikes.</p>
+<p>For many long-stay residents, it balances budget, agility, and everyday reliability in Ubud traffic.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Honda Vario 125 in Bali — glossary | Balitrusted",
+    seoDescription: "A practical overview of Honda Vario 125 for Bali daily transport.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-honda-vario-160",
+    slug: "honda-vario-160-bali",
+    title: "Honda Vario 160",
+    category: "living",
+    summary:
+      "A stronger Vario variant with more torque and improved braking confidence for hilly routes.",
+    content: `<p><strong>Honda Vario 160</strong> adds meaningful engine and braking upgrades over the 125cc class, making steep inclines and faster main-road merges more comfortable.</p>
+<p>It is often chosen by riders who want extra power without moving to a larger maxi-scooter frame.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Honda Vario 160 in Bali — glossary | Balitrusted",
+    seoDescription: "What makes Vario 160 a popular choice in Bali’s mixed road conditions.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-yamaha-lexi",
+    slug: "yamaha-lexi-bali-scooter",
+    title: "Yamaha Lexi",
+    category: "living",
+    summary:
+      "An entry-level maxi-style scooter known for practical cargo floor space and relaxed ergonomics.",
+    content: `<p><strong>Yamaha Lexi</strong> sits between small commuter scooters and larger maxi models. Its practical flat floor area helps carry groceries or bulky daily items.</p>
+<p>Riders who find compact scooters cramped often prefer Lexi’s riding position for longer daily use.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Yamaha Lexi in Bali — glossary | Balitrusted",
+    seoDescription: "A practical guide to Yamaha Lexi for Bali daily transport.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-yamaha-xmax",
+    slug: "yamaha-xmax-bali-maxi-scooter",
+    title: "Yamaha XMAX",
+    category: "living",
+    summary:
+      "A powerful 250cc maxi-scooter suited to frequent long-distance travel across Bali.",
+    content: `<p><strong>Yamaha XMAX</strong> offers motorcycle-level touring comfort in scooter format, with strong highway stability and large under-seat storage.</p>
+<p>It is commonly chosen by riders who regularly move between distant areas and value comfort over compact-city agility.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Yamaha XMAX in Bali — glossary | Balitrusted",
+    seoDescription: "Why Yamaha XMAX is favored for long inter-area rides in Bali.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-bluebird-mybluebird",
+    slug: "bluebird-mybluebird-app-bali",
+    title: "Bluebird MyBluebird",
+    category: "living",
+    summary:
+      "Bluebird’s official taxi app, often preferred for metered rides and formal transfers.",
+    content: `<p><strong>MyBluebird</strong> is the booking app of Bluebird, one of Indonesia’s most trusted taxi operators. It is widely used for airport and business-style trips where predictable service is important.</p>
+<p>Compared with informal street hailing, app booking helps with route transparency, payment clarity, and driver traceability.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "MyBluebird taxi app in Bali — glossary | Balitrusted",
+    seoDescription: "How Bluebird’s app fits Bali daily transport and airport transfers.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-parking-ticket-karcis",
+    slug: "parking-ticket-karcis-bali",
+    title: "Parking Ticket (Karcis)",
+    category: "living",
+    summary:
+      "A small parking slip issued in official lots and controlled zones; keep it until exit.",
+    content: `<p><strong>Karcis</strong> is the parking ticket commonly issued at regulated parking points in Bali. The fee is usually small, but the ticket controls entry-exit matching.</p>
+<p>Losing the slip can trigger a higher replacement charge, so residents typically keep it in wallet or scooter storage until departure.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Parking ticket (karcis) in Bali — glossary | Balitrusted",
+    seoDescription: "What karcis means in Bali parking systems and why you should keep it.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-pertalite-fuel",
+    slug: "pertalite-fuel-bali",
+    title: "Pertalite",
+    category: "living",
+    summary:
+      "A common subsidized Indonesian fuel grade, widely available and budget-friendly.",
+    content: `<p><strong>Pertalite</strong> is a lower-octane, subsidized fuel option available across many Pertamina stations. It is popular because of price and accessibility.</p>
+<p>For newer or higher-compression engines, many riders still prefer higher-octane alternatives for cleaner combustion and smoother performance.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Pertalite fuel in Bali — glossary | Balitrusted",
+    seoDescription: "A practical explanation of Pertalite and when riders use it in Bali.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-pertamax-fuel",
+    slug: "pertamax-fuel-bali",
+    title: "Pertamax",
+    category: "living",
+    summary:
+      "A higher-octane fuel grade commonly recommended for modern scooters in Bali.",
+    content: `<p><strong>Pertamax</strong> is a popular fuel choice for modern scooters because it generally burns cleaner than lower-octane alternatives and supports more consistent engine response.</p>
+<p>Long-stay riders often see it as the default balance between cost and engine care.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Pertamax fuel in Bali — glossary | Balitrusted",
+    seoDescription: "Why Pertamax is commonly used by expats and long-stay riders in Bali.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-pertamax-turbo",
+    slug: "pertamax-turbo-fuel-bali",
+    title: "Pertamax Turbo",
+    category: "living",
+    summary:
+      "A premium high-octane fuel option for performance-focused engines.",
+    content: `<p><strong>Pertamax Turbo</strong> is a premium fuel grade aimed at higher-performance engines and demanding riding conditions.</p>
+<p>It is less universally available than standard grades, but riders may choose it for mountain routes or premium vehicle setups.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Pertamax Turbo in Bali — glossary | Balitrusted",
+    seoDescription: "What Pertamax Turbo is and when riders choose it in Bali.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-durian-fruit",
+    slug: "durian-bali-fruit",
+    title: "Durian",
+    category: "living",
+    summary:
+      "A strongly scented tropical fruit with custard-like flesh, highly loved and highly divisive.",
+    content: `<p><strong>Durian</strong> is often called the “King of Fruits.” In Bali, seasonal stalls appear widely and families often treat durian eating as a social event.</p>
+<p>Its aroma is intense and can linger, which is why many hotels and villas restrict bringing durian inside.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Durian in Bali — glossary | Balitrusted",
+    seoDescription: "Why durian is iconic in Bali and why many properties ban it indoors.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-dragon-fruit-buah-naga",
+    slug: "dragon-fruit-buah-naga-bali",
+    title: "Dragon Fruit (Buah Naga)",
+    category: "living",
+    summary:
+      "A bright tropical fruit commonly used in Bali smoothie bowls and fresh juices.",
+    content: `<p><strong>Dragon fruit</strong> (<em>buah naga</em>) is easily recognized by its vivid skin and speckled flesh. In Bali it is widely consumed fresh and in smoothie-focused cafe menus.</p>
+<p>Its mild sweetness and high water content make it a common hot-weather fruit choice.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Dragon fruit (buah naga) in Bali — glossary | Balitrusted",
+    seoDescription: "A quick guide to dragon fruit and why it is common in Bali daily diet.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-mangosteen-manggis",
+    slug: "mangosteen-manggis-bali",
+    title: "Mangosteen (Manggis)",
+    category: "living",
+    summary:
+      "A sweet-tangy fruit with white segments inside a thick purple rind.",
+    content: `<p><strong>Mangosteen</strong> (<em>manggis</em>) is known as the “Queen of Fruits” in Southeast Asia. Its interior is fragrant, juicy, and usually easy to portion.</p>
+<p>It is widely sold in Bali fruit markets during season and often preferred by people who like balanced sweetness with light acidity.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Mangosteen (manggis) in Bali — glossary | Balitrusted",
+    seoDescription: "What mangosteen is and why it is a favorite seasonal fruit in Bali.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-papaya-bali",
+    slug: "papaya-bali-daily-fruit",
+    title: "Papaya",
+    category: "living",
+    summary:
+      "A common tropical fruit in Bali, often eaten fresh at breakfast or with lime.",
+    content: `<p><strong>Papaya</strong> is a daily staple fruit in many Bali households and villas. It is inexpensive, easy to find, and usually served ripe and chilled.</p>
+<p>Local style often includes a squeeze of lime to brighten flavor and reduce perceived sweetness.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Papaya in Bali — glossary | Balitrusted",
+    seoDescription: "A practical note on papaya as a daily fruit in Bali.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-salak-snake-fruit",
+    slug: "salak-snake-fruit-bali",
+    title: "Snake Fruit (Salak)",
+    category: "living",
+    summary:
+      "A crunchy tropical fruit with scaly skin and a sweet-acidic flavor profile.",
+    content: `<p><strong>Salak</strong> (snake fruit) is named for its reptile-like skin texture. Inside, the flesh is crisp and less juicy than many tropical fruits.</p>
+<p>In Bali, regional variants differ noticeably in sweetness, and local market sellers often highlight origin when quality is high.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Snake fruit (salak) in Bali — glossary | Balitrusted",
+    seoDescription: "How salak tastes and why regional varieties matter in Bali markets.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-rambutan-fruit",
+    slug: "rambutan-bali-fruit",
+    title: "Rambutan",
+    category: "living",
+    summary:
+      "A hair-like red tropical fruit with sweet translucent flesh similar to lychee.",
+    content: `<p><strong>Rambutan</strong> is sold in bunches and is a classic rainy-season market fruit in Bali. Its shell is easy to peel and reveals a smooth, sweet interior.</p>
+<p>It is often eaten as a casual snack and appears in household fruit bowls during seasonal peaks.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Rambutan in Bali — glossary | Balitrusted",
+    seoDescription: "A quick guide to rambutan, a common seasonal fruit in Bali.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-harum-manis-mango",
+    slug: "harum-manis-mango-indonesia",
+    title: "Mango (Harum Manis)",
+    category: "living",
+    summary:
+      "A fragrant Indonesian mango variety prized for rich sweetness in peak season.",
+    content: `<p><strong>Harum Manis</strong> is one of Indonesia’s best-known mango varieties. When fully ripe it is aromatic, soft, and very sweet.</p>
+<p>In Bali, seasonal supply strongly affects both price and quality, with peak months delivering the best value.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Harum Manis mango in Bali — glossary | Balitrusted",
+    seoDescription: "Why Harum Manis is a prized mango variety in Indonesia.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-markisa-passion-fruit",
+    slug: "markisa-passion-fruit-bali",
+    title: "Passion Fruit (Markisa)",
+    category: "living",
+    summary:
+      "A fragrant tropical fruit eaten fresh or juiced, with sweet-acidic crunchy seeds.",
+    content: `<p><strong>Markisa</strong> refers to passion fruit varieties commonly found in Indonesian markets. In Bali it is used both for fresh eating and drinks.</p>
+<p>Highland-grown fruit often has stronger aroma, making it popular with juice bars and home kitchens.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Passion fruit (markisa) in Bali — glossary | Balitrusted",
+    seoDescription: "What markisa is and how it appears in Bali daily food culture.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-soursop-sirsak",
+    slug: "soursop-sirsak-bali",
+    title: "Sour Sop (Sirsak)",
+    category: "living",
+    summary:
+      "A large tropical fruit with creamy-acidic flavor, often consumed as fresh juice.",
+    content: `<p><strong>Sirsak</strong> (soursop) has white fibrous flesh and a distinctive flavor combining sweet and citrus-like notes.</p>
+<p>Because whole-fruit preparation can be messy, it is most commonly consumed in Bali as chilled juice.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Soursop (sirsak) in Bali — glossary | Balitrusted",
+    seoDescription: "A practical overview of soursop and how people consume it in Bali.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-jackfruit-nangka",
+    slug: "jackfruit-nangka-bali",
+    title: "Jackfruit (Nangka)",
+    category: "living",
+    summary:
+      "A very large tropical fruit eaten both ripe (sweet) and unripe (savory cooking).",
+    content: `<p><strong>Nangka</strong> (jackfruit) is used in two very different ways: ripe for sweet fruit segments, and young/green as a savory ingredient in traditional dishes.</p>
+<p>Its versatility makes it common in Bali markets, kitchens, and local warung menus.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Jackfruit (nangka) in Bali — glossary | Balitrusted",
+    seoDescription: "How jackfruit is used in Bali as both sweet fruit and savory ingredient.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-bca-mobile",
+    slug: "bca-mobile-banking-indonesia",
+    title: "BCA Mobile",
+    category: "finance",
+    summary:
+      "A widely used Indonesian banking app with fast transfers and QR-based daily payments.",
+    content: `<p><strong>BCA Mobile</strong> is one of the most used personal banking apps in Indonesia. For long-term residents, it simplifies transfers to owners, staff, and service providers.</p>
+<p>Its broad acceptance makes it central to daily local finance workflows, including QRIS payments and account-to-account transfers.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "BCA Mobile in Indonesia — glossary | Balitrusted",
+    seoDescription: "Why BCA Mobile is important for daily payments in Bali.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-bank-mandiri-livin",
+    slug: "bank-mandiri-livin-app",
+    title: "Bank Mandiri Livin",
+    category: "finance",
+    summary:
+      "Mandiri’s full-featured mobile banking app for transfers, bills, and financial operations.",
+    content: `<p><strong>Livin by Mandiri</strong> is the flagship app of Bank Mandiri, widely used for domestic transactions and bill payments.</p>
+<p>Long-stay users often value its integrated banking ecosystem and broad institutional reliability.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Mandiri Livin app — glossary | Balitrusted",
+    seoDescription: "What Mandiri Livin is and how it supports daily finance in Indonesia.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-permatame",
+    slug: "permatame-digital-banking",
+    title: "PermataME",
+    category: "finance",
+    summary:
+      "A digital-first banking product known for easy mobile workflows and promo programs.",
+    content: `<p><strong>PermataME</strong> is a digital banking platform from Permata Bank, popular among users who prioritize mobile-first account management.</p>
+<p>Its positioning focuses on app usability, online transaction perks, and practical daily transfer tools.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "PermataME banking app — glossary | Balitrusted",
+    seoDescription: "A quick explanation of PermataME in Indonesia’s digital banking landscape.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-cimb-niaga-atm",
+    slug: "cimb-niaga-bali-atm-withdrawal",
+    title: "CIMB Niaga",
+    category: "finance",
+    summary:
+      "A major Indonesian bank often noted for ATM convenience and withdrawal limits.",
+    content: `<p><strong>CIMB Niaga</strong> is commonly used by residents and visitors who need reliable ATM access and practical transaction limits.</p>
+<p>In Bali, ATM network behavior can materially affect foreign card fees, so bank and machine choice matters.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "CIMB Niaga in Bali — glossary | Balitrusted",
+    seoDescription: "Why CIMB Niaga ATMs are relevant for cash withdrawals in Bali.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-atm-bersama",
+    slug: "atm-bersama-network-indonesia",
+    title: "ATM Bersama",
+    category: "finance",
+    summary:
+      "An interbank ATM network allowing cross-bank withdrawals and balance checks in Indonesia.",
+    content: `<p><strong>ATM Bersama</strong> is a shared network logo indicating interoperability between multiple Indonesian banks.</p>
+<p>For residents, it increases practical cash access, usually with a small convenience fee when using another bank’s machine.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "ATM Bersama network — glossary | Balitrusted",
+    seoDescription: "What ATM Bersama means and how it helps with interbank cash access.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-indomaret-poinku",
+    slug: "indomaret-poinku-loyalty-app",
+    title: "Indomaret Poinku",
+    category: "finance",
+    summary:
+      "A loyalty app for Indomaret offering points, discounts, and member-only promos.",
+    content: `<p><strong>Poinku</strong> is Indomaret’s rewards ecosystem. Frequent users collect points and access app-specific offers not always available in walk-in pricing.</p>
+<p>For long-stay budgeting, loyalty stacks from convenience chains can make recurring household purchases cheaper over time.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Indomaret Poinku — glossary | Balitrusted",
+    seoDescription: "How Indomaret Poinku works for recurring purchases in Indonesia.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-alfamart-gift-dan",
+    slug: "alfamart-gift-dan-loyalty",
+    title: "Alfamart Gift Dan",
+    category: "finance",
+    summary:
+      "Alfamart’s digital loyalty and promo system for points and periodic discount campaigns.",
+    content: `<p><strong>Gift Dan</strong> is tied to Alfamart’s customer rewards model, allowing users to gather points and track promotional windows.</p>
+<p>Residents often compare Indomaret vs Alfamart offers weekly to optimize recurring grocery spend.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Alfamart Gift Dan loyalty — glossary | Balitrusted",
+    seoDescription: "A practical note on Alfamart loyalty usage for long-stay budgeting.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-coco-mart",
+    slug: "coco-mart-bali-neighborhood-market",
+    title: "Coco Mart",
+    category: "living",
+    summary:
+      "A neighborhood supermarket format sitting between minimarkets and large grocery stores.",
+    content: `<p><strong>Coco Mart</strong> stores often serve residential pockets where a full supermarket is too far but minimarket range is too limited.</p>
+<p>In many areas, they provide a practical middle-ground for weekly top-ups and selected imported items.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Coco Mart in Bali — glossary | Balitrusted",
+    seoDescription: "What Coco Mart offers in Bali daily shopping patterns.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-toko-kelontong",
+    slug: "toko-kelontong-local-shop-bali",
+    title: "Toko Kelontong",
+    category: "living",
+    summary:
+      "A small family-run local convenience shop, often embedded directly in village neighborhoods.",
+    content: `<p><strong>Toko kelontong</strong> refers to traditional small stores, usually independent and deeply tied to local community life.</p>
+<p>They are especially useful for quick low-volume purchases in village lanes where chain stores are less convenient.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Toko kelontong in Bali — glossary | Balitrusted",
+    seoDescription: "Why toko kelontong shops matter in Bali neighborhood daily life.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-warung-local-business",
+    slug: "warung-local-business-bali",
+    title: "Warung",
+    category: "living",
+    summary:
+      "A small local Indonesian business, often used for simple food stalls and neighborhood shops.",
+    content: `<p><strong>Warung</strong> is a broad Indonesian term for small local businesses, especially food stalls and simple family-run eateries.</p>
+<p>In Bali, warungs are central to affordable daily meals and authentic local dining patterns.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Warung in Bali — glossary | Balitrusted",
+    seoDescription: "What warung means and why it is important in Bali daily culture.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-pln-mobile",
+    slug: "pln-mobile-prepaid-electricity-bali",
+    title: "PLN Mobile",
+    category: "living",
+    summary:
+      "The app used to buy prepaid electricity tokens and manage PLN utility services.",
+    content: `<p><strong>PLN Mobile</strong> helps residents monitor prepaid power and buy token credits without visiting a payment point.</p>
+<p>For villas on prepaid meters, keeping token balance visible in-app reduces blackout risk from depleted credit.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "PLN Mobile app — glossary | Balitrusted",
+    seoDescription: "How PLN Mobile supports prepaid electricity management in Bali.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-biznet-home",
+    slug: "biznet-home-fiber-bali",
+    title: "Biznet Home",
+    category: "living",
+    summary:
+      "A major fiber internet provider for residential properties in Bali.",
+    content: `<p><strong>Biznet Home</strong> is one of the most common fixed-line internet options in Bali residential areas, especially for remote-work households.</p>
+<p>Availability and uptime still vary by street and infrastructure condition, so backup options remain important.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Biznet Home in Bali — glossary | Balitrusted",
+    seoDescription: "What Biznet Home is and how it fits Bali residential internet setup.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-globalxtreme-lite",
+    slug: "globalxtreme-lite-fiber-bali",
+    title: "GlobalXtreme Lite",
+    category: "living",
+    summary:
+      "A fiber internet package line from GlobalXtreme, popular in many Bali locations.",
+    content: `<p><strong>GlobalXtreme Lite</strong> refers to consumer fiber plans offered by GlobalXtreme, often compared directly with Biznet in Bali rental decisions.</p>
+<p>Provider performance can vary by area, so practical choice depends on local uptime history rather than brand alone.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "GlobalXtreme Lite in Bali — glossary | Balitrusted",
+    seoDescription: "A quick guide to GlobalXtreme Lite for Bali home internet choices.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-telkomsel-orbit",
+    slug: "telkomsel-orbit-wireless-home-internet",
+    title: "Telkomsel Orbit",
+    category: "living",
+    summary:
+      "A plug-and-play wireless home internet modem using cellular networks.",
+    content: `<p><strong>Telkomsel Orbit</strong> provides home internet through mobile network infrastructure rather than fixed fiber lines.</p>
+<p>It is commonly used as backup connectivity when fiber is unstable or unavailable in remote villa locations.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Telkomsel Orbit in Bali — glossary | Balitrusted",
+    seoDescription: "How Telkomsel Orbit works as backup or primary wireless internet in Bali.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-starlink-roam",
+    slug: "starlink-roam-bali-remote-internet",
+    title: "Starlink Roam",
+    category: "living",
+    summary:
+      "Portable satellite internet useful for areas where fixed fiber is not viable.",
+    content: `<p><strong>Starlink Roam</strong> gives location-flexible satellite connectivity, which is valuable in remote Bali pockets with weak terrestrial infrastructure.</p>
+<p>For some jungle or hillside villas, it can be a practical primary line or resilience layer in a multi-provider setup.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Starlink Roam in Bali — glossary | Balitrusted",
+    seoDescription: "Why Starlink Roam matters for remote villas and internet resilience in Bali.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-gojek-goride",
+    slug: "gojek-goride-bali",
+    title: "Gojek GoRide",
+    category: "living",
+    summary:
+      "Gojek’s scooter ride-hailing service, fast for short urban routes and heavy traffic.",
+    content: `<p><strong>GoRide</strong> is the two-wheel ride service inside Gojek, often the quickest way through congested Bali streets.</p>
+<p>It is widely used for short daily hops where car travel is slower or parking is difficult.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Gojek GoRide in Bali — glossary | Balitrusted",
+    seoDescription: "How GoRide fits everyday transport in Bali’s traffic conditions.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-gojek-gocar",
+    slug: "gojek-gocar-bali",
+    title: "Gojek GoCar",
+    category: "living",
+    summary:
+      "Gojek’s private car ride-hailing service for weather comfort and group trips.",
+    content: `<p><strong>GoCar</strong> is the car-based transport option in Gojek, usually preferred during rain, late-night returns, or when carrying luggage.</p>
+<p>App tracking and fare visibility make it a common safety-and-convenience option for long-stay users.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Gojek GoCar in Bali — glossary | Balitrusted",
+    seoDescription: "A quick explanation of GoCar for private app-based rides in Bali.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-grabfood",
+    slug: "grabfood-bali-delivery",
+    title: "GrabFood",
+    category: "living",
+    summary:
+      "A major food-delivery platform used for restaurant meals sent directly to villas.",
+    content: `<p><strong>GrabFood</strong> aggregates local restaurants into one delivery interface with real-time tracking and promotional bundles.</p>
+<p>For residents without a car or scooter, it is a core convenience layer for daily meals and late-hour orders.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "GrabFood in Bali — glossary | Balitrusted",
+    seoDescription: "How GrabFood supports daily villa life through app-based meal delivery.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-grabmart",
+    slug: "grabmart-bali-quick-delivery",
+    title: "GrabMart",
+    category: "living",
+    summary:
+      "A rapid app-based delivery service for groceries, pharmacy items, and essentials.",
+    content: `<p><strong>GrabMart</strong> extends delivery beyond restaurants by connecting users with nearby retail stores for household and personal items.</p>
+<p>It is especially useful when residents need immediate essentials without leaving the villa.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "GrabMart in Bali — glossary | Balitrusted",
+    seoDescription: "What GrabMart is and why it is useful for day-to-day villa logistics.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-satusehat-app",
+    slug: "satusehat-indonesia-health-app",
+    title: "SatuSehat (formerly PeduliLindungi)",
+    category: "documents",
+    summary:
+      "Indonesia’s official health app for records, vaccination history, and related services.",
+    content: `<p><strong>SatuSehat</strong> is the Indonesian government health application platform. It evolved from PeduliLindungi and remains tied to public health record workflows.</p>
+<p>Long-term residents often keep it installed for access to vaccination and health documentation when needed.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "SatuSehat app in Indonesia — glossary | Balitrusted",
+    seoDescription: "What SatuSehat is and why long-term residents keep it available.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-pagi-greeting",
+    slug: "pagi-greeting-bali",
+    title: "Pagi",
+    category: "living",
+    summary:
+      "An everyday morning greeting used as a friendly shorthand in Indonesian conversation.",
+    content: `<p><strong>Pagi</strong> is shorthand for <em>Selamat Pagi</em> (“good morning”). In Bali villages, using simple greetings helps build respectful daily relationships.</p>
+<p>Even short polite language can noticeably improve social warmth in local neighborhoods.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Pagi greeting in Bali — glossary | Balitrusted",
+    seoDescription: "Meaning and practical use of “Pagi” in Bali daily life.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-siang-greeting",
+    slug: "siang-greeting-bali",
+    title: "Siang",
+    category: "living",
+    summary:
+      "A daytime greeting used from late morning into early afternoon.",
+    content: `<p><strong>Siang</strong> comes from <em>Selamat Siang</em>, typically used in the middle part of the day.</p>
+<p>Using time-appropriate greetings is a small but appreciated social detail in Indonesian communication.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Siang greeting in Bali — glossary | Balitrusted",
+    seoDescription: "How and when to use “Siang” in daily Indonesian greetings.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-sore-greeting",
+    slug: "sore-greeting-bali",
+    title: "Sore",
+    category: "living",
+    summary:
+      "A late-afternoon greeting often used from around mid-afternoon until sunset.",
+    content: `<p><strong>Sore</strong> is used as part of <em>Selamat Sore</em>, the polite greeting for late afternoon in Indonesian.</p>
+<p>It is commonly heard in village and neighborhood settings as people transition from work hours into evening routines.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Sore greeting in Bali — glossary | Balitrusted",
+    seoDescription: "Meaning and timing of “Sore” in Indonesian daily speech.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-malam-greeting",
+    slug: "malam-greeting-bali",
+    title: "Malam",
+    category: "living",
+    summary:
+      "An evening/night greeting used in social contexts and dinner-time interaction.",
+    content: `<p><strong>Malam</strong> appears in <em>Selamat Malam</em> and is used both as an evening greeting and night farewell depending on context.</p>
+<p>In Bali dining and market settings, it is commonly used as a warm opener rather than only a goodbye phrase.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Malam greeting in Bali — glossary | Balitrusted",
+    seoDescription: "How “Malam” is used in Indonesian evening social interaction.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-berapa-phrase",
+    slug: "berapa-how-much-indonesian",
+    title: "Berapa?",
+    category: "living",
+    summary:
+      "The key Indonesian question word for asking price: “How much?”.",
+    content: `<p><strong>Berapa?</strong> means “How much?” and is one of the first practical words most long-stay foreigners learn.</p>
+<p>Used politely, it opens price conversation in markets and small shops without requiring full Indonesian fluency.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Berapa meaning in Bali markets — glossary | Balitrusted",
+    seoDescription: "How to use “Berapa?” when asking prices in Bali.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-mahal-phrase",
+    slug: "mahal-expensive-indonesian",
+    title: "Mahal",
+    category: "living",
+    summary:
+      "Indonesian word for “expensive,” often used in friendly market negotiation.",
+    content: `<p><strong>Mahal</strong> means “expensive.” In local bargaining contexts, it is often used playfully as part of polite price negotiation.</p>
+<p>Tone matters: respectful, light interaction tends to produce better outcomes than aggressive haggling.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Mahal meaning in Indonesian — glossary | Balitrusted",
+    seoDescription: "What “Mahal” means and how it is used in Bali market negotiation.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-murah-phrase",
+    slug: "murah-cheap-indonesian",
+    title: "Murah",
+    category: "living",
+    summary:
+      "Indonesian word for “cheap” or good value, often used positively in local buying.",
+    content: `<p><strong>Murah</strong> means “cheap” or “good value” depending on context. It is commonly used to express satisfaction with price.</p>
+<p>Using simple appreciation language helps build friendly repeat-customer relationships with local sellers.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Murah meaning in Indonesian — glossary | Balitrusted",
+    seoDescription: "How “Murah” is used in Bali shopping and market culture.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-bisa-phrase",
+    slug: "bisa-can-possible-indonesian",
+    title: "Bisa",
+    category: "living",
+    summary:
+      "A high-frequency Indonesian word meaning “can” or “possible”.",
+    content: `<p><strong>Bisa</strong> means “can” or “possible,” and appears constantly in practical daily communication.</p>
+<p>In service contexts, it often indicates willingness to find a solution, though details and timing should still be clarified.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Bisa meaning in Indonesian — glossary | Balitrusted",
+    seoDescription: "Meaning and practical usage of “Bisa” in Bali everyday interactions.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-tidak-bisa-phrase",
+    slug: "tidak-bisa-not-possible-indonesian",
+    title: "Tidak Bisa",
+    category: "living",
+    summary:
+      "Indonesian phrase for “cannot / not possible,” indicating a practical constraint.",
+    content: `<p><strong>Tidak bisa</strong> means “cannot” or “not possible.” In Bali daily operations, it usually signals a real limitation rather than a negotiation opening.</p>
+<p>When you hear it, the next step is usually to ask for alternative timing or workaround options.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Tidak bisa meaning in Indonesian — glossary | Balitrusted",
+    seoDescription: "How to interpret “Tidak bisa” in practical Bali communication.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-hati-hati-phrase",
+    slug: "hati-hati-take-care-indonesian",
+    title: "Hati-Hati",
+    category: "living",
+    summary:
+      "A warm Indonesian phrase meaning “take care / be careful,” common in daily departures.",
+    content: `<p><strong>Hati-hati</strong> means “be careful” or “take care.” It is one of the most common caring phrases you hear from neighbors, staff, and friends in Bali.</p>
+<p>In transport-heavy island life, it is both practical safety advice and a sign of social warmth.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Hati-hati meaning in Bali — glossary | Balitrusted",
+    seoDescription: "Why “Hati-hati” is a meaningful daily phrase in Bali culture.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-yamaha-nmax",
+    slug: "yamaha-nmax-bali-maxi-scooter",
+    title: "Yamaha NMAX",
+    category: "living",
+    summary:
+      "A highly popular 155cc maxi-scooter among Bali expats, known for power and commuting comfort.",
+    content: `<p><strong>Yamaha NMAX</strong> is one of the most common long-stay expat scooters in Bali. It combines stronger engine output with practical storage and comfort for daily mixed-distance riding.</p>
+<p>Newer versions add connected and safety features, while older models remain respected for durable real-world reliability.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Yamaha NMAX in Bali — glossary | Balitrusted",
+    seoDescription: "Why Yamaha NMAX is a top scooter choice for long-term Bali residents.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-honda-pcx",
+    slug: "honda-pcx-bali-maxi-scooter",
+    title: "Honda PCX",
+    category: "living",
+    summary:
+      "A comfort-focused maxi-scooter line known for smooth ride quality and premium daily usability.",
+    content: `<p><strong>Honda PCX</strong> is often chosen by riders who prioritize smooth suspension feel and relaxed commuting ergonomics over aggressive sporty handling.</p>
+<p>Newer 160cc versions improved torque and practicality, making PCX a strong long-stay mobility platform for couples and daily commuting.</p>`,
+    published: true,
+    createdAt: "2026-04-25T10:00:00.000Z",
+    updatedAt: "2026-04-25T10:00:00.000Z",
+    seoTitle: "Honda PCX in Bali — glossary | Balitrusted",
+    seoDescription: "A practical overview of Honda PCX for daily riding in Bali.",
     relatedGuideUrl: "/guides/rent",
   },
 ];
