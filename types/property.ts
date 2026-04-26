@@ -50,6 +50,8 @@ export interface Property {
   /** Latitude,longitude for map (e.g. "-8.5068,115.2624"). Optional. */
   displayLocation?: string;
   bedrooms: number;
+  /** Number of above-ground levels (e.g. 1, 2). Optional for legacy listings. */
+  floors?: number;
   bathrooms?: number;
   price: {
     currency: 'IDR' | 'USD';

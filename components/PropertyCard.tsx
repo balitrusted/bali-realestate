@@ -49,6 +49,36 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
       );
     };
 
+    const scoreSentence = (s: string) => {
+      const t = s.toLowerCase();
+      let score = 0;
+
+      // Penalize geo-only utility lines (distance, maps, nearest cafe, etc.)
+      if (
+        /walking distance|minutes? to|close to|nearby|google maps|location|area\b|center\b|ubud\b|penestanan\b|lodtunduh\b|petulu\b|sayan\b|tegallalang\b|gentong\b|mas\b/.test(
+          t
+        )
+      ) {
+        score -= 2;
+      }
+
+      // Reward value-rich property hooks
+      if (/brand new|newly built|first occupancy|never rented|freshly built/.test(t)) score += 4;
+      if (/private pool|swimming pool|pool/.test(t)) score += 3;
+      if (/rice field|open view|nature|jungle|green/.test(t)) score += 3;
+      if (/quiet|peaceful|calm|meditative|inspiring/.test(t)) score += 3;
+      if (/designer|modern|refined|premium|cozy|well maintained|well cared/.test(t)) score += 3;
+      if (/workspace|working desk|remote work|wi-?fi|internet/.test(t)) score += 2;
+      if (/enclosed|closed kitchen|living room|air conditioning|bathtub/.test(t)) score += 2;
+      if (/parking|car access|scooter/.test(t)) score += 1;
+      if (/everything is included|cleaning included|included/.test(t)) score += 2;
+
+      // Slight preference for substantial phrases
+      if (s.length >= 60) score += 1;
+      if (s.length <= 28) score -= 1;
+      return score;
+    };
+
     // Prefer real listing text so cards stay unique and never empty
     // when owners provide meaningful descriptions.
     if (cleanDesc) {
@@ -57,8 +87,12 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
         .map((s) => s.trim().replace(/^[-•]\s*/, ""))
         .filter((s) => s.length >= 24);
 
-      const firstNonGeneric = sentences.find((s) => !isGenericLeadSentence(s));
-      const candidate = (firstNonGeneric || cleanDesc).trim();
+      const candidates = sentences
+        .filter((s) => !isGenericLeadSentence(s))
+        .map((s) => ({ s, score: scoreSentence(s) }))
+        .sort((a, b) => b.score - a.score);
+
+      const candidate = (candidates[0]?.s || cleanDesc).trim();
       if (candidate) {
         return candidate.length > 190 ? `${candidate.slice(0, 187).trimEnd()}…` : candidate;
       }

@@ -203,6 +203,12 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
                       <span className="text-sm text-gray-600">Bedrooms</span>
                       <p className="text-lg font-semibold text-gray-900">{property.bedrooms}</p>
                     </div>
+                    {property.floors != null && property.floors > 0 && (
+                      <div>
+                        <span className="text-sm text-gray-600">Floors</span>
+                        <p className="text-lg font-semibold text-gray-900">{property.floors}</p>
+                      </div>
+                    )}
                     {property.bathrooms && (
                       <div>
                         <span className="text-sm text-gray-600">Bathrooms</span>

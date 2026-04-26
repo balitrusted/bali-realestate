@@ -179,6 +179,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
     exactLocation: property?.exactLocation ?? "",
     displayLocation: property?.displayLocation ?? "",
     bedrooms: landOnly ? (property?.bedrooms ?? 0) : property?.bedrooms || 1,
+    floors: landOnly ? undefined : property?.floors ?? undefined,
     bathrooms: landOnly ? (property?.bathrooms ?? 1) : property?.bathrooms || 1,
     priceMin: property?.price.min || 0,
     priceMonthly: property?.price.monthly ?? property?.price.min ?? undefined,
@@ -222,6 +223,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
       exactLocation: formData.exactLocation.trim() || undefined,
       displayLocation: formData.displayLocation.trim() || undefined,
       bedrooms: landOnly ? 0 : formData.bedrooms,
+      floors: landOnly ? undefined : (formData.floors && formData.floors > 0 ? formData.floors : undefined),
       bathrooms: landOnly ? undefined : formData.bathrooms,
       price: {
         currency: formData.priceCurrency,
@@ -507,9 +509,9 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
                       ...formData,
                       types: nextTypes,
                       ...(nextLandOnly
-                        ? { bedrooms: 0, bathrooms: 1 }
+                        ? { bedrooms: 0, floors: undefined, bathrooms: 1 }
                         : formData.bedrooms === 0
-                          ? { bedrooms: 1, bathrooms: formData.bathrooms || 1 }
+                          ? { bedrooms: 1, floors: formData.floors, bathrooms: formData.bathrooms || 1 }
                           : {}),
                     });
                   }}
@@ -620,6 +622,25 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
                 <option key={n} value={n}>{n}</option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-900 mb-2">
+              Floors
+            </label>
+            <input
+              type="number"
+              min="1"
+              value={formData.floors ?? ""}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  floors: e.target.value ? Math.max(1, parseInt(e.target.value, 10) || 1) : undefined,
+                })
+              }
+              placeholder="e.g. 1 or 2"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+            />
           </div>
 
           <div>

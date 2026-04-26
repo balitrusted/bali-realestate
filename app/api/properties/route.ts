@@ -165,6 +165,11 @@ function updateSingleProperty(
     : property.bathrooms !== undefined
       ? property.bathrooms
       : properties[index].bathrooms;
+  const nextFloors = landOnly
+    ? undefined
+    : property.floors !== undefined
+      ? property.floors
+      : properties[index].floors;
 
   properties[index] = {
     ...properties[index],
@@ -173,6 +178,7 @@ function updateSingleProperty(
     mainArea: mainArea,
     subArea: subArea,
     bedrooms: nextBedrooms,
+    floors: nextFloors,
     bathrooms: nextBathrooms,
     price: property.price,
     features: normalizePropertyFeatures(
@@ -367,6 +373,7 @@ export async function POST(request: Request) {
             exactLocation: property.exactLocation?.trim() || undefined,
             displayLocation: property.displayLocation?.trim() || undefined,
             bedrooms: landOnly ? 0 : property.bedrooms,
+            floors: landOnly ? undefined : (property.floors ?? undefined),
             bathrooms: landOnly ? undefined : property.bathrooms,
             price: property.price,
             duration: property.duration,
