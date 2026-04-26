@@ -1,9 +1,12 @@
 import { list, put } from "@vercel/blob";
 import { writeBlobJsonArrayWithRetry } from "@/lib/blobJsonOptimisticWrite";
+import { getSearchQueryLogsRolloutMode } from "@/lib/dataRollout";
+import { getSupabaseServerClient, isSupabaseConfigured } from "@/lib/supabaseServer";
 
 const BLOB_KEY = "data/search-queries.json";
 const MAX_LOG_ROWS = 5000;
 const getBlobStoreBaseUrl = () => process.env.BLOB_STORE_URL?.trim().replace(/\/$/, "");
+const OBS_ENABLED = process.env.DATA_MIGRATION_OBSERVABILITY === "1";
 
 export type SearchLogSource =
   | "site_search_submit"
@@ -18,6 +21,24 @@ export interface SearchQueryLog {
   propertyId?: string;
   userAgent?: string;
   createdAt: string;
+}
+
+type SearchQueryLogsRow = {
+  id: string;
+  query: string;
+  source: SearchLogSource;
+  path: string | null;
+  property_id: string | null;
+  user_agent: string | null;
+  created_at: string;
+};
+
+function reportMetric(
+  event: string,
+  details: Record<string, string | number | boolean | null | undefined>
+): void {
+  if (!OBS_ENABLED) return;
+  console.info(`[search_query_logs] ${event}`, details);
 }
 
 async function readFromBlob(): Promise<SearchQueryLog[]> {
@@ -61,7 +82,51 @@ async function writeToBlob(rows: SearchQueryLog[]): Promise<void> {
   });
 }
 
-export async function getSearchQueryLogs(): Promise<SearchQueryLog[]> {
+async function readFromSupabase(): Promise<SearchQueryLog[]> {
+  if (!isSupabaseConfigured()) return [];
+  const supabase = getSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("search_query_logs")
+    .select("id, query, source, path, property_id, user_agent, created_at")
+    .order("created_at", { ascending: true })
+    .limit(MAX_LOG_ROWS);
+  if (error) {
+    throw new Error(`[supabase] read failed: ${error.message}`);
+  }
+  return ((data as SearchQueryLogsRow[] | null) ?? []).map((row) => ({
+    id: row.id,
+    query: row.query,
+    source: row.source,
+    path: row.path ?? undefined,
+    propertyId: row.property_id ?? undefined,
+    userAgent: row.user_agent ?? undefined,
+    createdAt: row.created_at,
+  }));
+}
+
+async function writeSingleToSupabase(row: SearchQueryLog): Promise<void> {
+  if (!isSupabaseConfigured()) {
+    throw new Error("[supabase] not configured");
+  }
+  const supabase = getSupabaseServerClient();
+  const { error } = await supabase.from("search_query_logs").upsert(
+    {
+      id: row.id,
+      query: row.query,
+      source: row.source,
+      path: row.path ?? null,
+      property_id: row.propertyId ?? null,
+      user_agent: row.userAgent ?? null,
+      created_at: row.createdAt,
+    },
+    { onConflict: "id", ignoreDuplicates: false }
+  );
+  if (error) {
+    throw new Error(`[supabase] write failed: ${error.message}`);
+  }
+}
+
+async function getSearchLogsFromBlobOrFile(): Promise<SearchQueryLog[]> {
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     return readFromBlob();
   }
@@ -74,6 +139,43 @@ export async function getSearchQueryLogs(): Promise<SearchQueryLog[]> {
   } catch {
     return [];
   }
+}
+
+export async function getSearchQueryLogs(): Promise<SearchQueryLog[]> {
+  const mode = getSearchQueryLogsRolloutMode();
+  const startedAt = Date.now();
+
+  if (mode === "supabase") {
+    try {
+      const rows = await readFromSupabase();
+      reportMetric("read_ok", {
+        mode,
+        source: "supabase",
+        rows: rows.length,
+        elapsedMs: Date.now() - startedAt,
+      });
+      return rows;
+    } catch (error) {
+      console.error("[search_query_logs] Supabase read failed, fallback to Blob/JSON:", error);
+      const fallbackRows = await getSearchLogsFromBlobOrFile();
+      reportMetric("read_fallback", {
+        mode,
+        source: "blob_or_file",
+        rows: fallbackRows.length,
+        elapsedMs: Date.now() - startedAt,
+      });
+      return fallbackRows;
+    }
+  }
+
+  const rows = await getSearchLogsFromBlobOrFile();
+  reportMetric("read_ok", {
+    mode,
+    source: "blob_or_file",
+    rows: rows.length,
+    elapsedMs: Date.now() - startedAt,
+  });
+  return rows;
 }
 
 async function saveSearchQueryLogs(rows: SearchQueryLog[]): Promise<void> {
@@ -101,15 +203,47 @@ export async function addSearchQueryLog(input: Omit<SearchQueryLog, "id" | "crea
     createdAt: new Date().toISOString(),
   };
 
-  await writeBlobJsonArrayWithRetry({
-    read: getSearchQueryLogs,
-    write: saveSearchQueryLogs,
-    mutate: (rows) => {
-      rows.push(row);
-      if (rows.length > MAX_LOG_ROWS) {
-        rows.splice(0, rows.length - MAX_LOG_ROWS);
-      }
-      return rows;
-    },
-  });
+  const mode = getSearchQueryLogsRolloutMode();
+  const startedAt = Date.now();
+
+  const writeBlobSide = async () => {
+    await writeBlobJsonArrayWithRetry({
+      read: getSearchLogsFromBlobOrFile,
+      write: saveSearchQueryLogs,
+      mutate: (rows) => {
+        rows.push(row);
+        if (rows.length > MAX_LOG_ROWS) {
+          rows.splice(0, rows.length - MAX_LOG_ROWS);
+        }
+        return rows;
+      },
+    });
+  };
+
+  if (mode === "blob") {
+    await writeBlobSide();
+    reportMetric("write_ok", { mode, target: "blob_or_file", elapsedMs: Date.now() - startedAt });
+    return;
+  }
+
+  if (mode === "dual-write") {
+    await writeBlobSide();
+    try {
+      await writeSingleToSupabase(row);
+      reportMetric("write_ok", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
+    } catch (error) {
+      console.error("[search_query_logs] dual-write Supabase write failed:", error);
+      reportMetric("write_error", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
+    }
+    return;
+  }
+
+  try {
+    await writeSingleToSupabase(row);
+    reportMetric("write_ok", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
+  } catch (error) {
+    console.error("[search_query_logs] Supabase write failed, fallback to Blob/JSON:", error);
+    await writeBlobSide();
+    reportMetric("write_fallback", { mode, target: "blob_or_file", elapsedMs: Date.now() - startedAt });
+  }
 }
