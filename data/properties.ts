@@ -15,6 +15,7 @@ export const properties: Property[] = [
     displayLocation: "-8.5514502, 115.2879722",
     bedrooms: 4,
     bathrooms: 4,
+    floors: 2,
     price: {
       currency: "IDR",
       min: 25000000,
@@ -148,6 +149,7 @@ export const properties: Property[] = [
     displayLocation: "-8.500017661529785, 115.24830693786518",
     bedrooms: 1,
     bathrooms: 1,
+    floors: 1,
     price: {
       currency: "IDR",
       min: 12000000,
@@ -180,6 +182,7 @@ export const properties: Property[] = [
     displayLocation: "-8.485069760010461, 115.27993272485071",
     bedrooms: 2,
     bathrooms: 2,
+    floors: 1,
     price: {
       currency: "IDR",
       min: 0,
@@ -242,6 +245,7 @@ export const properties: Property[] = [
     subArea: "sayan",
     bedrooms: 2,
     bathrooms: 2,
+    floors: 1,
     price: {
       currency: "IDR",
       min: 17999999,
@@ -371,6 +375,7 @@ export const properties: Property[] = [
     displayLocation: "-8.554221096516248, 115.25678369041087",
     bedrooms: 2,
     bathrooms: 2,
+    floors: 1,
     price: {
       currency: "IDR",
       min: 2000000000,
@@ -511,6 +516,7 @@ export const properties: Property[] = [
     displayLocation: "-8.505546854642256, 115.24827152514113",
     bedrooms: 1,
     bathrooms: 1,
+    floors: 1,
     price: {
       currency: "IDR",
       min: 6000000,
@@ -639,6 +645,7 @@ export const properties: Property[] = [
     displayLocation: "-8.561822010379261, 115.26528292469813",
     bedrooms: 2,
     bathrooms: 2,
+    floors: 1,
     price: {
       currency: "IDR",
       min: 17000000,
@@ -704,6 +711,7 @@ export const properties: Property[] = [
     displayLocation: "-8.563984846043224, 115.25138549317629",
     bedrooms: 2,
     bathrooms: 2,
+    floors: 1,
     price: {
       currency: "IDR",
       min: 20000000,
@@ -736,6 +744,7 @@ export const properties: Property[] = [
     displayLocation: "-8.539808817172238, 115.26146133381957",
     bedrooms: 2,
     bathrooms: 2,
+    floors: 1,
     price: {
       currency: "IDR",
       min: 20000000,
@@ -837,6 +846,7 @@ export const properties: Property[] = [
     displayLocation: "-8.463923308970148, 115.2695987124786",
     bedrooms: 3,
     bathrooms: 3,
+    floors: 2,
     price: {
       currency: "IDR",
       min: 4600000000,
@@ -872,6 +882,7 @@ export const properties: Property[] = [
     displayLocation: "-8.474643642210433, 115.2477942652757",
     bedrooms: 4,
     bathrooms: 4,
+    floors: 2,
     price: {
       currency: "IDR",
       min: 25000000,
@@ -906,6 +917,7 @@ export const properties: Property[] = [
     displayLocation: "-8.462167897622175, 115.2705069227891",
     bedrooms: 1,
     bathrooms: 2,
+    floors: 2,
     price: {
       currency: "IDR",
       min: 33000000,
@@ -941,6 +953,7 @@ export const properties: Property[] = [
     displayLocation: "-8.462824132170919, 115.26980518838924",
     bedrooms: 2,
     bathrooms: 3,
+    floors: 2,
     price: {
       currency: "IDR",
       min: 42000000,
@@ -1039,6 +1052,7 @@ export const properties: Property[] = [
     displayLocation: "-8.570210877725213, 115.26444224887263",
     bedrooms: 8,
     bathrooms: 9,
+    floors: 1,
     price: {
       currency: "IDR",
       min: 8000000000,
@@ -1073,6 +1087,7 @@ export const properties: Property[] = [
     subArea: "lodtunduh",
     bedrooms: 4,
     bathrooms: 4,
+    floors: 1,
     price: {
       currency: "IDR",
       min: 45000000,
