@@ -360,6 +360,11 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
               {property.bathrooms} {property.bathrooms === 1 ? "bath" : "baths"}
             </span>
           )}
+          {!isPureLandListing(property) && property.floors != null && property.floors > 0 && (
+            <span className="px-2 py-1 bg-gray-100 text-gray-700 text-sm rounded">
+              {property.floors} {property.floors === 1 ? "floor" : "floors"}
+            </span>
+          )}
           {featuresList.map((feature, idx) => (
             <span key={idx} className="px-2 py-1 bg-gray-100 text-gray-700 text-sm rounded">
               {feature}

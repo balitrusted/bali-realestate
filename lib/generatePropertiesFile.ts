@@ -47,6 +47,9 @@ export function generatePropertiesFile(properties: Property[]): string {
     if (prop.bathrooms) {
       content += `${indent}${indent}bathrooms: ${prop.bathrooms},\n`;
     }
+    if (prop.floors != null && prop.floors > 0) {
+      content += `${indent}${indent}floors: ${prop.floors},\n`;
+    }
     content += `${indent}${indent}price: {\n`;
     content += `${indent}${indent}${indent}currency: ${JSON.stringify(prop.price?.currency || "IDR")},\n`;
     const minVal = toIntegerPrice(

@@ -312,7 +312,11 @@ function parsePropertyObject(objStr: string): Property | null {
     // Extract bathrooms
     const bathroomsMatch = objStr.match(/bathrooms:\s*(\d+)/);
     if (bathroomsMatch) obj.bathrooms = parseInt(bathroomsMatch[1]);
-    
+
+    // Extract floors (optional)
+    const floorsMatch = objStr.match(/floors:\s*(\d+)/);
+    if (floorsMatch) obj.floors = parseInt(floorsMatch[1], 10);
+
     // Extract price only from the real `price: { }` block (not from description text)
     const priceBlock = extractTopLevelPriceBlock(objStr) ?? objStr;
     const priceCurrencyMatch = priceBlock.match(/currency:\s*"([^"]+)"/);
