@@ -18,3 +18,7 @@ export function getRequestsRolloutMode(): RolloutMode {
 export function getPropertiesRolloutMode(): RolloutMode {
   return normalizeMode(process.env.PROPERTIES_ROLLOUT_MODE);
 }
+
+export function getCommentsRolloutMode(): RolloutMode {
+  return normalizeMode(process.env.COMMENTS_ROLLOUT_MODE);
+}

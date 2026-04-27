@@ -62,10 +62,12 @@ create table if not exists public.comments (
   author_website text,
   content text not null,
   approved boolean not null default false,
+  moderation_status text not null default 'pending',
   created_at timestamptz not null default now(),
   updated_at timestamptz,
   upvotes integer not null default 0,
-  downvotes integer not null default 0
+  downvotes integer not null default 0,
+  user_votes jsonb not null default '{}'::jsonb
 );
 
 create index if not exists idx_comments_article_approved_created
@@ -74,6 +76,14 @@ create index if not exists idx_comments_parent
   on public.comments (parent_id);
 create index if not exists idx_comments_created_at
   on public.comments (created_at desc);
+
+alter table public.comments
+  add column if not exists moderation_status text not null default 'pending';
+alter table public.comments
+  add column if not exists user_votes jsonb not null default '{}'::jsonb;
+alter table public.comments
+  add constraint comments_moderation_status_check
+  check (moderation_status in ('pending', 'approved', 'rejected'));
 
 create table if not exists public.comment_votes (
   comment_id text not null references public.comments (id) on delete cascade,
