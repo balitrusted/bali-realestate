@@ -14,3 +14,7 @@ export function getSearchQueryLogsRolloutMode(): RolloutMode {
 export function getRequestsRolloutMode(): RolloutMode {
   return normalizeMode(process.env.REQUESTS_ROLLOUT_MODE);
 }
+
+export function getPropertiesRolloutMode(): RolloutMode {
+  return normalizeMode(process.env.PROPERTIES_ROLLOUT_MODE);
+}

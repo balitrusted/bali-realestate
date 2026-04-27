@@ -28,9 +28,10 @@ export default function AdminCommentsPage() {
 
   const buildArticleLinkMap = async () => {
     try {
-      const [articlesRes, blogRes] = await Promise.all([
+      const [articlesRes, blogRes, glossaryRes] = await Promise.all([
         fetch("/api/articles?published=false", { cache: "no-store" }),
         fetch("/api/admin/blog", { cache: "no-store" }),
+        fetch("/api/admin/glossary", { cache: "no-store" }),
       ]);
 
       const nextMap: ArticleLinkMap = {};
@@ -55,6 +56,16 @@ export default function AdminCommentsPage() {
         }
       }
 
+      if (glossaryRes.ok) {
+        const glossaryData = (await glossaryRes.json()) as {
+          terms?: Array<{ id: string; slug: string }>;
+        };
+        for (const t of glossaryData.terms ?? []) {
+          if (!t?.id || !t?.slug) continue;
+          nextMap[`glossary:${t.id}`] = `/glossary/${t.slug}`;
+        }
+      }
+
       setArticleLinkMap(nextMap);
     } catch (error) {
       console.error("Error building article link map:", error);
@@ -64,10 +75,6 @@ export default function AdminCommentsPage() {
   const getArticleHref = (articleId: string): string | null => {
     if (!articleId) return null;
     if (articleLinkMap[articleId]) return articleLinkMap[articleId];
-    if (articleId.startsWith("glossary:")) {
-      const termId = articleId.slice("glossary:".length).trim();
-      return termId ? `/glossary/${termId}` : null;
-    }
     return null;
   };
 

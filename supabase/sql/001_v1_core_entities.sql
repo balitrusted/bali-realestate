@@ -103,6 +103,12 @@ create index if not exists idx_notify_requests_created_at
 create index if not exists idx_notify_requests_property_created
   on public.notify_requests (property_id, created_at desc);
 
+create table if not exists public.properties_catalog (
+  id text primary key,
+  payload jsonb not null,
+  updated_at timestamptz not null default now()
+);
+
 -- Data API access for server-side migration/runtime.
 -- We keep anon/authenticated closed for now.
 grant usage on schema public to service_role;
@@ -111,3 +117,4 @@ grant select, insert, update, delete on table public.requests to service_role;
 grant select, insert, update, delete on table public.comments to service_role;
 grant select, insert, update, delete on table public.comment_votes to service_role;
 grant select, insert, update, delete on table public.notify_requests to service_role;
+grant select, insert, update, delete on table public.properties_catalog to service_role;
