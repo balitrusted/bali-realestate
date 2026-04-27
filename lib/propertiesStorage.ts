@@ -7,6 +7,7 @@ import { parsePropertiesFile } from "@/lib/parseProperties";
 import { generatePropertiesFile } from "@/lib/generatePropertiesFile";
 
 const DATA_FILE = join(process.cwd(), "data", "properties.ts");
+const getBlobStoreBaseUrl = () => process.env.BLOB_STORE_URL?.trim().replace(/\/$/, "");
 
 /** Blob pathname for full catalog JSON (separate from `properties/*` image uploads). */
 export const PROPERTIES_CATALOG_BLOB_PATH = "_catalog/properties.json";
@@ -40,6 +41,22 @@ async function readPropertiesFromBlob(): Promise<Property[] | null> {
   if (!token) return null;
 
   try {
+    const baseUrl = getBlobStoreBaseUrl();
+    if (baseUrl) {
+      const directUrl = `${baseUrl}/${PROPERTIES_CATALOG_BLOB_PATH}`;
+      const directWithCacheBust = `${directUrl}${directUrl.includes("?") ? "&" : "?"}t=${Date.now()}`;
+      const directRes = await fetch(directWithCacheBust, {
+        cache: "no-store",
+        headers: { Pragma: "no-cache", "Cache-Control": "no-cache" },
+      });
+      if (directRes.ok) {
+        const directData: unknown = await directRes.json();
+        if (Array.isArray(directData)) {
+          return withNormalizedCatalogFeatures(directData as Property[]);
+        }
+      }
+    }
+
     const { blobs } = await list({
       prefix: PROPERTIES_CATALOG_BLOB_PATH,
       limit: 20,

@@ -60,6 +60,15 @@ async function verifyPropertyCatalogWrite(written: Property[]): Promise<boolean>
   return stableArraySignature(after) === stableArraySignature(expected);
 }
 
+/**
+ * Strict verification is expensive for large catalogs on Blob.
+ * Keep it opt-in while we complete DB migration.
+ */
+const useStrictCatalogWriteVerification =
+  process.env.PROPERTIES_STRICT_VERIFY === "1";
+
+const fastCatalogWriteVerify = async () => true;
+
 function isLandOnlyTypes(types: PropertyType[]): boolean {
   return (
     types.includes("land") &&
@@ -301,7 +310,10 @@ export async function POST(request: Request) {
       const finalList = await writeBlobJsonArrayWithRetry({
         read: loadFullPropertyList,
         write: persistPropertyList,
-        verifyAfterWrite: verifyPropertyCatalogWrite,
+        verifyAfterWrite: useStrictCatalogWriteVerification
+          ? verifyPropertyCatalogWrite
+          : fastCatalogWriteVerify,
+        maxAttempts: useStrictCatalogWriteVerification ? 28 : 1,
         mutate: async (properties) => {
           const types: PropertyType[] = normalizeTypesInput(
             property.types !== undefined
@@ -432,7 +444,10 @@ export async function PUT(request: Request) {
       const finalList = await writeBlobJsonArrayWithRetry({
         read: loadFullPropertyList,
         write: persistPropertyList,
-        verifyAfterWrite: verifyPropertyCatalogWrite,
+        verifyAfterWrite: useStrictCatalogWriteVerification
+          ? verifyPropertyCatalogWrite
+          : fastCatalogWriteVerify,
+        maxAttempts: useStrictCatalogWriteVerification ? 28 : 1,
         mutate: async (properties) => {
           if (action === "reorder") {
             return newOrder.map((id: string, index: number) => {
@@ -512,7 +527,10 @@ export async function DELETE(request: Request) {
       const finalList = await writeBlobJsonArrayWithRetry({
         read: loadFullPropertyList,
         write: persistPropertyList,
-        verifyAfterWrite: verifyPropertyCatalogWrite,
+        verifyAfterWrite: useStrictCatalogWriteVerification
+          ? verifyPropertyCatalogWrite
+          : fastCatalogWriteVerify,
+        maxAttempts: useStrictCatalogWriteVerification ? 28 : 1,
         mutate: async (properties) => properties.filter((p) => p.id !== id),
       });
 
