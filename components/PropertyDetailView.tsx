@@ -21,6 +21,7 @@ import {
 } from "@/lib/propertyUtils";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { formatLocaleDate } from "@/lib/formatDate";
+import { normalizeAvailableFrom } from "@/lib/availability";
 
 type Props = {
   property: Property;
@@ -77,6 +78,7 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
   const hasLand = types.includes("land");
   const hasBusiness = types.includes("business");
   const showAvailability = hasRent && !hasLand && !hasBusiness;
+  const availableFrom = normalizeAvailableFrom(property.availableFrom ?? undefined);
   const dealLabel = hasRent ? "Rent" : hasSale ? "Buy" : hasLand ? "Land" : hasBusiness ? "Business" : "Listing";
   const headingTitle = (() => {
     if (isPureLandListing(property) && property.villaNumber?.trim?.()) {
@@ -180,7 +182,7 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
                 {showAvailability && (
                   <div className="mt-3">
                     <span className="inline-flex items-center rounded-md border border-stone-200 px-2.5 py-1 text-xs font-medium text-stone-700">
-                      Available: {property.availableFrom ? formatLocaleDate(property.availableFrom) : "Now"}
+                      Available: {availableFrom ? formatLocaleDate(availableFrom) : "Now"}
                     </span>
                   </div>
                 )}

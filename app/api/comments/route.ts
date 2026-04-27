@@ -92,6 +92,7 @@ export async function POST(request: Request) {
       authorWebsite: commentData.authorWebsite?.trim(),
       content: commentData.content.trim(),
       approved: false, // Requires moderation
+      moderationStatus: "pending",
       createdAt: new Date().toISOString(),
       upvotes: 0,
       downvotes: 0,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   DndContext,
   closestCenter,
@@ -29,6 +29,7 @@ import { getMergedAreaInfos } from "@/lib/mainAreaRegistry";
 import { fixVillaNumberDisplay, fixDescriptionDisplay } from "@/lib/propertyUtils";
 import { PriceInput } from "@/components/admin/PriceInput";
 import { ALLOWED_BEDROOM_COUNTS } from "@/lib/catalogBedrooms";
+import { normalizeAvailableFrom } from "@/lib/availability";
 
 function isLandOnlyListing(types: PropertyType[]): boolean {
   return (
@@ -62,13 +63,6 @@ function SortableImageItem({ url, onDelete }: { url: string; onDelete: () => voi
 
   // Check if URL is local (starts with /uploads) or external
   const isLocal = url.startsWith('/uploads');
-  
-  // Debug: log the URL
-  useEffect(() => {
-    if (isLocal) {
-      console.log('Loading local image:', url);
-    }
-  }, [url, isLocal]);
 
   return (
     <div
@@ -93,21 +87,11 @@ function SortableImageItem({ url, onDelete }: { url: string; onDelete: () => voi
                 left: 0,
                 zIndex: 1
               }}
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                console.error('❌ Image load error for:', url);
-                console.error('Failed src:', target?.src);
+              onError={() => {
+                console.error("Image load error:", url);
                 setImageError(true);
               }}
-              onLoad={(e) => {
-                const target = e.target as HTMLImageElement;
-                console.log('✅ Image loaded successfully:', url);
-                console.log('Image dimensions:', target.naturalWidth, 'x', target.naturalHeight);
-                console.log('Image computed style:', window.getComputedStyle(target).display);
-                console.log('Image opacity:', window.getComputedStyle(target).opacity);
-                console.log('Image visibility:', window.getComputedStyle(target).visibility);
-                setImageError(false);
-              }}
+              onLoad={() => setImageError(false)}
             />
           ) : (
             // For external images, use Next.js Image
@@ -191,13 +175,14 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
     features: normalizePropertyFeatures(property?.features as Partial<Record<string, unknown>> | undefined),
     images: property?.images || [] as string[],
     archived: property?.archived ?? false,
-    availableFrom: property?.availableFrom ?? null,
+    availableFrom: normalizeAvailableFrom(property?.availableFrom ?? null) ?? null,
     order: property?.order,
   });
 
   const [newImageUrl, setNewImageUrl] = useState("");
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [showImageGallery, setShowImageGallery] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -238,7 +223,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
       },
       order: formData.order,
       archived: formData.archived,
-      availableFrom: formData.availableFrom || null,
+      availableFrom: normalizeAvailableFrom(formData.availableFrom || null) || null,
     };
 
     try {
@@ -456,15 +441,21 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
                 <input
                   type="date"
                   value={formData.availableFrom}
-                  onChange={(e) => setFormData({ ...formData, availableFrom: e.target.value || null })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      availableFrom: normalizeAvailableFrom(e.target.value || null) ?? null,
+                    })
+                  }
+                  lang="en-GB"
                   className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:ring-gray-500 focus:border-gray-500"
                 />
                 <button
                   type="button"
-                  onClick={() => setFormData({ ...formData, availableFrom: new Date().toISOString().slice(0, 10) })}
+                  onClick={() => setFormData({ ...formData, availableFrom: null })}
                   className="text-sm text-gray-600 hover:text-gray-900 underline"
                 >
-                  Set to today
+                  Set to now
                 </button>
               </>
             )}
@@ -854,6 +845,9 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
       {/* Images */}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-gray-900">Images</h2>
+        <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+          Temporary performance mode: existing image previews are collapsed by default to speed up editor load.
+        </div>
         <p className="text-sm text-gray-600">
           Drag images to reorder them. The first image will be the main image shown on the property card.
         </p>
@@ -910,26 +904,38 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
         </div>
 
         {formData.images.length > 0 && (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleImageDragEnd}
-          >
-            <SortableContext
-              items={formData.images}
-              strategy={horizontalListSortingStrategy}
+          <div className="space-y-3">
+            <button
+              type="button"
+              onClick={() => setShowImageGallery((prev) => !prev)}
+              className="inline-flex items-center gap-2 rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-800 hover:bg-gray-50"
             >
-              <div className="flex flex-wrap gap-4">
-                {formData.images.map((url, index) => (
-                  <SortableImageItem
-                    key={url}
-                    url={url}
-                    onDelete={() => handleDeleteImage(index)}
-                  />
-                ))}
-              </div>
-            </SortableContext>
-          </DndContext>
+              {showImageGallery ? "Hide photos" : `Show photos (${formData.images.length})`}
+            </button>
+
+            {showImageGallery && (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleImageDragEnd}
+              >
+                <SortableContext
+                  items={formData.images}
+                  strategy={horizontalListSortingStrategy}
+                >
+                  <div className="flex flex-wrap gap-4">
+                    {formData.images.map((url, index) => (
+                      <SortableImageItem
+                        key={url}
+                        url={url}
+                        onDelete={() => handleDeleteImage(index)}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
+            )}
+          </div>
         )}
       </div>
 

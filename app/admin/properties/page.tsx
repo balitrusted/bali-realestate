@@ -25,6 +25,7 @@ import { propertyHasUnknownAmenities } from "@/lib/featureState";
 import PropertyImageWithFallback from "@/components/PropertyImageWithFallback";
 import { getPropertyDisplayTitle, fixDescriptionDisplay } from "@/lib/propertyUtils";
 import { formatLocaleDate } from "@/lib/formatDate";
+import { normalizeAvailableFrom } from "@/lib/availability";
 import { subAreaNames, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
 
 type MutationListsPayload = {
@@ -87,6 +88,7 @@ function SortablePropertyItem({
         : `${formatPrice(price.monthly ?? price.min ?? 0, price.currency || "IDR")}${price.monthly != null ? " / month" : ""}`
       : "Price not set";
   const amenitiesIncomplete = propertyHasUnknownAmenities(property.features);
+  const availableFrom = normalizeAvailableFrom(property.availableFrom ?? undefined);
 
   return (
     <div
@@ -167,7 +169,7 @@ function SortablePropertyItem({
           )}
           <span className="font-semibold text-gray-900">{priceDisplay}</span>
           <span className="text-xs">
-            Availability: {property.availableFrom ? formatLocaleDate(property.availableFrom) : "Now"}
+            Availability: {availableFrom ? formatLocaleDate(availableFrom) : "Now"}
           </span>
           <span className="text-xs">Order: {property.order ?? 999}</span>
         </div>

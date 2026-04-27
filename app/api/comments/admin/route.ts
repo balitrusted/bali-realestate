@@ -9,6 +9,17 @@ async function checkAuth() {
   return cookieStore.get("admin-auth")?.value === "true";
 }
 
+function normalizeModerationStatus(input: {
+  approved?: boolean;
+  moderationStatus?: unknown;
+}): "pending" | "approved" | "rejected" {
+  if (input.moderationStatus === "approved") return "approved";
+  if (input.moderationStatus === "rejected") return "rejected";
+  if (input.moderationStatus === "pending") return "pending";
+  if (input.approved === true) return "approved";
+  return "pending";
+}
+
 // GET - Get all comments (admin only)
 export async function GET() {
   if (!(await checkAuth())) {
@@ -31,7 +42,7 @@ export async function PUT(request: Request) {
   }
 
   try {
-    const { id, approved } = await request.json();
+    const { id, approved, moderationStatus } = await request.json();
 
     if (!id) {
       return NextResponse.json({ error: "ID required" }, { status: 400 });
@@ -46,11 +57,13 @@ export async function PUT(request: Request) {
         );
       }
 
+      const nextStatus = normalizeModerationStatus({ approved, moderationStatus });
       return existingComments.map((c, i) =>
         i === index
           ? {
               ...c,
-              approved: approved === true,
+              approved: nextStatus === "approved",
+              moderationStatus: nextStatus,
               updatedAt: new Date().toISOString(),
             }
           : c
@@ -74,24 +87,52 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id");
-
-    if (!id) {
+    const url = new URL(request.url);
+    const idFromQuery = url.searchParams.get("id");
+    let ids: string[] = [];
+    try {
+      const body = (await request.json()) as { ids?: unknown };
+      if (Array.isArray(body.ids)) {
+        ids = body.ids.filter((v): v is string => typeof v === "string" && v.trim().length > 0);
+      }
+    } catch {
+      // no body, fallback to query param
+    }
+    if (ids.length === 0 && idFromQuery) {
+      ids = [idFromQuery];
+    }
+    if (ids.length === 0) {
       return NextResponse.json({ error: "ID required" }, { status: 400 });
     }
+    const idSet = new Set(ids);
 
     await mutateCommentsWithRetry((existingComments) => {
-      const filtered = existingComments.filter((c) => c.id !== id);
-      if (filtered.length === existingComments.length) {
+      const existingIds = new Set(existingComments.map((c) => c.id));
+      const missingId = ids.find((id) => !existingIds.has(id));
+      if (missingId) {
         throw new MutationHttpError(
-          NextResponse.json({ error: "Comment not found" }, { status: 404 })
+          NextResponse.json({ error: `Comment not found: ${missingId}` }, { status: 404 })
         );
       }
-      return filtered;
+
+      const notRejected = existingComments.find((c) => {
+        if (!idSet.has(c.id)) return false;
+        const status = normalizeModerationStatus(c);
+        return status !== "rejected";
+      });
+      if (notRejected) {
+        throw new MutationHttpError(
+          NextResponse.json(
+            { error: "Only comments in Rejected can be permanently deleted" },
+            { status: 400 }
+          )
+        );
+      }
+
+      return existingComments.filter((c) => !idSet.has(c.id));
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, deleted: ids.length });
   } catch (error) {
     if (error instanceof MutationHttpError) {
       return error.response;

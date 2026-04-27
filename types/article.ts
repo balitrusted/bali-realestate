@@ -33,6 +33,7 @@ export interface Comment {
   authorWebsite?: string;
   content: string;
   approved: boolean; // Moderation
+  moderationStatus?: "pending" | "approved" | "rejected";
   createdAt: string;
   updatedAt?: string;
   // Voting

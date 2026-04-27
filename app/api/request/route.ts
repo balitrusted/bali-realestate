@@ -24,15 +24,23 @@ async function checkAuth(): Promise<boolean> {
 
 /** GET – list requests (admin only) */
 export async function GET() {
+  const startedAt = Date.now();
   if (!(await checkAuth())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const requests = await getRequests();
+  if (process.env.DATA_MIGRATION_OBSERVABILITY === "1") {
+    console.info("[requests] api_get_ok", {
+      rows: requests.length,
+      elapsedMs: Date.now() - startedAt,
+    });
+  }
   return NextResponse.json({ requests });
 }
 
 /** PATCH – update request status/comment (admin only) */
 export async function PATCH(request: NextRequest) {
+  const startedAt = Date.now();
   if (!(await checkAuth())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -43,6 +51,12 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "id required" }, { status: 400 });
     }
     const updated = await updateRequest(id, { status, comment });
+    if (process.env.DATA_MIGRATION_OBSERVABILITY === "1") {
+      console.info("[requests] api_patch_ok", {
+        id,
+        elapsedMs: Date.now() - startedAt,
+      });
+    }
     return NextResponse.json({ request: updated });
   } catch (error) {
     if (error instanceof MutationHttpError) {
@@ -55,6 +69,7 @@ export async function PATCH(request: NextRequest) {
 
 /** POST – create request (public). Saves to storage and sends email to admin. */
 export async function POST(request: NextRequest) {
+  const startedAt = Date.now();
   try {
     const body = await request.json();
     const {
@@ -170,6 +185,13 @@ export async function POST(request: NextRequest) {
     void sendToAdmin(subject, lines.join("\n")).then((r) => {
       if (!r.success) console.error("Request email failed:", r.error);
     });
+
+    if (process.env.DATA_MIGRATION_OBSERVABILITY === "1") {
+      console.info("[requests] api_post_ok", {
+        id,
+        elapsedMs: Date.now() - startedAt,
+      });
+    }
 
     return NextResponse.json({ success: true, id });
   } catch (error) {

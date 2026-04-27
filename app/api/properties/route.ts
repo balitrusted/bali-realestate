@@ -34,6 +34,10 @@ import {
   stableArraySignature,
   writeBlobJsonArrayWithRetry,
 } from "@/lib/blobJsonOptimisticWrite";
+import {
+  normalizeAvailableFrom,
+  propertyWithNormalizedAvailability,
+} from "@/lib/availability";
 
 /** Admin and catalog must never serve stale JSON from edge/browser caches. */
 export const dynamic = "force-dynamic";
@@ -184,6 +188,11 @@ function updateSingleProperty(
     features: normalizePropertyFeatures(
       property.features ?? properties[index].features
     ),
+    availableFrom: normalizeAvailableFrom(
+      property.hasOwnProperty("availableFrom")
+        ? property.availableFrom
+        : properties[index].availableFrom
+    ),
     updatedAt: new Date().toISOString(),
   };
 
@@ -212,11 +221,11 @@ function buildListsWithSlugs(fullList: Property[]): {
   const main = valid
     .filter((p) => p.archived !== true)
     .sort(sortFn)
-    .map((p) => ({ ...p, publicSlug: slugIdx.segmentFor(p) }));
+    .map((p) => ({ ...propertyWithNormalizedAvailability(p), publicSlug: slugIdx.segmentFor(p) }));
   const archived = valid
     .filter((p) => p.archived === true)
     .sort(sortFn)
-    .map((p) => ({ ...p, publicSlug: slugIdx.segmentFor(p) }));
+    .map((p) => ({ ...propertyWithNormalizedAvailability(p), publicSlug: slugIdx.segmentFor(p) }));
   return { properties: main, archivedProperties: archived };
 }
 
@@ -250,7 +259,7 @@ function getPropertiesForRequest(
   const allForSlugs = fullList.filter((p) => p && p.id && hasValidPrice(p));
   const slugIdx = buildPropertySlugIndex(allForSlugs);
   const withSlugs = sorted.map((p) => ({
-    ...p,
+    ...propertyWithNormalizedAvailability(p),
     publicSlug: slugIdx.segmentFor(p),
   }));
 
@@ -381,7 +390,7 @@ export async function POST(request: Request) {
             images: Array.isArray(property.images) ? property.images : [],
             order: property.order ?? properties.length,
             archived: property.archived === true,
-            availableFrom: property.availableFrom ?? undefined,
+            availableFrom: normalizeAvailableFrom(property.availableFrom ?? undefined),
             createdAt: property.createdAt || new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           };

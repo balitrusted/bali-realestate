@@ -10,3 +10,7 @@ function normalizeMode(value: string | undefined): RolloutMode {
 export function getSearchQueryLogsRolloutMode(): RolloutMode {
   return normalizeMode(process.env.SEARCH_QUERY_LOGS_ROLLOUT_MODE);
 }
+
+export function getRequestsRolloutMode(): RolloutMode {
+  return normalizeMode(process.env.REQUESTS_ROLLOUT_MODE);
+}
