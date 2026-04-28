@@ -96,6 +96,49 @@ function suggestedWizardStep(
   return visible[visible.length - 1]!;
 }
 
+function hasUnmetWizardStep(
+  f: PropertyFiltersState,
+  visible: WizardStepId[],
+  showVillas: boolean,
+  showSubject: boolean,
+  subAreaPromptSkipped: boolean,
+  skipped: WizardSkipState
+): boolean {
+  for (const id of visible) {
+    switch (id) {
+      case "action":
+        if (showVillas && !f.type && !skipped.action) return true;
+        break;
+      case "payment":
+        if (
+          showVillas &&
+          f.type === "rent" &&
+          f.minDuration !== 1 &&
+          f.minDuration !== 12 &&
+          !skipped.payment
+        ) {
+          return true;
+        }
+        break;
+      case "subject":
+        if (showSubject && !f.type && !skipped.subject) return true;
+        break;
+      case "area":
+        if (!f.mainArea && !skipped.area) return true;
+        break;
+      case "subarea":
+        if (!subAreaPromptSkipped && taxonomySubAreaCount(f.mainArea) > 0 && f.subArea.length === 0) return true;
+        break;
+      case "bedrooms":
+        if (f.bedrooms.length === 0 && !skipped.bedrooms) return true;
+        break;
+      default:
+        break;
+    }
+  }
+  return false;
+}
+
 type PropertyFiltersState = {
   mainArea?: MainArea;
   subArea: SubArea[];
@@ -565,7 +608,16 @@ export default function PropertyFilters({
     const visible = getVisibleStepIdsFor(f);
     setCurrentStepId((prev) => {
       if (prev === "done") {
-        if (!f.type || !f.mainArea) {
+        if (
+          hasUnmetWizardStep(
+            f,
+            visible,
+            showVillasSpecificBlocks,
+            showSubjectBlock,
+            subAreaPromptSkipped,
+            wizardSkipped
+          )
+        ) {
           return suggestedWizardStep(
             f,
             visible,
@@ -713,6 +765,25 @@ export default function PropertyFilters({
     }
   };
 
+  const removeWizardChip = useCallback(
+    (step: WizardStepId, newFilters: PropertyFiltersState) => {
+      if (step === "action") {
+        setWizardSkipped((s) => ({ ...s, action: false, payment: false, subject: false }));
+      } else if (step === "payment") {
+        setWizardSkipped((s) => ({ ...s, payment: false }));
+      } else if (step === "subject") {
+        setWizardSkipped((s) => ({ ...s, subject: false }));
+      } else if (step === "area") {
+        setWizardSkipped((s) => ({ ...s, area: false }));
+      } else if (step === "bedrooms") {
+        setWizardSkipped((s) => ({ ...s, bedrooms: false }));
+      }
+      setCurrentStepId(step);
+      applyFilterNav(newFilters, false);
+    },
+    [applyFilterNav]
+  );
+
   const isSubAreaChecked = (s: SubArea) => filters.subArea.includes(s);
   const isBedroomChecked = (b: number) => filters.bedrooms.includes(b);
   const bedroomLabel = (b: number) => (b === 1 ? "1 bed" : `${b} beds`);
@@ -773,25 +844,25 @@ export default function PropertyFilters({
       chips.push({
         id: "t-rent",
         label: "Rent",
-        remove: () => applyFilterNav({ ...filters, type: undefined, minDuration: undefined }, false),
+        remove: () => removeWizardChip("action", { ...filters, type: undefined, minDuration: undefined }),
       });
     else if (filters.type === "sale")
       chips.push({
         id: "t-sale",
         label: "Buy · villas",
-        remove: () => applyFilterNav({ ...filters, type: undefined, minDuration: undefined }, false),
+        remove: () => removeWizardChip("action", { ...filters, type: undefined, minDuration: undefined }),
       });
     else if (filters.type === "land")
       chips.push({
         id: "t-land",
         label: "Land",
-        remove: () => applyFilterNav({ ...filters, type: undefined, minDuration: undefined }, false),
+        remove: () => removeWizardChip("action", { ...filters, type: undefined, minDuration: undefined }),
       });
     else if (filters.type === "business")
       chips.push({
         id: "t-bus",
         label: "Business",
-        remove: () => applyFilterNav({ ...filters, type: undefined, minDuration: undefined }, false),
+        remove: () => removeWizardChip("action", { ...filters, type: undefined, minDuration: undefined }),
       });
 
     if (filters.type === "rent") {
@@ -799,13 +870,13 @@ export default function PropertyFilters({
         chips.push({
           id: "pay-m",
           label: "Monthly",
-          remove: () => applyFilterNav({ ...filters, minDuration: undefined }, false),
+          remove: () => removeWizardChip("payment", { ...filters, minDuration: undefined }),
         });
       else if (filters.minDuration === 12)
         chips.push({
           id: "pay-y",
           label: "Yearly",
-          remove: () => applyFilterNav({ ...filters, minDuration: undefined }, false),
+          remove: () => removeWizardChip("payment", { ...filters, minDuration: undefined }),
         });
     }
 
@@ -814,21 +885,21 @@ export default function PropertyFilters({
       chips.push({
         id: `area-${filters.mainArea}`,
         label: nm,
-        remove: () => applyFilterNav({ ...filters, mainArea: undefined, subArea: [] }, false),
+        remove: () => removeWizardChip("area", { ...filters, mainArea: undefined, subArea: [] }),
       });
     }
     filters.subArea.forEach((s) => {
       chips.push({
         id: `sub-${s}`,
         label: subAreaNames[s] ?? s,
-        remove: () => applyFilterNav({ ...filters, subArea: filters.subArea.filter((x) => x !== s) }, false),
+        remove: () => removeWizardChip("subarea", { ...filters, subArea: filters.subArea.filter((x) => x !== s) }),
       });
     });
     filters.bedrooms.forEach((b) => {
       chips.push({
         id: `bed-${b}`,
         label: bedroomLabel(b),
-        remove: () => applyFilterNav({ ...filters, bedrooms: filters.bedrooms.filter((x) => x !== b) }, false),
+        remove: () => removeWizardChip("bedrooms", { ...filters, bedrooms: filters.bedrooms.filter((x) => x !== b) }),
       });
     });
     if (filters.maxPrice) {
