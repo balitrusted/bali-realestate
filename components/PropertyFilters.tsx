@@ -406,6 +406,10 @@ export default function PropertyFilters({
 
       if (pathType && pathArea) {
         const newType = newFilters.type || pathType;
+        if (newType === "villas") {
+          router.push(`/properties/villas${qsForPath("/properties/villas")}`, { scroll: false });
+          return;
+        }
         if (!newFilters.mainArea) {
           router.push(`/properties/${newType}${qsForPath(`/properties/${newType}`)}`, { scroll: false });
           return;
@@ -449,6 +453,10 @@ export default function PropertyFilters({
         const newType = newFilters.type || pathType;
         if (!newType) {
           router.push(`/properties${qsForPath("/properties")}`, { scroll: false });
+          return;
+        }
+        if (newType === "villas") {
+          router.push(`/properties/villas${qsForPath("/properties/villas")}`, { scroll: false });
           return;
         }
         if (newFilters.mainArea) {
