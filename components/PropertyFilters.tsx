@@ -18,6 +18,13 @@ import { ALLOWED_BEDROOM_COUNTS } from "@/lib/catalogBedrooms";
 import ToggleSwitch from "@/components/ToggleSwitch";
 
 type WizardStepId = "action" | "payment" | "subject" | "area" | "subarea" | "bedrooms";
+type WizardSkipState = {
+  action: boolean;
+  payment: boolean;
+  subject: boolean;
+  area: boolean;
+  bedrooms: boolean;
+};
 
 /** Catalog URL slug → listing `PropertyType`. `/properties/villas` is a hub, not a concrete type. */
 function parseTypeFromPropertiesPath(pathname: string): PropertyType | undefined {
@@ -51,19 +58,26 @@ function suggestedWizardStep(
   visible: WizardStepId[],
   showVillas: boolean,
   showSubject: boolean,
-  subAreaPromptSkipped: boolean
+  subAreaPromptSkipped: boolean,
+  skipped: WizardSkipState
 ): WizardStepId {
   if (visible.length === 0) return "area";
   const needs = (id: WizardStepId): boolean => {
     switch (id) {
       case "action":
-        return showVillas && !f.type;
+        return showVillas && !f.type && !skipped.action;
       case "payment":
-        return showVillas && f.type === "rent" && f.minDuration !== 1 && f.minDuration !== 12;
+        return (
+          showVillas &&
+          f.type === "rent" &&
+          f.minDuration !== 1 &&
+          f.minDuration !== 12 &&
+          !skipped.payment
+        );
       case "subject":
-        return showSubject && !f.type;
+        return showSubject && !f.type && !skipped.subject;
       case "area":
-        return !f.mainArea;
+        return !f.mainArea && !skipped.area;
       case "subarea":
         return (
           !subAreaPromptSkipped &&
@@ -71,7 +85,7 @@ function suggestedWizardStep(
           f.subArea.length === 0
         );
       case "bedrooms":
-        return false;
+        return !skipped.bedrooms;
       default:
         return false;
     }
@@ -208,6 +222,13 @@ export default function PropertyFilters({
   const [isCollapsed, setIsCollapsed] = useState(true);
   /** After "Any" on sub-areas, stop forcing the sub-area step when reopening the wizard. */
   const [subAreaPromptSkipped, setSubAreaPromptSkipped] = useState(false);
+  const [wizardSkipped, setWizardSkipped] = useState<WizardSkipState>({
+    action: false,
+    payment: false,
+    subject: false,
+    area: false,
+    bedrooms: false,
+  });
   const [filters, setFilters] = useState<PropertyFiltersState>(() =>
     buildFiltersFromSearchParams(searchParams, defaultMainArea, defaultType, pathSubArea, pathname)
   );
@@ -272,6 +293,13 @@ export default function PropertyFilters({
   /** Full reset to clean SEO hub URLs (no query) — same entry points as legacy redirects. */
   const clearFilters = useCallback(() => {
     setSubAreaPromptSkipped(false);
+    setWizardSkipped({
+      action: false,
+      payment: false,
+      subject: false,
+      area: false,
+      bedrooms: false,
+    });
     setIsCollapsed(true);
     try {
       sessionStorage.removeItem(FILTERS_EXPANDED_KEY);
@@ -489,7 +517,14 @@ export default function PropertyFilters({
       const f = buildFiltersFromSearchParams(searchParams, defaultMainArea, defaultType, pathSubArea, pathname);
       const visible = getVisibleStepIdsFor(f);
       setCurrentStepId(
-        suggestedWizardStep(f, visible, showVillasSpecificBlocks, showSubjectBlock, subAreaPromptSkipped)
+        suggestedWizardStep(
+          f,
+          visible,
+          showVillasSpecificBlocks,
+          showSubjectBlock,
+          subAreaPromptSkipped,
+          wizardSkipped
+        )
       );
     }
     wasCollapsedRef.current = isCollapsed;
@@ -504,6 +539,7 @@ export default function PropertyFilters({
     showVillasSpecificBlocks,
     showSubjectBlock,
     subAreaPromptSkipped,
+    wizardSkipped,
   ]);
 
   /** When path or ?query changes (not on first open): keep step if still valid, else snap to suggested — avoids resetting to step 1 after Rent/Monthly/Ubud. */
@@ -522,12 +558,26 @@ export default function PropertyFilters({
     setCurrentStepId((prev) => {
       if (prev === "done") {
         if (!f.type || !f.mainArea) {
-          return suggestedWizardStep(f, visible, showVillasSpecificBlocks, showSubjectBlock, subAreaPromptSkipped);
+          return suggestedWizardStep(
+            f,
+            visible,
+            showVillasSpecificBlocks,
+            showSubjectBlock,
+            subAreaPromptSkipped,
+            wizardSkipped
+          );
         }
         return "done";
       }
       if (visible.includes(prev as WizardStepId)) return prev as WizardStepIdOrDone;
-      return suggestedWizardStep(f, visible, showVillasSpecificBlocks, showSubjectBlock, subAreaPromptSkipped);
+      return suggestedWizardStep(
+        f,
+        visible,
+        showVillasSpecificBlocks,
+        showSubjectBlock,
+        subAreaPromptSkipped,
+        wizardSkipped
+      );
     });
   }, [
     pathAndQuery,
@@ -541,10 +591,12 @@ export default function PropertyFilters({
     showVillasSpecificBlocks,
     showSubjectBlock,
     subAreaPromptSkipped,
+    wizardSkipped,
     isCollapsed,
   ]);
 
   const handleMainAreaChange = (area: MainArea) => {
+    setWizardSkipped((s) => ({ ...s, area: false }));
     applyFilterNav({ ...filters, mainArea: area, subArea: [] }, true);
   };
 
@@ -603,6 +655,7 @@ export default function PropertyFilters({
   const subjectOptions: Subject[] = action === "Rent" ? ["Villas"] : ["Villas", "Land", "Business"];
 
   const handleActionChange = (newAction: Action) => {
+    setWizardSkipped((s) => ({ ...s, action: false, payment: false, subject: false }));
     const newSubject: Subject =
       newAction === "Rent" ? "Villas" : subject === "Villas" || subject === "Land" || subject === "Business" ? subject : "Villas";
     const newType = typeFromActionSubject(newAction, newSubject);
@@ -628,6 +681,7 @@ export default function PropertyFilters({
   };
 
   const handleSubjectChange = (newSubject: Subject) => {
+    setWizardSkipped((s) => ({ ...s, subject: false }));
     const effectiveAction = action ?? "Buy";
     const newType = typeFromActionSubject(effectiveAction, newSubject);
     const newFilters = {
@@ -889,7 +943,16 @@ export default function PropertyFilters({
               {safeStepId === "action" && showVillasSpecificBlocks && (
                 <section aria-label={stepHeading}>
                   <div className="flex gap-1.5 overflow-x-auto pb-0.5 md:flex-wrap scrollbar-thin scrollbar-thumb-stone-200 scrollbar-track-transparent">
-                    {pill(false, () => applyFilterNav({ ...filters, type: undefined, minDuration: undefined }, true), "Any", undefined, true)}
+                    {pill(
+                      false,
+                      () => {
+                        setWizardSkipped((s) => ({ ...s, action: true, payment: true, subject: true }));
+                        applyFilterNav({ ...filters, type: undefined, minDuration: undefined }, true);
+                      },
+                      "Any",
+                      undefined,
+                      true
+                    )}
                     {(["Rent", "Buy"] as const).map((a) =>
                       pill(action === a, () => handleActionChange(a), a, `action-${a}`)
                     )}
@@ -901,12 +964,15 @@ export default function PropertyFilters({
                 <section aria-label={stepHeading}>
                   <div className="flex gap-1.5 overflow-x-auto pb-0.5 md:flex-wrap">
                     {pill(false, () => {
+                      setWizardSkipped((s) => ({ ...s, payment: true }));
                       applyFilterNav({ ...filters, minDuration: undefined }, true);
                     }, "Any", undefined, true)}
                     {pill(filters.minDuration === 1, () => {
+                      setWizardSkipped((s) => ({ ...s, payment: false }));
                       applyFilterNav({ ...filters, minDuration: 1 }, true);
                     }, "Monthly")}
                     {pill(filters.minDuration === 12, () => {
+                      setWizardSkipped((s) => ({ ...s, payment: false }));
                       applyFilterNav({ ...filters, minDuration: 12 }, true);
                     }, "Yearly")}
                   </div>
@@ -917,6 +983,7 @@ export default function PropertyFilters({
                 <section aria-label={stepHeading}>
                   <div className="flex gap-1.5 overflow-x-auto pb-0.5 md:flex-wrap">
                     {pill(false, () => {
+                      setWizardSkipped((s) => ({ ...s, subject: true }));
                       applyFilterNav({ ...filters, type: undefined }, true);
                     }, "All types")}
                     {subjectOptions.map((s) => pill(subject === s, () => handleSubjectChange(s), s, `subject-${s}`))}
@@ -928,6 +995,7 @@ export default function PropertyFilters({
                 <section aria-label={stepHeading}>
                   <div className="flex gap-1.5 overflow-x-auto pb-0.5 md:flex-wrap scrollbar-thin scrollbar-thumb-stone-200 scrollbar-track-transparent">
                     {pill(false, () => {
+                      setWizardSkipped((s) => ({ ...s, area: true }));
                       applyFilterNav({ ...filters, mainArea: undefined, subArea: [] }, true);
                     }, "Any", undefined, true)}
                     {areasToShow.map((area) =>
@@ -967,6 +1035,7 @@ export default function PropertyFilters({
                     {pill(
                       false,
                       () => {
+                        setWizardSkipped((s) => ({ ...s, bedrooms: true }));
                         applyFilterNav({ ...filters, bedrooms: [] }, true);
                       },
                       "Any",
@@ -976,7 +1045,10 @@ export default function PropertyFilters({
                     {bedroomOptions.map((beds) =>
                       pill(
                         isBedroomChecked(beds),
-                        () => handleBedroomChange(beds, !isBedroomChecked(beds)),
+                        () => {
+                          setWizardSkipped((s) => ({ ...s, bedrooms: false }));
+                          handleBedroomChange(beds, !isBedroomChecked(beds));
+                        },
                         bedroomLabel(beds),
                         `beds-${beds}`
                       )
