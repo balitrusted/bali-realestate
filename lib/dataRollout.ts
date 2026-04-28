@@ -22,3 +22,7 @@ export function getPropertiesRolloutMode(): RolloutMode {
 export function getCommentsRolloutMode(): RolloutMode {
   return normalizeMode(process.env.COMMENTS_ROLLOUT_MODE);
 }
+
+export function getNotifyRequestsRolloutMode(): RolloutMode {
+  return normalizeMode(process.env.NOTIFY_REQUESTS_ROLLOUT_MODE);
+}

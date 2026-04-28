@@ -11,6 +11,8 @@
     "backfill:search-logs": "npx tsx scripts/backfill-search-query-logs-to-supabase.ts",
     "backfill:requests": "npx tsx scripts/backfill-requests-to-supabase.ts",
     "backfill:comments": "npx tsx scripts/backfill-comments-to-supabase.ts",
+    "backfill:notify-requests": "npx tsx scripts/backfill-notify-requests-to-supabase.ts",
+    "backfill:notify-requests:prod": "npx tsx scripts/backfill-notify-requests-from-prod-to-supabase.ts",
     "backfill:properties": "npx tsx scripts/backfill-properties-catalog-to-supabase.ts",
     "backfill:properties:prod": "npx tsx scripts/backfill-properties-catalog-from-prod-to-supabase.ts"
   },

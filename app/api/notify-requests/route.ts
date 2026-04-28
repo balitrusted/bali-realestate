@@ -1,21 +1,17 @@
 import { NextResponse } from "next/server";
-import { writeFile } from "fs/promises";
-import { join } from "path";
 import { cookies } from "next/headers";
 import { sendToAdmin } from "@/lib/email";
-import { getNotifyRequests, type NotifyRequest } from "@/lib/notifyRequestsData";
+import {
+  addNotifyRequest,
+  getNotifyRequests,
+  type NotifyRequest,
+} from "@/lib/notifyRequestsData";
 
 export type { NotifyRequest };
-
-const DATA_FILE = join(process.cwd(), "data", "notify-requests.json");
 
 async function checkAuth() {
   const cookieStore = await cookies();
   return cookieStore.get("admin-auth")?.value === "true";
-}
-
-async function writeRequests(requests: NotifyRequest[]) {
-  await writeFile(DATA_FILE, JSON.stringify(requests, null, 2), "utf-8");
 }
 
 // GET - List all (admin only)
@@ -38,7 +34,6 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    const requests = await getNotifyRequests();
     const newRequest: NotifyRequest = {
       id: `nr-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
       propertyId: String(propertyId),
@@ -48,7 +43,6 @@ export async function POST(request: Request) {
       dateFrom: dateFrom ? String(dateFrom).trim() : undefined,
       createdAt: new Date().toISOString(),
     };
-    requests.push(newRequest);
 
     // Email admin about new "notify when available" request
     const subject = `[Balitrusted] Notify when available: ${newRequest.propertyTitle || newRequest.propertyId}`;
@@ -66,12 +60,7 @@ export async function POST(request: Request) {
       if (!r.success) console.error("Notify-request email failed:", r.error);
     });
 
-    try {
-      await writeRequests(requests);
-    } catch (writeErr) {
-      console.error("Could not save notify-requests (e.g. on Vercel):", writeErr);
-      // Still return success – admin got the email
-    }
+    await addNotifyRequest(newRequest);
     return NextResponse.json({ success: true, id: newRequest.id });
   } catch (error) {
     console.error("Notify request error:", error);
