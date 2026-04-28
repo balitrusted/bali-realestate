@@ -2,7 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { sendToAdmin } from "@/lib/email";
 import { MutationHttpError } from "@/lib/blobJsonOptimisticWrite";
-import { getRequests, addRequest, updateRequest, type SiteRequest } from "@/lib/requestsData";
+import {
+  getRequests,
+  addRequest,
+  updateRequest,
+  deleteRequest,
+  type SiteRequest,
+  type RequestStatus,
+} from "@/lib/requestsData";
 
 export const dynamic = "force-dynamic";
 
@@ -38,6 +45,8 @@ export async function GET() {
   return NextResponse.json({ requests });
 }
 
+const ALLOWED_REQUEST_STATUSES: RequestStatus[] = ["new", "in_progress", "done", "cancelled"];
+
 /** PATCH – update request status/comment (admin only) */
 export async function PATCH(request: NextRequest) {
   const startedAt = Date.now();
@@ -49,6 +58,9 @@ export async function PATCH(request: NextRequest) {
     const { id, status, comment } = body;
     if (!id || typeof id !== "string") {
       return NextResponse.json({ error: "id required" }, { status: 400 });
+    }
+    if (status !== undefined && !ALLOWED_REQUEST_STATUSES.includes(status)) {
+      return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
     const updated = await updateRequest(id, { status, comment });
     if (process.env.DATA_MIGRATION_OBSERVABILITY === "1") {
@@ -64,6 +76,37 @@ export async function PATCH(request: NextRequest) {
     }
     console.error("Request PATCH error:", error);
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
+  }
+}
+
+/** DELETE – remove request permanently (admin only). Used from Cancelled tab. */
+export async function DELETE(request: NextRequest) {
+  if (!(await checkAuth())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  try {
+    let id: string | null = null;
+    const url = new URL(request.url);
+    id = url.searchParams.get("id");
+    if (!id) {
+      try {
+        const body = await request.json();
+        if (body && typeof body.id === "string") id = body.id;
+      } catch {
+        /* empty body */
+      }
+    }
+    if (!id) {
+      return NextResponse.json({ error: "id required" }, { status: 400 });
+    }
+    await deleteRequest(id);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    if (error instanceof MutationHttpError) {
+      return error.response;
+    }
+    console.error("Request DELETE error:", error);
+    return NextResponse.json({ error: "Delete failed" }, { status: 500 });
   }
 }
 

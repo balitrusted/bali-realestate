@@ -8,7 +8,7 @@ const BLOB_KEY = "data/requests.json";
 const getBlobStoreBaseUrl = () => process.env.BLOB_STORE_URL?.trim().replace(/\/$/, "");
 const OBS_ENABLED = process.env.DATA_MIGRATION_OBSERVABILITY === "1";
 
-export type RequestStatus = "new" | "in_progress" | "done";
+export type RequestStatus = "new" | "in_progress" | "done" | "cancelled";
 
 export interface SiteRequest {
   id: string;
@@ -110,8 +110,13 @@ async function writeToBlob(requests: SiteRequest[]): Promise<void> {
   });
 }
 
+function parseRequestStatus(value: string | null | undefined): RequestStatus {
+  if (value === "in_progress" || value === "done" || value === "cancelled") return value;
+  return "new";
+}
+
 function normalizeRequest(r: SiteRequest): SiteRequest {
-  return { ...r, status: r.status || "new" };
+  return { ...r, status: parseRequestStatus(r.status) };
 }
 
 function mapRowToRequest(row: RequestRow): SiteRequest {
@@ -134,7 +139,7 @@ function mapRowToRequest(row: RequestRow): SiteRequest {
     propertyTitle: row.property_title ?? undefined,
     propertyUrl: row.property_url ?? undefined,
     desiredStart: row.desired_start ?? undefined,
-    status: row.status ?? "new",
+    status: parseRequestStatus(row.status),
     comment: row.comment ?? undefined,
     createdAt: row.created_at,
   });
@@ -160,7 +165,7 @@ function mapRequestToRow(r: SiteRequest): RequestRow {
     property_title: r.propertyTitle ?? null,
     property_url: r.propertyUrl ?? null,
     desired_start: r.desiredStart ?? null,
-    status: r.status ?? "new",
+    status: parseRequestStatus(r.status),
     comment: r.comment ?? null,
     created_at: r.createdAt,
   };
@@ -191,6 +196,22 @@ async function writeOneToSupabase(request: SiteRequest): Promise<void> {
     .upsert(mapRequestToRow(request), { onConflict: "id", ignoreDuplicates: false });
   if (error) {
     throw new Error(`[supabase] requests write failed: ${error.message}`);
+  }
+}
+
+async function deleteOneFromSupabase(id: string): Promise<void> {
+  if (!isSupabaseConfigured()) {
+    throw new Error("[supabase] not configured");
+  }
+  const supabase = getSupabaseServerClient();
+  const { data, error } = await supabase.from("requests").delete().eq("id", id).select("id");
+  if (error) {
+    throw new Error(`[supabase] requests delete failed: ${error.message}`);
+  }
+  if (!data?.length) {
+    throw new MutationHttpError(
+      NextResponse.json({ error: "Request not found" }, { status: 404 })
+    );
   }
 }
 
@@ -402,4 +423,71 @@ export async function updateRequest(
   }
 
   return result;
+}
+
+/** Remove one request (admin). Throws MutationHttpError(404) if missing. */
+export async function deleteRequest(id: string): Promise<void> {
+  const mode = getRequestsRolloutMode();
+  const startedAt = Date.now();
+
+  if (mode === "supabase") {
+    try {
+      await deleteOneFromSupabase(id);
+      reportMetric("delete_ok", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
+      return;
+    } catch (error) {
+      if (error instanceof MutationHttpError) throw error;
+      console.error("[requests] Supabase delete failed, fallback to Blob/JSON:", error);
+      reportMetric("delete_fallback", {
+        mode,
+        target: "blob_or_file",
+        elapsedMs: Date.now() - startedAt,
+      });
+    }
+  }
+
+  try {
+    await writeBlobJsonArrayWithRetry({
+      read: getRequestsFromBlobOrFile,
+      write: saveRequests,
+      mutate: (requests) => {
+        const next = requests.filter((r) => r.id !== id);
+        if (next.length === requests.length) {
+          throw new MutationHttpError(
+            NextResponse.json({ error: "Request not found" }, { status: 404 })
+          );
+        }
+        return next.map(normalizeRequest);
+      },
+    });
+    reportMetric("delete_ok", { mode, target: "blob_or_file", elapsedMs: Date.now() - startedAt });
+  } catch (error) {
+    if (error instanceof MutationHttpError) {
+      if (mode === "dual-write") {
+        try {
+          await deleteOneFromSupabase(id);
+          reportMetric("delete_ok", {
+            mode,
+            target: "supabase",
+            elapsedMs: Date.now() - startedAt,
+          });
+          return;
+        } catch (e2) {
+          throw e2;
+        }
+      }
+      throw error;
+    }
+    throw error;
+  }
+
+  if (mode === "dual-write") {
+    try {
+      await deleteOneFromSupabase(id);
+      reportMetric("delete_ok", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
+    } catch (error) {
+      console.error("[requests] dual-write Supabase delete failed:", error);
+      reportMetric("delete_error", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
+    }
+  }
 }

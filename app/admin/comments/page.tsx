@@ -192,6 +192,7 @@ export default function AdminCommentsPage() {
   });
 
   const rejectedVisible = filteredComments.filter((c) => getCommentStatus(c) === "rejected");
+  const pendingCount = comments.filter((c) => getCommentStatus(c) === "pending").length;
   const allRejectedVisibleSelected =
     rejectedVisible.length > 0 &&
     rejectedVisible.every((c) => selectedRejectedIds.includes(c.id));
@@ -223,7 +224,7 @@ export default function AdminCommentsPage() {
               filter === "pending" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-700"
             }`}
           >
-            Pending ({comments.filter(c => !c.approved).length})
+            Pending ({pendingCount})
           </button>
           <button
             onClick={() => setFilter("approved")}

@@ -6,6 +6,16 @@ import { getAllComments } from "@/lib/commentsPersistence";
 
 export const dynamic = "force-dynamic";
 
+function getCommentStatus(comment: {
+  approved: boolean;
+  moderationStatus?: "pending" | "approved" | "rejected";
+}): "pending" | "approved" | "rejected" {
+  if (comment.moderationStatus === "approved") return "approved";
+  if (comment.moderationStatus === "rejected") return "rejected";
+  if (comment.moderationStatus === "pending") return "pending";
+  return comment.approved ? "approved" : "pending";
+}
+
 async function checkAuth(): Promise<boolean> {
   const cookieStore = await cookies();
   return cookieStore.get("admin-auth")?.value === "true";
@@ -18,7 +28,7 @@ export async function GET() {
 
   try {
     const comments = await getAllComments();
-    const commentsPending = comments.filter((c) => !c.approved).length;
+    const commentsPending = comments.filter((c) => getCommentStatus(c) === "pending").length;
 
     const siteRequests = await getRequests();
     const requestsNew = siteRequests.filter((r) => (r.status || "new") === "new").length;

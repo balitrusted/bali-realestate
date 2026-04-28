@@ -43,7 +43,7 @@ create table if not exists public.requests (
   comment text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  constraint requests_status_check check (status in ('new', 'in_progress', 'done'))
+  constraint requests_status_check check (status in ('new', 'in_progress', 'done', 'cancelled'))
 );
 
 create index if not exists idx_requests_created_at
@@ -52,6 +52,12 @@ create index if not exists idx_requests_status_created_at
   on public.requests (status, created_at desc);
 create index if not exists idx_requests_request_type_created_at
   on public.requests (request_type, created_at desc);
+
+-- Allow cancelled for existing DBs created before this value was added.
+alter table public.requests drop constraint if exists requests_status_check;
+alter table public.requests
+  add constraint requests_status_check
+  check (status in ('new', 'in_progress', 'done', 'cancelled'));
 
 create table if not exists public.comments (
   id text primary key,
