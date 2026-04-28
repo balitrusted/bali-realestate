@@ -19,6 +19,7 @@ export default function AdminCommentsPage() {
   const [filter, setFilter] = useState<ModerationFilter>("pending");
   const [selectedRejectedIds, setSelectedRejectedIds] = useState<string[]>([]);
   const [bulkDeleting, setBulkDeleting] = useState(false);
+  const [updatingIds, setUpdatingIds] = useState<string[]>([]);
   const [articleLinkMap, setArticleLinkMap] = useState<ArticleLinkMap>({});
 
   useEffect(() => {
@@ -91,6 +92,13 @@ export default function AdminCommentsPage() {
   };
 
   const handleApprove = async (id: string) => {
+    const previous = comments;
+    setUpdatingIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
+    setComments((prev) =>
+      prev.map((c) =>
+        c.id === id ? { ...c, approved: true, moderationStatus: "approved", updatedAt: new Date().toISOString() } : c
+      )
+    );
     try {
       const response = await fetch("/api/comments/admin", {
         method: "PUT",
@@ -102,15 +110,27 @@ export default function AdminCommentsPage() {
 
       if (response.ok) {
         setSelectedRejectedIds((prev) => prev.filter((x) => x !== id));
-        fetchAllComments();
+      } else {
+        setComments(previous);
+        alert("Failed to approve comment");
       }
     } catch (error) {
+      setComments(previous);
       console.error("Error approving comment:", error);
       alert("Failed to approve comment");
+    } finally {
+      setUpdatingIds((prev) => prev.filter((x) => x !== id));
     }
   };
 
   const handleReject = async (id: string) => {
+    const previous = comments;
+    setUpdatingIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
+    setComments((prev) =>
+      prev.map((c) =>
+        c.id === id ? { ...c, approved: false, moderationStatus: "rejected", updatedAt: new Date().toISOString() } : c
+      )
+    );
     try {
       const response = await fetch("/api/comments/admin", {
         method: "PUT",
@@ -122,11 +142,16 @@ export default function AdminCommentsPage() {
 
       if (response.ok) {
         setSelectedRejectedIds((prev) => prev.filter((x) => x !== id));
-        fetchAllComments();
+      } else {
+        setComments(previous);
+        alert("Failed to reject comment");
       }
     } catch (error) {
+      setComments(previous);
       console.error("Error rejecting comment:", error);
       alert("Failed to reject comment");
+    } finally {
+      setUpdatingIds((prev) => prev.filter((x) => x !== id));
     }
   };
 
@@ -373,17 +398,19 @@ export default function AdminCommentsPage() {
                   {getCommentStatus(comment) !== "approved" && (
                     <button
                       onClick={() => handleApprove(comment.id)}
+                      disabled={updatingIds.includes(comment.id)}
                       className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200"
                     >
-                      Approve
+                      {updatingIds.includes(comment.id) ? "Saving..." : "Approve"}
                     </button>
                   )}
                   {getCommentStatus(comment) !== "rejected" && (
                     <button
                       onClick={() => handleReject(comment.id)}
+                      disabled={updatingIds.includes(comment.id)}
                       className="px-3 py-1 text-sm bg-orange-100 text-orange-700 rounded hover:bg-orange-200"
                     >
-                      Reject
+                      {updatingIds.includes(comment.id) ? "Saving..." : "Reject"}
                     </button>
                   )}
                   {getCommentStatus(comment) === "rejected" && (

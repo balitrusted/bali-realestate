@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { getRequests } from "@/lib/requestsData";
 import { getNotifyUnreadCount } from "@/lib/adminBadgeState";
 import { getAllComments } from "@/lib/commentsPersistence";
+import { getNotifyRequests } from "@/lib/notifyRequestsData";
 
 export const dynamic = "force-dynamic";
 
@@ -16,13 +17,9 @@ function getCommentStatus(comment: {
   return comment.approved ? "approved" : "pending";
 }
 
-async function checkAuth(): Promise<boolean> {
-  const cookieStore = await cookies();
-  return cookieStore.get("admin-auth")?.value === "true";
-}
-
 export async function GET() {
-  if (!(await checkAuth())) {
+  const cookieStore = await cookies();
+  if (cookieStore.get("admin-auth")?.value !== "true") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -33,7 +30,18 @@ export async function GET() {
     const siteRequests = await getRequests();
     const requestsNew = siteRequests.filter((r) => (r.status || "new") === "new").length;
 
-    const notifyNew = await getNotifyUnreadCount();
+    const notifySeenAtCookie = cookieStore.get("admin-notify-seen-at")?.value;
+    let notifyNew = 0;
+    if (notifySeenAtCookie) {
+      const since = Date.parse(notifySeenAtCookie);
+      const requests = await getNotifyRequests();
+      notifyNew = requests.filter((r) => {
+        const t = Date.parse(r.createdAt);
+        return Number.isFinite(t) && t > since;
+      }).length;
+    } else {
+      notifyNew = await getNotifyUnreadCount();
+    }
 
     return NextResponse.json({
       commentsPending,

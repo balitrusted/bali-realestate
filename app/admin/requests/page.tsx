@@ -91,6 +91,9 @@ function RequestCard({
   };
 
   const setStatus = async (newStatus: RequestStatus) => {
+    const previous = r;
+    const optimistic: SiteRequest = { ...r, status: newStatus };
+    onRequestUpdated(optimistic);
     setSavingStatus(true);
     try {
       const res = await fetch("/api/request", {
@@ -102,7 +105,11 @@ function RequestCard({
       if (res.ok && data.request) {
         onRequestUpdated(data.request);
         fireAdminBadgesRefresh();
+      } else {
+        onRequestUpdated(previous);
       }
+    } catch {
+      onRequestUpdated(previous);
     } finally {
       setSavingStatus(false);
     }

@@ -19,7 +19,16 @@ export async function POST(request: Request) {
     const section = body?.section as string | undefined;
     if (section === "notify") {
       await markNotifyRequestsSeen();
-      return NextResponse.json({ ok: true });
+      const nowIso = new Date().toISOString();
+      const response = NextResponse.json({ ok: true });
+      response.cookies.set("admin-notify-seen-at", nowIso, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 365,
+      });
+      return response;
     }
     return NextResponse.json({ error: "Unknown section" }, { status: 400 });
   } catch (e) {

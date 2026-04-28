@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { Comment } from "@/types/article";
 import { formatLocaleDate } from "@/lib/formatDate";
 
+const MIN_SUBMITTING_MS = 900;
+const SUCCESS_BANNER_MS = 5000;
+
 interface ArticleCommentsProps {
   articleId: string;
 }
@@ -45,6 +48,7 @@ export default function ArticleComments({ articleId }: ArticleCommentsProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
+    const startedAt = Date.now();
 
     try {
       const response = await fetch("/api/comments", {
@@ -62,6 +66,10 @@ export default function ArticleComments({ articleId }: ArticleCommentsProps) {
       });
 
       if (response.ok) {
+        const elapsed = Date.now() - startedAt;
+        if (elapsed < MIN_SUBMITTING_MS) {
+          await new Promise((resolve) => setTimeout(resolve, MIN_SUBMITTING_MS - elapsed));
+        }
         setSubmitted(true);
         setFormData({
           authorName: "",
@@ -70,11 +78,14 @@ export default function ArticleComments({ articleId }: ArticleCommentsProps) {
           parentId: null,
         });
         setReplyingTo(null);
-        // Refresh comments after a delay
+        document.getElementById("comment-success")?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
         setTimeout(() => {
           fetchComments();
           setSubmitted(false);
-        }, 2000);
+        }, SUCCESS_BANNER_MS);
       } else {
         const error = await response.json();
         alert(error.error || "Failed to submit comment");
@@ -150,7 +161,6 @@ export default function ArticleComments({ articleId }: ArticleCommentsProps) {
     const upvotes = comment.upvotes || 0;
     const downvotes = comment.downvotes || 0;
     const score = upvotes - downvotes;
-    const isReplying = replyingTo === comment.id;
 
     return (
       <div className={`${depth > 0 ? 'ml-8 mt-4 border-l-2 border-gray-200 pl-4' : ''}`}>
@@ -274,9 +284,17 @@ export default function ArticleComments({ articleId }: ArticleCommentsProps) {
         </h3>
         
         {submitted && (
-          <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-md">
-            <p className="text-green-800">
-              Thank you! Your comment has been submitted and is awaiting moderation.
+          <div
+            id="comment-success"
+            className="mb-4 rounded-md border border-green-200 bg-green-50 px-4 py-4 shadow-sm"
+            role="status"
+            aria-live="polite"
+          >
+            <p className="font-medium text-green-900">
+              Thank you. Your comment was sent successfully.
+            </p>
+            <p className="mt-1 text-sm text-green-800">
+              It is now awaiting moderation and will appear after approval.
             </p>
           </div>
         )}
@@ -331,7 +349,7 @@ export default function ArticleComments({ articleId }: ArticleCommentsProps) {
             disabled={submitting}
             className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors disabled:opacity-50"
           >
-            {submitting ? "Submitting..." : replyingTo ? "Submit Reply" : "Submit Comment"}
+            {submitting ? "Submitting..." : submitted ? "Sent" : replyingTo ? "Submit Reply" : "Submit Comment"}
           </button>
         </form>
       </div>
