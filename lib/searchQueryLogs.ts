@@ -1,11 +1,6 @@
-import { list, put } from "@vercel/blob";
-import { writeBlobJsonArrayWithRetry } from "@/lib/blobJsonOptimisticWrite";
-import { getSearchQueryLogsRolloutMode } from "@/lib/dataRollout";
 import { getSupabaseServerClient, isSupabaseConfigured } from "@/lib/supabaseServer";
 
-const BLOB_KEY = "data/search-queries.json";
 const MAX_LOG_ROWS = 5000;
-const getBlobStoreBaseUrl = () => process.env.BLOB_STORE_URL?.trim().replace(/\/$/, "");
 const OBS_ENABLED = process.env.DATA_MIGRATION_OBSERVABILITY === "1";
 
 export type SearchLogSource =
@@ -39,47 +34,6 @@ function reportMetric(
 ): void {
   if (!OBS_ENABLED) return;
   console.info(`[search_query_logs] ${event}`, details);
-}
-
-async function readFromBlob(): Promise<SearchQueryLog[]> {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) return [];
-  try {
-    const baseUrl = getBlobStoreBaseUrl();
-    if (baseUrl) {
-      const url = `${baseUrl}/${BLOB_KEY}`;
-      const res = await fetch(`${url}${url.includes("?") ? "&" : "?"}t=${Date.now()}`, {
-        cache: "no-store",
-        headers: { Pragma: "no-cache", "Cache-Control": "no-cache" },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        return Array.isArray(data) ? data : [];
-      }
-    }
-
-    const { blobs } = await list({ prefix: "data/", limit: 200 });
-    const match = blobs.find((b) => b.pathname === BLOB_KEY);
-    if (!match?.url) return [];
-    const res = await fetch(`${match.url}${match.url.includes("?") ? "&" : "?"}t=${Date.now()}`, {
-      cache: "no-store",
-      headers: { Pragma: "no-cache", "Cache-Control": "no-cache" },
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return Array.isArray(data) ? data : [];
-  } catch {
-    return [];
-  }
-}
-
-async function writeToBlob(rows: SearchQueryLog[]): Promise<void> {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) return;
-  await put(BLOB_KEY, JSON.stringify(rows), {
-    access: "public",
-    contentType: "application/json",
-    addRandomSuffix: false,
-    cacheControlMaxAge: 0,
-  });
 }
 
 async function readFromSupabase(): Promise<SearchQueryLog[]> {
@@ -126,67 +80,16 @@ async function writeSingleToSupabase(row: SearchQueryLog): Promise<void> {
   }
 }
 
-async function getSearchLogsFromBlobOrFile(): Promise<SearchQueryLog[]> {
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
-    return readFromBlob();
-  }
-  try {
-    const { readFile } = await import("fs/promises");
-    const { join } = await import("path");
-    const path = join(process.cwd(), "data", "search-queries.json");
-    const data = JSON.parse(await readFile(path, "utf-8"));
-    return Array.isArray(data) ? data : [];
-  } catch {
-    return [];
-  }
-}
-
 export async function getSearchQueryLogs(): Promise<SearchQueryLog[]> {
-  const mode = getSearchQueryLogsRolloutMode();
   const startedAt = Date.now();
-
-  if (mode === "supabase") {
-    try {
-      const rows = await readFromSupabase();
-      reportMetric("read_ok", {
-        mode,
-        source: "supabase",
-        rows: rows.length,
-        elapsedMs: Date.now() - startedAt,
-      });
-      return rows;
-    } catch (error) {
-      console.error("[search_query_logs] Supabase read failed, fallback to Blob/JSON:", error);
-      const fallbackRows = await getSearchLogsFromBlobOrFile();
-      reportMetric("read_fallback", {
-        mode,
-        source: "blob_or_file",
-        rows: fallbackRows.length,
-        elapsedMs: Date.now() - startedAt,
-      });
-      return fallbackRows;
-    }
-  }
-
-  const rows = await getSearchLogsFromBlobOrFile();
+  const rows = await readFromSupabase();
   reportMetric("read_ok", {
-    mode,
-    source: "blob_or_file",
+    mode: "supabase",
+    source: "supabase",
     rows: rows.length,
     elapsedMs: Date.now() - startedAt,
   });
   return rows;
-}
-
-async function saveSearchQueryLogs(rows: SearchQueryLog[]): Promise<void> {
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
-    await writeToBlob(rows);
-    return;
-  }
-  const { writeFile } = await import("fs/promises");
-  const { join } = await import("path");
-  const path = join(process.cwd(), "data", "search-queries.json");
-  await writeFile(path, JSON.stringify(rows, null, 2), "utf-8");
 }
 
 export async function addSearchQueryLog(input: Omit<SearchQueryLog, "id" | "createdAt">): Promise<void> {
@@ -203,47 +106,7 @@ export async function addSearchQueryLog(input: Omit<SearchQueryLog, "id" | "crea
     createdAt: new Date().toISOString(),
   };
 
-  const mode = getSearchQueryLogsRolloutMode();
   const startedAt = Date.now();
-
-  const writeBlobSide = async () => {
-    await writeBlobJsonArrayWithRetry({
-      read: getSearchLogsFromBlobOrFile,
-      write: saveSearchQueryLogs,
-      mutate: (rows) => {
-        rows.push(row);
-        if (rows.length > MAX_LOG_ROWS) {
-          rows.splice(0, rows.length - MAX_LOG_ROWS);
-        }
-        return rows;
-      },
-    });
-  };
-
-  if (mode === "blob") {
-    await writeBlobSide();
-    reportMetric("write_ok", { mode, target: "blob_or_file", elapsedMs: Date.now() - startedAt });
-    return;
-  }
-
-  if (mode === "dual-write") {
-    await writeBlobSide();
-    try {
-      await writeSingleToSupabase(row);
-      reportMetric("write_ok", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
-    } catch (error) {
-      console.error("[search_query_logs] dual-write Supabase write failed:", error);
-      reportMetric("write_error", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
-    }
-    return;
-  }
-
-  try {
-    await writeSingleToSupabase(row);
-    reportMetric("write_ok", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
-  } catch (error) {
-    console.error("[search_query_logs] Supabase write failed, fallback to Blob/JSON:", error);
-    await writeBlobSide();
-    reportMetric("write_fallback", { mode, target: "blob_or_file", elapsedMs: Date.now() - startedAt });
-  }
+  await writeSingleToSupabase(row);
+  reportMetric("write_ok", { mode: "supabase", target: "supabase", elapsedMs: Date.now() - startedAt });
 }

@@ -1,11 +1,7 @@
 import { NextResponse } from "next/server";
-import { list, put } from "@vercel/blob";
-import { MutationHttpError, writeBlobJsonArrayWithRetry } from "@/lib/blobJsonOptimisticWrite";
-import { getRequestsRolloutMode } from "@/lib/dataRollout";
+import { MutationHttpError } from "@/lib/blobJsonOptimisticWrite";
 import { getSupabaseServerClient, isSupabaseConfigured } from "@/lib/supabaseServer";
 
-const BLOB_KEY = "data/requests.json";
-const getBlobStoreBaseUrl = () => process.env.BLOB_STORE_URL?.trim().replace(/\/$/, "");
 const OBS_ENABLED = process.env.DATA_MIGRATION_OBSERVABILITY === "1";
 
 export type RequestStatus = "new" | "in_progress" | "done" | "cancelled";
@@ -66,48 +62,6 @@ function reportMetric(
 ): void {
   if (!OBS_ENABLED) return;
   console.info(`[requests] ${event}`, details);
-}
-
-async function readFromBlob(): Promise<SiteRequest[]> {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) return [];
-  try {
-    const baseUrl = getBlobStoreBaseUrl();
-    // Prefer direct fetch (no list()) to avoid Advanced Requests.
-    if (baseUrl) {
-      const url = `${baseUrl}/${BLOB_KEY}`;
-      const urlWithCacheBust = `${url}${url.includes("?") ? "&" : "?"}t=${Date.now()}`;
-      const res = await fetch(urlWithCacheBust, {
-        cache: "no-store",
-        headers: { Pragma: "no-cache", "Cache-Control": "no-cache" },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        return Array.isArray(data) ? data : [];
-      }
-      // Direct URL can 404 if BLOB_STORE_URL is wrong; fall through to list()+fetch by pathname.
-    }
-
-    const { blobs } = await list({ prefix: "data/", limit: 100 });
-    const match = blobs?.find((b) => b.pathname === BLOB_KEY);
-    if (!match?.url) return [];
-    const urlWithCacheBust = `${match.url}${match.url.includes("?") ? "&" : "?"}t=${Date.now()}`;
-    const res = await fetch(urlWithCacheBust, { cache: "no-store", headers: { Pragma: "no-cache", "Cache-Control": "no-cache" } });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return Array.isArray(data) ? data : [];
-  } catch {
-    return [];
-  }
-}
-
-async function writeToBlob(requests: SiteRequest[]): Promise<void> {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) return;
-  await put(BLOB_KEY, JSON.stringify(requests), {
-    access: "public",
-    contentType: "application/json",
-    addRandomSuffix: false,
-    cacheControlMaxAge: 0,
-  });
 }
 
 function parseRequestStatus(value: string | null | undefined): RequestStatus {
@@ -245,59 +199,12 @@ async function patchOneInSupabase(
   return mapRowToRequest(data as RequestRow);
 }
 
-async function getRequestsFromBlobOrFile(): Promise<SiteRequest[]> {
-  let raw: SiteRequest[] = [];
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
-    raw = await readFromBlob();
-  } else {
-    try {
-      const { readFile } = await import("fs/promises");
-      const { join } = await import("path");
-      const path = join(process.cwd(), "data", "requests.json");
-      const content = await readFile(path, "utf-8");
-      const data = JSON.parse(content);
-      raw = Array.isArray(data) ? data : [];
-    } catch {
-      raw = [];
-    }
-  }
-  return raw.map(normalizeRequest);
-}
-
-/**
- * Get all requests (admin only).
- * When BLOB_READ_WRITE_TOKEN is set, read only from Blob — never fall back to data/requests.json.
- * Otherwise PATCH saves to Blob but GET would re-read the repo file and “lose” status/comments after refresh.
- */
 export async function getRequests(): Promise<SiteRequest[]> {
-  const mode = getRequestsRolloutMode();
   const startedAt = Date.now();
-  if (mode === "supabase") {
-    try {
-      const rows = await readFromSupabase();
-      reportMetric("read_ok", {
-        mode,
-        source: "supabase",
-        rows: rows.length,
-        elapsedMs: Date.now() - startedAt,
-      });
-      return rows;
-    } catch (error) {
-      console.error("[requests] Supabase read failed, fallback to Blob/JSON:", error);
-      const fallbackRows = await getRequestsFromBlobOrFile();
-      reportMetric("read_fallback", {
-        mode,
-        source: "blob_or_file",
-        rows: fallbackRows.length,
-        elapsedMs: Date.now() - startedAt,
-      });
-      return fallbackRows;
-    }
-  }
-  const rows = await getRequestsFromBlobOrFile();
+  const rows = await readFromSupabase();
   reportMetric("read_ok", {
-    mode,
-    source: "blob_or_file",
+    mode: "supabase",
+    source: "supabase",
     rows: rows.length,
     elapsedMs: Date.now() - startedAt,
   });
@@ -306,62 +213,10 @@ export async function getRequests(): Promise<SiteRequest[]> {
 
 /** Append one request. Saves to Blob on Vercel, else to file. */
 export async function addRequest(request: SiteRequest): Promise<void> {
-  const mode = getRequestsRolloutMode();
   const startedAt = Date.now();
   const normalizedRequest = normalizeRequest({ ...request, status: "new" });
-
-  const writeBlobSide = async () => {
-    await writeBlobJsonArrayWithRetry({
-      read: getRequestsFromBlobOrFile,
-      write: saveRequests,
-      mutate: (requests) => {
-        if (requests.some((r) => r.id === normalizedRequest.id)) {
-          return requests.map(normalizeRequest);
-        }
-        requests.push(normalizedRequest);
-        return requests.map(normalizeRequest);
-      },
-    });
-  };
-
-  if (mode === "blob") {
-    await writeBlobSide();
-    reportMetric("write_ok", { mode, target: "blob_or_file", elapsedMs: Date.now() - startedAt });
-    return;
-  }
-
-  if (mode === "dual-write") {
-    await writeBlobSide();
-    try {
-      await writeOneToSupabase(normalizedRequest);
-      reportMetric("write_ok", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
-    } catch (error) {
-      console.error("[requests] dual-write Supabase write failed:", error);
-      reportMetric("write_error", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
-    }
-    return;
-  }
-
-  try {
-    await writeOneToSupabase(normalizedRequest);
-    reportMetric("write_ok", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
-  } catch (error) {
-    console.error("[requests] Supabase write failed, fallback to Blob/JSON:", error);
-    await writeBlobSide();
-    reportMetric("write_fallback", { mode, target: "blob_or_file", elapsedMs: Date.now() - startedAt });
-  }
-}
-
-/** Save full list (used after update). */
-export async function saveRequests(requests: SiteRequest[]): Promise<void> {
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
-    await writeToBlob(requests);
-  } else {
-    const { writeFile } = await import("fs/promises");
-    const { join } = await import("path");
-    const path = join(process.cwd(), "data", "requests.json");
-    await writeFile(path, JSON.stringify(requests, null, 2), "utf-8");
-  }
+  await writeOneToSupabase(normalizedRequest);
+  reportMetric("write_ok", { mode: "supabase", target: "supabase", elapsedMs: Date.now() - startedAt });
 }
 
 /** Update one request (status and/or comment). Throws MutationHttpError(404) if missing. */
@@ -369,125 +224,15 @@ export async function updateRequest(
   id: string,
   patch: { status?: RequestStatus; comment?: string }
 ): Promise<SiteRequest> {
-  const mode = getRequestsRolloutMode();
   const startedAt = Date.now();
-
-  if (mode === "supabase") {
-    try {
-      const updated = await patchOneInSupabase(id, patch);
-      reportMetric("update_ok", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
-      return updated;
-    } catch (error) {
-      if (error instanceof MutationHttpError) throw error;
-      console.error("[requests] Supabase update failed, fallback to Blob/JSON:", error);
-      reportMetric("update_fallback", {
-        mode,
-        target: "blob_or_file",
-        elapsedMs: Date.now() - startedAt,
-      });
-    }
-  }
-
-  let result!: SiteRequest;
-  await writeBlobJsonArrayWithRetry({
-    read: getRequestsFromBlobOrFile,
-    write: saveRequests,
-    mutate: (requests) => {
-      const index = requests.findIndex((r) => r.id === id);
-      if (index === -1) {
-        throw new MutationHttpError(
-          NextResponse.json({ error: "Request not found" }, { status: 404 })
-        );
-      }
-      const row = { ...requests[index] };
-      if (patch.status !== undefined) row.status = patch.status;
-      if (patch.comment !== undefined) row.comment = patch.comment;
-      const normalized = normalizeRequest(row);
-      requests[index] = normalized;
-      result = normalized;
-      return requests.map(normalizeRequest);
-    },
-  });
-
-  if (mode === "dual-write") {
-    try {
-      await patchOneInSupabase(id, patch);
-      reportMetric("update_ok", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
-    } catch (error) {
-      if (error instanceof MutationHttpError) throw error;
-      console.error("[requests] dual-write Supabase update failed:", error);
-      reportMetric("update_error", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
-    }
-  } else {
-    reportMetric("update_ok", { mode, target: "blob_or_file", elapsedMs: Date.now() - startedAt });
-  }
-
-  return result;
+  const updated = await patchOneInSupabase(id, patch);
+  reportMetric("update_ok", { mode: "supabase", target: "supabase", elapsedMs: Date.now() - startedAt });
+  return updated;
 }
 
 /** Remove one request (admin). Throws MutationHttpError(404) if missing. */
 export async function deleteRequest(id: string): Promise<void> {
-  const mode = getRequestsRolloutMode();
   const startedAt = Date.now();
-
-  if (mode === "supabase") {
-    try {
-      await deleteOneFromSupabase(id);
-      reportMetric("delete_ok", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
-      return;
-    } catch (error) {
-      if (error instanceof MutationHttpError) throw error;
-      console.error("[requests] Supabase delete failed, fallback to Blob/JSON:", error);
-      reportMetric("delete_fallback", {
-        mode,
-        target: "blob_or_file",
-        elapsedMs: Date.now() - startedAt,
-      });
-    }
-  }
-
-  try {
-    await writeBlobJsonArrayWithRetry({
-      read: getRequestsFromBlobOrFile,
-      write: saveRequests,
-      mutate: (requests) => {
-        const next = requests.filter((r) => r.id !== id);
-        if (next.length === requests.length) {
-          throw new MutationHttpError(
-            NextResponse.json({ error: "Request not found" }, { status: 404 })
-          );
-        }
-        return next.map(normalizeRequest);
-      },
-    });
-    reportMetric("delete_ok", { mode, target: "blob_or_file", elapsedMs: Date.now() - startedAt });
-  } catch (error) {
-    if (error instanceof MutationHttpError) {
-      if (mode === "dual-write") {
-        try {
-          await deleteOneFromSupabase(id);
-          reportMetric("delete_ok", {
-            mode,
-            target: "supabase",
-            elapsedMs: Date.now() - startedAt,
-          });
-          return;
-        } catch (e2) {
-          throw e2;
-        }
-      }
-      throw error;
-    }
-    throw error;
-  }
-
-  if (mode === "dual-write") {
-    try {
-      await deleteOneFromSupabase(id);
-      reportMetric("delete_ok", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
-    } catch (error) {
-      console.error("[requests] dual-write Supabase delete failed:", error);
-      reportMetric("delete_error", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
-    }
-  }
+  await deleteOneFromSupabase(id);
+  reportMetric("delete_ok", { mode: "supabase", target: "supabase", elapsedMs: Date.now() - startedAt });
 }

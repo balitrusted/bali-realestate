@@ -45,7 +45,7 @@ export default function CurrencySwitcher({ mobile = false }: { mobile?: boolean 
       {open && (
         <ul
           role="listbox"
-          className={`absolute z-[100] mt-1 max-h-56 min-w-[11rem] overflow-auto rounded-md border border-gray-200 bg-white py-1 text-left shadow-lg ${mobile ? "left-0 right-0" : "right-0"}`}
+          className={`absolute top-full z-[100] mt-1 max-h-56 min-w-[11rem] overflow-y-auto overscroll-contain rounded-md border border-gray-200 bg-white py-1 text-left shadow-lg ${mobile ? "left-0 right-0" : "right-0"}`}
         >
           {CURRENCY_OPTIONS.map((c) => {
             const { symbol, name } = CURRENCY_LABELS[c];
