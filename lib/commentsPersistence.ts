@@ -288,6 +288,19 @@ async function persistCommentsToSupabase(comments: Comment[]): Promise<void> {
   }
 }
 
+async function writeOneCommentToSupabase(comment: Comment): Promise<void> {
+  if (!isSupabaseConfigured()) {
+    throw new Error("[comments] Supabase is not configured");
+  }
+  const supabase = getSupabaseServerClient();
+  const { error } = await supabase
+    .from("comments")
+    .upsert(mapCommentToRow(comment), { onConflict: "id", ignoreDuplicates: false });
+  if (error) {
+    throw new Error(`[comments] Supabase single write failed: ${error.message}`);
+  }
+}
+
 /**
  * Persist full comment list: Blob/FS and optionally Supabase depending on rollout.
  */
@@ -351,4 +364,27 @@ export async function mutateCommentsWithRetry(
         : undefined,
     mutate,
   });
+}
+
+/** Fast path for comment creation to avoid full-table rewrite on Supabase mode. */
+export async function addCommentFast(comment: Comment): Promise<void> {
+  const mode = getCommentsRolloutMode();
+  const startedAt = Date.now();
+
+  if (mode === "supabase") {
+    try {
+      await writeOneCommentToSupabase(comment);
+      reportMetric("write_one_ok", { mode, target: "supabase", elapsedMs: Date.now() - startedAt });
+      return;
+    } catch (error) {
+      console.error("[comments] Supabase single write failed, fallback to full-write:", error);
+      const rows = await getAllComments();
+      await persistComments([...rows, comment]);
+      reportMetric("write_one_fallback", { mode, target: "full_write", elapsedMs: Date.now() - startedAt });
+      return;
+    }
+  }
+
+  await mutateCommentsWithRetry((existing) => [...existing, comment]);
+  reportMetric("write_one_ok", { mode, target: "blob_or_dual", elapsedMs: Date.now() - startedAt });
 }

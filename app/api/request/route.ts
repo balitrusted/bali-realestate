@@ -225,9 +225,8 @@ export async function POST(request: NextRequest) {
     lines.push(`<p><em>Balitrusted</em></p>`);
 
     const subject = `[Balitrusted] New request: ${typeLabel} – ${siteRequest.name}`;
-    void sendToAdmin(subject, lines.join("\n")).then((r) => {
-      if (!r.success) console.error("Request email failed:", r.error);
-    });
+    const sent = await sendToAdmin(subject, lines.join("\n"));
+    if (!sent.success) console.error("Request email failed:", sent.error);
 
     if (process.env.DATA_MIGRATION_OBSERVABILITY === "1") {
       console.info("[requests] api_post_ok", {

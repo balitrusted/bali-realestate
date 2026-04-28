@@ -3,7 +3,7 @@ import { Comment } from "@/types/article";
 import { sendToAdmin } from "@/lib/email";
 import { getArticles } from "@/lib/articlesData";
 import { getAllBlogPosts } from "@/lib/blogPostsPersistence";
-import { getAllComments, mutateCommentsWithRetry } from "@/lib/commentsPersistence";
+import { addCommentFast, getAllComments } from "@/lib/commentsPersistence";
 
 // GET - Get comments for an article (only approved)
 export async function GET(request: Request) {
@@ -70,7 +70,14 @@ export async function GET(request: Request) {
 // POST - Create new comment (public, requires moderation)
 export async function POST(request: Request) {
   try {
-    const commentData: any = await request.json();
+    const commentData = (await request.json()) as {
+      articleId?: string;
+      parentId?: string;
+      authorName?: string;
+      authorEmail?: string;
+      authorWebsite?: string;
+      content?: string;
+    };
 
     // Basic validation
     if (!commentData.articleId || !commentData.authorName || !commentData.authorEmail || !commentData.content) {
@@ -100,12 +107,11 @@ export async function POST(request: Request) {
     };
 
     let parentComment: Comment | undefined;
-    await mutateCommentsWithRetry(async (existingComments) => {
-      if (commentData.parentId) {
-        parentComment = existingComments.find((c) => c.id === commentData.parentId);
-      }
-      return [...existingComments, newComment];
-    });
+    if (commentData.parentId) {
+      const existingComments = await getAllComments();
+      parentComment = existingComments.find((c) => c.id === commentData.parentId);
+    }
+    await addCommentFast(newComment);
 
     // Send email notification if this is a reply (to the comment author)
     if (commentData.parentId) {
@@ -126,39 +132,40 @@ export async function POST(request: Request) {
     }
 
     // Notify admin about new comment (for moderation)
-    (async () => {
-      try {
-        let articleTitle = "Article";
-        let articleUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    try {
+      let articleTitle = "Article";
+      let articleUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
-        if (String(newComment.articleId).startsWith("blog:")) {
-          const blogId = String(newComment.articleId).slice("blog:".length);
-          const posts = await getAllBlogPosts();
-          const post = posts.find((p) => p.id === blogId);
-          articleTitle = post?.title || "Blog post";
-          articleUrl = `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/blog/${post?.slug || ""}`;
-        } else {
-          const articles = await getArticles();
-          const article = articles.find((a) => a.id === newComment.articleId);
-          articleTitle = article?.title || "Article";
-          articleUrl = `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/guides/${article?.category || ""}/${article?.slug || ""}`;
-        }
-
-        const subject = `[Balitrusted] New comment to moderate: "${articleTitle}"`;
-        const html = `
-          <p><strong>New comment (awaiting moderation)</strong></p>
-          <p><strong>Article:</strong> ${articleTitle}</p>
-          <p><strong>Author:</strong> ${newComment.authorName} &lt;${newComment.authorEmail}&gt;</p>
-          <p><strong>Content:</strong></p>
-          <p>${newComment.content.replace(/\n/g, "<br>")}</p>
-          <p><a href="${articleUrl}">View article</a></p>
-          <p><em>Balitrusted</em></p>
-        `;
-        await sendToAdmin(subject, html);
-      } catch (err) {
-        console.error("Failed to send admin comment notification:", err);
+      if (String(newComment.articleId).startsWith("blog:")) {
+        const blogId = String(newComment.articleId).slice("blog:".length);
+        const posts = await getAllBlogPosts();
+        const post = posts.find((p) => p.id === blogId);
+        articleTitle = post?.title || "Blog post";
+        articleUrl = `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/blog/${post?.slug || ""}`;
+      } else {
+        const articles = await getArticles();
+        const article = articles.find((a) => a.id === newComment.articleId);
+        articleTitle = article?.title || "Article";
+        articleUrl = `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/guides/${article?.category || ""}/${article?.slug || ""}`;
       }
-    })();
+
+      const subject = `[Balitrusted] New comment to moderate: "${articleTitle}"`;
+      const html = `
+        <p><strong>New comment (awaiting moderation)</strong></p>
+        <p><strong>Article:</strong> ${articleTitle}</p>
+        <p><strong>Author:</strong> ${newComment.authorName} &lt;${newComment.authorEmail}&gt;</p>
+        <p><strong>Content:</strong></p>
+        <p>${newComment.content.replace(/\n/g, "<br>")}</p>
+        <p><a href="${articleUrl}">View article</a></p>
+        <p><em>Balitrusted</em></p>
+      `;
+      const sent = await sendToAdmin(subject, html);
+      if (!sent.success) {
+        console.error("Failed to send admin comment notification:", sent.error);
+      }
+    } catch (err) {
+      console.error("Failed to send admin comment notification:", err);
+    }
 
     return NextResponse.json({
       comment: newComment,
