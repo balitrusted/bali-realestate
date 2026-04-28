@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { CURRENCY_OPTIONS, useCurrency } from "@/components/CurrencyProvider";
 import { CURRENCY_LABELS, type SupportedCurrency } from "@/lib/currency";
 
@@ -8,6 +8,8 @@ export default function CurrencySwitcher({ mobile = false }: { mobile?: boolean 
   const { currency, setCurrency } = useCurrency();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [menuStyle, setMenuStyle] = useState<CSSProperties>({});
 
   useEffect(() => {
     if (!open) return;
@@ -20,6 +22,39 @@ export default function CurrencySwitcher({ mobile = false }: { mobile?: boolean 
     return () => document.removeEventListener("mousedown", onDoc);
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+
+    const updatePosition = () => {
+      const btn = buttonRef.current;
+      if (!btn) return;
+      const rect = btn.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
+      const menuWidth = mobile ? Math.max(rect.width, 220) : 220;
+      const left = mobile
+        ? Math.max(8, Math.min(rect.left, viewportWidth - menuWidth - 8))
+        : Math.max(8, rect.right - menuWidth);
+      const top = rect.bottom + 6;
+      const maxHeight = Math.max(160, viewportHeight - top - 8);
+      setMenuStyle({
+        position: "fixed",
+        top,
+        left,
+        width: menuWidth,
+        maxHeight,
+      });
+    };
+
+    updatePosition();
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
+  }, [open, mobile]);
+
   const cur = CURRENCY_LABELS[currency];
 
   return (
@@ -29,6 +64,7 @@ export default function CurrencySwitcher({ mobile = false }: { mobile?: boolean 
     >
       <span className="text-[10px] uppercase tracking-wide text-gray-500 shrink-0">Currency</span>
       <button
+        ref={buttonRef}
         type="button"
         aria-expanded={open}
         aria-haspopup="listbox"
@@ -45,7 +81,8 @@ export default function CurrencySwitcher({ mobile = false }: { mobile?: boolean 
       {open && (
         <ul
           role="listbox"
-          className={`absolute top-full z-[100] mt-1 max-h-56 min-w-[11rem] overflow-y-auto overscroll-contain rounded-md border border-gray-200 bg-white py-1 text-left shadow-lg ${mobile ? "left-0 right-0" : "right-0"}`}
+          style={menuStyle}
+          className="z-[140] overflow-y-auto overscroll-contain rounded-md border border-gray-200 bg-white py-1 text-left shadow-lg"
         >
           {CURRENCY_OPTIONS.map((c) => {
             const { symbol, name } = CURRENCY_LABELS[c];

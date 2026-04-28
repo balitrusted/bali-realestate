@@ -38,18 +38,12 @@ import { PropertyType, MainArea, SubArea } from "@/types/property";
 import Image from "next/image";
 import CatalogMapLink from "@/components/CatalogMapLink";
 import { mergeSegmentIntoCatalogFilters } from "@/lib/parseCatalogSearchParams";
+import { getMoneyPageContent, shouldIndexSegmentPage } from "@/lib/moneyPages";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 const VALID_TYPE_SLUGS = ["rent", "sale", "villas", "land", "business"] as const;
-const propertyTypeNames: Record<string, string> = {
-  rent: "Rent",
-  sale: "Buy",
-  land: "Land",
-  business: "Business",
-  villas: "Villas (Rent or Buy)",
-};
 
 export async function generateMetadata({
   params,
@@ -72,7 +66,7 @@ export async function generateMetadata({
   const subArea = parsed.kind === "subArea" ? (parsed.value as SubArea) : undefined;
   const all = await loadAllProperties();
   const filtered = filterProperties(all, { type: catalogType, mainArea }, parsed);
-  const noIndex = filtered.length === 0 || mainArea !== "ubud";
+  const noIndex = !shouldIndexSegmentPage(catalogType, mainArea, parsed, filtered.length);
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://balitrusted.com";
   const canonicalPath = `/properties/${type}/${area}/${segment}`;
   const kwSub =
@@ -204,10 +198,32 @@ export default async function PropertiesSegmentPage({
           : parsed.kind === "subArea"
             ? subAreaNames[parsed.value as SubArea]
             : null;
+  const moneyPageContent = getMoneyPageContent(catalogType, mainArea, parsed);
+  const faqJsonLd =
+    moneyPageContent && moneyPageContent.faqs.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: moneyPageContent.faqs.map((item) => ({
+            "@type": "Question",
+            name: item.q,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.a,
+            },
+          })),
+        }
+      : null;
 
   return (
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-8">
+        {faqJsonLd && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+          />
+        )}
         <link rel="canonical" href={`${baseUrl}${basePath}`} />
         <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <CatalogBreadcrumb
@@ -249,6 +265,11 @@ export default async function PropertiesSegmentPage({
         {areaInfo?.image && parsed.kind === "subArea" && (
           <p className="text-gray-600 mt-4 text-sm max-w-3xl leading-relaxed">
             {buildIntro(catalogType, mainArea, parsed)}
+          </p>
+        )}
+        {moneyPageContent && (
+          <p className="text-gray-600 mt-4 text-sm max-w-3xl leading-relaxed">
+            {moneyPageContent.intro}
           </p>
         )}
 
@@ -354,6 +375,21 @@ export default async function PropertiesSegmentPage({
               buildSeoText(catalogType, mainArea, subArea, parsed)
             )}
           </div>
+        )}
+        {moneyPageContent && moneyPageContent.faqs.length > 0 && (
+          <section className="mt-12 max-w-3xl">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              FAQ
+            </h2>
+            <div className="space-y-4">
+              {moneyPageContent.faqs.map((item) => (
+                <div key={item.q} className="rounded-lg border border-gray-200 bg-white p-4">
+                  <h3 className="text-sm font-semibold text-gray-900">{item.q}</h3>
+                  <p className="mt-2 text-sm text-gray-600 leading-relaxed">{item.a}</p>
+                </div>
+              ))}
+            </div>
+          </section>
         )}
       </div>
     </div>

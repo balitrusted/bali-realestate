@@ -43,6 +43,7 @@ import {
 } from "@/lib/seoTemplates";
 import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
 import Image from "next/image";
+import { getMoneyAreaHubContent } from "@/lib/moneyPages";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -171,6 +172,22 @@ export default async function PropertiesByTypeAndAreaPage({
   const featureText = featureTexts.length > 0 ? ` ${featureTexts.join(", ")}` : "";
 
   const areaDisplayName = areaInfo?.nameEn ?? resolveAreaLabel(area);
+  const moneyAreaHubContent = getMoneyAreaHubContent(catalogType, mainArea);
+  const faqJsonLd =
+    moneyAreaHubContent && moneyAreaHubContent.faqs.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: moneyAreaHubContent.faqs.map((item) => ({
+            "@type": "Question",
+            name: item.q,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.a,
+            },
+          })),
+        }
+      : null;
 
   const heroBlurb =
     catalogType === "land" || catalogType === "business"
@@ -202,6 +219,12 @@ export default async function PropertiesByTypeAndAreaPage({
   return (
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-8">
+        {faqJsonLd && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+          />
+        )}
         <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <CatalogBreadcrumb
             type={catalogType as "rent" | "sale" | "villas" | "land" | "business"}
@@ -246,6 +269,11 @@ export default async function PropertiesByTypeAndAreaPage({
             </div>
           </div>
         )}
+        {areaInfo?.image && moneyAreaHubContent && (
+          <p className="text-gray-600 mt-4 mb-4 text-sm max-w-3xl leading-relaxed">
+            {moneyAreaHubContent.intro}
+          </p>
+        )}
         
         {!areaInfo?.image && (
           <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
@@ -258,6 +286,11 @@ export default async function PropertiesByTypeAndAreaPage({
               </p>
             )}
             <p className="text-gray-600 mt-4 text-sm max-w-3xl leading-relaxed">{heroBlurb}</p>
+            {moneyAreaHubContent && (
+              <p className="text-gray-600 mt-4 text-sm max-w-3xl leading-relaxed">
+                {moneyAreaHubContent.intro}
+              </p>
+            )}
           </div>
         )}
 
@@ -360,6 +393,19 @@ export default async function PropertiesByTypeAndAreaPage({
               {buildSeoText(catalogType, mainArea)}
             </div>
           ))}
+        {moneyAreaHubContent && moneyAreaHubContent.faqs.length > 0 && total > 0 && (
+          <section className="mt-12 max-w-3xl">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">FAQ</h2>
+            <div className="space-y-4">
+              {moneyAreaHubContent.faqs.map((item) => (
+                <div key={item.q} className="rounded-lg border border-gray-200 bg-white p-4">
+                  <h3 className="text-sm font-semibold text-gray-900">{item.q}</h3>
+                  <p className="mt-2 text-sm text-gray-600 leading-relaxed">{item.a}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );
