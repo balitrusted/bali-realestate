@@ -10,7 +10,7 @@ const UBUD_SUB_SLUGS = new Set(Object.keys(subAreaNames));
 const CATALOG_ROOT = new Set(["rent", "sale", "villas", "land", "business"]);
 
 /** Single-segment routes under `/properties/...` that are not listing slug rewrites. */
-const PROPERTIES_RESERVED_SEGMENTS = new Set(["p", "map"]);
+const PROPERTIES_RESERVED_SEGMENTS = new Set(["p", "map", "archive"]);
 
 function normalizePathname(pathname: string): string {
   if (pathname.length > 1 && pathname.endsWith("/")) return pathname.slice(0, -1);

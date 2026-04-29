@@ -23,6 +23,7 @@ interface PropertyCardProps {
 const PROPERTY_CARD_TITLE_VARIANT: "above" | "overlay" | "below" = "above";
 
 export default function PropertyCard({ property, detailSlug, viewReturnPath }: PropertyCardProps) {
+  const isArchived = !!property.archived;
   const formatBasePrice = (price: number, currency: string) =>
     currency === "IDR" ? `${(price / 1000000).toFixed(0)}M IDR` : `$${price.toLocaleString()}`;
 
@@ -264,7 +265,13 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
   const teaser = buildTeaser();
 
   return (
-    <article className="flex flex-col h-full bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+    <article
+      className={`flex flex-col h-full bg-white border rounded-lg overflow-hidden transition-shadow ${
+        isArchived
+          ? "border-gray-200/80 opacity-90 saturate-50 hover:opacity-100 hover:saturate-75"
+          : "border-gray-200 hover:shadow-lg"
+      }`}
+    >
       {PROPERTY_CARD_TITLE_VARIANT === "above" && (
         <div className="p-5 pb-3">
           <h3 className="text-xl font-semibold text-gray-900 leading-snug select-text">
@@ -297,7 +304,7 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
               src={mainImage}
               alt={getPropertyImageAlt(property, 0)}
               fill
-              className="object-cover"
+              className={`object-cover ${isArchived ? "grayscale-[35%]" : ""}`}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </PropertyViewLink>
