@@ -13,7 +13,7 @@ export const revalidate = 0;
 export const metadata: Metadata = {
   title: "Archived villas in Bali | Balitrusted",
   description:
-    "Browse archived Bali villas that are currently not available. Explore past listings and request similar options from our team.",
+    "Browse previously listed Bali villas that are currently unavailable, and request similar options that are available now.",
 };
 
 export default async function ArchivedVillasPage({
@@ -44,8 +44,8 @@ export default async function ArchivedVillasPage({
             Archived villas
           </h1>
           <p className="text-sm text-gray-600 max-w-3xl leading-relaxed">
-            This archive stays indexable as a reference library of past villa listings in Bali. If a villa is not
-            available, use its detail page to request alternatives.
+            Explore villas that were listed before and are currently unavailable. Open any listing to check details
+            and request similar available options.
           </p>
         </div>
 
