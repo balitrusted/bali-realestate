@@ -16,7 +16,7 @@ import {
   resolveAreaSeoDescription,
 } from "@/lib/mainAreaRegistry";
 import {
-  loadAllProperties,
+  loadAllPropertiesIncludingArchived,
   loadAllPropertiesForSlugIndex,
   filterProperties,
   paginate,
@@ -75,7 +75,7 @@ export async function generateMetadata({
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://balitrusted.com";
   const canonicalPath = `/properties/${type}/${area}`;
 
-  const all = await loadAllProperties();
+  const all = await loadAllPropertiesIncludingArchived();
   const filtered = filterProperties(all, { type: catalogType, mainArea });
   const noIndex = filtered.length === 0;
 
@@ -143,11 +143,13 @@ export default async function PropertiesByTypeAndAreaPage({
   const filters = parseQueryFilters(queryParams, catalogType, mainArea);
   const page = Math.max(1, parseInt(String(queryParams.page || "1"), 10) || 1);
 
-  const all = await loadAllProperties();
+  const all = await loadAllPropertiesIncludingArchived();
   const allForSlugs = await loadAllPropertiesForSlugIndex();
   const slugIdx = buildPropertySlugIndex(allForSlugs);
   const filtered = filterProperties(all, filters);
   const { items: sortedProperties, total, totalPages, page: currentPage } = paginate(filtered, page);
+  const activeItems = sortedProperties.filter((p) => !p.archived);
+  const archivedItems = sortedProperties.filter((p) => !!p.archived);
 
   const allowedMainAreas = getAvailableMainAreas(all, catalogFiltersWithoutMainArea(filters));
   const allowedSubAreas = getAvailableSubAreas(all, catalogFiltersWithoutSubArea(filters));
@@ -347,15 +349,34 @@ export default async function PropertiesByTypeAndAreaPage({
                   baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
                   matchingCount={total}
                 />
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {sortedProperties.map((property) => (
-                    <PropertyCard
-                      key={property.id}
-                      property={property}
-                      detailSlug={slugIdx.segmentFor(property)}
-                    />
-                  ))}
-                </div>
+                {activeItems.length > 0 && (
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {activeItems.map((property) => (
+                      <PropertyCard
+                        key={property.id}
+                        property={property}
+                        detailSlug={slugIdx.segmentFor(property)}
+                      />
+                    ))}
+                  </div>
+                )}
+                {archivedItems.length > 0 && (
+                  <div className="mt-8 mb-6 rounded-lg border border-rose-200 bg-rose-50/60 px-4 py-3 text-sm text-rose-800">
+                    <span className="font-semibold">{activeItems.length > 0 ? "Archived villas" : "Only archived villas matched"}</span>{" "}
+                    <span className="text-rose-700">(currently not available) can still be opened and requested.</span>
+                  </div>
+                )}
+                {archivedItems.length > 0 && (
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {archivedItems.map((property) => (
+                      <PropertyCard
+                        key={property.id}
+                        property={property}
+                        detailSlug={slugIdx.segmentFor(property)}
+                      />
+                    ))}
+                  </div>
+                )}
                 <Pagination
                   basePath={basePath}
                   page={currentPage}

@@ -4,7 +4,7 @@ import PropertyViewLink from "@/components/PropertyViewLink";
 import PriceText from "@/components/PriceText";
 import { Property } from "@/types/property";
 import { featureIsYes } from "@/lib/featureState";
-import { areas, subAreaNames, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
+import { areas, subAreaNames } from "@/types/areas";
 import { fixDescriptionDisplay, getPropertyDisplayTitle, isPureLandListing } from "@/lib/propertyUtils";
 import { getPropertyImageAlt } from "@/lib/imageSeo";
 
@@ -321,6 +321,11 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+          {property.archived && (
+            <div className="absolute left-3 top-3 z-10 rounded-md border border-rose-200 bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-700">
+              Not available
             </div>
           )}
           <PropertyCardActions propertyId={String(property.id)} />

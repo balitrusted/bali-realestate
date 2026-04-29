@@ -120,17 +120,22 @@ export async function loadAllProperties(): Promise<Property[]> {
   }
 }
 
-/**
- * Valid-price listings including archived. Used for stable SEO slugs, redirects, and `/properties/p/[slug]`.
- */
-export async function loadAllPropertiesForSlugIndex(): Promise<Property[]> {
+/** Valid-price listings including archived. Useful for SEO/archive catalogs. */
+export async function loadAllPropertiesIncludingArchived(): Promise<Property[]> {
   try {
     const properties = await loadFullPropertyList();
     return properties.filter((p) => p && p.id && hasValidPrice(p));
   } catch (error) {
-    console.error("Error loading properties for slug index:", error);
+    console.error("Error loading properties including archived:", error);
     return [];
   }
+}
+
+/**
+ * Valid-price listings including archived. Used for stable SEO slugs, redirects, and `/properties/p/[slug]`.
+ */
+export async function loadAllPropertiesForSlugIndex(): Promise<Property[]> {
+  return loadAllPropertiesIncludingArchived();
 }
 
 export function filterProperties(
@@ -199,7 +204,11 @@ export function filterProperties(
   if (filters.hasPool) result = result.filter((p) => featureIsYes(p.features.pool));
   if (filters.hasWashingMachine) result = result.filter((p) => featureIsYes(p.features.washingMachine));
 
-  return result.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+  return result.sort((a, b) => {
+    const archivedDelta = Number(!!a.archived) - Number(!!b.archived);
+    if (archivedDelta !== 0) return archivedDelta;
+    return (a.order ?? 999) - (b.order ?? 999);
+  });
 }
 
 const AMENITY_FILTER_KEYS: (keyof CatalogFilters)[] = [

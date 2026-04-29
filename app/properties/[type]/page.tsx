@@ -7,7 +7,7 @@ import TopPageNumbers from "@/components/TopPageNumbers";
 import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import {
-  loadAllProperties,
+  loadAllPropertiesIncludingArchived,
   loadAllPropertiesForSlugIndex,
   filterProperties,
   paginate,
@@ -41,22 +41,6 @@ export const revalidate = 0;
 const VALID_TYPE_SLUGS = ["rent", "sale", "villas", "land", "business"] as const;
 export type CatalogTypeSlug = (typeof VALID_TYPE_SLUGS)[number];
 
-const propertyTypeNames: Record<string, string> = {
-  rent: "Rent",
-  sale: "Buy",
-  land: "Land",
-  business: "Business",
-  villas: "Villas (Rent or Buy)",
-};
-
-const propertyTypeVerbs: Record<string, string> = {
-  rent: "Rent",
-  sale: "Buy",
-  land: "Buy",
-  business: "Buy",
-  villas: "Rent or Buy",
-};
-
 // (No wizard UI on this page; only filters + results.)
 
 export async function generateMetadata({ params }: { params: Promise<{ type: string }> }) {
@@ -65,7 +49,7 @@ export async function generateMetadata({ params }: { params: Promise<{ type: str
     return { title: "Properties Not Found" };
   }
   const catalogType = type as CatalogTypeForSeo;
-  const all = await loadAllProperties();
+  const all = await loadAllPropertiesIncludingArchived();
   const filtered = filterProperties(all, { type: catalogType });
   const noIndex = filtered.length === 0;
   return {
@@ -125,11 +109,13 @@ export default async function PropertiesByTypePage({
   const filters = parseQueryFilters(query, catalogType);
   const page = Math.max(1, parseInt(String(query.page || "1"), 10) || 1);
 
-  const all = await loadAllProperties();
+  const all = await loadAllPropertiesIncludingArchived();
   const allForSlugs = await loadAllPropertiesForSlugIndex();
   const slugIdx = buildPropertySlugIndex(allForSlugs);
   const filtered = filterProperties(all, filters);
   const { items, total, totalPages, page: currentPage } = paginate(filtered, page);
+  const activeItems = items.filter((p) => !p.archived);
+  const archivedItems = items.filter((p) => !!p.archived);
 
   const allowedMainAreas = getAvailableMainAreas(all, catalogFiltersWithoutMainArea(filters));
   const allowedSubAreas = filters.mainArea
@@ -231,15 +217,34 @@ export default async function PropertiesByTypePage({
                   allowedBedroomCounts={allowedBedroomCounts}
                   availableAmenityKeys={availableAmenityFilterKeys}
                 />
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {items.map((property) => (
-                    <PropertyCard
-                      key={property.id}
-                      property={property}
-                      detailSlug={slugIdx.segmentFor(property)}
-                    />
-                  ))}
-                </div>
+                {activeItems.length > 0 && (
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {activeItems.map((property) => (
+                      <PropertyCard
+                        key={property.id}
+                        property={property}
+                        detailSlug={slugIdx.segmentFor(property)}
+                      />
+                    ))}
+                  </div>
+                )}
+                {archivedItems.length > 0 && (
+                  <div className="mt-8 mb-6 rounded-lg border border-rose-200 bg-rose-50/60 px-4 py-3 text-sm text-rose-800">
+                    <span className="font-semibold">{activeItems.length > 0 ? "Archived villas" : "Only archived villas matched"}</span>{" "}
+                    <span className="text-rose-700">(currently not available) can still be opened and requested.</span>
+                  </div>
+                )}
+                {archivedItems.length > 0 && (
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {archivedItems.map((property) => (
+                      <PropertyCard
+                        key={property.id}
+                        property={property}
+                        detailSlug={slugIdx.segmentFor(property)}
+                      />
+                    ))}
+                  </div>
+                )}
                 <Pagination
                   basePath={`/properties/${catalogType}`}
                   page={currentPage}

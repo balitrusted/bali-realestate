@@ -3,7 +3,7 @@ import { getArticles } from '@/lib/articlesData'
 import { loadFullPropertyList } from '@/lib/propertiesStorage'
 import { getBlogPosts } from '@/lib/blogData'
 import { getGlossaryTerms } from '@/lib/glossaryData'
-import { loadAllProperties, filterProperties, parseSegment, SEGMENT_TYPES } from '@/lib/propertiesCatalog'
+import { loadAllPropertiesIncludingArchived, filterProperties, parseSegment, SEGMENT_TYPES } from '@/lib/propertiesCatalog'
 import { buildPropertySlugIndex } from '@/lib/propertySlug'
 import type { PropertyType, MainArea } from '@/types/property'
 import { getAllMainAreaSlugs } from '@/lib/mainAreaRegistry'
@@ -56,6 +56,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.72,
     },
     {
+      url: `${baseUrl}/properties/archive`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
+    {
       url: `${baseUrl}/glossary`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
@@ -89,7 +95,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   let propertyPages: MetadataRoute.Sitemap = []
   try {
-    const all = await loadAllProperties()
+    const all = await loadAllPropertiesIncludingArchived()
     propertyPages = propertyTypes.flatMap((type) => {
       const typePages: MetadataRoute.Sitemap = []
       const typeFiltered = filterProperties(all, { type })
@@ -165,9 +171,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
     const slugIdx = buildPropertySlugIndex(forSitemap)
 
-    // Only include non-archived properties
     propertyDetailPages = forSitemap
-      .filter((p) => !p.archived && p.id)
+      .filter((p) => p.id)
       .map((property) => ({
         url: `${baseUrl.replace(/\/$/, '')}${slugIdx.pathFor(property)}`,
         lastModified: property.updatedAt ? new Date(property.updatedAt) : new Date(property.createdAt),

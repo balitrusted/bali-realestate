@@ -9,7 +9,7 @@ import Link from "next/link";
 import CatalogMapLink from "@/components/CatalogMapLink";
 import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
 import {
-  loadAllProperties,
+  loadAllPropertiesIncludingArchived,
   loadAllPropertiesForSlugIndex,
   filterProperties,
   paginate,
@@ -101,12 +101,14 @@ export default async function PropertiesCatalogPage({
   const page = Math.max(1, parseInt(String(query.page || "1"), 10) || 1);
   const hasBoth = query.both === "1";
 
-  const all = await loadAllProperties();
+  const all = await loadAllPropertiesIncludingArchived();
   const allForSlugs = await loadAllPropertiesForSlugIndex();
   const slugIdx = buildPropertySlugIndex(allForSlugs);
   const effectiveFilters: CatalogFilters = hasBoth ? { ...filters, type: "villas" as const } : filters;
   const filtered = filterProperties(all, effectiveFilters);
   const { items, total, totalPages, page: currentPage } = paginate(filtered, page);
+  const activeItems = items.filter((p) => !p.archived);
+  const archivedItems = items.filter((p) => !!p.archived);
 
   const searchParamsForPagination: Record<string, string> = {};
   Object.entries(query).forEach(([k, v]) => {
@@ -198,11 +200,26 @@ export default async function PropertiesCatalogPage({
             </div>
           ) : (
             <>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {items.map((property) => (
-                  <PropertyCard key={property.id} property={property} detailSlug={slugIdx.segmentFor(property)} />
-                ))}
-              </div>
+              {activeItems.length > 0 && (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {activeItems.map((property) => (
+                    <PropertyCard key={property.id} property={property} detailSlug={slugIdx.segmentFor(property)} />
+                  ))}
+                </div>
+              )}
+              {archivedItems.length > 0 && (
+                <div className="mt-8 mb-6 rounded-lg border border-rose-200 bg-rose-50/60 px-4 py-3 text-sm text-rose-800">
+                  <span className="font-semibold">{activeItems.length > 0 ? "Archived villas" : "Only archived villas matched"}</span>{" "}
+                  <span className="text-rose-700">(currently not available) can still be opened and requested.</span>
+                </div>
+              )}
+              {archivedItems.length > 0 && (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {archivedItems.map((property) => (
+                    <PropertyCard key={property.id} property={property} detailSlug={slugIdx.segmentFor(property)} />
+                  ))}
+                </div>
+              )}
               <Pagination
                 basePath="/properties"
                 page={currentPage}
