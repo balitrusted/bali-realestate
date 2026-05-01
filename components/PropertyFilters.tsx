@@ -15,7 +15,6 @@ import { PropertyType, MainArea, SubArea } from "@/types/property";
 import { areas, subAreaNames } from "@/types/areas";
 import { getMergedAreaInfos, isValidMainAreaSlug } from "@/lib/mainAreaRegistry";
 import { ALLOWED_BEDROOM_COUNTS, bedroomSegmentSlug } from "@/lib/catalogBedrooms";
-import { SEGMENT_TYPES } from "@/lib/propertiesCatalog";
 import ToggleSwitch from "@/components/ToggleSwitch";
 
 type WizardStepId = "action" | "payment" | "subject" | "area" | "subarea" | "bedrooms";
@@ -432,6 +431,19 @@ export default function PropertyFilters({
         "hasPool",
         "hasWashingMachine",
       ] as const;
+      const amenitySegmentSlugs = [
+        "pool",
+        "nature-view",
+        "bathtub",
+        "closed-kitchen",
+        "enclosed-living",
+        "pet-friendly",
+        "car-park",
+        "desk",
+        "garage",
+        "high-speed-wifi",
+        "washing-machine",
+      ] as const;
 
       const amenitySlugFromFilterKey = (key: (typeof amenityKeys)[number]): string | null => {
         switch (key) {
@@ -467,7 +479,7 @@ export default function PropertyFilters({
         for (const k of amenityKeys) {
           if (newFilters[k]) {
             const slug = amenitySlugFromFilterKey(k);
-            if (slug && (SEGMENT_TYPES.amenity as readonly string[]).includes(slug)) out.push(slug);
+            if (slug && (amenitySegmentSlugs as readonly string[]).includes(slug)) out.push(slug);
           }
         }
         return out;
