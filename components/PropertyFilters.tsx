@@ -495,17 +495,16 @@ export default function PropertyFilters({
         const minDur = newFilters.minDuration;
         const amenities = selectedAmenitySlugs();
 
-        // Prefer explicit bedroom SEO slugs when exactly one bedroom is selected.
+        if (minDur === 1) return "monthly";
+        if (minDur === 12) return "yearly";
+
+        // Bedroom segment if payment segment is not explicitly selected.
         if (beds.length === 1) {
           const n = beds[0]!;
           if (Number.isFinite(n) && (ALLOWED_BEDROOM_COUNTS as readonly number[]).includes(n)) {
-            // If monthly/yearly is also selected, keep it only as query (segment pages are single-segment today).
             return bedroomSegmentSlug(n);
           }
         }
-
-        if (minDur === 1) return "monthly";
-        if (minDur === 12) return "yearly";
 
         if (amenities.length === 1) return amenities[0]!;
 

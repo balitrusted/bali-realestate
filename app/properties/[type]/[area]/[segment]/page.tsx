@@ -269,12 +269,6 @@ export default async function PropertiesSegmentPage({
             {buildIntro(catalogType, mainArea, parsed)}
           </p>
         )}
-        {moneyPageContent && (
-          <p className="text-gray-600 mt-4 text-sm max-w-3xl leading-relaxed">
-            {moneyPageContent.intro}
-          </p>
-        )}
-
         {!areaInfo?.image && (
           <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
             <h1 className="text-2xl md:text-4xl font-semibold tracking-tight text-gray-900 mb-2">
@@ -393,7 +387,10 @@ export default async function PropertiesSegmentPage({
                 ))}
               </div>
             ) : (
-              buildSeoText(catalogType, mainArea, subArea, parsed)
+              <div className="space-y-4">
+                {moneyPageContent ? <p>{moneyPageContent.intro}</p> : null}
+                <p>{buildSeoText(catalogType, mainArea, subArea, parsed)}</p>
+              </div>
             )}
           </div>
         )}
