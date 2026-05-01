@@ -488,7 +488,8 @@ export default function PropertyFilters({
       const ubudRentCanonicalSegment = (): string | null => {
         const t = newFilters.type;
         if (newFilters.mainArea !== "ubud") return null;
-        if (t !== "rent" && t !== "villas") return null;
+        // `type` is undefined on /properties/villas; treat it as the villas hub.
+        if (t && t !== "rent") return null;
 
         const beds = newFilters.bedrooms;
         const minDur = newFilters.minDuration;
