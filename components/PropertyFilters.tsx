@@ -14,7 +14,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 import { areas, subAreaNames } from "@/types/areas";
 import { getMergedAreaInfos, isValidMainAreaSlug } from "@/lib/mainAreaRegistry";
-import { ALLOWED_BEDROOM_COUNTS } from "@/lib/catalogBedrooms";
+import { ALLOWED_BEDROOM_COUNTS, bedroomSegmentSlug } from "@/lib/catalogBedrooms";
+import { SEGMENT_TYPES } from "@/lib/propertiesCatalog";
 import ToggleSwitch from "@/components/ToggleSwitch";
 
 type WizardStepId = "action" | "payment" | "subject" | "area" | "subarea" | "bedrooms";
@@ -418,6 +419,86 @@ export default function PropertyFilters({
       const pathType = matchSegment?.[1] ?? matchTypeOnly?.[1];
       const pathArea = matchSegment?.[2];
 
+      const amenityKeys = [
+        "hasBathtub",
+        "hasCarPark",
+        "hasClosedKitchen",
+        "hasDesk",
+        "hasEnclosedLiving",
+        "hasGarage",
+        "hasHighSpeedWifi",
+        "hasNatureView",
+        "hasPetFriendly",
+        "hasPool",
+        "hasWashingMachine",
+      ] as const;
+
+      const amenitySlugFromFilterKey = (key: (typeof amenityKeys)[number]): string | null => {
+        switch (key) {
+          case "hasBathtub":
+            return "bathtub";
+          case "hasCarPark":
+            return "car-park";
+          case "hasClosedKitchen":
+            return "closed-kitchen";
+          case "hasDesk":
+            return "desk";
+          case "hasEnclosedLiving":
+            return "enclosed-living";
+          case "hasGarage":
+            return "garage";
+          case "hasHighSpeedWifi":
+            return "high-speed-wifi";
+          case "hasNatureView":
+            return "nature-view";
+          case "hasPetFriendly":
+            return "pet-friendly";
+          case "hasPool":
+            return "pool";
+          case "hasWashingMachine":
+            return "washing-machine";
+          default:
+            return null;
+        }
+      };
+
+      const selectedAmenitySlugs = (): string[] => {
+        const out: string[] = [];
+        for (const k of amenityKeys) {
+          if (newFilters[k]) {
+            const slug = amenitySlugFromFilterKey(k);
+            if (slug && (SEGMENT_TYPES.amenity as readonly string[]).includes(slug)) out.push(slug);
+          }
+        }
+        return out;
+      };
+
+      const ubudRentCanonicalSegment = (): string | null => {
+        const t = newFilters.type;
+        if (newFilters.mainArea !== "ubud") return null;
+        if (t !== "rent" && t !== "villas") return null;
+
+        const beds = newFilters.bedrooms;
+        const minDur = newFilters.minDuration;
+        const amenities = selectedAmenitySlugs();
+
+        // Prefer explicit bedroom SEO slugs when exactly one bedroom is selected.
+        if (beds.length === 1) {
+          const n = beds[0]!;
+          if (Number.isFinite(n) && (ALLOWED_BEDROOM_COUNTS as readonly number[]).includes(n)) {
+            // If monthly/yearly is also selected, keep it only as query (segment pages are single-segment today).
+            return bedroomSegmentSlug(n);
+          }
+        }
+
+        if (minDur === 1) return "monthly";
+        if (minDur === 12) return "yearly";
+
+        if (amenities.length === 1) return amenities[0]!;
+
+        return null;
+      };
+
       const queryParams = new URLSearchParams();
       if (newFilters.mainArea) queryParams.set("mainArea", newFilters.mainArea);
       if (newFilters.subArea.length > 0) queryParams.set("subArea", newFilters.subArea.join(","));
@@ -443,6 +524,34 @@ export default function PropertyFilters({
         if (m?.[1] && newFilters.mainArea === m[1]) {
           qp.delete("mainArea");
         }
+
+        // Canonicalize known Ubud rent SEO segments into the path (drop redundant query keys).
+        const seg = ubudRentCanonicalSegment();
+        if (seg) {
+          const third = pn.match(/^\/properties\/[^/]+\/[^/]+\/([^/?#]+)/)?.[1];
+          if (third === seg) {
+            if (seg.endsWith("-bedroom-villa")) {
+              const mBed = seg.match(/^(\d+)-bedroom-villa$/);
+              const n = mBed ? parseInt(mBed[1], 10) : NaN;
+              if (Number.isFinite(n) && newFilters.bedrooms.length === 1 && newFilters.bedrooms[0] === n) {
+                qp.delete("bedrooms");
+              }
+            } else if (seg === "monthly" && newFilters.minDuration === 1) {
+              qp.delete("minDuration");
+            } else if (seg === "yearly" && newFilters.minDuration === 12) {
+              qp.delete("minDuration");
+            } else {
+              const activeAmenity = selectedAmenitySlugs();
+              if (activeAmenity.length === 1 && activeAmenity[0] === seg) {
+                for (const k of amenityKeys) {
+                  const s = amenitySlugFromFilterKey(k);
+                  if (s === seg) qp.delete(k);
+                }
+              }
+            }
+          }
+        }
+
         const s = qp.toString();
         return s ? `?${s}` : "";
       };
@@ -459,22 +568,26 @@ export default function PropertyFilters({
         }
         const newArea = newFilters.mainArea;
         if (newArea !== pathArea || newType !== pathType) {
+          const seg = newArea === "ubud" ? ubudRentCanonicalSegment() : null;
           const dest =
             newArea === "ubud" && newFilters.subArea.length === 1
               ? `/properties/${newType}/ubud/${newFilters.subArea[0]}`
-              : `/properties/${newType}/${newArea}`;
+              : seg
+                ? `/properties/${newType}/ubud/${seg}`
+                : `/properties/${newType}/${newArea}`;
           const omitSub = newArea === "ubud" && newFilters.subArea.length === 1;
           router.push(`${dest}${qsForPath(dest, omitSub)}`, { scroll: false });
           return;
         }
 
         if (newArea === "ubud") {
+          const seg = ubudRentCanonicalSegment();
           if (newFilters.subArea.length === 1) {
             const dest = `/properties/${newType}/ubud/${newFilters.subArea[0]}`;
             router.push(`${dest}${qsForPath(dest, true)}`, { scroll: false });
             return;
           }
-          const dest = `/properties/${newType}/ubud`;
+          const dest = seg ? `/properties/${newType}/ubud/${seg}` : `/properties/${newType}/ubud`;
           const qp = new URLSearchParams(queryParams.toString());
           if (newFilters.subArea.length > 1) {
             qp.set("subArea", newFilters.subArea.join(","));
@@ -483,6 +596,29 @@ export default function PropertyFilters({
           }
           const m = dest.match(/^\/properties\/[^/]+\/([^/]+)(?:\/|$)/);
           if (m?.[1] && newFilters.mainArea === m[1]) qp.delete("mainArea");
+
+          if (seg) {
+            if (seg.endsWith("-bedroom-villa")) {
+              const mBed = seg.match(/^(\d+)-bedroom-villa$/);
+              const n = mBed ? parseInt(mBed[1], 10) : NaN;
+              if (Number.isFinite(n) && newFilters.bedrooms.length === 1 && newFilters.bedrooms[0] === n) {
+                qp.delete("bedrooms");
+              }
+            } else if (seg === "monthly" && newFilters.minDuration === 1) {
+              qp.delete("minDuration");
+            } else if (seg === "yearly" && newFilters.minDuration === 12) {
+              qp.delete("minDuration");
+            } else {
+              const activeAmenity = selectedAmenitySlugs();
+              if (activeAmenity.length === 1 && activeAmenity[0] === seg) {
+                for (const k of amenityKeys) {
+                  const s = amenitySlugFromFilterKey(k);
+                  if (s === seg) qp.delete(k);
+                }
+              }
+            }
+          }
+
           const s = qp.toString();
           router.push(`${dest}${s ? `?${s}` : ""}`, { scroll: false });
           return;
@@ -503,10 +639,13 @@ export default function PropertyFilters({
           return;
         }
         if (newFilters.mainArea) {
+          const seg = newFilters.mainArea === "ubud" ? ubudRentCanonicalSegment() : null;
           const dest =
             newFilters.mainArea === "ubud" && newFilters.subArea.length === 1
               ? `/properties/${newType}/ubud/${newFilters.subArea[0]}`
-              : `/properties/${newType}/${newFilters.mainArea}`;
+              : seg
+                ? `/properties/${newType}/ubud/${seg}`
+                : `/properties/${newType}/${newFilters.mainArea}`;
           const omitSub = newFilters.mainArea === "ubud" && newFilters.subArea.length === 1;
           router.push(`${dest}${qsForPath(dest, omitSub)}`, { scroll: false });
         } else {
@@ -516,10 +655,13 @@ export default function PropertyFilters({
       }
 
       if (newFilters.type && newFilters.mainArea) {
+        const seg = newFilters.mainArea === "ubud" ? ubudRentCanonicalSegment() : null;
         const dest =
           newFilters.mainArea === "ubud" && newFilters.subArea.length === 1
             ? `/properties/${newFilters.type}/ubud/${newFilters.subArea[0]}`
-            : `/properties/${newFilters.type}/${newFilters.mainArea}`;
+            : seg
+              ? `/properties/${newFilters.type}/ubud/${seg}`
+              : `/properties/${newFilters.type}/${newFilters.mainArea}`;
         const omitSub = newFilters.mainArea === "ubud" && newFilters.subArea.length === 1;
         router.push(`${dest}${qsForPath(dest, omitSub)}`, { scroll: false });
       } else if (newFilters.type) {
