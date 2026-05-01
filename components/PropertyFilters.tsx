@@ -35,6 +35,11 @@ function parseTypeFromPropertiesPath(pathname: string): PropertyType | undefined
   return undefined;
 }
 
+function parseSegmentFromPropertiesPath(pathname: string): string | undefined {
+  const m = pathname.match(/^\/properties\/[^/]+\/[^/]+\/([^/?#]+)/);
+  return m?.[1];
+}
+
 const FILTERS_EXPANDED_KEY = "balitrusted-catalog-filters-expanded";
 
 type WizardStepIdOrDone = WizardStepId | "done";
@@ -168,6 +173,32 @@ function buildFiltersFromSearchParams(
 ): PropertyFiltersState {
   const pathMainArea = pathname ? parseMainAreaFromPropertiesPath(pathname) : undefined;
   const pathType = pathname ? parseTypeFromPropertiesPath(pathname) : undefined;
+  const pathSegment = pathname ? parseSegmentFromPropertiesPath(pathname) : undefined;
+  const pathBedrooms = (() => {
+    if (!pathSegment) return [] as number[];
+    const m = pathSegment.match(/^(\d+)-bedroom-villa$/);
+    if (!m) return [] as number[];
+    const n = Number(m[1]);
+    if (!Number.isFinite(n)) return [] as number[];
+    if (!(ALLOWED_BEDROOM_COUNTS as readonly number[]).includes(n)) return [] as number[];
+    return [n] as number[];
+  })();
+  const pathMinDuration =
+    pathSegment === "monthly" ? 1 : pathSegment === "yearly" ? 12 : undefined;
+  const pathAmenityFlags = {
+    hasBathtub: pathSegment === "bathtub",
+    hasCarPark: pathSegment === "car-park",
+    hasClosedKitchen: pathSegment === "closed-kitchen",
+    hasDesk: pathSegment === "desk",
+    hasEnclosedLiving: pathSegment === "enclosed-living",
+    hasGarage: pathSegment === "garage",
+    hasHighSpeedWifi: pathSegment === "high-speed-wifi",
+    hasNatureView: pathSegment === "nature-view",
+    hasPetFriendly: pathSegment === "pet-friendly",
+    hasPool: pathSegment === "pool",
+    hasWashingMachine: pathSegment === "washing-machine",
+  };
+
   return {
     mainArea: defaultMainArea || pathMainArea || (searchParams.get("mainArea") as MainArea) || undefined,
     subArea: (() => {
@@ -188,20 +219,26 @@ function buildFiltersFromSearchParams(
           .split(",")
           .map((v) => Number(v))
           .filter((n) => (ALLOWED_BEDROOM_COUNTS as readonly number[]).includes(n))
-      : ([] as number[]),
+      : pathBedrooms,
     type: defaultType || pathType || (searchParams.get("type") as PropertyType) || undefined,
-    hasBathtub: searchParams.get("hasBathtub") === "true",
-    hasCarPark: searchParams.get("hasCarPark") === "true",
-    hasClosedKitchen: searchParams.get("hasClosedKitchen") === "true",
-    hasDesk: searchParams.get("hasDesk") === "true",
-    hasEnclosedLiving: searchParams.get("hasEnclosedLiving") === "true",
-    hasGarage: searchParams.get("hasGarage") === "true",
-    hasHighSpeedWifi: searchParams.get("hasHighSpeedWifi") === "true",
-    hasNatureView: searchParams.get("hasNatureView") === "true",
-    hasPetFriendly: searchParams.get("hasPetFriendly") === "true",
-    hasPool: searchParams.get("hasPool") === "true",
-    hasWashingMachine: searchParams.get("hasWashingMachine") === "true",
-    minDuration: searchParams.get("minDuration") ? Number(searchParams.get("minDuration")) : undefined,
+    hasBathtub: searchParams.get("hasBathtub") === "true" || pathAmenityFlags.hasBathtub,
+    hasCarPark: searchParams.get("hasCarPark") === "true" || pathAmenityFlags.hasCarPark,
+    hasClosedKitchen: searchParams.get("hasClosedKitchen") === "true" || pathAmenityFlags.hasClosedKitchen,
+    hasDesk: searchParams.get("hasDesk") === "true" || pathAmenityFlags.hasDesk,
+    hasEnclosedLiving:
+      searchParams.get("hasEnclosedLiving") === "true" || pathAmenityFlags.hasEnclosedLiving,
+    hasGarage: searchParams.get("hasGarage") === "true" || pathAmenityFlags.hasGarage,
+    hasHighSpeedWifi:
+      searchParams.get("hasHighSpeedWifi") === "true" || pathAmenityFlags.hasHighSpeedWifi,
+    hasNatureView: searchParams.get("hasNatureView") === "true" || pathAmenityFlags.hasNatureView,
+    hasPetFriendly:
+      searchParams.get("hasPetFriendly") === "true" || pathAmenityFlags.hasPetFriendly,
+    hasPool: searchParams.get("hasPool") === "true" || pathAmenityFlags.hasPool,
+    hasWashingMachine:
+      searchParams.get("hasWashingMachine") === "true" || pathAmenityFlags.hasWashingMachine,
+    minDuration: searchParams.get("minDuration")
+      ? Number(searchParams.get("minDuration"))
+      : pathMinDuration,
     maxPrice: searchParams.get("maxPrice") ? Number(searchParams.get("maxPrice")) : undefined,
   };
 }
