@@ -57,7 +57,7 @@ function taxonomySubAreaCount(mainArea?: MainArea): number {
   return entry?.subAreas?.length ?? 0;
 }
 
-/** First step that still needs a choice; otherwise last step (refine / amenities path). */
+/** First step that still needs a choice; otherwise `"done"` when the funnel is satisfied. */
 function suggestedWizardStep(
   f: PropertyFiltersState,
   visible: WizardStepId[],
@@ -65,7 +65,7 @@ function suggestedWizardStep(
   showSubject: boolean,
   subAreaPromptSkipped: boolean,
   skipped: WizardSkipState
-): WizardStepId {
+): WizardStepIdOrDone {
   if (visible.length === 0) return "area";
   const needs = (id: WizardStepId): boolean => {
     switch (id) {
@@ -87,10 +87,11 @@ function suggestedWizardStep(
         return (
           !subAreaPromptSkipped &&
           taxonomySubAreaCount(f.mainArea) > 0 &&
-          f.subArea.length === 0
+          f.subArea.length === 0 &&
+          f.bedrooms.length === 0
         );
       case "bedrooms":
-        return !skipped.bedrooms;
+        return f.bedrooms.length === 0 && !skipped.bedrooms;
       default:
         return false;
     }
@@ -98,7 +99,7 @@ function suggestedWizardStep(
   for (const id of visible) {
     if (needs(id)) return id;
   }
-  return visible[visible.length - 1]!;
+  return "done";
 }
 
 function hasUnmetWizardStep(
@@ -132,7 +133,14 @@ function hasUnmetWizardStep(
         if (!f.mainArea && !skipped.area) return true;
         break;
       case "subarea":
-        if (!subAreaPromptSkipped && taxonomySubAreaCount(f.mainArea) > 0 && f.subArea.length === 0) return true;
+        if (
+          !subAreaPromptSkipped &&
+          taxonomySubAreaCount(f.mainArea) > 0 &&
+          f.subArea.length === 0 &&
+          f.bedrooms.length === 0
+        ) {
+          return true;
+        }
         break;
       case "bedrooms":
         if (f.bedrooms.length === 0 && !skipped.bedrooms) return true;
@@ -790,27 +798,25 @@ export default function PropertyFilters({
     const f = buildFiltersFromSearchParams(searchParams, defaultMainArea, defaultType, pathSubArea, pathname);
     const visible = getVisibleStepIdsFor(f);
     setCurrentStepId((prev) => {
+      const complete = !hasUnmetWizardStep(
+        f,
+        visible,
+        showVillasSpecificBlocks,
+        showSubjectBlock,
+        subAreaPromptSkipped,
+        wizardSkipped
+      );
+      if (complete) return "done";
+
       if (prev === "done") {
-        if (
-          hasUnmetWizardStep(
-            f,
-            visible,
-            showVillasSpecificBlocks,
-            showSubjectBlock,
-            subAreaPromptSkipped,
-            wizardSkipped
-          )
-        ) {
-          return suggestedWizardStep(
-            f,
-            visible,
-            showVillasSpecificBlocks,
-            showSubjectBlock,
-            subAreaPromptSkipped,
-            wizardSkipped
-          );
-        }
-        return "done";
+        return suggestedWizardStep(
+          f,
+          visible,
+          showVillasSpecificBlocks,
+          showSubjectBlock,
+          subAreaPromptSkipped,
+          wizardSkipped
+        );
       }
       if (visible.includes(prev as WizardStepId)) return prev as WizardStepIdOrDone;
       return suggestedWizardStep(
