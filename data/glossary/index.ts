@@ -1,10 +1,11 @@
 import type { GlossaryTerm } from "@/types/glossary";
+import { glossaryGeminiMay2026Batch } from "./gemini-batch-may-2026";
 
 export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-imb",
     slug: "imb-building-permit-bali",
-    title: "IMB — building permit",
+    title: "IMB",
     category: "legal",
     summary:
       "The key building permit framework in Indonesia (transitioned from IMB toward PBG). It defines legal building use and is critical for risk control.",
@@ -145,7 +146,7 @@ export const glossaryTerms: GlossaryTerm[] = [
       "Water utility (PDAM) vs delivery; state grid (PLN) vs generator; prepaid token meters are common in villas.",
     content: `<p><strong>PDAM</strong> is the municipal water utility where connected; many rural villas instead rely on wells, filters, and trucked water top-ups—ask what is actually in service, not the label in the brochure.</p>
 <p><strong>PLN</strong> is the state electricity provider. Some compounds supplement with generators during outages. Long-term renters should confirm <em>kWh</em> capacity for AC + office gear.</p>
-<p><strong>Token</strong> (prepaid) meters are widespread: you purchase credit codes. Track baseline spend in the first month to avoid surprises.</p>`,
+<p><strong>Token</strong> prepaid meters are widespread: you buy a 20-digit <a href="/glossary/pln-prepaid-electricity-token">PLN token</a> code and punch it into the meter. When the unit chirps, credits are almost gone—keep spare codes before guests arrive.</p>`,
     published: true,
     createdAt: "2026-04-09T10:00:00.000Z",
     updatedAt: "2026-04-09T10:00:00.000Z",
@@ -172,11 +173,11 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-green-zone-jalur-hijau",
     slug: "green-zone-jalur-hijau-bali",
-    title: "Green Zone — Jalur Hijau",
+    title: "Green Zone",
     category: "legal",
     summary:
       "Protected agricultural or conservation land where construction is restricted; high compliance and demolition risk if a villa sits on the wrong zoning.",
-    content: `<p>The <strong>Green Zone</strong> (<em>Jalur Hijau</em>) refers to protected agricultural or conservation land where construction is strictly limited or prohibited under Indonesian spatial planning. In and around Ubud, marketing rarely spells this out—but a wrong classification can mean enforcement, disputes, or loss of the structure.</p>
+    content: `<p>The <strong>Green Zone</strong> refers to protected agricultural or conservation land where construction is strictly limited or prohibited under Indonesian spatial planning. On maps and permits the label is often <a href="/glossary/jalur-hijau">Jalur Hijau</a>. In and around Ubud, marketing rarely spells this out—but a wrong classification can mean enforcement, disputes, or loss of the structure.</p>
 <p>Buying or long-term renting on land that is not aligned with the approved use carries a real risk that improvements could be challenged. Always verify zoning and the chain of permits (including how current regulations like <strong>ITR</strong> / spatial plans are applied locally) before you commit—not only the agent’s map pin.</p>
 <p>This entry is orientation, not legal advice; use a qualified notary and, where needed, a zoning or land-use specialist for your specific plot.</p>`,
     published: true,
@@ -185,6 +186,22 @@ export const glossaryTerms: GlossaryTerm[] = [
     seoTitle: "Green Zone Jalur Hijau Bali — zoning risk | Balitrusted glossary",
     seoDescription:
       "What Green Zones mean for Ubud villas, why illegal builds happen, and why ITR/zoning checks matter before rent or purchase.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-jalur-hijau",
+    slug: "jalur-hijau",
+    title: "Jalur Hijau",
+    category: "legal",
+    summary:
+      "Indonesian planning label for green belt or protected non-built strips; property listings may gloss over what it implies.",
+    content: `<p><strong>Jalur Hijau</strong> means “green corridor” or green belt: zones planners intend to keep vegetated or free of dense construction. In Bali it shows up on spatial maps alongside the same themes as our <a href="/glossary/green-zone-jalur-hijau-bali">Green Zone</a> note—verify against official zoning, not only chat or marketing pins.</p>`,
+    published: true,
+    createdAt: "2026-05-02T12:00:00.000Z",
+    updatedAt: "2026-05-02T12:00:00.000Z",
+    seoTitle: "Jalur Hijau meaning (Green Zone) | Balitrusted glossary",
+    seoDescription:
+      "What Jalur Hijau means on Indonesian zoning maps and why it matters before you rent or buy land.",
     relatedGuideUrl: "/guides/legal",
   },
   {
@@ -239,11 +256,11 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-rice-field-view-sawah",
     slug: "rice-field-view-sawah-buffer",
-    title: "Rice field view — sawah",
+    title: "Rice field view",
     category: "living",
     summary:
       "The most requested Ubud feature—but open fields can be built on unless protected or controlled; ask about what protects your view.",
-    content: `<p>A <strong>rice field view</strong> (<em>sawah</em>) is the top request in many Ubud searches. Marketing photos lean hard on open paddies—but <strong>views are not always permanent</strong>.</p>
+    content: `<p>A <strong>rice field view</strong> over <a href="/glossary/sawah-rice-paddy">sawah</a> is the top request in many Ubud searches. Marketing photos lean hard on open paddies—but <strong>views are not always permanent</strong>.</p>
 <p>Unless the land in front is in a protected category, under long-term control of the same owner/lessor as the villa, or otherwise unlikely to be built out, tomorrow’s view can be a wall or a new roofline. Always ask about the <strong>buffer</strong>: who owns the plot you’re looking over, what can be built there under local rules, and whether any agreement restricts height or use.</p>
 <p>Pair this with our note on <a href="/glossary/green-zone-jalur-hijau-bali">Green Zones</a>: “protected” can be real—or overstated in chat. Verify rather than assume.</p>`,
     published: true,
@@ -251,6 +268,22 @@ export const glossaryTerms: GlossaryTerm[] = [
     updatedAt: "2026-04-10T12:00:00.000Z",
     seoTitle: "Rice field view sawah — will it last? | Balitrusted glossary",
     seoDescription: "Why sawah views in Ubud listings need a buffer-zone reality check before you rent or buy.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-sawah",
+    slug: "sawah-rice-paddy",
+    title: "Sawah",
+    category: "living",
+    summary:
+      "Indonesian word for irrigated rice paddy; hosts and listings use it when selling open-field outlooks.",
+    content: `<p><strong>Sawah</strong> is the everyday word for rice paddy. Listing language often pairs it with “rice field view.” For whether an outlook is likely to stay open, read <a href="/glossary/rice-field-view-sawah-buffer">Rice field view</a>.</p>`,
+    published: true,
+    createdAt: "2026-05-02T12:00:00.000Z",
+    updatedAt: "2026-05-02T12:00:00.000Z",
+    seoTitle: "Sawah meaning (rice paddy) | Balitrusted glossary",
+    seoDescription:
+      "What sawah means in Indonesian and how it shows up in Ubud villa marketing.",
     relatedGuideUrl: "/guides/ubud",
   },
   {
@@ -328,7 +361,8 @@ export const glossaryTerms: GlossaryTerm[] = [
     summary:
       "North of Ubud center, UNESCO-famous terraces; cooler air, larger plots, and growing upscale resort and eco-villa interest.",
     content: `<p><strong>Tegalalang</strong>, north of Ubud center, is internationally known for its rice terraces (including UNESCO-recognized cultural landscape framing). The district has become a magnet for <strong>boutique resorts</strong>, eco-style villas, and buyers who want cooler nights and more breathing room than the dense central ring.</p>
-<p>Compared with cramped center plots, Tegalalang can offer relatively more land per dollar—though prices have risen with visibility. “Investment zone” is not a guarantee: success still depends on title quality, infrastructure, staffing, and whether your exit audience is tourism, long-stay nomads, or local demand.</p>
+<p>Northern pockets such as higher Tegalalang can run noticeably <strong>cooler</strong> than the steamy central ring—some houses skip daytime AC when ridge breeze works. Still verify insulation, orientation, and humidity comfort year-round.</p>
+<p>Compared with cramped center plots, Tegalalang can offer relatively more land per dollar—though prices have risen with visibility. Success still depends on title quality, infrastructure, staffing, and who your guest or buyer audience really is.</p>
 <p>Use this label as a geography cue, then run the same financial and legal checks you would anywhere else in Bali.</p>`,
     published: true,
     createdAt: "2026-04-10T12:00:00.000Z",
@@ -376,7 +410,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-electricity-kva",
     slug: "electricity-kva-pln-bali",
-    title: "Electricity — KVA",
+    title: "KVA",
     category: "living",
     summary:
       "Power capacity in Indonesia is measured in KVA, and many modern villas need an upgrade to support ACs, pumps, and appliances.",
@@ -394,7 +428,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-well-water-sumur-bor",
     slug: "well-water-sumur-bor-bali",
-    title: "Well water — sumur bor",
+    title: "Well water",
     category: "living",
     summary:
       "A deep drilled well is the main water source for many Ubud villas, often paired with filtration or RO for better quality.",
@@ -417,8 +451,8 @@ export const glossaryTerms: GlossaryTerm[] = [
     summary:
       "Property deals and rentals in Indonesia involve different taxes, including transfer taxes and income-based withholding on rental earnings.",
     content: `<p><strong>Pajak</strong> simply means tax. In Bali real estate, buyers, sellers, and owners all face different tax obligations depending on the transaction.</p>
-<p>Examples often discussed include <strong>BPHTB</strong> (a transfer tax generally associated with the buyer), <strong>PPh</strong> (income tax generally associated with the seller), and rental-income taxation such as <strong>10% withholding</strong> in certain structures.</p>
-<p>The exact setup depends on deal structure, ownership form, and advice from your notary or tax professional. Never assume “tax included” means all obligations disappeared.</p>`,
+<p>Most conversations reference <a href="/glossary/bphtb-land-acquisition-tax">BPHTB</a> (buyer-side acquisition tax on many transfers), <a href="/glossary/pph-property-sale-tax">PPh</a> (seller-side income tax on many sale structures), and rental-income rules such as <strong>10% withholding</strong> in certain setups.</p>
+<p>Rates and labels shift with asset class and structuring—confirm line items with your notary and tax advisor rather than trusting headline “tax included” chat.</p>`,
     published: true,
     createdAt: "2026-04-15T12:00:00.000Z",
     updatedAt: "2026-04-15T12:00:00.000Z",
@@ -435,8 +469,8 @@ export const glossaryTerms: GlossaryTerm[] = [
     summary:
       "An artist-focused village just west of central Ubud, loved for atmosphere and expat life but often limited to scooter or foot access.",
     content: `<p><strong>Penestanan</strong> is one of Ubud’s best-known villages, just west of the center. It is famous for its artistic feel, quiet lanes, cafe culture, and strong expat presence.</p>
-<p>The tradeoff is access: many homes are reached through narrow pedestrian or scooter paths rather than full car roads. That is part of the charm for some people and a deal-breaker for others.</p>
-<p>If a listing says “Penestanan,” confirm the last-mile logistics, parking, and night-time walkability rather than assuming all parts of the village function the same way.</p>`,
+<p>The northern pocket <a href="/glossary/penestanan-kaja-quiet-ridges">Penestanan Kaja</a> is especially known for scooter-only paths and a slower creative vibe—writers and long-stay yogis often gravitate there.</p>
+<p>The tradeoff is access: many homes are reached through narrow pedestrian or scooter paths rather than full car roads. Confirm last-mile logistics before you assume a listing’s “Penestanan” matches your mobility needs.</p>`,
     published: true,
     createdAt: "2026-04-15T12:00:00.000Z",
     updatedAt: "2026-04-15T12:00:00.000Z",
@@ -464,21 +498,39 @@ export const glossaryTerms: GlossaryTerm[] = [
     relatedGuideUrl: "/guides/ubud",
   },
   {
-    id: "glossary-mas-peliatan",
-    slug: "mas-peliatan-ubud-neighborhood",
-    title: "Mas / Peliatan",
+    id: "glossary-mas-village",
+    slug: "mas-village-ubud",
+    title: "Mas",
     category: "living",
     summary:
-      "Traditional villages south and east of Ubud center, known for woodcarving heritage, better road access, and growing villa development.",
-    content: `<p><strong>Mas</strong> and <strong>Peliatan</strong> sit south and east of central Ubud and are deeply associated with traditional Balinese arts, especially woodcarving.</p>
-<p>For real estate, these areas attract attention because they can offer a more authentic village feel while still giving better road access than some of the tighter central and ridge-side pockets.</p>
-<p>They are increasingly relevant for villa development, long-stay rentals, and buyers who want connectivity without being in the busiest tourist core.</p>`,
+      "Village south of Ubud famous for wood carving, wider roads than central lanes, and steady villa development with easier car access.",
+    content: `<p><strong>Mas</strong> sits just south of Ubud center and is synonymous with high-quality <strong>wood carving</strong>—showrooms and workshops line the main road.</p>
+<p>For property, Mas appeals when you want village atmosphere without the tightest pedestrian-only lanes: roads are generally more forgiving than central Ubud pockets, and supply chains for furniture and gates are on your doorstep.</p>
+<p>Compare listings with nearby <a href="/glossary/peliatan-village-ubud">Peliatan</a> for ceremony density, traffic rhythm, and distance to the venues you care about.</p>`,
     published: true,
     createdAt: "2026-04-15T12:00:00.000Z",
-    updatedAt: "2026-04-15T12:00:00.000Z",
-    seoTitle: "Mas and Peliatan in Ubud | Balitrusted glossary",
+    updatedAt: "2026-05-02T20:00:00.000Z",
+    seoTitle: "Mas village in Ubud | Balitrusted glossary",
     seoDescription:
-      "How Mas and Peliatan combine traditional Balinese identity with practical road access and growing villa demand.",
+      "Mas wood-carving village near Ubud and what it implies for access, culture, and villa development.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-peliatan-village",
+    slug: "peliatan-village-ubud",
+    title: "Peliatan",
+    category: "living",
+    summary:
+      "East of Ubud center; royal dance and gamelan heritage, palaces, and daily ceremony life alongside residential streets.",
+    content: `<p><strong>Peliatan</strong> lies east of central Ubud and is often described as a cultural heartland for <strong>legong</strong>, <strong>gamelan</strong>, and palace-affiliated dance.</p>
+<p>Living here can mean more frequent rehearsal soundscapes and ceremony logistics—beautiful for culture lovers, louder for noise-sensitive households.</p>
+<p>Pair location research with <a href="/glossary/mas-village-ubud">Mas</a> when you are comparing south/east micro-markets with similar road access profiles.</p>`,
+    published: true,
+    createdAt: "2026-05-02T20:00:00.000Z",
+    updatedAt: "2026-05-02T20:00:00.000Z",
+    seoTitle: "Peliatan village in Ubud | Balitrusted glossary",
+    seoDescription:
+      "Peliatan’s dance and music heritage and what it means for daily villa life east of Ubud.",
     relatedGuideUrl: "/guides/ubud",
   },
   {
@@ -615,14 +667,30 @@ export const glossaryTerms: GlossaryTerm[] = [
     summary:
       "A recurring local contribution to the community that can support security, waste management, and ceremonial costs.",
     content: `<p>A <strong>banjar fee</strong> is a recurring payment made to the local community structure. The exact amount and arrangement vary by area and by whether the payer is an owner, tenant, or business operator.</p>
-<p>These contributions often support practical and social functions such as security, garbage handling, and local ceremonial life.</p>
+<p>These contributions often support practical and social functions such as security, garbage handling, and local ceremonial life. In speech and notices you may see the word <a href="/glossary/iuran-banjar">iuran</a> for this kind of local contribution.</p>
 <p>When comparing villas, ask whether a banjar fee exists, how often it is paid, and whether it is included in rent or handled separately.</p>`,
     published: true,
     createdAt: "2026-04-15T12:00:00.000Z",
-    updatedAt: "2026-04-15T12:00:00.000Z",
+    updatedAt: "2026-05-02T18:00:00.000Z",
     seoTitle: "Banjar fee in Bali villas | Balitrusted glossary",
     seoDescription:
       "What a banjar fee usually covers in Bali and why owners or tenants may pay it separately from rent.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-iuran-banjar",
+    slug: "iuran-banjar",
+    title: "Iuran",
+    category: "finance",
+    summary:
+      "The everyday Indonesian word for a membership fee or local contribution, including banjar-level payments.",
+    content: `<p><strong>Iuran</strong> is a general term for contributions or fees toward a group or community. In a Balinese <a href="/glossary/banjar-local-community">banjar</a> context, it often refers to the same practical idea as a <a href="/glossary/banjar-fee-bali-villa">banjar fee</a>: shared support for security, ceremonies, and neighborhood upkeep.</p>
+<p>It is not the same as a government tax, but it is part of how local life is funded and coordinated.</p>`,
+    published: true,
+    createdAt: "2026-05-02T18:00:00.000Z",
+    updatedAt: "2026-05-02T18:00:00.000Z",
+    seoTitle: "Iuran meaning in Bali | Balitrusted glossary",
+    seoDescription: "What iuran means in Indonesia and how it relates to banjar fees for villa residents.",
     relatedGuideUrl: "/guides/rent",
   },
   {
@@ -634,7 +702,8 @@ export const glossaryTerms: GlossaryTerm[] = [
       "Fast fiber internet is a major decision factor for long-stay renters, but coverage still varies a lot by micro-location.",
     content: `<p><strong>Fiber optic internet</strong> is one of the biggest practical filters for long-stay renters, especially remote workers and digital nomads.</p>
 <p>Even in Ubud, availability is highly location-specific. Some areas have strong service from providers like <strong>Biznet</strong> or <strong>GlobalXtreme</strong>, while others still rely on weaker setups or patchwork solutions.</p>
-<p>If a listing mentions fiber readiness, verify the actual provider, installed line status, backup options, and real-world speed rather than assuming “internet available” means remote-work quality.</p>`,
+<p>Inside the villa, router placement matters: thick stone, pools, and steel frames kill signal. Ask where the ONT/router lives and whether a <a href="/glossary/mesh-wifi-villa-estate">mesh network</a> already covers bedrooms and studios.</p>
+<p>If a listing mentions fiber readiness, verify provider, installed line status, backup options, and measured speed—not marketing screenshots.</p>`,
     published: true,
     createdAt: "2026-04-15T12:00:00.000Z",
     updatedAt: "2026-04-15T12:00:00.000Z",
@@ -706,7 +775,7 @@ export const glossaryTerms: GlossaryTerm[] = [
       "A traditional Balinese thatched roof made from dried cogon grass, prized for ventilation and tropical character but needing periodic replacement.",
     content: `<p><strong>Alang-alang</strong> is a traditional thatched roof made from dried <strong>cogon grass</strong>. It is one of the most recognizable “tropical Bali” design signatures because it breathes well and softens sound compared with hard roofing.</p>
 <p>For the general English concept, see <a href="/glossary/thatched-roof-bali">thatched roof</a>.</p>
-<p>The tradeoff is maintenance: alang-alang typically needs replacement or serious refurbishment on a multi-year cycle, often discussed in the <strong>5–10 year</strong> range depending on climate exposure, slope detail, and quality of installation.</p>
+<p>The tradeoff is maintenance: expect refresh every roughly <strong>5–7 years</strong> in hard service, sooner after storms if bundles slip. Budget like a roof replacement line item, not a surprise.</p>
 <p>When a listing highlights alang-alang, ask whether it is decorative only or the primary weatherproof roof, and what the owner’s maintenance plan looks like in practice.</p>`,
     published: true,
     createdAt: "2026-04-17T10:00:00.000Z",
@@ -792,9 +861,9 @@ export const glossaryTerms: GlossaryTerm[] = [
     category: "other",
     summary:
       "A dark volcanic stone popular for pool decks and wet areas because it feels natural, durable, and grippy underfoot when finished correctly.",
-    content: `<p><strong>Batu candi</strong> is a dark <strong>volcanic stone</strong> (often described as lava stone) widely used in Bali for pool decks, stepping paths, feature walls, and bathrooms.</p>
-<p>Its appeal is aesthetic and practical: it looks grounded and tropical, and when properly finished it can be <strong>non-slip</strong> around water compared with polished marble in wet zones.</p>
-<p>Quality varies by quarry, cut, sealing, and installation. If a listing brags about batu candi, it is still worth checking whether surfaces are comfortable for bare feet, whether sealing is maintained, and whether detailing avoids sharp edges at pool transitions.</p>`,
+    content: `<p><strong>Batu candi</strong> is a dark, porous <strong>volcanic stone</strong> (often described as lava stone). You see it on temples, modern villa facades, pool decks, stepping paths, feature walls, and bathrooms.</p>
+<p>Its pores pull in water, which can help surfaces feel cooler underfoot in tropical heat—but that same porosity feeds moss and algae if cleaning slips. Many estates schedule periodic high-pressure washing alongside sensible sealing.</p>
+<p>Quality varies by quarry, cut, sealing, and installation. If a listing highlights batu candi, still verify barefoot comfort, slip resistance when wet, and detailing at pool edges.</p>`,
     published: true,
     createdAt: "2026-04-17T10:00:00.000Z",
     updatedAt: "2026-04-17T10:00:00.000Z",
@@ -810,9 +879,9 @@ export const glossaryTerms: GlossaryTerm[] = [
     category: "other",
     summary:
       "A light cream sandstone used for carvings and cladding that brightens exteriors and reads as clean tropical elegance.",
-    content: `<p><strong>Palimanan stone</strong> is a light-colored sandstone, often cream or white, widely used in Bali for carved panels, wall cladding, gates, and garden features.</p>
-<p>Visually, it makes exteriors feel brighter and more “resort clean” than darker stone palettes, which is why it shows up heavily in tropical contemporary villas.</p>
-<p>Like any porous stone, performance depends on detailing, sealing, and cleaning routines—especially in humid jungle microclimates where algae and staining can appear if water sits on surfaces.</p>`,
+    content: `<p><strong>Palimanan stone</strong> is a creamy-yellow sandstone widely used for carved panels, wall cladding, gates, and garden features. It reads bright and “high-end tropical” next to greenery.</p>
+<p>It is softer than many volcanic stones: edges can wear faster, and incorrect sealing can invite erosion or staining in driving rain. Specifying sealant cycles and gentle cleaning matters more than with harder basalts.</p>
+<p>In humid microclimates, algae film can return quickly if water pools—plan maintenance like any light limestone-style cladding.</p>`,
     published: true,
     createdAt: "2026-04-17T10:00:00.000Z",
     updatedAt: "2026-04-17T10:00:00.000Z",
@@ -864,9 +933,9 @@ export const glossaryTerms: GlossaryTerm[] = [
     category: "other",
     summary:
       "A pool edge designed so water visually meets the horizon, often aligned with jungle or sawah views in Ubud listings.",
-    content: `<p>An <strong>infinity pool</strong> (often called a <strong>vanishing edge</strong> pool) uses a lowered catch basin so water appears to spill into the horizon. In Ubud marketing, it is frequently composed to merge visually with <strong>jungle canopy</strong> or <strong>rice fields</strong>.</p>
-<p>The effect is powerful for photography and guest experience, but engineering matters: edge detailing, pump systems, overflow maintenance, and safe walking lines around the wet edge.</p>
-<p>When comparing listings, confirm whether the “infinity” view is stable across seasons and whether the edge faces the view you actually use during the day, not only the hero camera angle.</p>`,
+    content: `<p>An <strong>infinity pool</strong> uses a lowered catch basin—the <strong>infinity edge</strong>—so water appears to spill into jungle, <a href="/glossary/rice-field-view-sawah-buffer">rice fields</a>, or sky. In Ubud marketing it is the classic hero shot.</p>
+<p>Engineering matters as much as aesthetics: overflow weir cleaning, pump sizing, safe routes around a wet edge, and night lighting so guests do not misread the lip.</p>
+<p>Compare listings on whether the vanishing line aligns with the view you actually use in daylight and wet season, not only the photographer’s angle.</p>`,
     published: true,
     createdAt: "2026-04-17T10:00:00.000Z",
     updatedAt: "2026-04-17T10:00:00.000Z",
@@ -1058,7 +1127,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-pondasi-foundations-bali",
     slug: "pondasi-foundations-seismic-bali",
-    title: "Foundations — pondasi",
+    title: "Foundations",
     category: "other",
     summary:
       "Structural base engineered for earthquakes and volcanic soils—deep piles or “cakar ayam” (chicken-claw) grids are common patterns.",
@@ -1191,7 +1260,8 @@ export const glossaryTerms: GlossaryTerm[] = [
     summary:
       "Soil and timber treatments against tropical termites—essential upkeep where teak, joglo, and wooden structures are central to the design.",
     content: `<p><strong>Termite treatment</strong> uses chemical or certified organic systems to protect soil lines and timber members. Bali’s humidity makes termites a predictable risk for expensive teak interiors and traditional wooden structures such as joglos.</p>
-<p>Regular anti-termite maintenance should be budgeted like pool cleaning: prevention is cheaper than replacing structural timber after damage becomes visible.</p>`,
+<p><strong>Mud tubes</strong>—thin soil-colored highways running up concrete to reach timber—mean activity now, not later. Treat them as urgent: colony routing can bypass finishes straight into ceilings.</p>
+<p>Budget anti-termite work like pool care: prevention beats replacing structural timber after damage is visible.</p>`,
     published: true,
     createdAt: "2026-04-18T12:00:00.000Z",
     updatedAt: "2026-04-18T12:00:00.000Z",
@@ -1232,18 +1302,36 @@ export const glossaryTerms: GlossaryTerm[] = [
     relatedGuideUrl: "/guides/rent",
   },
   {
+    id: "glossary-banjar-security",
+    slug: "banjar-security",
+    title: "Banjar security",
+    category: "living",
+    summary:
+      "Informal English wording for neighborhood order under banjar norms; in practice you often meet it through pecalang during ceremonies.",
+    content: `<p><strong>Banjar security</strong> is not a hired guard company. It describes how a <a href="/glossary/banjar-local-community">banjar</a> coordinates safety, traffic, and public-space discipline, especially on ceremony days.</p>
+<p>Who you actually see in that role is usually <a href="/glossary/banjar-pecalang-village-security">pecalang</a>.</p>`,
+    published: true,
+    createdAt: "2026-05-02T12:00:00.000Z",
+    updatedAt: "2026-05-02T12:00:00.000Z",
+    seoTitle: "Banjar security in Bali | Balitrusted glossary",
+    seoDescription:
+      "What people mean by banjar-level security and how it connects to pecalang and daily villa life.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
     id: "glossary-banjar-pecalang-security",
     slug: "banjar-pecalang-village-security",
-    title: "Banjar security — pecalang",
+    title: "Pecalang",
     category: "living",
     summary:
       "Traditional village security in checkered sarong—ceremony traffic control plus grassroots authority; good neighbour relations help villa life.",
     content: `<p><strong>Pecalang</strong> are traditional village security, often recognised by checkered sarongs. They manage traffic and safety during ceremonies, but they also embody local authority structures at banjar level.</p>
-<p>For villa life, respectful engagement with banjar norms—noise, parking, events—often translates into smoother operations and an extra layer of community-backed security awareness.</p>`,
+<p>For villa life, respectful engagement with banjar norms—noise, parking, events—often translates into smoother operations and an extra layer of community-backed security awareness.</p>
+<p>English conversation sometimes uses the phrase <a href="/glossary/banjar-security">banjar security</a> for the same general idea.</p>`,
     published: true,
     createdAt: "2026-04-18T12:00:00.000Z",
-    updatedAt: "2026-04-18T12:00:00.000Z",
-    seoTitle: "Banjar pecalang and village security — glossary | Balitrusted",
+    updatedAt: "2026-05-02T12:00:00.000Z",
+    seoTitle: "Pecalang village security in Bali | Balitrusted glossary",
     seoDescription: "What pecalang are and why banjar relationships matter for villas.",
     relatedGuideUrl: "/guides/rent",
   },
@@ -1282,12 +1370,13 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-teak-wood-jati",
     slug: "teak-wood-jati-bali-timber",
-    title: "Teak wood — jati",
+    title: "Teak wood",
     category: "living",
     summary:
       "Indonesia’s flagship hardwood—dense grain, natural oils, used from pillars to bespoke furniture for long tropical service life.",
     content: `<p><strong>Teak</strong> (<em>jati</em>) is Indonesia’s most prized construction and furniture timber: strong, attractive, and rich in natural oils that resist rot and insects when properly graded and dried.</p>
-<p>High-quality teak underpins structural pillars, decking, doors, and bespoke interiors. It is a long-horizon material choice—cheap “teak look” substitutes rarely age the same way in Bali’s sun and rain cycles.</p>`,
+<p>High-quality teak underpins structural pillars, decking, doors, and bespoke interiors. Where budgets stretch differently, operators sometimes specify <a href="/glossary/bengkirai-hardwood-bali">bengkirai</a> for posts or decking—still Indonesian hardwood, usually lighter on wallet than premium jati.</p>
+<p>Cheap “teak look” substitutes rarely age the same way in Bali’s sun and rain cycles.</p>`,
     published: true,
     createdAt: "2026-04-18T12:00:00.000Z",
     updatedAt: "2026-04-18T12:00:00.000Z",
@@ -1331,7 +1420,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-yellow-zone-pemukiman",
     slug: "yellow-zone-pemukiman-bali-zoning",
-    title: "Yellow Zone — Pemukiman",
+    title: "Yellow Zone",
     category: "legal",
     summary:
       "Residential zoning in Bali spatial plans, typically the target zone for standard long-term villa living and non-tourism use.",
@@ -1348,7 +1437,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-pink-zone-pariwisata",
     slug: "pink-zone-pariwisata-bali-tourism-zoning",
-    title: "Pink Zone — Pariwisata",
+    title: "Pink Zone",
     category: "legal",
     summary:
       "Tourism-designated zoning where legal short-term villa rental licensing is typically possible.",
@@ -1387,8 +1476,8 @@ export const glossaryTerms: GlossaryTerm[] = [
     summary:
       "Contract language that controls how a lease can be extended after expiry; one of the highest-impact lines in leasehold deals.",
     content: `<p>A <strong>lease extension clause</strong> defines how a lease can continue after the initial term. For leasehold investors, this can be more important than interior finishes or short-term yield assumptions.</p>
-<p>Favorable formats include fixed-price extension formulas or capped market mechanisms. Vague “to be discussed later” language can create major uncertainty at renewal time.</p>
-<p>Before signing, negotiate extension mechanics early and make sure terms are explicit, enforceable, and understood by all parties.</p>`,
+<p>Favorable formats include fixed-price extension formulas or capped market mechanisms. Clauses that only promise renewal at “market price” can surprise both sides—many investors push for language tied to <strong>land value only</strong> so they are not effectively paying twice for improvements they funded.</p>
+<p>Vague “to be discussed later” wording is worse than a crisp formula: negotiate triggers, valuation method, and timelines before you sign.</p>`,
     published: true,
     createdAt: "2026-04-21T10:00:00.000Z",
     updatedAt: "2026-04-21T10:00:00.000Z",
@@ -1433,7 +1522,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-land-notary-ppat",
     slug: "land-notary-ppat-bali",
-    title: "Land Notary — PPAT",
+    title: "Land Notary",
     category: "documents",
     summary:
       "A government-authorized land deed official for legally binding transfer documents and registration workflow.",
@@ -1467,7 +1556,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-building-management-system-bms",
     slug: "building-management-system-bms-smart-villa",
-    title: "Building Management System — BMS",
+    title: "Building Management System",
     category: "living",
     summary:
       "A centralized digital control layer for lighting, climate, pumps, and security in smart villas.",
@@ -1518,7 +1607,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-deep-well-ro-filtration",
     slug: "deep-well-filtration-ro-system-bali",
-    title: "Deep well filtration — RO",
+    title: "Deep well filtration",
     category: "living",
     summary:
       "A high-spec water treatment setup that can make villa tap water suitable for direct drinking.",
@@ -1716,7 +1805,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-parking-ticket-karcis",
     slug: "parking-ticket-karcis-bali",
-    title: "Parking ticket — karcis",
+    title: "Parking ticket",
     category: "living",
     summary:
       "A small parking slip issued in official lots and controlled zones; keep it until exit.",
@@ -2617,7 +2706,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     summary:
       "A common informal term for travel-related digestive upset from food or water changes.",
     content: `<p><strong>Bali Belly</strong> informally describes short-term digestive illness many travelers and new residents experience while adapting.</p>
-<p>Hydration, cautious food choices, and timely pharmacy support are common practical responses.</p>`,
+<p>Hosts often keep oral rehydration mixes and <a href="/glossary/activated-charcoal-norit-stomach">activated charcoal</a> kits alongside hydration salts—paired with sensible food choices and medical escalation when symptoms persist.</p>`,
     published: true,
     createdAt: "2026-04-26T09:30:00.000Z",
     updatedAt: "2026-04-26T09:30:00.000Z",
@@ -2648,7 +2737,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     category: "living",
     summary:
       "A paid shared office environment with stable internet, desks, and professional work setup.",
-    content: `<p><strong>Co-working spaces</strong> are central to Ubud’s digital-work ecosystem, especially for residents whose villas have unreliable internet or noisy daytime environments.</p>
+    content: `<p><strong>Co-working spaces</strong> are central to Ubud’s digital-work ecosystem—venues such as Outpost or daytime hubs near cafés give redundant uplinks and social rhythm when home Wi-Fi flickers.</p>
 <p>They usually provide higher network stability, meeting areas, and backup power compared with ad-hoc cafe workflows.</p>`,
     published: true,
     createdAt: "2026-04-26T09:30:00.000Z",
@@ -2868,7 +2957,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-kitas-investor-index-313-314",
     slug: "kitas-investor-index-313-314",
-    title: "KITAS investor — indexes 313 and 314",
+    title: "KITAS investor",
     category: "documents",
     summary:
       "A residency permit route for foreigners investing through an Indonesian PMA company.",
@@ -2884,7 +2973,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-remote-worker-visa-e33g",
     slug: "remote-worker-visa-e33g",
-    title: "Remote worker visa — E33G",
+    title: "Remote worker visa",
     category: "documents",
     summary:
       "A visa category designed for foreigners working remotely for non-Indonesian employers while living in Indonesia.",
@@ -2932,12 +3021,13 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-ravine-edge-abing",
     slug: "ravine-edge-abing",
-    title: "Ravine edge — abing",
+    title: "Ravine edge",
     category: "living",
     summary:
       "A gorge-edge site type with premium views and higher engineering demands.",
-    content: `<p><strong>Abing-edge</strong> villas can be visually exceptional but require strong foundation and slope-stability planning.</p>
-<p>Before commitment, soil and structural assessment quality is critical, especially for heavy rainy seasons.</p>`,
+    content: `<p>A <strong>ravine-edge</strong> or gorge-front plot sits above deep valleys—often called the premium “river gorge view” pitch around Ubud. Drama and breezes come with geotechnical homework.</p>
+<p>Foundations, retaining structures, and drainage matter more than on flat land. Seasonal storms load slopes harder; insurance and emergency access routes deserve scrutiny.</p>
+<p><em>Abing</em> is one local word you may hear for ravine geography—same diligence applies whichever label marketing uses.</p>`,
     published: true,
     createdAt: "2026-04-27T13:10:00.000Z",
     updatedAt: "2026-04-27T13:10:00.000Z",
@@ -2964,7 +3054,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-limestone-batu-putih",
     slug: "limestone-batu-putih",
-    title: "Limestone — batu putih",
+    title: "Limestone",
     category: "living",
     summary:
       "A decorative white stone common in Bali landscaping and facade details.",
@@ -2980,7 +3070,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-ironwood-decking-kayu-ulin",
     slug: "ironwood-decking-kayu-ulin",
-    title: "Ironwood decking — kayu ulin",
+    title: "Ironwood decking",
     category: "living",
     summary:
       "A premium, dense decking timber known for high durability around pools and outdoor areas.",
@@ -3012,12 +3102,13 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-polished-concrete-semen-ekspos",
     slug: "polished-concrete-semen-ekspos",
-    title: "Polished concrete — semen ekspos",
+    title: "Polished concrete",
     category: "living",
     summary:
       "A minimalist floor and surface finish popular in modern tropical villa design.",
-    content: `<p><strong>Semen ekspos</strong> gives a clean, contemporary look and usually performs well in warm climates when properly sealed.</p>
-<p>Surface quality depends heavily on execution and moisture control during application.</p>`,
+    content: `<p><strong>Semen ekspos</strong> usually refers to ground/honed concrete floors and countertops. It reads minimalist when sealing and workmanship are strong.</p>
+<p><a href="/glossary/exposed-concrete-casting-bali">Exposed concrete</a> in architecture often means raw structural walls left untreated—a different maintenance profile from honed floors; humidity can streak untreated faces unless coatings are chosen deliberately.</p>
+<p>Either finish depends on craftsman skill and vapor management behind the scenes.</p>`,
     published: true,
     createdAt: "2026-04-27T13:10:00.000Z",
     updatedAt: "2026-04-27T13:10:00.000Z",
@@ -3044,7 +3135,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-carved-teak-doors-pintu-ukir",
     slug: "carved-teak-doors-pintu-ukir",
-    title: "Carved teak doors — pintu ukir",
+    title: "Carved teak doors",
     category: "living",
     summary:
       "Traditional carved entrance doors used as heritage statement elements in villas.",
@@ -3128,8 +3219,8 @@ export const glossaryTerms: GlossaryTerm[] = [
     category: "living",
     summary:
       "Meditative sessions using bowls, gongs, and vibration-focused audio practices.",
-    content: `<p><strong>Sound healing</strong> is a major wellness activity in Ubud and often influences short-stay and retreat rental demand.</p>
-<p>Properties near known venues may attract longer wellness-focused guest profiles.</p>`,
+    content: `<p><strong>Sound healing</strong> weaves gongs, singing bowls, and guided breath into meditation-style sessions—Ubud’s studio density is world-famous.</p>
+<p>Properties a short walk from respected venues can market retreat-friendly stays, but also need honest sound privacy disclosures when neighboring studios run late sessions.</p>`,
     published: true,
     createdAt: "2026-04-27T13:10:00.000Z",
     updatedAt: "2026-04-27T13:10:00.000Z",
@@ -3192,8 +3283,8 @@ export const glossaryTerms: GlossaryTerm[] = [
     category: "living",
     summary:
       "A traditional Indonesian herbal tonic commonly made with turmeric, ginger, and citrus.",
-    content: `<p><strong>Jamu</strong> is widely used as a daily functional drink for digestion, energy, and general wellness support.</p>
-<p>You will find it in markets, cafes, and health-oriented villa kitchens.</p>`,
+    content: `<p><strong>Jamu</strong> covers countless herbal tonics—turmeric-ginger bases with tamarind sourness are everyday staples for digestion and hydration rituals.</p>
+<p>You will find bottled jamu in markets, boutique cafes, and health-oriented villa fridges; quality swings wildly, so sample reputable sellers before bulk-buying for guests.</p>`,
     published: true,
     createdAt: "2026-04-27T13:10:00.000Z",
     updatedAt: "2026-04-27T13:10:00.000Z",
@@ -3314,22 +3405,6 @@ export const glossaryTerms: GlossaryTerm[] = [
     relatedGuideUrl: "/guides/rent",
   },
   {
-    id: "glossary-banjar-fee-iuran",
-    slug: "banjar-fee-iuran",
-    title: "Banjar fee — iuran",
-    category: "finance",
-    summary:
-      "A community contribution paid to local village structure for neighborhood support services.",
-    content: `<p><strong>Iuran banjar</strong> is not framed as a standard government tax but as a local social obligation supporting community functions.</p>
-<p>Consistent payment helps maintain smooth local relationships and practical support.</p>`,
-    published: true,
-    createdAt: "2026-04-27T13:10:00.000Z",
-    updatedAt: "2026-04-27T13:10:00.000Z",
-    seoTitle: "Banjar fee iuran in Bali — glossary | Balitrusted",
-    seoDescription: "What banjar iuran is and why it matters for long-term villa residents.",
-    relatedGuideUrl: "/guides/legal",
-  },
-  {
     id: "glossary-ceremony-traffic",
     slug: "ceremony-traffic-bali",
     title: "Ceremony Traffic",
@@ -3396,7 +3471,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-gas-refill-lpg",
     slug: "gas-refill-lpg-bali",
-    title: "Gas refill — LPG",
+    title: "Gas refill",
     category: "living",
     summary:
       "Canister-swap system used for stove and hot-water gas supply in many villas.",
@@ -3444,7 +3519,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-safety-box-brankas",
     slug: "safety-box-brankas",
-    title: "Safety box — brankas",
+    title: "Safety box",
     category: "living",
     summary:
       "An in-room safe used for passports, cash, and valuables in rental properties.",
@@ -3460,7 +3535,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-blackouts-mati-lampu",
     slug: "blackouts-mati-lampu",
-    title: "Blackouts — mati lampu",
+    title: "Blackouts",
     category: "living",
     summary:
       "Temporary power outages, often linked to storms and line interruptions.",
@@ -3476,7 +3551,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-paving-stones-conblock",
     slug: "paving-stones-conblock",
-    title: "Paving stones — conblock",
+    title: "Paving stones",
     category: "living",
     summary:
       "Pre-cast concrete blocks used for drives and paths with practical drainage advantages.",
@@ -3492,7 +3567,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-exposed-brick-bata-ekspos",
     slug: "exposed-brick-bata-ekspos",
-    title: "Exposed brick — bata ekspos",
+    title: "Exposed brick",
     category: "living",
     summary:
       "A traditional red-brick finish used as both structure and visible design feature.",
@@ -3651,16 +3726,34 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-banjar-meeting",
     slug: "banjar-meeting-rapat-banjar",
-    title: "Banjar meeting — rapat banjar",
+    title: "Banjar meeting",
     category: "living",
     summary: "Regular village community meetings that coordinate local decisions, ceremonies, and practical rules.",
     content: `<p>A <strong>Banjar meeting</strong> is where local community leaders and members coordinate village matters, including ceremonies, logistics, and social obligations.</p>
-<p>Foreign residents usually do not attend, but should respect the schedule because it can affect local staffing, road use, and neighborhood activity.</p>`,
+<p>Foreign residents usually do not attend, but should respect the schedule because it can affect local staffing, road use, and neighborhood activity.</p>
+<p>The usual Indonesian phrase is <a href="/glossary/rapat-banjar">rapat banjar</a>.</p>`,
     published: true,
     createdAt: "2026-04-28T05:40:00.000Z",
-    updatedAt: "2026-04-28T05:40:00.000Z",
+    updatedAt: "2026-05-02T12:00:00.000Z",
     seoTitle: "Banjar meeting in Bali — glossary | Balitrusted",
     seoDescription: "What Rapat Banjar means for daily life and villa operations in Bali.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-rapat-banjar",
+    slug: "rapat-banjar",
+    title: "Rapat banjar",
+    category: "living",
+    summary:
+      "Local name for scheduled banjar meetings where logistics, ceremonies, and contributions get lined up.",
+    content: `<p><strong>Rapat banjar</strong> is what communities call their regular <a href="/glossary/banjar-meeting-rapat-banjar">Banjar meeting</a>: aligning calendars, labor, and neighborhood rules.</p>
+<p>You may also hear <strong>sangkep</strong> for a fuller assembly style meeting—same practical impact for villa life: roads, staffing, and ceremony timing can shift when the banjar calendar moves.</p>`,
+    published: true,
+    createdAt: "2026-05-02T12:00:00.000Z",
+    updatedAt: "2026-05-02T12:00:00.000Z",
+    seoTitle: "Rapat banjar meaning | Balitrusted glossary",
+    seoDescription:
+      "What rapat banjar means in Bali and how it affects staffing and road use around your villa.",
     relatedGuideUrl: "/guides/ubud",
   },
   {
@@ -3681,7 +3774,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-bea-cukai",
     slug: "bea-cukai-customs-indonesia",
-    title: "Customs — Bea Cukai",
+    title: "Customs",
     category: "finance",
     summary: "Indonesia’s customs authority handling duties and taxes on imported goods.",
     content: `<p><strong>Bea Cukai</strong> is Indonesia’s customs office. Imported goods may be held until duties are paid.</p>
@@ -3711,7 +3804,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-building-setback",
     slug: "building-setback-sempadan",
-    title: "Building setback — sempadan",
+    title: "Building setback",
     category: "legal",
     summary: "Mandatory legal distance between a building and roads, rivers, or boundaries.",
     content: `<p><strong>Sempadan</strong> defines setback limits that control where construction is allowed on a plot.</p>
@@ -3756,7 +3849,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-centipede-kelabang",
     slug: "centipede-kelabang-bali-villa",
-    title: "Centipede — kelabang",
+    title: "Centipede",
     category: "living",
     summary: "Large centipede occasionally entering ground-floor rooms in tropical areas.",
     content: `<p><strong>Kelabang</strong> are large centipedes that may enter homes near gardens or jungle edges.</p>
@@ -3771,7 +3864,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-cicada-tonggeret",
     slug: "cicada-tonggeret-jungle-sound",
-    title: "Cicada — tonggeret",
+    title: "Cicada",
     category: "living",
     summary: "Loud tropical insect known for intense afternoon and evening buzzing.",
     content: `<p><strong>Tonggeret</strong> are cicadas that create the classic high-pitched jungle soundtrack in many Ubud zones.</p>
@@ -3816,7 +3909,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-dry-season-bali",
     slug: "dry-season-musim-kemarau-bali",
-    title: "Dry season — musim kemarau",
+    title: "Dry season",
     category: "living",
     summary: "Bali’s lower-rain period, typically April to October, with clearer skies.",
     content: `<p>The <strong>dry season</strong> in Bali is generally from April to October, with lower humidity and more predictable weather.</p>
@@ -3831,22 +3924,23 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-e-wallet-ovo-dana",
     slug: "e-wallet-ovo-dana-indonesia",
-    title: "E-wallets — OVO and Dana",
+    title: "E-wallets",
     category: "finance",
     summary: "Popular Indonesian digital wallets used for transport, shops, and app payments.",
     content: `<p><strong>E-wallets</strong> like OVO and Dana are widely accepted in urban Bali for daily spending.</p>
+<p>Street sellers and small warungs increasingly expect <a href="/glossary/qris-universal-qr-indonesia">QRIS</a> scans from those same wallets—confirm which bank or e-wallet app you will standardize on so staff training stays simple.</p>
 <p>They are especially convenient for people without full local banking setup.</p>`,
     published: true,
     createdAt: "2026-04-28T05:40:00.000Z",
     updatedAt: "2026-04-28T05:40:00.000Z",
     seoTitle: "OVO and Dana e-wallets in Bali — glossary | Balitrusted",
     seoDescription: "How e-wallet payments work for expats, guests, and daily local transactions.",
-    relatedGuideUrl: "/guides/living",
+    relatedGuideUrl: "/guides/rent",
   },
   {
     id: "glossary-flying-ants-laron",
     slug: "flying-ants-laron-rainy-season",
-    title: "Flying ants — laron",
+    title: "Flying ants",
     category: "living",
     summary: "Winged ants that appear in large numbers after heavy rains and are attracted to light.",
     content: `<p><strong>Laron</strong> swarms often appear after first major rains and can gather around bright lamps.</p>
@@ -3864,8 +3958,8 @@ export const glossaryTerms: GlossaryTerm[] = [
     title: "Gamelan Music",
     category: "living",
     summary: "Traditional Balinese percussion music often heard during rehearsals and ceremonies.",
-    content: `<p><strong>Gamelan</strong> is a core part of Balinese cultural life and frequently audible in Ubud neighborhoods.</p>
-<p>Listings near village centers may frame it as a cultural soundscape rather than noise.</p>`,
+    content: `<p><strong>Gamelan</strong> is a core part of Balinese cultural life. Evening rehearsal rhythm from nearby <a href="/glossary/peliatan-village-ubud">Peliatan</a>-style banjars can feel like Ubud’s soundtrack—sometimes romantic, sometimes loud for light sleepers.</p>
+<p>Listings near village centers may frame it as a cultural soundscape rather than noise; visit at rehearsal hours before you sign a lease.</p>`,
     published: true,
     createdAt: "2026-04-28T05:40:00.000Z",
     updatedAt: "2026-04-28T05:40:00.000Z",
@@ -3891,7 +3985,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-housekeeping-pembantu",
     slug: "housekeeping-pembantu-bali",
-    title: "Housekeeping — pembantu",
+    title: "Housekeeping",
     category: "living",
     summary: "Daily cleaning and household support role in villa operations.",
     content: `<p><strong>Pembantu</strong> generally refers to domestic support staff handling cleaning and day-to-day home routines.</p>
@@ -3921,7 +4015,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-leeches-pacat",
     slug: "leeches-pacat-ubud-trek",
-    title: "Leeches — pacat",
+    title: "Leeches",
     category: "living",
     summary: "Small blood-feeding leeches found in wet grass and jungle trails during rainy periods.",
     content: `<p><strong>Pacat</strong> may appear in wet rice fields and jungle paths during the rainy season.</p>
@@ -3951,7 +4045,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-local-coffee-kopi-bali",
     slug: "kopi-bali-local-coffee",
-    title: "Local coffee — Kopi Bali",
+    title: "Local coffee",
     category: "living",
     summary: "Traditional Indonesian-style coffee commonly served strong and sweet.",
     content: `<p><strong>Kopi Bali</strong> is typically fine-ground, unfiltered, and served with sugar.</p>
@@ -3996,7 +4090,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-pasar-seni",
     slug: "pasar-seni-ubud-art-market",
-    title: "Pasar Seni — art market",
+    title: "Pasar Seni",
     category: "living",
     summary: "Central Ubud art market used by tourists and residents for decor and textiles.",
     content: `<p><strong>Pasar Seni Ubud</strong> is both a tourist landmark and a practical sourcing spot for baskets, textiles, and decor.</p>
@@ -4011,7 +4105,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-panen-rice-harvest",
     slug: "panen-rice-harvest-ubud",
-    title: "Rice harvesting — panen",
+    title: "Rice harvesting",
     category: "living",
     summary: "Harvest period in rice fields, often busier and noisier but visually iconic.",
     content: `<p><strong>Panen</strong> is the rice harvest cycle, bringing more workers and activity to paddy zones.</p>
@@ -4086,7 +4180,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-rainy-season-bali",
     slug: "rainy-season-musim-hujan-bali",
-    title: "Rainy season — musim hujan",
+    title: "Rainy season",
     category: "living",
     summary: "Bali’s wetter season, typically November to March, with heavy short downpours.",
     content: `<p>The <strong>rainy season</strong> usually runs from November to March, with intense but often short rain bursts.</p>
@@ -4116,7 +4210,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-scorpion-ketunggeng",
     slug: "scorpion-ketunggeng-bali",
-    title: "Scorpion — ketunggeng",
+    title: "Scorpion",
     category: "living",
     summary: "Occasional small scorpion presence in garden and bathroom edges of tropical homes.",
     content: `<p><strong>Ketunggeng</strong> are occasionally seen in humid corners, timber piles, or garden-adjacent bathrooms.</p>
@@ -4131,7 +4225,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-security-waker",
     slug: "security-waker-night-watchman",
-    title: "Security — waker",
+    title: "Security",
     category: "living",
     summary: "Night watchman role focused on perimeter checks and overnight property security.",
     content: `<p>A <strong>Waker</strong> is a night guard role commonly used in villas and estates.</p>
@@ -4161,7 +4255,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-septic-tank-pumping",
     slug: "septic-tank-pumping-sedot-wc",
-    title: "Septic pumping — sedot WC",
+    title: "Septic pumping",
     category: "living",
     summary: "Periodic waste tank emptying service required for many Bali properties.",
     content: `<p><strong>Sedot WC</strong> is scheduled septic pumping by specialized service trucks.</p>
@@ -4176,7 +4270,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-sinking-fund",
     slug: "sinking-fund-dana-cadangan",
-    title: "Sinking fund — dana cadangan",
+    title: "Sinking fund",
     category: "finance",
     summary: "Reserve budget for future major repairs in shared or managed property setups.",
     content: `<p>A <strong>sinking fund</strong> is money set aside for predictable large repairs such as roof or generator replacement.</p>
@@ -4191,7 +4285,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-street-food-kaki-lima",
     slug: "street-food-kaki-lima-bali",
-    title: "Street food — kaki lima",
+    title: "Street food",
     category: "living",
     summary: "Mobile local food carts serving affordable evening meals and snacks.",
     content: `<p><strong>Kaki Lima</strong> refers to street food carts, often selling dishes like bakso and martabak.</p>
@@ -4221,7 +4315,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-termite-mound",
     slug: "termite-mound-sarang-rayap",
-    title: "Termite mound — sarang rayap",
+    title: "Termite mound",
     category: "living",
     summary: "Earthen termite structure signaling active colonies that may threaten timber elements.",
     content: `<p>A <strong>Sarang Rayap</strong> near structures is a warning sign for potential timber damage.</p>
@@ -4251,7 +4345,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-tomcat-beetle",
     slug: "tomcat-paederus-litteralis",
-    title: "Tomcat — Paederus beetles",
+    title: "Tomcat",
     category: "living",
     summary: "Small rove beetle whose body fluid can irritate skin if crushed.",
     content: `<p><strong>Tomcat</strong> is a small orange-black beetle known for skin irritation risk when smashed against skin.</p>
@@ -4326,7 +4420,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-water-heater-gas-vs-electric",
     slug: "water-heater-gas-vs-electric-bali",
-    title: "Water heater — gas or electric",
+    title: "Water heater",
     category: "living",
     summary: "Hot water system choice balancing operating cost, safety preferences, and reliability.",
     content: `<p>Bali villas commonly use LPG gas heaters due to running cost advantages, while electric systems are often preferred for simpler safety management.</p>
@@ -4341,7 +4435,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-weather-windy-season-august",
     slug: "windy-season-august-bali",
-    title: "Windy season — August",
+    title: "Windy season",
     category: "living",
     summary: "Cooler windy period associated with kite season and more dust around open spaces.",
     content: `<p>August is often considered a <strong>windy season</strong> in Bali, with cooler air and stronger breezes.</p>
@@ -4353,4 +4447,5 @@ export const glossaryTerms: GlossaryTerm[] = [
     seoDescription: "How August wind patterns affect comfort and maintenance in Ubud villas.",
     relatedGuideUrl: "/guides/ubud",
   },
+  ...glossaryGeminiMay2026Batch,
 ];

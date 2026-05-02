@@ -97,13 +97,22 @@ export default function AdminArchivePage() {
     return <div className="text-center py-12 text-gray-600">Loading archive...</div>;
   }
 
+  const archivedCount = properties.length;
+
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Archive</h1>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-6">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Archive</h1>
+          <p className="mt-1 text-sm text-gray-600 tabular-nums">
+            <span className="font-semibold text-gray-900">{archivedCount}</span>
+            {" "}
+            archived {archivedCount === 1 ? "listing" : "listings"}
+          </p>
+        </div>
         <Link
           href="/admin/properties"
-          className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
+          className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors shrink-0 self-start"
         >
           Back to Properties
         </Link>
