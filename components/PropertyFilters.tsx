@@ -183,8 +183,16 @@ function buildFiltersFromSearchParams(
     if (!(ALLOWED_BEDROOM_COUNTS as readonly number[]).includes(n)) return [] as number[];
     return [n] as number[];
   })();
+  const isUbudRentBedroomSlug =
+    pathMainArea === "ubud" && pathType === "rent" && pathBedrooms.length === 1;
   const pathMinDuration =
-    pathSegment === "monthly" ? 1 : pathSegment === "yearly" ? 12 : undefined;
+    pathSegment === "monthly"
+      ? 1
+      : pathSegment === "yearly"
+        ? 12
+        : isUbudRentBedroomSlug
+          ? 1
+          : undefined;
   const pathAmenityFlags = {
     hasBathtub: pathSegment === "bathtub",
     hasCarPark: pathSegment === "car-park",
@@ -532,10 +540,8 @@ export default function PropertyFilters({
         const minDur = newFilters.minDuration;
         const amenities = selectedAmenitySlugs();
 
-        if (minDur === 1) return "monthly";
-        if (minDur === 12) return "yearly";
-
-        // Bedroom segment if payment segment is not explicitly selected.
+        // Prefer bedroom SEO slugs when a single bedroom count is selected.
+        // (We can't represent bedroom + monthly/yearly simultaneously as separate path segments today.)
         if (beds.length === 1) {
           const n = beds[0]!;
           if (Number.isFinite(n) && (ALLOWED_BEDROOM_COUNTS as readonly number[]).includes(n)) {
@@ -543,9 +549,52 @@ export default function PropertyFilters({
           }
         }
 
+        if (minDur === 1) return "monthly";
+        if (minDur === 12) return "yearly";
+
         if (amenities.length === 1) return amenities[0]!;
 
         return null;
+      };
+
+      const stripRedundantUbudRentQuery = (qp: URLSearchParams, seg: string | null) => {
+        if (!seg) return;
+        if (seg.endsWith("-bedroom-villa")) {
+          const mBed = seg.match(/^(\d+)-bedroom-villa$/);
+          const n = mBed ? parseInt(mBed[1], 10) : NaN;
+          if (Number.isFinite(n) && newFilters.bedrooms.length === 1 && newFilters.bedrooms[0] === n) {
+            qp.delete("bedrooms");
+          }
+          // Monthly rent is the default UX once a bedroom slug is in the path; yearly must stay explicit.
+          if (newFilters.minDuration === 1) {
+            qp.delete("minDuration");
+          }
+        } else if (seg === "monthly" && newFilters.minDuration === 1) {
+          qp.delete("minDuration");
+          // Avoid duplicating bedroom selection in query when it can be represented as a bedroom segment.
+          if (newFilters.bedrooms.length === 1) {
+            const n = newFilters.bedrooms[0]!;
+            if (Number.isFinite(n) && (ALLOWED_BEDROOM_COUNTS as readonly number[]).includes(n)) {
+              qp.delete("bedrooms");
+            }
+          }
+        } else if (seg === "yearly" && newFilters.minDuration === 12) {
+          qp.delete("minDuration");
+          if (newFilters.bedrooms.length === 1) {
+            const n = newFilters.bedrooms[0]!;
+            if (Number.isFinite(n) && (ALLOWED_BEDROOM_COUNTS as readonly number[]).includes(n)) {
+              qp.delete("bedrooms");
+            }
+          }
+        } else {
+          const activeAmenity = selectedAmenitySlugs();
+          if (activeAmenity.length === 1 && activeAmenity[0] === seg) {
+            for (const k of amenityKeys) {
+              const s = amenitySlugFromFilterKey(k);
+              if (s === seg) qp.delete(k);
+            }
+          }
+        }
       };
 
       const queryParams = new URLSearchParams();
@@ -574,32 +623,7 @@ export default function PropertyFilters({
           qp.delete("mainArea");
         }
 
-        // Canonicalize known Ubud rent SEO segments into the path (drop redundant query keys).
-        const seg = ubudRentCanonicalSegment();
-        if (seg) {
-          const third = pn.match(/^\/properties\/[^/]+\/[^/]+\/([^/?#]+)/)?.[1];
-          if (third === seg) {
-            if (seg.endsWith("-bedroom-villa")) {
-              const mBed = seg.match(/^(\d+)-bedroom-villa$/);
-              const n = mBed ? parseInt(mBed[1], 10) : NaN;
-              if (Number.isFinite(n) && newFilters.bedrooms.length === 1 && newFilters.bedrooms[0] === n) {
-                qp.delete("bedrooms");
-              }
-            } else if (seg === "monthly" && newFilters.minDuration === 1) {
-              qp.delete("minDuration");
-            } else if (seg === "yearly" && newFilters.minDuration === 12) {
-              qp.delete("minDuration");
-            } else {
-              const activeAmenity = selectedAmenitySlugs();
-              if (activeAmenity.length === 1 && activeAmenity[0] === seg) {
-                for (const k of amenityKeys) {
-                  const s = amenitySlugFromFilterKey(k);
-                  if (s === seg) qp.delete(k);
-                }
-              }
-            }
-          }
-        }
+        stripRedundantUbudRentQuery(qp, ubudRentCanonicalSegment());
 
         const s = qp.toString();
         return s ? `?${s}` : "";
@@ -637,39 +661,7 @@ export default function PropertyFilters({
             return;
           }
           const dest = seg ? `/properties/${newType}/ubud/${seg}` : `/properties/${newType}/ubud`;
-          const qp = new URLSearchParams(queryParams.toString());
-          if (newFilters.subArea.length > 1) {
-            qp.set("subArea", newFilters.subArea.join(","));
-          } else {
-            qp.delete("subArea");
-          }
-          const m = dest.match(/^\/properties\/[^/]+\/([^/]+)(?:\/|$)/);
-          if (m?.[1] && newFilters.mainArea === m[1]) qp.delete("mainArea");
-
-          if (seg) {
-            if (seg.endsWith("-bedroom-villa")) {
-              const mBed = seg.match(/^(\d+)-bedroom-villa$/);
-              const n = mBed ? parseInt(mBed[1], 10) : NaN;
-              if (Number.isFinite(n) && newFilters.bedrooms.length === 1 && newFilters.bedrooms[0] === n) {
-                qp.delete("bedrooms");
-              }
-            } else if (seg === "monthly" && newFilters.minDuration === 1) {
-              qp.delete("minDuration");
-            } else if (seg === "yearly" && newFilters.minDuration === 12) {
-              qp.delete("minDuration");
-            } else {
-              const activeAmenity = selectedAmenitySlugs();
-              if (activeAmenity.length === 1 && activeAmenity[0] === seg) {
-                for (const k of amenityKeys) {
-                  const s = amenitySlugFromFilterKey(k);
-                  if (s === seg) qp.delete(k);
-                }
-              }
-            }
-          }
-
-          const s = qp.toString();
-          router.push(`${dest}${s ? `?${s}` : ""}`, { scroll: false });
+          router.push(`${dest}${qsForPath(dest, false)}`, { scroll: false });
           return;
         }
 

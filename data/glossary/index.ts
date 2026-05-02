@@ -4,7 +4,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-imb",
     slug: "imb-building-permit-bali",
-    title: "IMB / building permit (Izin Mendirikan Bangunan)",
+    title: "IMB — building permit",
     category: "legal",
     summary:
       "The key building permit framework in Indonesia (transitioned from IMB toward PBG). It defines legal building use and is critical for risk control.",
@@ -22,7 +22,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-hgb",
     slug: "hgb-hak-guna-bangunan",
-    title: "HGB (Hak Guna Bangunan)",
+    title: "HGB",
     category: "legal",
     summary:
       "A title held by legal entities (e.g. PT PMA) giving the right to build on state land for a fixed period, often relevant in structured investments.",
@@ -32,14 +32,14 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-09T10:00:00.000Z",
     updatedAt: "2026-04-09T10:00:00.000Z",
-    seoTitle: "HGB (Hak Guna Bangunan) in Bali — glossary | Balitrusted",
+    seoTitle: "HGB in Bali — glossary | Balitrusted",
     seoDescription: "Short explanation of HGB, who can hold it, and how it differs from freehold.",
     relatedGuideUrl: "/guides/buy",
   },
   {
     id: "glossary-hak-pakai",
     slug: "hak-pakai-right-to-use",
-    title: "Hak Pakai (right to use)",
+    title: "Hak Pakai",
     category: "legal",
     summary:
       "A titled right to use land or a unit, sometimes relevant for foreign buyers under specific setups—details depend on asset class and eligibility.",
@@ -55,7 +55,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-leasehold",
     slug: "leasehold-vs-freehold-bali",
-    title: "Leasehold vs freehold (simple view)",
+    title: "Leasehold vs freehold",
     category: "legal",
     summary:
       "Freehold is ownership for eligible holders on qualifying land. Leasehold is a contract giving use for years—common for villas and land.",
@@ -89,7 +89,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-ppjb",
     slug: "ppjb-preliminary-agreement",
-    title: "PPJB (preliminary sale agreement)",
+    title: "PPJB",
     category: "documents",
     summary:
       "A binding preliminary contract before full transfer—often sets deposit, timeline, and conditions precedent.",
@@ -105,7 +105,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-notary",
     slug: "notary-notaris-bali",
-    title: "Notary (Notaris)",
+    title: "Notaris",
     category: "legal",
     summary:
       "Indonesian notaries are public officials who draft authentic deeds (including many land transfers)—not the same role as in some Western countries.",
@@ -115,7 +115,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-09T10:00:00.000Z",
     updatedAt: "2026-04-09T10:00:00.000Z",
-    seoTitle: "Notary (Notaris) in Indonesian property deals | Balitrusted glossary",
+    seoTitle: "Notaris in Indonesian property deals | Balitrusted glossary",
     seoDescription: "How Indonesian notaries fit into land transfers and what they do not guarantee.",
     relatedGuideUrl: "/guides/legal",
   },
@@ -156,7 +156,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-service-charge",
     slug: "villa-service-charge-ilp",
-    title: "Service charge & ILP (shared estates)",
+    title: "Service charge and ILP",
     category: "finance",
     summary:
       "In gated clusters, monthly common-area fees may cover security, roads, clubhouses, or drainage—separate from rent.",
@@ -172,7 +172,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-green-zone-jalur-hijau",
     slug: "green-zone-jalur-hijau-bali",
-    title: "Green Zone (Jalur Hijau)",
+    title: "Green Zone — Jalur Hijau",
     category: "legal",
     summary:
       "Protected agricultural or conservation land where construction is restricted; high compliance and demolition risk if a villa sits on the wrong zoning.",
@@ -182,7 +182,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-10T12:00:00.000Z",
     updatedAt: "2026-04-10T12:00:00.000Z",
-    seoTitle: "Green Zone (Jalur Hijau) Bali — zoning risk | Balitrusted glossary",
+    seoTitle: "Green Zone Jalur Hijau Bali — zoning risk | Balitrusted glossary",
     seoDescription:
       "What Green Zones mean for Ubud villas, why illegal builds happen, and why ITR/zoning checks matter before rent or purchase.",
     relatedGuideUrl: "/guides/legal",
@@ -190,7 +190,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-pyramids-of-chi",
     slug: "pyramids-of-chi-keliki-landmark",
-    title: "Pyramids of Chi (location landmark)",
+    title: "Pyramids of Chi",
     category: "living",
     summary:
       "A major sound-healing center in Keliki, north of Ubud; “near Pyramids of Chi” is now a common way to position listings.",
@@ -206,7 +206,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-monkey-forest-access",
     slug: "monkey-forest-access-ubud",
-    title: "Monkey Forest access (Ubud)",
+    title: "Monkey Forest access",
     category: "living",
     summary:
       "Living near the Sacred Monkey Forest means jungle atmosphere—and regular visits from macaques that affect doors, roofs, and gardens.",
@@ -223,7 +223,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-campuhan-ridge-walk",
     slug: "campuhan-ridge-walk-ubud-views",
-    title: "Campuhan Ridge Walk (premium views)",
+    title: "Campuhan Ridge Walk",
     category: "living",
     summary:
       "Ubud’s famous ridge trail; villas with ridge outlooks or northern end positions often trade at a premium for stable views and breeze.",
@@ -239,7 +239,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-rice-field-view-sawah",
     slug: "rice-field-view-sawah-buffer",
-    title: "Rice field view (sawah)",
+    title: "Rice field view — sawah",
     category: "living",
     summary:
       "The most requested Ubud feature—but open fields can be built on unless protected or controlled; ask about what protects your view.",
@@ -249,14 +249,14 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-10T12:00:00.000Z",
     updatedAt: "2026-04-10T12:00:00.000Z",
-    seoTitle: "Rice field view (sawah) — will it last? | Balitrusted glossary",
+    seoTitle: "Rice field view sawah — will it last? | Balitrusted glossary",
     seoDescription: "Why sawah views in Ubud listings need a buffer-zone reality check before you rent or buy.",
     relatedGuideUrl: "/guides/ubud",
   },
   {
     id: "glossary-melasti",
     slug: "melasti-ceremony-bali-road-closures",
-    title: "Melasti (ceremonial impact)",
+    title: "Melasti",
     category: "living",
     summary:
       "Major Hindu purification processions toward the water; in Ubud, Melasti can mean hours of road closure—part of normal life, not an emergency.",
@@ -272,7 +272,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-canang-sari",
     slug: "canang-sari-daily-offerings",
-    title: "Canang sari (daily offerings)",
+    title: "Canang sari",
     category: "living",
     summary:
       "Small leaf trays with flowers and incense at gates and paths; part of daily life in villas—treat them with respect.",
@@ -323,7 +323,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-tegalalang-investment",
     slug: "tegalalang-rice-terraces-investment",
-    title: "Tegalalang (investment zone)",
+    title: "Tegalalang",
     category: "finance",
     summary:
       "North of Ubud center, UNESCO-famous terraces; cooler air, larger plots, and growing upscale resort and eco-villa interest.",
@@ -340,7 +340,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-itr-informasi-tata-ruang",
     slug: "itr-informasi-tata-ruang-bali",
-    title: "ITR (Informasi Tata Ruang)",
+    title: "ITR",
     category: "documents",
     summary:
       "A local spatial planning document showing what a plot can legally be used for, making it the first zoning check before any Bali property deal.",
@@ -350,7 +350,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-15T12:00:00.000Z",
     updatedAt: "2026-04-15T12:00:00.000Z",
-    seoTitle: "ITR (Informasi Tata Ruang) in Bali | Balitrusted glossary",
+    seoTitle: "ITR spatial planning in Bali | Balitrusted glossary",
     seoDescription:
       "What ITR means in Bali property, why it is the first zoning check, and how it protects buyers and renters from the wrong land use.",
     relatedGuideUrl: "/guides/legal",
@@ -358,7 +358,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-topography-land-level",
     slug: "topography-land-level-ubud",
-    title: "Topography (land level)",
+    title: "Topography",
     category: "other",
     summary:
       "In hilly Ubud, slope affects views, drainage, retaining walls, engineering complexity, and total construction cost.",
@@ -376,7 +376,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-electricity-kva",
     slug: "electricity-kva-pln-bali",
-    title: "Electricity (KVA)",
+    title: "Electricity — KVA",
     category: "living",
     summary:
       "Power capacity in Indonesia is measured in KVA, and many modern villas need an upgrade to support ACs, pumps, and appliances.",
@@ -394,7 +394,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-well-water-sumur-bor",
     slug: "well-water-sumur-bor-bali",
-    title: "Well water (sumur bor)",
+    title: "Well water — sumur bor",
     category: "living",
     summary:
       "A deep drilled well is the main water source for many Ubud villas, often paired with filtration or RO for better quality.",
@@ -404,7 +404,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-15T12:00:00.000Z",
     updatedAt: "2026-04-15T12:00:00.000Z",
-    seoTitle: "Well water (sumur bor) in Bali villas | Balitrusted glossary",
+    seoTitle: "Well water sumur bor in Bali villas | Balitrusted glossary",
     seoDescription:
       "How drilled wells work in Ubud, why filtration matters, and what to verify about villa water quality.",
     relatedGuideUrl: "/guides/rent",
@@ -412,7 +412,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-pajak-tax-bali-property",
     slug: "pajak-tax-bali-property",
-    title: "Pajak (tax)",
+    title: "Pajak",
     category: "finance",
     summary:
       "Property deals and rentals in Indonesia involve different taxes, including transfer taxes and income-based withholding on rental earnings.",
@@ -556,7 +556,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-pura",
     slug: "pura-balinese-temple",
-    title: "Pura (temple)",
+    title: "Pura",
     category: "living",
     summary:
       "A Balinese Hindu temple, with major implications for ceremony life and even practical development limits such as building height.",
@@ -566,7 +566,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-15T12:00:00.000Z",
     updatedAt: "2026-04-15T12:00:00.000Z",
-    seoTitle: "Pura (Balinese temple) explained | Balitrusted glossary",
+    seoTitle: "Pura Balinese temple explained | Balitrusted glossary",
     seoDescription:
       "What a pura is in Bali and why temples influence culture, ceremonies, and even development constraints.",
     relatedGuideUrl: "/guides/ubud",
@@ -646,11 +646,11 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-laundry-kiloan",
     slug: "laundry-kiloan-bali",
-    title: "Laundry (kiloan)",
+    title: "Kiloan laundry",
     category: "living",
     summary:
       "A low-cost wash-and-fold service priced by weight, making external laundry a normal part of everyday Bali life.",
-    content: `<p><strong>Kiloan laundry</strong> is a common Bali service where clothes are washed, dried, and folded for a very low price per kilogram.</p>
+    content: `<p><strong>Kiloan laundry</strong> is a common Bali service where clothes are washed, dried, and folded for a very low price per kilogram—the everyday verb is <a href="/glossary/cuci-wash-indonesian">cuci</a>, “wash.”</p>
 <p>Because the service is so normal and accessible, many long-stay residents rely on outside laundry rather than using large in-villa washing setups for every load.</p>
 <p>For property decisions, this means a villa without a huge laundry room is not always a practical problem the way it might be elsewhere.</p>`,
     published: true,
@@ -682,7 +682,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-kitas-visa",
     slug: "kitas-visa-long-stay-bali",
-    title: "KITAS (KITAS visa)",
+    title: "KITAS",
     category: "documents",
     summary:
       "A limited stay permit often relevant for foreigners signing longer leases or operating a formal business structure in Indonesia.",
@@ -700,11 +700,12 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-alang-alang-thatched-roof",
     slug: "alang-alang-thatched-roof-bali",
-    title: "Alang-alang (thatched roof)",
+    title: "Alang-alang",
     category: "other",
     summary:
       "A traditional Balinese thatched roof made from dried cogon grass, prized for ventilation and tropical character but needing periodic replacement.",
     content: `<p><strong>Alang-alang</strong> is a traditional thatched roof made from dried <strong>cogon grass</strong>. It is one of the most recognizable “tropical Bali” design signatures because it breathes well and softens sound compared with hard roofing.</p>
+<p>For the general English concept, see <a href="/glossary/thatched-roof-bali">thatched roof</a>.</p>
 <p>The tradeoff is maintenance: alang-alang typically needs replacement or serious refurbishment on a multi-year cycle, often discussed in the <strong>5–10 year</strong> range depending on climate exposure, slope detail, and quality of installation.</p>
 <p>When a listing highlights alang-alang, ask whether it is decorative only or the primary weatherproof roof, and what the owner’s maintenance plan looks like in practice.</p>`,
     published: true,
@@ -713,6 +714,39 @@ export const glossaryTerms: GlossaryTerm[] = [
     seoTitle: "Alang-alang thatched roof in Bali villas | Balitrusted glossary",
     seoDescription:
       "What alang-alang roofing is, why it feels so tropical, and what maintenance expectations look like for Bali villas.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-thatched-roof",
+    slug: "thatched-roof-bali",
+    title: "Thatched roof",
+    category: "other",
+    summary:
+      "Plant-based roofing—grass, palm, or similar—that gives a soft silhouette and natural insulation but needs periodic renewal in wet tropical climates.",
+    content: `<p>A <strong>thatched roof</strong> uses bundled dried vegetation to shed rain while staying visually warm and acoustically softer than sheet metal.</p>
+<p>In Bali villa design, the signature material is usually <a href="/glossary/alang-alang-thatched-roof-bali"><strong>Alang-alang</strong></a>—cogon-grass thatch. That entry covers maintenance cycles and what to verify in listings.</p>`,
+    published: true,
+    createdAt: "2026-05-02T12:00:00.000Z",
+    updatedAt: "2026-05-02T12:00:00.000Z",
+    seoTitle: "Thatched roof in Bali villas — glossary | Balitrusted",
+    seoDescription:
+      "What thatched roofing means in the tropics and how it connects to alang-alang in Bali.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-cuci-indonesian",
+    slug: "cuci-wash-indonesian",
+    title: "Cuci",
+    category: "living",
+    summary:
+      "The Indonesian verb for wash or clean—laundry, dishes, vehicles, and specialist villa jobs such as air-conditioner cleaning.",
+    content: `<p><strong>Cuci</strong> means “wash” or “clean.” You hear it across daily life: clothes, cars, dishes, and maintenance slang.</p>
+<p>For weight-priced laundry, see <a href="/glossary/laundry-kiloan-bali">kiloan laundry</a>. For AC deep cleaning, see <a href="/glossary/ac-service-cuci-ac-bali">Cuci AC</a>.</p>`,
+    published: true,
+    createdAt: "2026-05-02T12:00:00.000Z",
+    updatedAt: "2026-05-02T12:00:00.000Z",
+    seoTitle: "Cuci meaning wash and clean — glossary | Balitrusted",
+    seoDescription: "How the word cuci appears in Bali daily life and villa maintenance phrases.",
     relatedGuideUrl: "/guides/rent",
   },
   {
@@ -754,7 +788,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-batu-candi-volcanic-stone",
     slug: "batu-candi-volcanic-stone-bali",
-    title: "Batu candi (volcanic stone)",
+    title: "Batu candi",
     category: "other",
     summary:
       "A dark volcanic stone popular for pool decks and wet areas because it feels natural, durable, and grippy underfoot when finished correctly.",
@@ -889,7 +923,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-18T12:00:00.000Z",
     updatedAt: "2026-04-18T12:00:00.000Z",
-    seoTitle: "Lumpsum payment (leasehold) — glossary | Balitrusted",
+    seoTitle: "Lumpsum leasehold payment — glossary | Balitrusted",
     seoDescription: "What a lumpsum lease payment is in Bali and how it differs from monthly rent.",
     relatedGuideUrl: "/guides/buy",
   },
@@ -928,7 +962,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-pbb-land-building-tax",
     slug: "pbb-pajak-bumi-dan-bangunan",
-    title: "PBB (Pajak Bumi dan Bangunan)",
+    title: "PBB",
     category: "finance",
     summary:
       "Indonesia’s annual land and building tax—usually modest rates, but unpaid years can block transfers and permit work.",
@@ -960,7 +994,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-batu-hijau-sukabumi-stone",
     slug: "batu-hijau-sukabumi-green-stone-pools",
-    title: "Batu Hijau (Sukabumi stone)",
+    title: "Batu Hijau",
     category: "other",
     summary:
       "Premium green volcanic stone from Java, iconic for luxury pool linings—natural zeolite can help water clarity and reduce chemical load.",
@@ -992,7 +1026,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-bio-septic-tank",
     slug: "bio-septic-tank-bali-villas",
-    title: "Septic tank (bio-septic)",
+    title: "Septic tank",
     category: "other",
     summary:
       "Multi-chamber sewage treatment using bacteria—cleaner effluent than basic tanks, important for groundwater in dense green areas.",
@@ -1008,7 +1042,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-sirap-roofing-shingles",
     slug: "sirap-roofing-shingles-ulin-ironwood",
-    title: "Roofing shingles (sirap)",
+    title: "Sirap shingles",
     category: "other",
     summary:
       "Thin tapered wooden roof tiles, often from ultra-durable ulin (ironwood)—organic look, silvery ageing, and natural insulation.",
@@ -1024,7 +1058,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-pondasi-foundations-bali",
     slug: "pondasi-foundations-seismic-bali",
-    title: "Foundations (pondasi)",
+    title: "Foundations — pondasi",
     category: "other",
     summary:
       "Structural base engineered for earthquakes and volcanic soils—deep piles or “cakar ayam” (chicken-claw) grids are common patterns.",
@@ -1033,7 +1067,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-18T12:00:00.000Z",
     updatedAt: "2026-04-18T12:00:00.000Z",
-    seoTitle: "Villa foundations (pondasi) in Bali — glossary | Balitrusted",
+    seoTitle: "Villa foundations pondasi in Bali — glossary | Balitrusted",
     seoDescription: "Why Bali villa foundations must handle earthquakes and tricky soils.",
     relatedGuideUrl: "/guides/buy",
   },
@@ -1200,7 +1234,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-banjar-pecalang-security",
     slug: "banjar-pecalang-village-security",
-    title: "Banjar security (pecalang)",
+    title: "Banjar security — pecalang",
     category: "living",
     summary:
       "Traditional village security in checkered sarong—ceremony traffic control plus grassroots authority; good neighbour relations help villa life.",
@@ -1248,7 +1282,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-teak-wood-jati",
     slug: "teak-wood-jati-bali-timber",
-    title: "Teak wood (jati)",
+    title: "Teak wood — jati",
     category: "living",
     summary:
       "Indonesia’s flagship hardwood—dense grain, natural oils, used from pillars to bespoke furniture for long tropical service life.",
@@ -1257,14 +1291,14 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-18T12:00:00.000Z",
     updatedAt: "2026-04-18T12:00:00.000Z",
-    seoTitle: "Teak wood (jati) in Bali builds — glossary | Balitrusted",
+    seoTitle: "Teak wood jati in Bali builds — glossary | Balitrusted",
     seoDescription: "Why teak is valued for Bali villas and outdoor timberwork.",
     relatedGuideUrl: "/guides/rent",
   },
   {
     id: "glossary-ulin-ironwood",
     slug: "ulin-ironwood-outdoor-timber-bali",
-    title: "Ulin (ironwood)",
+    title: "Ulin",
     category: "living",
     summary:
       "Extremely dense Borneo ironwood—decades of outdoor life for decking, sirap, and pool details even under harsh sun.",
@@ -1297,7 +1331,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-yellow-zone-pemukiman",
     slug: "yellow-zone-pemukiman-bali-zoning",
-    title: "Yellow Zone (Pemukiman)",
+    title: "Yellow Zone — Pemukiman",
     category: "legal",
     summary:
       "Residential zoning in Bali spatial plans, typically the target zone for standard long-term villa living and non-tourism use.",
@@ -1307,14 +1341,14 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-21T10:00:00.000Z",
     updatedAt: "2026-04-21T10:00:00.000Z",
-    seoTitle: "Yellow Zone (Pemukiman) Bali — glossary | Balitrusted",
+    seoTitle: "Yellow Zone Pemukiman Bali — glossary | Balitrusted",
     seoDescription: "What Yellow Zone means in Bali zoning and why it matters for residential villa use.",
     relatedGuideUrl: "/guides/legal",
   },
   {
     id: "glossary-pink-zone-pariwisata",
     slug: "pink-zone-pariwisata-bali-tourism-zoning",
-    title: "Pink Zone (Pariwisata)",
+    title: "Pink Zone — Pariwisata",
     category: "legal",
     summary:
       "Tourism-designated zoning where legal short-term villa rental licensing is typically possible.",
@@ -1324,7 +1358,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-21T10:00:00.000Z",
     updatedAt: "2026-04-21T10:00:00.000Z",
-    seoTitle: "Pink Zone (Pariwisata) Bali — glossary | Balitrusted",
+    seoTitle: "Pink Zone Pariwisata Bali — glossary | Balitrusted",
     seoDescription: "Why tourism zoning is critical for legal short-term villa rental strategy in Bali.",
     relatedGuideUrl: "/guides/buy",
   },
@@ -1399,7 +1433,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-land-notary-ppat",
     slug: "land-notary-ppat-bali",
-    title: "Land Notary (PPAT)",
+    title: "Land Notary — PPAT",
     category: "documents",
     summary:
       "A government-authorized land deed official for legally binding transfer documents and registration workflow.",
@@ -1409,7 +1443,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-21T10:00:00.000Z",
     updatedAt: "2026-04-21T10:00:00.000Z",
-    seoTitle: "Land Notary (PPAT) in Bali transactions | Balitrusted glossary",
+    seoTitle: "Land Notary PPAT in Bali transactions | Balitrusted glossary",
     seoDescription: "What PPAT does in Indonesian land transfers and why this role is transaction-critical.",
     relatedGuideUrl: "/guides/legal",
   },
@@ -1433,7 +1467,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-building-management-system-bms",
     slug: "building-management-system-bms-smart-villa",
-    title: "Building Management System (BMS)",
+    title: "Building Management System — BMS",
     category: "living",
     summary:
       "A centralized digital control layer for lighting, climate, pumps, and security in smart villas.",
@@ -1467,7 +1501,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-soakaway-drainage",
     slug: "soakaway-drainage-system-bali",
-    title: "Soakaway (Drainage)",
+    title: "Soakaway",
     category: "living",
     summary:
       "A subsurface gravel pit system that slows rainwater absorption and helps prevent flooding around villas.",
@@ -1484,7 +1518,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-deep-well-ro-filtration",
     slug: "deep-well-filtration-ro-system-bali",
-    title: "Deep Well Filtration (RO System)",
+    title: "Deep well filtration — RO",
     category: "living",
     summary:
       "A high-spec water treatment setup that can make villa tap water suitable for direct drinking.",
@@ -1552,7 +1586,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-insect-protection-screening",
     slug: "insect-protection-screening-villa",
-    title: "Insect Protection (Screening)",
+    title: "Insect screening",
     category: "living",
     summary:
       "Mosquito screens and insect barriers that materially improve comfort in jungle and tropical settings.",
@@ -1682,7 +1716,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-parking-ticket-karcis",
     slug: "parking-ticket-karcis-bali",
-    title: "Parking Ticket (Karcis)",
+    title: "Parking ticket — karcis",
     category: "living",
     summary:
       "A small parking slip issued in official lots and controlled zones; keep it until exit.",
@@ -1691,7 +1725,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-25T10:00:00.000Z",
     updatedAt: "2026-04-25T10:00:00.000Z",
-    seoTitle: "Parking ticket (karcis) in Bali — glossary | Balitrusted",
+    seoTitle: "Parking ticket karcis in Bali — glossary | Balitrusted",
     seoDescription: "What karcis means in Bali parking systems and why you should keep it.",
     relatedGuideUrl: "/guides/rent",
   },
@@ -1762,7 +1796,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-dragon-fruit-buah-naga",
     slug: "dragon-fruit-buah-naga-bali",
-    title: "Dragon Fruit (Buah Naga)",
+    title: "Dragon fruit",
     category: "living",
     summary:
       "A bright tropical fruit commonly used in Bali smoothie bowls and fresh juices.",
@@ -1771,14 +1805,14 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-25T10:00:00.000Z",
     updatedAt: "2026-04-25T10:00:00.000Z",
-    seoTitle: "Dragon fruit (buah naga) in Bali — glossary | Balitrusted",
+    seoTitle: "Dragon fruit buah naga in Bali — glossary | Balitrusted",
     seoDescription: "A quick guide to dragon fruit and why it is common in Bali daily diet.",
     relatedGuideUrl: "/guides/ubud",
   },
   {
     id: "glossary-mangosteen-manggis",
     slug: "mangosteen-manggis-bali",
-    title: "Mangosteen (Manggis)",
+    title: "Mangosteen",
     category: "living",
     summary:
       "A sweet-tangy fruit with white segments inside a thick purple rind.",
@@ -1787,7 +1821,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-25T10:00:00.000Z",
     updatedAt: "2026-04-25T10:00:00.000Z",
-    seoTitle: "Mangosteen (manggis) in Bali — glossary | Balitrusted",
+    seoTitle: "Mangosteen manggis in Bali — glossary | Balitrusted",
     seoDescription: "What mangosteen is and why it is a favorite seasonal fruit in Bali.",
     relatedGuideUrl: "/guides/ubud",
   },
@@ -1810,7 +1844,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-salak-snake-fruit",
     slug: "salak-snake-fruit-bali",
-    title: "Snake Fruit (Salak)",
+    title: "Snake fruit",
     category: "living",
     summary:
       "A crunchy tropical fruit with scaly skin and a sweet-acidic flavor profile.",
@@ -1819,7 +1853,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-25T10:00:00.000Z",
     updatedAt: "2026-04-25T10:00:00.000Z",
-    seoTitle: "Snake fruit (salak) in Bali — glossary | Balitrusted",
+    seoTitle: "Snake fruit salak in Bali — glossary | Balitrusted",
     seoDescription: "How salak tastes and why regional varieties matter in Bali markets.",
     relatedGuideUrl: "/guides/ubud",
   },
@@ -1842,7 +1876,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-harum-manis-mango",
     slug: "harum-manis-mango-indonesia",
-    title: "Mango (Harum Manis)",
+    title: "Mango Harum Manis",
     category: "living",
     summary:
       "A fragrant Indonesian mango variety prized for rich sweetness in peak season.",
@@ -1858,7 +1892,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-markisa-passion-fruit",
     slug: "markisa-passion-fruit-bali",
-    title: "Passion Fruit (Markisa)",
+    title: "Passion fruit",
     category: "living",
     summary:
       "A fragrant tropical fruit eaten fresh or juiced, with sweet-acidic crunchy seeds.",
@@ -1867,14 +1901,14 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-25T10:00:00.000Z",
     updatedAt: "2026-04-25T10:00:00.000Z",
-    seoTitle: "Passion fruit (markisa) in Bali — glossary | Balitrusted",
+    seoTitle: "Passion fruit markisa in Bali — glossary | Balitrusted",
     seoDescription: "What markisa is and how it appears in Bali daily food culture.",
     relatedGuideUrl: "/guides/ubud",
   },
   {
     id: "glossary-soursop-sirsak",
     slug: "soursop-sirsak-bali",
-    title: "Sour Sop (Sirsak)",
+    title: "Soursop",
     category: "living",
     summary:
       "A large tropical fruit with creamy-acidic flavor, often consumed as fresh juice.",
@@ -1883,14 +1917,14 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-25T10:00:00.000Z",
     updatedAt: "2026-04-25T10:00:00.000Z",
-    seoTitle: "Soursop (sirsak) in Bali — glossary | Balitrusted",
+    seoTitle: "Soursop sirsak in Bali — glossary | Balitrusted",
     seoDescription: "A practical overview of soursop and how people consume it in Bali.",
     relatedGuideUrl: "/guides/ubud",
   },
   {
     id: "glossary-jackfruit-nangka",
     slug: "jackfruit-nangka-bali",
-    title: "Jackfruit (Nangka)",
+    title: "Jackfruit",
     category: "living",
     summary:
       "A very large tropical fruit eaten both ripe (sweet) and unripe (savory cooking).",
@@ -1899,7 +1933,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-25T10:00:00.000Z",
     updatedAt: "2026-04-25T10:00:00.000Z",
-    seoTitle: "Jackfruit (nangka) in Bali — glossary | Balitrusted",
+    seoTitle: "Jackfruit nangka in Bali — glossary | Balitrusted",
     seoDescription: "How jackfruit is used in Bali as both sweet fruit and savory ingredient.",
     relatedGuideUrl: "/guides/ubud",
   },
@@ -2210,7 +2244,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-satusehat-app",
     slug: "satusehat-indonesia-health-app",
-    title: "SatuSehat (formerly PeduliLindungi)",
+    title: "SatuSehat",
     category: "documents",
     summary:
       "Indonesia’s official health app for records, vaccination history, and related services.",
@@ -2290,17 +2324,17 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-berapa-phrase",
     slug: "berapa-how-much-indonesian",
-    title: "Berapa?",
+    title: "Berapa",
     category: "living",
     summary:
       "The key Indonesian question word for asking price: “How much?”.",
-    content: `<p><strong>Berapa?</strong> means “How much?” and is one of the first practical words most long-stay foreigners learn.</p>
+    content: `<p><strong>Berapa</strong> means “how much” and is one of the first practical words most long-stay foreigners learn. In full sentences you often hear <em>Berapa harganya?</em>; in markets people sometimes shorten to a quick “berapa” tone.</p>
 <p>Used politely, it opens price conversation in markets and small shops without requiring full Indonesian fluency.</p>`,
     published: true,
     createdAt: "2026-04-25T10:00:00.000Z",
-    updatedAt: "2026-04-25T10:00:00.000Z",
-    seoTitle: "Berapa meaning in Bali markets — glossary | Balitrusted",
-    seoDescription: "How to use “Berapa?” when asking prices in Bali.",
+    updatedAt: "2026-05-02T12:00:00.000Z",
+    seoTitle: "Berapa how much in Bali markets — glossary | Balitrusted",
+    seoDescription: "How to use Berapa when asking prices in Bali markets and shops.",
     relatedGuideUrl: "/guides/ubud",
   },
   {
@@ -2418,7 +2452,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-pool-man-tukang-kolam",
     slug: "pool-man-tukang-kolam-bali",
-    title: "Pool Man (Tukang Kolam)",
+    title: "Tukang kolam",
     category: "living",
     summary:
       "A routine pool-maintenance specialist handling chemical balance, filtration, and cleaning.",
@@ -2427,14 +2461,14 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-26T09:30:00.000Z",
     updatedAt: "2026-04-26T09:30:00.000Z",
-    seoTitle: "Pool man (tukang kolam) in Bali villas — glossary | Balitrusted",
+    seoTitle: "Tukang kolam pool service in Bali villas — glossary | Balitrusted",
     seoDescription: "What a pool maintenance specialist does in day-to-day Bali villa operations.",
     relatedGuideUrl: "/guides/rent",
   },
   {
     id: "glossary-gardener-tukang-kebun",
     slug: "gardener-tukang-kebun-bali",
-    title: "Gardener (Tukang Kebun)",
+    title: "Tukang kebun",
     category: "living",
     summary:
       "A garden maintenance role critical for tropical growth control and outdoor villa upkeep.",
@@ -2443,23 +2477,23 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-26T09:30:00.000Z",
     updatedAt: "2026-04-26T09:30:00.000Z",
-    seoTitle: "Gardener (tukang kebun) in Bali villas — glossary | Balitrusted",
+    seoTitle: "Tukang kebun gardener in Bali villas — glossary | Balitrusted",
     seoDescription: "Why dedicated garden maintenance is essential for tropical villa operations.",
     relatedGuideUrl: "/guides/rent",
   },
   {
     id: "glossary-ac-service-cuci-ac",
     slug: "ac-service-cuci-ac-bali",
-    title: "AC Service (Cuci AC)",
+    title: "Cuci AC",
     category: "living",
     summary:
       "Periodic air-conditioner deep cleaning to preserve cooling efficiency and indoor air quality.",
-    content: `<p><strong>Cuci AC</strong> means cleaning AC units (filters and key components), usually every few months in Bali’s dusty and humid climate.</p>
+    content: `<p><strong>Cuci AC</strong> means cleaning AC units—filters and key components—usually every few months in Bali’s dusty and humid climate. The phrase uses the verb <a href="/glossary/cuci-wash-indonesian">cuci</a>, “wash.”</p>
 <p>Skipping this maintenance often causes weaker cooling, higher power use, and mold-related odor issues.</p>`,
     published: true,
     createdAt: "2026-04-26T09:30:00.000Z",
-    updatedAt: "2026-04-26T09:30:00.000Z",
-    seoTitle: "AC service (cuci AC) in Bali — glossary | Balitrusted",
+    updatedAt: "2026-05-02T12:00:00.000Z",
+    seoTitle: "Cuci AC in Bali — glossary | Balitrusted",
     seoDescription: "How frequent AC maintenance supports comfort and reliability in villas.",
     relatedGuideUrl: "/guides/rent",
   },
@@ -2482,7 +2516,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-water-pump-pompa-air",
     slug: "water-pump-pompa-air-villa",
-    title: "Water Pump (Pompa Air)",
+    title: "Pompa air",
     category: "living",
     summary:
       "A core plumbing component used to move well water through villa systems.",
@@ -2491,7 +2525,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-26T09:30:00.000Z",
     updatedAt: "2026-04-26T09:30:00.000Z",
-    seoTitle: "Water pump (pompa air) in Bali villas — glossary | Balitrusted",
+    seoTitle: "Pompa air water pump in Bali villas — glossary | Balitrusted",
     seoDescription: "Why water pump reliability is critical in well-based villa infrastructure.",
     relatedGuideUrl: "/guides/rent",
   },
@@ -2626,23 +2660,39 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-backup-generator-genset",
     slug: "backup-generator-genset-bali",
-    title: "Backup Generator (Genset)",
+    title: "Backup generator",
     category: "living",
     summary:
       "A secondary power source that keeps key systems running during electricity outages.",
-    content: `<p><strong>Genset</strong> is the Indonesian shorthand for a backup generator. In villa operations, it protects continuity during weather-related outages.</p>
-<p>Listings with generator backup are often treated as premium, especially for remote workers and managed rentals.</p>`,
+    content: `<p>A <strong>backup generator</strong> keeps essential circuits live when PLN mains power drops—during storms, maintenance, or peak strain.</p>
+<p>In speech and listings Indonesians usually say <a href="/glossary/genset-bali">genset</a> for the same equipment. Generator backup is often treated as premium, especially for remote workers and managed rentals.</p>`,
     published: true,
     createdAt: "2026-04-26T09:30:00.000Z",
-    updatedAt: "2026-04-26T09:30:00.000Z",
-    seoTitle: "Backup generator (genset) in Bali villas — glossary | Balitrusted",
-    seoDescription: "Why genset backup is a meaningful reliability feature for villa operations.",
+    updatedAt: "2026-05-02T12:00:00.000Z",
+    seoTitle: "Backup generator in Bali villas — glossary | Balitrusted",
+    seoDescription: "Why backup generator and genset backup matter for reliability in villa operations.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-genset",
+    slug: "genset-bali",
+    title: "Genset",
+    category: "living",
+    summary:
+      "Everyday Indonesian word for a generator set—backup electricity when the grid or compound supply fails.",
+    content: `<p><strong>Genset</strong> is shorthand for a <strong>generator set</strong>—typically diesel or petrol—used when mains power is out.</p>
+<p>For villa context, sizing, and how listings phrase backup power, see <a href="/glossary/backup-generator-genset-bali">backup generator</a>.</p>`,
+    published: true,
+    createdAt: "2026-05-02T12:00:00.000Z",
+    updatedAt: "2026-05-02T12:00:00.000Z",
+    seoTitle: "Genset meaning in Bali — glossary | Balitrusted",
+    seoDescription: "What genset means in Indonesian and how it maps to backup power in villas.",
     relatedGuideUrl: "/guides/rent",
   },
   {
     id: "glossary-ups-router-backup",
     slug: "ups-router-backup-power",
-    title: "UPS (Uninterruptible Power Supply)",
+    title: "UPS",
     category: "living",
     summary:
       "A small battery backup that keeps routers and critical devices online during short outages.",
@@ -2658,7 +2708,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-sktt-certificate",
     slug: "sktt-residence-certificate-indonesia",
-    title: "SKTT (Surat Keterangan Tempat Tinggal)",
+    title: "SKTT",
     category: "documents",
     summary:
       "A residence certificate tied to local civil registration for eligible foreign residents.",
@@ -2770,7 +2820,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-jamal-local-handyman",
     slug: "jamal-local-handyman-bali",
-    title: "Jamal (Local Handyman)",
+    title: "Jamal",
     category: "living",
     summary:
       "Colloquial term for a multi-skill local fixer who handles day-to-day practical repairs.",
@@ -2786,7 +2836,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-e-voa-electronic-visa-on-arrival",
     slug: "e-voa-electronic-visa-on-arrival",
-    title: "E-VOA (Electronic Visa on Arrival)",
+    title: "E-VOA",
     category: "documents",
     summary:
       "A digital 30-day visa-on-arrival process that can be completed online before landing in Indonesia.",
@@ -2802,15 +2852,15 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-b211a-visa",
     slug: "b211a-visa-bali",
-    title: "B211A Visa (Business/Visit Visa)",
+    title: "B211A",
     category: "documents",
     summary:
       "A common longer-stay visa route used by many remote workers and property seekers in Bali.",
-    content: `<p><strong>B211A</strong> is widely used for medium-term stays beyond standard tourist duration and usually requires proper sponsorship support.</p>
-<p>In practice, people rely on reputable visa agents to manage extensions and compliance timing, reducing overstay risk and administrative stress.</p>`,
+    content: `<p><strong>B211A</strong> is an Indonesian visit-class visa route many people describe informally as a <strong>business or visit</strong> stay—longer than a short tourist entry, but not a work permit by itself. Labels, allowed activities, and sponsorship rules change over time; confirm your situation with a qualified immigration adviser.</p>
+<p>In practice, many remote workers and property seekers use B211A through reputable agents who manage extensions and compliance timing, reducing overstay risk and administrative stress.</p>`,
     published: true,
     createdAt: "2026-04-27T13:10:00.000Z",
-    updatedAt: "2026-04-27T13:10:00.000Z",
+    updatedAt: "2026-05-02T12:00:00.000Z",
     seoTitle: "B211A visa in Bali — glossary | Balitrusted",
     seoDescription: "Plain-English overview of B211A visa use for longer stays in Bali.",
     relatedGuideUrl: "/guides/legal",
@@ -2818,7 +2868,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-kitas-investor-index-313-314",
     slug: "kitas-investor-index-313-314",
-    title: "KITAS Investor (Index 313/314)",
+    title: "KITAS investor — indexes 313 and 314",
     category: "documents",
     summary:
       "A residency permit route for foreigners investing through an Indonesian PMA company.",
@@ -2834,7 +2884,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-remote-worker-visa-e33g",
     slug: "remote-worker-visa-e33g",
-    title: "Remote Worker Visa (E33G)",
+    title: "Remote worker visa — E33G",
     category: "documents",
     summary:
       "A visa category designed for foreigners working remotely for non-Indonesian employers while living in Indonesia.",
@@ -2882,7 +2932,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-ravine-edge-abing",
     slug: "ravine-edge-abing",
-    title: "Ravine Edge (Abing)",
+    title: "Ravine edge — abing",
     category: "living",
     summary:
       "A gorge-edge site type with premium views and higher engineering demands.",
@@ -2914,7 +2964,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-limestone-batu-putih",
     slug: "limestone-batu-putih",
-    title: "Limestone (Batu Putih)",
+    title: "Limestone — batu putih",
     category: "living",
     summary:
       "A decorative white stone common in Bali landscaping and facade details.",
@@ -2930,7 +2980,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-ironwood-decking-kayu-ulin",
     slug: "ironwood-decking-kayu-ulin",
-    title: "Ironwood Decking (Kayu Ulin)",
+    title: "Ironwood decking — kayu ulin",
     category: "living",
     summary:
       "A premium, dense decking timber known for high durability around pools and outdoor areas.",
@@ -2946,7 +2996,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-woven-rattan-rotan",
     slug: "woven-rattan-rotan",
-    title: "Woven Rattan (Rotan)",
+    title: "Woven rattan",
     category: "living",
     summary:
       "A natural material central to Bali’s organic interior style in furniture and decor.",
@@ -2962,7 +3012,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-polished-concrete-semen-ekspos",
     slug: "polished-concrete-semen-ekspos",
-    title: "Polished Concrete (Semen Ekspos)",
+    title: "Polished concrete — semen ekspos",
     category: "living",
     summary:
       "A minimalist floor and surface finish popular in modern tropical villa design.",
@@ -2994,7 +3044,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-carved-teak-doors-pintu-ukir",
     slug: "carved-teak-doors-pintu-ukir",
-    title: "Carved Teak Doors (Pintu Ukir)",
+    title: "Carved teak doors — pintu ukir",
     category: "living",
     summary:
       "Traditional carved entrance doors used as heritage statement elements in villas.",
@@ -3058,7 +3108,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-traditional-healer-balian",
     slug: "traditional-healer-balian",
-    title: "Traditional Healer (Balian)",
+    title: "Balian",
     category: "living",
     summary:
       "A Balinese spiritual-healing practitioner integrated into local cultural and ceremonial life.",
@@ -3106,7 +3156,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-tempeh",
     slug: "tempeh-bali-superfood",
-    title: "Tempeh (Tempe)",
+    title: "Tempeh",
     category: "living",
     summary:
       "A fermented soy staple in Indonesian food, widely used in daily vegetarian and high-protein diets.",
@@ -3122,7 +3172,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-moringa-kelor",
     slug: "moringa-kelor-bali",
-    title: "Moringa (Kelor)",
+    title: "Moringa",
     category: "living",
     summary:
       "A nutrient-dense local plant commonly used in wellness-focused food and drink routines.",
@@ -3266,7 +3316,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-banjar-fee-iuran",
     slug: "banjar-fee-iuran",
-    title: "Banjar Fee (Iuran)",
+    title: "Banjar fee — iuran",
     category: "finance",
     summary:
       "A community contribution paid to local village structure for neighborhood support services.",
@@ -3330,7 +3380,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-silent-day-nyepi",
     slug: "silent-day-nyepi-bali",
-    title: "Silent Day (Nyepi)",
+    title: "Nyepi",
     category: "living",
     summary:
       "Balinese New Year day when the island enters full public silence and activity shutdown.",
@@ -3346,7 +3396,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-gas-refill-lpg",
     slug: "gas-refill-lpg-bali",
-    title: "Gas Refill (LPG)",
+    title: "Gas refill — LPG",
     category: "living",
     summary:
       "Canister-swap system used for stove and hot-water gas supply in many villas.",
@@ -3378,7 +3428,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-mosquito-coils-obat-nyamuk",
     slug: "mosquito-coils-obat-nyamuk",
-    title: "Mosquito Coils (Obat Nyamuk)",
+    title: "Mosquito coils",
     category: "living",
     summary:
       "Spiral insect repellents burned to reduce mosquito presence, especially in outdoor zones.",
@@ -3394,7 +3444,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-safety-box-brankas",
     slug: "safety-box-brankas",
-    title: "Safety Box (Brankas)",
+    title: "Safety box — brankas",
     category: "living",
     summary:
       "An in-room safe used for passports, cash, and valuables in rental properties.",
@@ -3410,7 +3460,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-blackouts-mati-lampu",
     slug: "blackouts-mati-lampu",
-    title: "Blackouts (Mati Lampu)",
+    title: "Blackouts — mati lampu",
     category: "living",
     summary:
       "Temporary power outages, often linked to storms and line interruptions.",
@@ -3426,7 +3476,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-paving-stones-conblock",
     slug: "paving-stones-conblock",
-    title: "Paving Stones (Conblock)",
+    title: "Paving stones — conblock",
     category: "living",
     summary:
       "Pre-cast concrete blocks used for drives and paths with practical drainage advantages.",
@@ -3442,7 +3492,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-exposed-brick-bata-ekspos",
     slug: "exposed-brick-bata-ekspos",
-    title: "Exposed Brick (Bata Ekspos)",
+    title: "Exposed brick — bata ekspos",
     category: "living",
     summary:
       "A traditional red-brick finish used as both structure and visible design feature.",
@@ -3601,7 +3651,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-banjar-meeting",
     slug: "banjar-meeting-rapat-banjar",
-    title: "Banjar Meeting (Rapat Banjar)",
+    title: "Banjar meeting — rapat banjar",
     category: "living",
     summary: "Regular village community meetings that coordinate local decisions, ceremonies, and practical rules.",
     content: `<p>A <strong>Banjar meeting</strong> is where local community leaders and members coordinate village matters, including ceremonies, logistics, and social obligations.</p>
@@ -3616,7 +3666,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-bat-poop-guano",
     slug: "bat-poop-guano-bali-villa",
-    title: "Bat Poop (Guano)",
+    title: "Guano",
     category: "living",
     summary: "Bat droppings found around roof spaces or high terraces; a maintenance and hygiene signal.",
     content: `<p><strong>Guano</strong> can appear on high terraces or under rafters where bats roost. It is organic but can stain stone and finishes.</p>
@@ -3631,7 +3681,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-bea-cukai",
     slug: "bea-cukai-customs-indonesia",
-    title: "Customs (Bea Cukai)",
+    title: "Customs — Bea Cukai",
     category: "finance",
     summary: "Indonesia’s customs authority handling duties and taxes on imported goods.",
     content: `<p><strong>Bea Cukai</strong> is Indonesia’s customs office. Imported goods may be held until duties are paid.</p>
@@ -3661,7 +3711,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-building-setback",
     slug: "building-setback-sempadan",
-    title: "Building Setback (Sempadan)",
+    title: "Building setback — sempadan",
     category: "legal",
     summary: "Mandatory legal distance between a building and roads, rivers, or boundaries.",
     content: `<p><strong>Sempadan</strong> defines setback limits that control where construction is allowed on a plot.</p>
@@ -3669,7 +3719,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-28T05:40:00.000Z",
     updatedAt: "2026-04-28T05:40:00.000Z",
-    seoTitle: "Building setback (Sempadan) Bali — glossary | Balitrusted",
+    seoTitle: "Building setback Sempadan Bali — glossary | Balitrusted",
     seoDescription: "Why setback rules matter in Bali land use and construction planning.",
     relatedGuideUrl: "/guides/legal",
   },
@@ -3706,7 +3756,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-centipede-kelabang",
     slug: "centipede-kelabang-bali-villa",
-    title: "Centipede (Kelabang)",
+    title: "Centipede — kelabang",
     category: "living",
     summary: "Large centipede occasionally entering ground-floor rooms in tropical areas.",
     content: `<p><strong>Kelabang</strong> are large centipedes that may enter homes near gardens or jungle edges.</p>
@@ -3714,14 +3764,14 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-28T05:40:00.000Z",
     updatedAt: "2026-04-28T05:40:00.000Z",
-    seoTitle: "Centipede (Kelabang) in Bali villas — glossary | Balitrusted",
+    seoTitle: "Centipede kelabang in Bali villas — glossary | Balitrusted",
     seoDescription: "Practical centipede prevention tips for jungle-facing properties.",
     relatedGuideUrl: "/guides/ubud",
   },
   {
     id: "glossary-cicada-tonggeret",
     slug: "cicada-tonggeret-jungle-sound",
-    title: "Cicada (Tonggeret)",
+    title: "Cicada — tonggeret",
     category: "living",
     summary: "Loud tropical insect known for intense afternoon and evening buzzing.",
     content: `<p><strong>Tonggeret</strong> are cicadas that create the classic high-pitched jungle soundtrack in many Ubud zones.</p>
@@ -3736,7 +3786,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-community-cleaning-kerja-bakti",
     slug: "community-cleaning-kerja-bakti",
-    title: "Community Cleaning (Kerja Bakti)",
+    title: "Kerja bakti",
     category: "living",
     summary: "Village-wide collaborative cleaning of roads, drains, and shared spaces.",
     content: `<p><strong>Kerja Bakti</strong> is a community clean-up effort where residents and local teams maintain shared infrastructure.</p>
@@ -3766,7 +3816,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-dry-season-bali",
     slug: "dry-season-musim-kemarau-bali",
-    title: "Dry Season (Musim Kemarau)",
+    title: "Dry season — musim kemarau",
     category: "living",
     summary: "Bali’s lower-rain period, typically April to October, with clearer skies.",
     content: `<p>The <strong>dry season</strong> in Bali is generally from April to October, with lower humidity and more predictable weather.</p>
@@ -3774,14 +3824,14 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-28T05:40:00.000Z",
     updatedAt: "2026-04-28T05:40:00.000Z",
-    seoTitle: "Dry season in Bali (Musim Kemarau) — glossary | Balitrusted",
+    seoTitle: "Dry season Musim Kemarau in Bali — glossary | Balitrusted",
     seoDescription: "What the dry season means for occupancy, comfort, and villa operations.",
     relatedGuideUrl: "/guides/rent",
   },
   {
     id: "glossary-e-wallet-ovo-dana",
     slug: "e-wallet-ovo-dana-indonesia",
-    title: "E-Wallet (OVO / Dana)",
+    title: "E-wallets — OVO and Dana",
     category: "finance",
     summary: "Popular Indonesian digital wallets used for transport, shops, and app payments.",
     content: `<p><strong>E-wallets</strong> like OVO and Dana are widely accepted in urban Bali for daily spending.</p>
@@ -3796,7 +3846,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-flying-ants-laron",
     slug: "flying-ants-laron-rainy-season",
-    title: "Flying Ants (Laron)",
+    title: "Flying ants — laron",
     category: "living",
     summary: "Winged ants that appear in large numbers after heavy rains and are attracted to light.",
     content: `<p><strong>Laron</strong> swarms often appear after first major rains and can gather around bright lamps.</p>
@@ -3804,7 +3854,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-28T05:40:00.000Z",
     updatedAt: "2026-04-28T05:40:00.000Z",
-    seoTitle: "Flying ants (Laron) in Bali — glossary | Balitrusted",
+    seoTitle: "Flying ants laron in Bali — glossary | Balitrusted",
     seoDescription: "Why Laron appear and how to reduce nuisance in tropical villas.",
     relatedGuideUrl: "/guides/ubud",
   },
@@ -3841,7 +3891,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-housekeeping-pembantu",
     slug: "housekeeping-pembantu-bali",
-    title: "Housekeeping (Pembantu)",
+    title: "Housekeeping — pembantu",
     category: "living",
     summary: "Daily cleaning and household support role in villa operations.",
     content: `<p><strong>Pembantu</strong> generally refers to domestic support staff handling cleaning and day-to-day home routines.</p>
@@ -3849,7 +3899,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-28T05:40:00.000Z",
     updatedAt: "2026-04-28T05:40:00.000Z",
-    seoTitle: "Housekeeping (Pembantu) in Bali villas — glossary | Balitrusted",
+    seoTitle: "Housekeeping pembantu in Bali villas — glossary | Balitrusted",
     seoDescription: "What housekeeping staffing typically includes in Ubud villa management.",
     relatedGuideUrl: "/guides/rent",
   },
@@ -3871,7 +3921,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-leeches-pacat",
     slug: "leeches-pacat-ubud-trek",
-    title: "Leeches (Pacat)",
+    title: "Leeches — pacat",
     category: "living",
     summary: "Small blood-feeding leeches found in wet grass and jungle trails during rainy periods.",
     content: `<p><strong>Pacat</strong> may appear in wet rice fields and jungle paths during the rainy season.</p>
@@ -3879,7 +3929,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-28T05:40:00.000Z",
     updatedAt: "2026-04-28T05:40:00.000Z",
-    seoTitle: "Leeches (Pacat) in Ubud — glossary | Balitrusted",
+    seoTitle: "Leeches pacat in Ubud — glossary | Balitrusted",
     seoDescription: "What to expect from Pacat during rainy-season walks and treks.",
     relatedGuideUrl: "/guides/ubud",
   },
@@ -3901,7 +3951,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-local-coffee-kopi-bali",
     slug: "kopi-bali-local-coffee",
-    title: "Local Coffee (Kopi Bali)",
+    title: "Local coffee — Kopi Bali",
     category: "living",
     summary: "Traditional Indonesian-style coffee commonly served strong and sweet.",
     content: `<p><strong>Kopi Bali</strong> is typically fine-ground, unfiltered, and served with sugar.</p>
@@ -3946,7 +3996,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-pasar-seni",
     slug: "pasar-seni-ubud-art-market",
-    title: "Pasar Seni (Art Market)",
+    title: "Pasar Seni — art market",
     category: "living",
     summary: "Central Ubud art market used by tourists and residents for decor and textiles.",
     content: `<p><strong>Pasar Seni Ubud</strong> is both a tourist landmark and a practical sourcing spot for baskets, textiles, and decor.</p>
@@ -3961,7 +4011,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-panen-rice-harvest",
     slug: "panen-rice-harvest-ubud",
-    title: "Rice Harvesting (Panen)",
+    title: "Rice harvesting — panen",
     category: "living",
     summary: "Harvest period in rice fields, often busier and noisier but visually iconic.",
     content: `<p><strong>Panen</strong> is the rice harvest cycle, bringing more workers and activity to paddy zones.</p>
@@ -3969,7 +4019,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-28T05:40:00.000Z",
     updatedAt: "2026-04-28T05:40:00.000Z",
-    seoTitle: "Rice harvest (Panen) in Ubud — glossary | Balitrusted",
+    seoTitle: "Rice harvest panen in Ubud — glossary | Balitrusted",
     seoDescription: "What harvest season means for atmosphere around rice-field properties.",
     relatedGuideUrl: "/guides/ubud",
   },
@@ -4036,7 +4086,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-rainy-season-bali",
     slug: "rainy-season-musim-hujan-bali",
-    title: "Rainy Season (Musim Hujan)",
+    title: "Rainy season — musim hujan",
     category: "living",
     summary: "Bali’s wetter season, typically November to March, with heavy short downpours.",
     content: `<p>The <strong>rainy season</strong> usually runs from November to March, with intense but often short rain bursts.</p>
@@ -4044,7 +4094,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-28T05:40:00.000Z",
     updatedAt: "2026-04-28T05:40:00.000Z",
-    seoTitle: "Rainy season in Bali (Musim Hujan) — glossary | Balitrusted",
+    seoTitle: "Rainy season Musim Hujan in Bali — glossary | Balitrusted",
     seoDescription: "What rainy season means for villa performance and maintenance risk.",
     relatedGuideUrl: "/guides/rent",
   },
@@ -4066,7 +4116,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-scorpion-ketunggeng",
     slug: "scorpion-ketunggeng-bali",
-    title: "Scorpion (Ketunggeng)",
+    title: "Scorpion — ketunggeng",
     category: "living",
     summary: "Occasional small scorpion presence in garden and bathroom edges of tropical homes.",
     content: `<p><strong>Ketunggeng</strong> are occasionally seen in humid corners, timber piles, or garden-adjacent bathrooms.</p>
@@ -4081,7 +4131,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-security-waker",
     slug: "security-waker-night-watchman",
-    title: "Security (Waker)",
+    title: "Security — waker",
     category: "living",
     summary: "Night watchman role focused on perimeter checks and overnight property security.",
     content: `<p>A <strong>Waker</strong> is a night guard role commonly used in villas and estates.</p>
@@ -4111,7 +4161,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-septic-tank-pumping",
     slug: "septic-tank-pumping-sedot-wc",
-    title: "Septic Tank Pumping (Sedot WC)",
+    title: "Septic pumping — sedot WC",
     category: "living",
     summary: "Periodic waste tank emptying service required for many Bali properties.",
     content: `<p><strong>Sedot WC</strong> is scheduled septic pumping by specialized service trucks.</p>
@@ -4119,14 +4169,14 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-28T05:40:00.000Z",
     updatedAt: "2026-04-28T05:40:00.000Z",
-    seoTitle: "Septic pumping (Sedot WC) in Bali — glossary | Balitrusted",
+    seoTitle: "Septic pumping sedot WC in Bali — glossary | Balitrusted",
     seoDescription: "Why septic pumping is essential in tropical villa maintenance planning.",
     relatedGuideUrl: "/guides/rent",
   },
   {
     id: "glossary-sinking-fund",
     slug: "sinking-fund-dana-cadangan",
-    title: "Sinking Fund (Dana Cadangan)",
+    title: "Sinking fund — dana cadangan",
     category: "finance",
     summary: "Reserve budget for future major repairs in shared or managed property setups.",
     content: `<p>A <strong>sinking fund</strong> is money set aside for predictable large repairs such as roof or generator replacement.</p>
@@ -4134,14 +4184,14 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-28T05:40:00.000Z",
     updatedAt: "2026-04-28T05:40:00.000Z",
-    seoTitle: "Sinking fund (Dana Cadangan) — glossary | Balitrusted",
+    seoTitle: "Sinking fund dana cadangan — glossary | Balitrusted",
     seoDescription: "How sinking funds are used for long-term repair planning in villa complexes.",
     relatedGuideUrl: "/guides/buy",
   },
   {
     id: "glossary-street-food-kaki-lima",
     slug: "street-food-kaki-lima-bali",
-    title: "Street Food (Kaki Lima)",
+    title: "Street food — kaki lima",
     category: "living",
     summary: "Mobile local food carts serving affordable evening meals and snacks.",
     content: `<p><strong>Kaki Lima</strong> refers to street food carts, often selling dishes like bakso and martabak.</p>
@@ -4171,7 +4221,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-termite-mound",
     slug: "termite-mound-sarang-rayap",
-    title: "Termite Mound (Sarang Rayap)",
+    title: "Termite mound — sarang rayap",
     category: "living",
     summary: "Earthen termite structure signaling active colonies that may threaten timber elements.",
     content: `<p>A <strong>Sarang Rayap</strong> near structures is a warning sign for potential timber damage.</p>
@@ -4186,7 +4236,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-thr-bonus",
     slug: "thr-tunjangan-hari-raya",
-    title: "THR (Tunjangan Hari Raya)",
+    title: "THR",
     category: "legal",
     summary: "Mandatory holiday bonus payment for eligible employees in Indonesia.",
     content: `<p><strong>THR</strong> is a legally required holiday bonus paid before major religious celebrations.</p>
@@ -4201,7 +4251,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-tomcat-beetle",
     slug: "tomcat-paederus-litteralis",
-    title: "Tomcat (Paederus Litteralis)",
+    title: "Tomcat — Paederus beetles",
     category: "living",
     summary: "Small rove beetle whose body fluid can irritate skin if crushed.",
     content: `<p><strong>Tomcat</strong> is a small orange-black beetle known for skin irritation risk when smashed against skin.</p>
@@ -4246,7 +4296,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-va-virtual-account",
     slug: "virtual-account-va-indonesia",
-    title: "VA (Virtual Account)",
+    title: "Virtual account",
     category: "finance",
     summary: "Unique payment number used in Indonesia for instant matching and confirmation.",
     content: `<p>A <strong>Virtual Account</strong> is a unique payment destination used for exact-amount transfers in online payments.</p>
@@ -4254,7 +4304,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-28T05:40:00.000Z",
     updatedAt: "2026-04-28T05:40:00.000Z",
-    seoTitle: "Virtual Account (VA) payments — glossary | Balitrusted",
+    seoTitle: "Virtual account VA payments — glossary | Balitrusted",
     seoDescription: "How VA payments work in Indonesian e-commerce and utility transactions.",
     relatedGuideUrl: "/guides/living",
   },
@@ -4276,7 +4326,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-water-heater-gas-vs-electric",
     slug: "water-heater-gas-vs-electric-bali",
-    title: "Water Heater (Gas vs Electric)",
+    title: "Water heater — gas or electric",
     category: "living",
     summary: "Hot water system choice balancing operating cost, safety preferences, and reliability.",
     content: `<p>Bali villas commonly use LPG gas heaters due to running cost advantages, while electric systems are often preferred for simpler safety management.</p>
@@ -4291,7 +4341,7 @@ export const glossaryTerms: GlossaryTerm[] = [
   {
     id: "glossary-weather-windy-season-august",
     slug: "windy-season-august-bali",
-    title: "Windy Season (August)",
+    title: "Windy season — August",
     category: "living",
     summary: "Cooler windy period associated with kite season and more dust around open spaces.",
     content: `<p>August is often considered a <strong>windy season</strong> in Bali, with cooler air and stronger breezes.</p>
@@ -4299,7 +4349,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     published: true,
     createdAt: "2026-04-28T05:40:00.000Z",
     updatedAt: "2026-04-28T05:40:00.000Z",
-    seoTitle: "Windy season in Bali (August) — glossary | Balitrusted",
+    seoTitle: "Windy season August in Bali — glossary | Balitrusted",
     seoDescription: "How August wind patterns affect comfort and maintenance in Ubud villas.",
     relatedGuideUrl: "/guides/ubud",
   },
