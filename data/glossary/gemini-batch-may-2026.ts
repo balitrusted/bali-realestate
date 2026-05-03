@@ -1406,5 +1406,230 @@ export const glossaryGeminiMay2026Batch: GlossaryTerm[] = [
       "Why seismic awareness belongs in Bali villa technical due diligence.",
     relatedGuideUrl: "/guides/buy",
   },
+  {
+    id: "glossary-banjar-adat",
+    slug: "banjar-adat-customary-bali",
+    title: "Banjar adat",
+    category: "legal",
+    summary:
+      "Customary village segment handling ritual obligations and social harmony—parallel but linked to dinas paperwork.",
+    content: `<p><strong>Banjar adat</strong> carries ancestral protocol: ceremonies, gotong royong labor, offering rhythms, and conflict mediation before matters escalate.</p>
+<p>Operators confuse it with <a href="/glossary/banjar-dinas-administrative-bali">banjar dinas</a> at their peril—social license often routes through adat leaders even when permits look fine.</p>
+<p>Start from <a href="/glossary/banjar-local-community">Banjar</a> for the combined picture.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Banjar adat customary council Bali | Balitrusted glossary",
+    seoDescription:
+      "What banjar adat covers versus administrative banjar dinas in Bali.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-pelinggih-shrine",
+    slug: "pelinggih-household-shrine-bali",
+    title: "Pelinggih",
+    category: "living",
+    summary:
+      "Elevated seat or pedestal for daily offerings—each villa stage manages flowers, incense, and ceremony timing.",
+    content: `<p>A <strong>pelinggih</strong> is the raised seat where gods or lineage ancestors receive offerings in Balinese homes.</p>
+<p>High-touch rentals hire trusted staff to refresh <a href="/glossary/canang-sari-daily-offerings">canang</a> on schedule; owners clarify who pays ceremony supplies.</p>
+<p>Renovation plans must respect shrine sightlines—do not treat them as decorative shelves.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Pelinggih household shrine Bali | Balitrusted glossary",
+    seoDescription:
+      "What a pelinggih is and why it matters for villa maintenance budgets.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-pbg-renovation",
+    slug: "pbg-renovation-alteration-bali",
+    title: "PBG renovation",
+    category: "documents",
+    summary:
+      "Post-IMB framework for approving structural changes—extensions and major retrofits need aligned paperwork.",
+    content: `<p><strong>PBG</strong> (<em>Persetujuan Bangunan Gedung</em>) is the modern pathway that replaced classic <a href="/glossary/imb-building-permit-bali">IMB</a> for many projects.</p>
+<p>Major retrofits—adding floors, extending footprints, big pool shell moves—should trigger architect + notary review against current rules, not “handshake OK.”</p>
+<p>Buyers inheriting illegal builds inherit enforcement risk too.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "PBG approval for villa renovations Bali | Balitrusted glossary",
+    seoDescription:
+      "Why PBG matters when altering villa structures after purchase.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-villa-guest-quota",
+    slug: "villa-guest-quota-pondok-wisata-bali",
+    title: "Guest quota",
+    category: "legal",
+    summary:
+      "Licensed nightly bed counts and room tallies—OTA calendars must stay inside what permits allow.",
+    content: `<p>A <strong>guest quota</strong> ties to licensing classes such as <a href="/glossary/pondok-wisata-license-bali">Pondok Wisata</a>—authorities expect declared bedroom counts and guest loads to match reality.</p>
+<p>Inflating booking capacity beyond paperwork exposes owners to enforcement and platform disputes.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Guest quota for licensed Bali villas | Balitrusted glossary",
+    seoDescription:
+      "How licensed guest ceilings relate to short-term rental operations.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-sip-hygiene",
+    slug: "sip-hygiene-registration-bali",
+    title: "SIP",
+    category: "documents",
+    summary:
+      "Sanitary hygiene registration for commercial kitchens, pools, and spa water systems serving paying guests.",
+    content: `<p><strong>SIP</strong> hygiene pathways cover pools, kitchens, and wellness water features when health inspectors expect traceable maintenance logs.</p>
+<p>Villas blending restaurant-level F&amp;B or public spas should budget inspections—not only Instagram aesthetics.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "SIP sanitary hygiene registration Bali | Balitrusted glossary",
+    seoDescription:
+      "When SIP-style hygiene registration touches villa kitchens and pools.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-stpw-tourism-staff",
+    slug: "stpw-tourism-staff-registration-bali",
+    title: "STPW",
+    category: "documents",
+    summary:
+      "Tourism-sector workforce registration layer—hotels and licensed villas align HR files with ministry databases.",
+    content: `<p><strong>STPW</strong> frameworks register hospitality personnel against sector databases so inspectors can verify legitimate employment.</p>
+<p>Compliance-heavy estates sync onboarding packets—contracts, IDs, training certs—with whoever handles payroll.</p>
+<p>Rules evolve; pair HR briefings with current province circulars rather than forum lore.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "STPW tourism staff registration Indonesia | Balitrusted glossary",
+    seoDescription:
+      "Introductory note on STPW hospitality workforce registration in Bali.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-noise-neighbour-mediation",
+    slug: "noise-neighbour-mediation-banjar-bali",
+    title: "Noise mediation",
+    category: "living",
+    summary:
+      "Neighbor sound disputes usually route through banjar dialogue before formal noise ordinances.",
+    content: `<p><strong>Noise mediation</strong> in residential valleys typically starts with hosts, managers, and <a href="/glossary/banjar-local-community">banjar</a> leaders—not midnight shouting matches.</p>
+<p>Document incidents, propose quiet hours, and offer structural fixes—genset boxes, pool pump schedules—before threatening police involvement.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Neighbor noise mediation via banjar Bali | Balitrusted glossary",
+    seoDescription:
+      "Practical escalation path for villa noise complaints in Bali villages.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-sanggah-shrine",
+    slug: "sanggah-family-shrine-bali",
+    title: "Sanggah",
+    category: "living",
+    summary:
+      "Family shrine pavilion upstream of the main house—hosts lineage offerings and ceremony prep.",
+    content: `<p>A <strong>sanggah</strong> is the elevated family shrine compound facing mountain-ward, preceding everyday living spaces.</p>
+<p>Villas that inherit active sanggah inherit ceremony obligations—clarify staffing and budgets before closing.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Sanggah family shrine Bali villas | Balitrusted glossary",
+    seoDescription:
+      "What a sanggah is on Balinese villa compounds and operational implications.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-toya-holy-water",
+    slug: "toya-holy-spring-water-bali",
+    title: "Toya",
+    category: "living",
+    summary:
+      "Sacred water fetched from springs or priests—some villas maintain priest-led refill rhythms.",
+    content: `<p><strong>Toya</strong> refers to ritually charged water used for blessings—not interchangeable with tap lines.</p>
+<p>Households schedule pickups after temple runs; managers respect cool storage away from pool chemicals.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Toya holy water in Balinese villas | Balitrusted glossary",
+    seoDescription:
+      "Meaning of toya for ceremonies and practical villa handling.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-surat-pengantar",
+    slug: "surat-pengantar-banjar-letter-bali",
+    title: "Surat pengantar",
+    category: "documents",
+    summary:
+      "Introductory letter from banjar or village office endorsing permit packets—without it applications stall.",
+    content: `<p><strong>Surat pengantar</strong> literally “escort letter”—confirms residency or neighborhood awareness before higher offices process SKDU, licensing, or vehicle paperwork.</p>
+<p>Apply early in admin workflows; missing signatures delay everything downstream.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Surat pengantar introduction letter Bali | Balitrusted glossary",
+    seoDescription:
+      "Why surat pengantar letters matter for Bali administrative filings.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-kulkas-fridge",
+    slug: "kulkas-fridge-villa-bali",
+    title: "Kulkas",
+    category: "living",
+    summary:
+      "Everyday word for refrigerator—staff shout kulkas when sourcing replacements during turnovers.",
+    content: `<p><strong>Kulkas</strong> is Indonesian shorthand for fridge—rental inventories list capacity and inverter friendliness.</p>
+<p>Humidity kills door seals; replace proactively between high-season lets.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Kulkas refrigerator Bali villas | Balitrusted glossary",
+    seoDescription:
+      "Meaning of kulkas in villa inventories and maintenance chatter.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-bored-pile",
+    slug: "bored-pile-foundation-bali",
+    title: "Bored pile",
+    category: "other",
+    summary:
+      "Drilled reinforced-concrete piles stabilizing villas on soft fills or steep slopes.",
+    content: `<p><strong>Bored piles</strong> auger shafts filled with steel and concrete where shallow footings would slip on volcanic soils.</p>
+<p>Ubud ravine builds cite pile caps when marketing structural seriousness—verify engineer stamps, not only drone footage.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Bored pile foundations Bali slopes | Balitrusted glossary",
+    seoDescription:
+      "What bored piles mean for hillside villa engineering in Bali.",
+    relatedGuideUrl: "/guides/buy",
+  },
+  {
+    id: "glossary-seasonal-adr",
+    slug: "seasonal-adr-bali-villas",
+    title: "Seasonal ADR",
+    category: "finance",
+    summary:
+      "Average daily rate swings between Christmas peaks and February troughs—yield models need season curves.",
+    content: `<p><strong>Seasonal ADR</strong> tracks how nightly tariffs move across holiday spikes, Nyepi closures, and wet-season softness.</p>
+<p>Pair ADR curves with <a href="/glossary/occupancy-rate-investment-villa-ubud">occupancy rate</a> assumptions so investor decks reflect Bali’s feast-or-famine calendar honestly.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Seasonal ADR for Bali rental villas | Balitrusted glossary",
+    seoDescription:
+      "Why average daily rate seasonality matters for Bali hospitality underwriting.",
+    relatedGuideUrl: "/guides/buy",
+  },
 ];
 
