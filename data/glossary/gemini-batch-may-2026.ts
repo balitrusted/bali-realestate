@@ -5,24 +5,6 @@ const ISO = "2026-05-02T22:00:00.000Z";
 /** New / expanded glossary terms — May 2026 editorial batch (integrated + deduped against index). */
 export const glossaryGeminiMay2026Batch: GlossaryTerm[] = [
   {
-    id: "glossary-activated-charcoal-norit",
-    slug: "activated-charcoal-norit-stomach",
-    title: "Activated charcoal",
-    category: "living",
-    summary:
-      "Pharmacy charcoal tablets used short-term for acute digestive upset while you assess hydration and medical care.",
-    content: `<p><strong>Activated charcoal</strong> tablets—often sold under names guests recognize from home—are a common short-term aid when someone hits sudden digestive upset after food or water changes.</p>
-<p>They are not a substitute for fluids: pair with <a href="/glossary/oral-rehydration-salts-tropical">oral rehydration salts</a>, rest, and escalation if fever or dehydration persists.</p>
-<p>For broader context see <a href="/glossary/bali-belly-digestive-upset">Bali Belly</a>.</p>`,
-    published: true,
-    createdAt: ISO,
-    updatedAt: ISO,
-    seoTitle: "Activated charcoal for travelers in Bali | Balitrusted glossary",
-    seoDescription:
-      "Practical glossary note on pharmacy charcoal use alongside hydration for Bali travelers.",
-    relatedGuideUrl: "/guides/rent",
-  },
-  {
     id: "glossary-architectural-void",
     slug: "architectural-void-ceiling-bali",
     title: "Void",
@@ -645,7 +627,7 @@ export const glossaryGeminiMay2026Batch: GlossaryTerm[] = [
     summary:
       "Electrolyte sachets—critical when Bali humidity drains newcomers faster than they notice.",
     content: `<p><strong>Oral rehydration salts</strong>—branded packets locals call oralit—replace sodium, potassium, and glucose lost to sweat or stomach upset.</p>
-<p>Stock them beside <a href="/glossary/activated-charcoal-norit-stomach">activated charcoal</a> in villa med kits.</p>`,
+<p>Keep sachets in villa med kits alongside guidance on when to escalate beyond self-care—see <a href="/glossary/bali-belly-digestive-upset">Bali Belly</a>.</p>`,
     published: true,
     createdAt: ISO,
     updatedAt: ISO,
@@ -1116,4 +1098,313 @@ export const glossaryGeminiMay2026Batch: GlossaryTerm[] = [
       "Using hygrometers to protect interiors in humid villa climates.",
     relatedGuideUrl: "/guides/rent",
   },
+  {
+    id: "glossary-subak-irrigation",
+    slug: "subak-irrigation-cooperative-bali",
+    title: "Subak",
+    category: "living",
+    summary:
+      "Democratic irrigation cooperative managing rice-field water—explains why paddies change together and views shift by season.",
+    content: `<p>The <strong>subak</strong> system coordinates water across terraces through temples and farmer assemblies—not just ditches.</p>
+<p>For villas overlooking <a href="/glossary/sawah-rice-paddy">sawah</a>, subak decisions affect flooding calendars, harvest smoke, and footpaths; “quiet rice field” marketing still sits inside agricultural reality.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Subak irrigation system Bali | Balitrusted glossary",
+    seoDescription:
+      "What subak means for rice-field adjacency and seasonal villa life in Bali.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-tri-hita-karana",
+    slug: "tri-hita-karana-bali-philosophy",
+    title: "Tri Hita Karana",
+    category: "living",
+    summary:
+      "Three harmonious relationships—with God, people, environment—often cited in branding for estates and hospitality.",
+    content: `<p><strong>Tri Hita Karana</strong> names harmony between humans, nature, and the divine.</p>
+<p>You will see it in villa brochures and estate naming; treat it as cultural orientation, not a substitute for zoning checks or contract terms.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Tri Hita Karana meaning Bali | Balitrusted glossary",
+    seoDescription:
+      "Plain-language intro to Tri Hita Karana in Balinese place-making discourse.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-ogoh-ogoh",
+    slug: "ogoh-ogoh-nyepi-parade-bali",
+    title: "Ogoh-ogoh",
+    category: "living",
+    summary:
+      "Giant papier-mâché effigies paraded before Nyepi—roads close; drums echo across ridges.",
+    content: `<p><strong>Ogoh-ogoh</strong> night ends with noisy parades purifying villages before <a href="/glossary/silent-day-nyepi-bali">Nyepi</a> silence.</p>
+<p>Villas on procession routes should brief guests about closures, dust, and amplified gamelan—celebration for locals, sensory overload for jet-lagged arrivals.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Ogoh-ogoh parade before Nyepi | Balitrusted glossary",
+    seoDescription:
+      "What ogoh-ogoh night implies for traffic and villa logistics around Nyepi.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-rupiah-currency",
+    slug: "rupiah-indonesia-currency-bali",
+    title: "Rupiah",
+    category: "finance",
+    summary:
+      "Indonesian rupiah IDR—cash still matters for villages; apps bridge where networks fail.",
+    content: `<p>Prices quote in <strong>IDR</strong> (Rp). Long digit counts confuse newcomers—double-check zeros on contracts and receipts.</p>
+<p>Villa ops keep petty cash for vendors who lack card terminals even when <a href="/glossary/qris-universal-qr-indonesia">QRIS</a> spreads in towns.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Indonesian rupiah IDR in Bali | Balitrusted glossary",
+    seoDescription:
+      "Practical notes on rupiah pricing habits for Bali property and rentals.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-staff-tipping-bali",
+    slug: "staff-tipping-villa-bali",
+    title: "Tipping",
+    category: "living",
+    summary:
+      "Discretionary gratitude on top of wages—clarity avoids awkward overlaps with service charges.",
+    content: `<p><strong>Tipping</strong> villa teams is appreciated but not legally mandated—parity matters across shifts.</p>
+<p>Separate tips from posted service percentages when reviewing payroll with managers so nobody double-counts.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Tipping villa staff in Bali | Balitrusted glossary",
+    seoDescription:
+      "How tipping interacts with wages and service charges in Bali villas.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-desa-village",
+    slug: "desa-rural-village-bali",
+    title: "Desa",
+    category: "legal",
+    summary:
+      "Rural village administrative layer beneath regency—permits and ceremonies route through desa offices.",
+    content: `<p>A <strong>desa</strong> is a village-level administration in rural Indonesia.</p>
+<p>For land and hospitality paperwork, desa letterheads sometimes accompany higher-level permits—ask advisors how your plot maps to desa boundaries versus banjar social units.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Desa village administration Bali | Balitrusted glossary",
+    seoDescription:
+      "What desa means in Indonesian rural governance touching Bali property.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-kelurahan-urban",
+    slug: "kelurahan-urban-village-bali",
+    title: "Kelurahan",
+    category: "legal",
+    summary:
+      "Urban ward administration—denser Kutuh-style pockets may sit under kelurahan workflows.",
+    content: `<p><strong>Kelurahan</strong> governs urban wards with staffing closer to city halls.</p>
+<p>Listings blur labels—confirm whether your address resolves under kelurahan or desa paperwork when chasing permits.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Kelurahan urban ward Indonesia | Balitrusted glossary",
+    seoDescription:
+      "Kelurahan versus desa framing for Bali addressing and permits.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-shm-freehold-title",
+    slug: "shm-freehold-title-certificate",
+    title: "SHM",
+    category: "legal",
+    summary:
+      "Sertifikat Hak Milik—full ownership certificate for qualifying Indonesian individuals on eligible land.",
+    content: `<p><strong>SHM</strong> certifies Hak Milik ownership where legally permitted.</p>
+<p>Foreign buyers cannot assume SHM in their name—structures typically pivot to leasehold or eligible corporate pathways discussed with notaries.</p>
+<p>Always compare chain-of-title talk against <a href="/glossary/leasehold-vs-freehold-bali">leasehold vs freehold</a> basics.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "SHM Hak Milik certificate Indonesia | Balitrusted glossary",
+    seoDescription:
+      "Intro to SHM land certificates relevant to Bali freehold conversations.",
+    relatedGuideUrl: "/guides/buy",
+  },
+  {
+    id: "glossary-shgb-building-title",
+    slug: "shgb-building-rights-certificate",
+    title: "SHGB",
+    category: "legal",
+    summary:
+      "Building rights certificate tied to state land—often paired with corporate structures.",
+    content: `<p><strong>SHGB</strong> (<em>Sertifikat Hak Guna Bangunan</em>) documents building rights on state land for defined periods.</p>
+<p>It frequently appears beside <a href="/glossary/hgb-hak-guna-bangunan">HGB</a> discussions when PMA or Indonesian entities hold structured titles.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "SHGB certificate Indonesia | Balitrusted glossary",
+    seoDescription:
+      "What SHGB represents next to HGB rights in Indonesian land books.",
+    relatedGuideUrl: "/guides/buy",
+  },
+  {
+    id: "glossary-wantilan-pavilion",
+    slug: "wantilan-community-pavilion-bali",
+    title: "Wantilan",
+    category: "living",
+    summary:
+      "Open-sided community hall for dance rehearsal, meetings, and ceremonies—sound travels.",
+    content: `<p>A <strong>wantilan</strong> is a large open pavilion—often beside temples—for practice and gatherings.</p>
+<p>Villas nearby inherit evenings of gamelan rehearsal; factor acoustic shading into bedroom placement.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Wantilan pavilion Bali | Balitrusted glossary",
+    seoDescription:
+      "What a wantilan is and why proximity matters for villa noise mapping.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-meru-roof",
+    slug: "meru-tiered-roof-temple-bali",
+    title: "Meru",
+    category: "living",
+    summary:
+      "Tiered shrine roof symbolizing sacred mountains—defines skyline etiquette near temples.",
+    content: `<p><strong>Meru</strong> roofs stack odd-numbered tiers toward the sky, signaling sacred architecture.</p>
+<p>Developers respect setback and height norms near pura complexes—ignoring local expectation invites friction beyond paperwork.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Meru tiered temple roofs Bali | Balitrusted glossary",
+    seoDescription:
+      "Meru roof symbolism and planning cues near Balinese temples.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-galungan-holiday",
+    slug: "galungan-holiday-cycle-bali",
+    title: "Galungan",
+    category: "living",
+    summary:
+      "Major Balinese holiday cycle—penjor line roads; staffing and logistics spike.",
+    content: `<p><strong>Galungan</strong> celebrates dharma’s victory; families erect <a href="/glossary/penjor-galungan-bamboo">penjor</a>, host guests, and rotate ceremonies for days.</p>
+<p>Villa calendars must flex for staff leave, heavier traffic to family compounds, and festive noise budgets.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Galungan holiday in Bali | Balitrusted glossary",
+    seoDescription:
+      "Galungan timing and what it means for villa operations near Ubud.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-water-refill-depot",
+    slug: "air-isi-ulang-water-refill-bali",
+    title: "Water refill depot",
+    category: "living",
+    summary:
+      "Reverse-osmosis refill shops lowering plastic waste—villas route gallon swaps through nearby depots.",
+    content: `<p><strong>Air isi ulang</strong> stations refill <a href="/glossary/galon-aqua-water-jug-system">gallon</a> bottles with filtered water at low cost.</p>
+<p>Eco-minded villas publish pinned maps so guests skip single-use plastics without stealing resort minibars.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Air isi ulang water refill stations Bali | Balitrusted glossary",
+    seoDescription:
+      "How refill depots support villa hydration logistics sustainably.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-visa-overstay-indonesia",
+    slug: "visa-overstay-indonesia-penalties",
+    title: "Visa overstay",
+    category: "documents",
+    summary:
+      "Days beyond permitted stay trigger fines and bans—property managers watch staff visas tightly.",
+    content: `<p><strong>Overstay</strong> days accrue daily fines and can trigger re-entry bans depending on length.</p>
+<p>Villa employers should keep scans of KITAS/KITAP validity aligned with HR calendars—informal overstays expose both worker and operator.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Visa overstay rules Indonesia | Balitrusted glossary",
+    seoDescription:
+      "Why visa overstays matter for Bali villa employers and long-stay residents.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-banjar-dinas",
+    slug: "banjar-dinas-administrative-bali",
+    title: "Banjar dinas",
+    category: "legal",
+    summary:
+      "Administrative neighborhood unit distinct from adat customs—permits and letters often route here.",
+    content: `<p><strong>Banjar dinas</strong> handles civic administration—population registers, letters supporting permits—alongside but not identical to adat leadership.</p>
+<p>Operators coordinating events or renovations may need dinas paperwork even when banjar adat already granted social blessing.</p>
+<p>Anchor broader context under <a href="/glossary/banjar-local-community">Banjar</a>.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Banjar dinas administrative unit Bali | Balitrusted glossary",
+    seoDescription:
+      "Difference between banjar dinas paperwork and customary banjar life.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-frangipani-kamboja",
+    slug: "frangipani-kamboja-garden-bali",
+    title: "Frangipani",
+    category: "living",
+    summary:
+      "Kamboja trees—iconic flowers for offerings and pool debris alike.",
+    content: `<p><strong>Frangipani</strong> (<em>kamboja</em>) perfumes ceremonies and villa pools alike.</p>
+<p>Petals stain decking if crews skip dawn skims—beautiful branding, steady housekeeping.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Frangipani kamboja trees Bali villas | Balitrusted glossary",
+    seoDescription:
+      "Why frangipani matters aesthetically and operationally around pools.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-villa-genset-curfew",
+    slug: "genset-hours-noise-bali",
+    title: "Genset hours",
+    category: "living",
+    summary:
+      "Neighbor etiquette and banjar expectations often limit generator noise after dark.",
+    content: `<p><strong>Genset hours</strong> describe when backup generators may run without triggering complaints.</p>
+<p>Jungle-adjacent villas pair automated transfer switches with battery buffers so <a href="/glossary/backup-generator-genset-bali">gensets</a> avoid midnight roars beside bedrooms.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Generator running hours Bali villas | Balitrusted glossary",
+    seoDescription:
+      "Noise etiquette around backup generators in residential Bali valleys.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-lombok-earthquake-risk",
+    slug: "lombok-strait-seismic-risk-bali",
+    title: "Lombok Strait seismic risk",
+    category: "other",
+    summary:
+      "Regional fault activity influencing Bali building codes and insurance conversations.",
+    content: `<p>The <strong>Lombok Strait</strong> seismic belt reminds builders why engineered foundations and lintels matter even when marketing focuses on jungle glam.</p>
+<p>Investors should ask engineers about liquefaction-prone fills—not only infinity pools.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Lombok Strait earthquakes and Bali building risk | Balitrusted glossary",
+    seoDescription:
+      "Why seismic awareness belongs in Bali villa technical due diligence.",
+    relatedGuideUrl: "/guides/buy",
+  },
 ];
+

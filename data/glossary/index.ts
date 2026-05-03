@@ -1336,22 +1336,6 @@ export const glossaryTerms: GlossaryTerm[] = [
     relatedGuideUrl: "/guides/rent",
   },
   {
-    id: "glossary-daybed-bali-villa",
-    slug: "daybed-bali-villa-lounging",
-    title: "Daybed",
-    category: "living",
-    summary:
-      "Oversized lounger, often poolside or in a nook—marketed as extra guest capacity as well as a signature relax feature.",
-    content: `<p>A <strong>daybed</strong> is an oversized lounging surface—sometimes built into a window nook, sometimes poolside—designed for reading, napping, and slow afternoons.</p>
-<p>In rental listings, large daybeds are often counted as an extra sleep surface for flexible guest capacity. Check mattress quality, rain exposure, and mosquito practicality before assuming it replaces a proper bedroom.</p>`,
-    published: true,
-    createdAt: "2026-04-18T12:00:00.000Z",
-    updatedAt: "2026-04-18T12:00:00.000Z",
-    seoTitle: "Daybeds in Bali villas — glossary | Balitrusted",
-    seoDescription: "What daybeds add to Bali villa layouts and rentals.",
-    relatedGuideUrl: "/guides/rent",
-  },
-  {
     id: "glossary-outdoor-shower-bali",
     slug: "outdoor-shower-bali-privacy-garden",
     title: "Outdoor shower",
@@ -2635,22 +2619,6 @@ export const glossaryTerms: GlossaryTerm[] = [
     relatedGuideUrl: "/guides/rent",
   },
   {
-    id: "glossary-grease-trap",
-    slug: "grease-trap-kitchen-plumbing-bali",
-    title: "Grease Trap",
-    category: "living",
-    summary:
-      "A kitchen plumbing component that captures fats and food residue before drain lines.",
-    content: `<p>A <strong>grease trap</strong> helps prevent oils and solids from entering narrow drainage pipes common in many local systems.</p>
-<p>Without routine cleaning, traps can overflow or lose effectiveness, leading to odors and blockages.</p>`,
-    published: true,
-    createdAt: "2026-04-26T09:30:00.000Z",
-    updatedAt: "2026-04-26T09:30:00.000Z",
-    seoTitle: "Grease trap in villa kitchens — glossary | Balitrusted",
-    seoDescription: "How grease traps support plumbing health in Bali rental properties.",
-    relatedGuideUrl: "/guides/rent",
-  },
-  {
     id: "glossary-bimc-hospital",
     slug: "bimc-hospital-bali",
     title: "BIMC Hospital",
@@ -2706,7 +2674,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     summary:
       "A common informal term for travel-related digestive upset from food or water changes.",
     content: `<p><strong>Bali Belly</strong> informally describes short-term digestive illness many travelers and new residents experience while adapting.</p>
-<p>Hosts often keep oral rehydration mixes and <a href="/glossary/activated-charcoal-norit-stomach">activated charcoal</a> kits alongside hydration salts—paired with sensible food choices and medical escalation when symptoms persist.</p>`,
+<p>Hosts often keep <a href="/glossary/oral-rehydration-salts-tropical">oral rehydration salts</a> on hand alongside sensible food protocols and clear escalation rules when symptoms persist.</p>`,
     published: true,
     createdAt: "2026-04-26T09:30:00.000Z",
     updatedAt: "2026-04-26T09:30:00.000Z",
@@ -3226,22 +3194,6 @@ export const glossaryTerms: GlossaryTerm[] = [
     updatedAt: "2026-04-27T13:10:00.000Z",
     seoTitle: "Sound healing in Ubud — glossary | Balitrusted",
     seoDescription: "How sound healing relates to Ubud lifestyle and villa demand patterns.",
-    relatedGuideUrl: "/guides/ubud",
-  },
-  {
-    id: "glossary-colonic-hydrotherapy",
-    slug: "colonic-hydrotherapy-ubud",
-    title: "Colonic Hydrotherapy",
-    category: "living",
-    summary:
-      "A detox-oriented treatment commonly offered in Ubud wellness programs.",
-    content: `<p><strong>Colonic hydrotherapy</strong> appears frequently in cleanse and retreat packages targeted at health-focused visitors.</p>
-<p>This demand pattern can influence micro-location rental preference near wellness clusters.</p>`,
-    published: true,
-    createdAt: "2026-04-27T13:10:00.000Z",
-    updatedAt: "2026-04-27T13:10:00.000Z",
-    seoTitle: "Colonic hydrotherapy in Ubud — glossary | Balitrusted",
-    seoDescription: "Glossary context for colonic hydrotherapy in Bali wellness ecosystems.",
     relatedGuideUrl: "/guides/ubud",
   },
   {
