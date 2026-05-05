@@ -4,6 +4,82 @@ import type { BlogPost } from "@/types/blog";
 // Add new posts here (or wire this to admin later).
 export const blogPosts: BlogPost[] = [
   {
+    id: "blog-2026-05-05-bali-construction-noisy-vs-quiet-areas",
+    slug: "construction-in-bali-where-its-noisy-and-where-its-still-quiet",
+    title: "Construction in Bali in 2026: Where It's Noisy and Where It's Still Quiet",
+    summary:
+      "Construction is now part of Bali's growth cycle. The real renter question is not whether there is building activity, but how unevenly it is distributed by area.",
+    content: `<p>Bali keeps expanding, and in 2026 construction is visible across much of the island. New villas, cafes, and infrastructure projects continue to move forward at a fast pace.</p>
+<p>For renters, this creates one practical question: <strong>where is it still quiet, and where should you expect daily noise?</strong></p>
+<p>In this article, we break down the current pattern and explain how construction intensity changes from area to area.</p>
+
+<h2>Why construction activity increased in Bali</h2>
+<p>The core driver is demand. Bali remains attractive for long stays, remote work, and relocation.</p>
+<p>As demand grows, developers continue to add supply in high-interest zones. At the same time, roads, access routes, and utilities are being upgraded to support that growth.</p>
+<p>So construction is not a temporary anomaly - it is part of the island's current development phase.</p>
+
+<h2>The key issue: distribution is uneven</h2>
+<p>Construction in Bali is <strong>not</strong> evenly spread. Two villas with similar photos can produce totally different day-to-day experiences depending on what is happening around them.</p>
+<p>In one micro-location, you may get rice-field calm, moderate traffic, and stable surroundings. In another, just a few minutes away, you may face active builds, early-morning drilling, dust, and reduced privacy.</p>
+<p>This mismatch between listing photos and real on-site conditions is one of the most common renter frustrations.</p>
+
+<h2>Areas with higher construction pressure</h2>
+<h3>Canggu</h3>
+<p>Canggu remains one of Bali's most active development zones. Construction density is high, projects rotate quickly, and neighborhood conditions can change within months.</p>
+<p>The area is still highly attractive, but genuinely quiet options are harder to secure and usually priced accordingly.</p>
+
+<h3>Ubud (specific expanding bands)</h3>
+<p>Ubud is no longer uniformly quiet. Edge zones that are still opening up often show new villa pipelines, access-road upgrades, and periodic land clearing.</p>
+<p>That said, Ubud still has calm pockets - especially where available land is limited and the existing built fabric is already mature.</p>
+
+<h3>Pererenan and nearby corridors</h3>
+<p>Pererenan and adjacent belts continue to absorb renter demand and investor capital. New projects appear regularly, and quieter streets are becoming both scarcer and more expensive.</p>
+
+<h2>Areas that are still relatively calmer</h2>
+<h3>Parts of Ubud</h3>
+<p>Established Ubud pockets with constrained new land supply are often more stable. You still need to verify each micro-location, but these zones generally experience fewer disruptive starts.</p>
+
+<h3>Sanur</h3>
+<p>Sanur tends to feel more structured and less aggressively transformed block by block. For many long-term residents, that translates into a more predictable environment.</p>
+
+<h3>Less central locations</h3>
+<p>Stepping slightly away from tourist-heavy centers can improve your odds of quieter surroundings, lower price pressure, and more space. The trade-off is commute time and slower access to major hubs.</p>
+
+<h2>What this means if you plan to rent</h2>
+<p>Construction exposure directly affects sleep quality, work focus, and overall comfort. Before signing, check not only the villa but also the immediate development context.</p>
+<p>Asking the right questions early saves expensive mistakes later.</p>
+
+<h2>Practical checks before you commit</h2>
+<ul>
+<li><p><strong>Ask about active nearby projects.</strong> Request specific information about adjacent lots and current build status.</p></li>
+<li><p><strong>Request recent walk-through video.</strong> Video captures ambient reality better than curated listing photos.</p></li>
+<li><p><strong>Do not rely on area name alone.</strong> Conditions can vary dramatically inside the same neighborhood.</p></li>
+<li><p><strong>Consider established villas.</strong> Slightly older stock in mature pockets is often quieter than brand-new clusters.</p></li>
+</ul>
+
+<h2>Final thoughts</h2>
+<p>Construction is now a normal part of Bali's growth. It does not mean quiet living is impossible, but it does mean location choice requires more precision than before.</p>
+<p>In practice, the difference between a smooth stay and a frustrating one is often local context, not villa aesthetics.</p>
+
+<h2>Need help finding quieter villa options?</h2>
+<p>If you want rental options in calmer pockets based on budget and priorities, we can help shortlist suitable villas and flag areas with lower construction exposure.</p>
+<p><a href="/request">Send your criteria</a> or browse current inventory: <a href="/properties/rent">Bali rental villas</a>.</p>`,
+    location: "other",
+    tags: ["bali", "rent", "construction", "noise", "areas", "2026", "villa"],
+    author: "Balitrusted Team",
+    published: true,
+    publishedAt: "2026-05-05T13:10:00.000Z",
+    createdAt: "2026-05-05T13:10:00.000Z",
+    updatedAt: "2026-05-05T13:10:00.000Z",
+    seoTitle: "Construction in Bali in 2026: Noisy vs Quiet Areas for Renters | Balitrusted",
+    seoDescription:
+      "Where construction is most active in Bali in 2026, where it is still relatively calm, and how renters can avoid noise mistakes before signing.",
+    introHighlight:
+      "Construction is now part of Bali's growth cycle. The real renter question is not whether there is building activity, but how unevenly it is distributed by area.",
+    ctaLabel: "Find quieter rental options →",
+    ctaUrl: "/request",
+  },
+  {
     id: "blog-2026-05-02-ubud-villa-rent-prices-increasing-2026",
     slug: "why-villa-rental-prices-in-ubud-are-increasing-in-2026",
     title: "Why Villa Rental Prices in Ubud Are Increasing in 2026",
