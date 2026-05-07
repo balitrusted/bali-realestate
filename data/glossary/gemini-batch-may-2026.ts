@@ -1409,7 +1409,7 @@ export const glossaryGeminiMay2026Batch: GlossaryTerm[] = [
   {
     id: "glossary-banjar-adat",
     slug: "banjar-adat-customary-bali",
-    title: "Banjar adat",
+    title: "Banjar Adat",
     category: "legal",
     summary:
       "Customary village segment handling ritual obligations and social harmony—parallel but linked to dinas paperwork.",
@@ -1630,6 +1630,96 @@ export const glossaryGeminiMay2026Batch: GlossaryTerm[] = [
     seoDescription:
       "Why average daily rate seasonality matters for Bali hospitality underwriting.",
     relatedGuideUrl: "/guides/buy",
+  },
+  {
+    id: "glossary-awig-awig",
+    slug: "awig-awig-customary-rules-bali",
+    title: "Awig-Awig",
+    category: "legal",
+    summary:
+      "Written customary rules of a desa adat or banjar adat that govern ceremonies, conduct, and local obligations.",
+    content: `<p><strong>Awig-awig</strong> are the formal customary rules used by Balinese traditional communities.</p>
+<p>For villa owners and long-stay residents, these rules can influence practical issues like noise tolerance, ceremony participation, parking behavior, and community contributions.</p>
+<p>When evaluating operational risk, map awig-awig context together with <a href="/glossary/banjar-adat-customary-bali">Banjar Adat</a> and your formal legal documents.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Awig-Awig customary rules in Bali | Balitrusted glossary",
+    seoDescription:
+      "What awig-awig means in Bali and why customary rules matter for villa operations.",
+    relatedGuideUrl: "/guides/legal",
+  },
+  {
+    id: "glossary-kaja-kelod",
+    slug: "kaja-kelod-orientation-bali",
+    title: "Kaja Kelod",
+    category: "living",
+    summary:
+      "Balinese sacred orientation axis mountainward and seawards used in layout logic, rituals, and space hierarchy.",
+    content: `<p><strong>Kaja</strong> points toward the mountain and <strong>kelod</strong> toward the sea in Balinese spatial understanding.</p>
+<p>This orientation influences how homes and shrines are positioned, including where sacred versus everyday functions sit on a plot.</p>
+<p>Design choices that respect local orientation logic are often easier to align with community expectations.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Kaja Kelod orientation in Bali | Balitrusted glossary",
+    seoDescription:
+      "Meaning of the kaja-kelod axis and why it appears in Balinese property layouts.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-kuningan-holiday",
+    slug: "kuningan-holiday-bali",
+    title: "Kuningan",
+    category: "living",
+    summary:
+      "Major Balinese holy day closing the Galungan cycle, with offerings and family-temple activity affecting routines.",
+    content: `<p><strong>Kuningan</strong> marks the closing point of the Galungan cycle and is one of Bali's key ceremonial days.</p>
+<p>Road use, staffing rhythm, and household ceremony activity may shift around this period, especially in village-focused areas.</p>
+<p>For context, pair it with <a href="/glossary/galungan-holiday-cycle-bali">Galungan</a> when planning arrivals or operational schedules.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Kuningan holiday in Bali | Balitrusted glossary",
+    seoDescription:
+      "What Kuningan means in Bali and how it affects villa life and scheduling.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-pecaruan-ritual",
+    slug: "pecaruan-ritual-cleansing-bali",
+    title: "Pecaruan",
+    category: "living",
+    summary:
+      "Balinese ritual offering for environmental balance and cleansing, often performed before or after major spatial changes.",
+    content: `<p><strong>Pecaruan</strong> is a ritual offering process connected with harmonizing space and restoring balance.</p>
+<p>In property life, it can appear around construction milestones, occupancy transitions, or post-disturbance cleansing requests from local stakeholders.</p>
+<p>Operationally, understand it as part of local ritual protocol rather than decoration.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Pecaruan ritual in Bali | Balitrusted glossary",
+    seoDescription:
+      "Meaning of Pecaruan and when this balancing ritual appears in Balinese property contexts.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
+    id: "glossary-pemelaspasan",
+    slug: "pemelaspasan-house-blessing-bali",
+    title: "Pemelaspasan",
+    category: "living",
+    summary:
+      "Formal Balinese house-blessing ritual for newly completed or renewed spaces before full use.",
+    content: `<p><strong>Pemelaspasan</strong> is a formal blessing ritual performed when a new or newly renewed building is prepared for proper use.</p>
+<p>Many people refer to the same practical idea using the shorter term <a href="/glossary/melaspas-ceremony-new-building-bali">Melaspas</a>.</p>
+<p>For owners and operators, this is not a legal permit substitute but a cultural milestone that often matters to neighbors and local workers.</p>`,
+    published: true,
+    createdAt: ISO,
+    updatedAt: ISO,
+    seoTitle: "Pemelaspasan house blessing in Bali | Balitrusted glossary",
+    seoDescription:
+      "What Pemelaspasan means and how it relates to Melaspas in Balinese building rituals.",
+    relatedGuideUrl: "/guides/ubud",
   },
 ];
 
