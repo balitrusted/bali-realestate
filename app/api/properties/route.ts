@@ -247,18 +247,16 @@ function getPropertiesForRequest(
 
   let validProperties = fullList.filter((p) => p && p.id && hasValidPrice(p));
 
-  if (archiveFilter === "true") {
-    validProperties = validProperties.filter((p) => p.archived === true);
-  } else if (archiveFilter === "false" || !archiveFilter) {
-    validProperties = validProperties.filter((p) => p.archived !== true);
-  }
-
   if (idsParam?.trim()) {
     const ids = idsParam.split(",").map((s) => s.trim()).filter(Boolean);
     const idSet = new Set(ids);
     validProperties = validProperties.filter(
       (p) => p.id != null && idSet.has(String(p.id))
     );
+  } else if (archiveFilter === "true") {
+    validProperties = validProperties.filter((p) => p.archived === true);
+  } else if (archiveFilter === "false" || !archiveFilter) {
+    validProperties = validProperties.filter((p) => p.archived !== true);
   }
 
   const sorted = [...validProperties].sort(

@@ -13,13 +13,17 @@ export default function EditPropertyPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/properties`, { cache: "no-store" })
+    const idsQuery =
+      id.includes("\uFFFD")
+        ? `${encodeURIComponent(id)},${encodeURIComponent(id.replace(/\uFFFD/g, "A"))}`
+        : encodeURIComponent(id);
+    fetch(`/api/properties?ids=${idsQuery}`, { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
-        let prop = data.properties.find((p: Property) => p.id === id);
+        let prop = data.properties?.find((p: Property) => p.id === id);
         if (!prop && id.includes("\uFFFD")) {
           const normalizedId = id.replace(/\uFFFD/g, "A");
-          prop = data.properties.find((p: Property) => p.id === normalizedId);
+          prop = data.properties?.find((p: Property) => p.id === normalizedId);
         }
         setProperty(prop || null);
         setLoading(false);
