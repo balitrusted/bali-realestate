@@ -248,27 +248,42 @@ export default async function GuidesPage() {
         ) : null}
 
         <section className="mb-12 md:mb-16" aria-labelledby="topics-heading">
-          <h2 id="topics-heading" className="sr-only">
+          <h2 id="topics-heading" className="text-xl font-semibold text-stone-900 md:text-2xl">
             Browse by topic
           </h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <p className="mt-1 max-w-2xl text-sm text-stone-500">
+            Each block is a full section of the library — open it for every article on that subject.
+          </p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {GUIDE_CATEGORIES.map((cat) => {
               const n = listsByCategory.get(cat.slug)?.length ?? 0;
+              const isUbud = cat.slug === "ubud";
               return (
                 <Link
                   key={cat.slug}
                   href={`/guides/${cat.slug}`}
-                  className={`flex flex-col rounded-2xl border bg-white/90 p-4 shadow-sm transition hover:border-emerald-200 hover:bg-white ${
-                    cat.slug === "ubud"
-                      ? "border-emerald-200/90 ring-1 ring-emerald-100"
-                      : "border-stone-200/90"
+                  className={`group flex min-h-[9.5rem] flex-col rounded-2xl border bg-white p-5 shadow-sm transition hover:border-emerald-200 hover:shadow-md md:min-h-[10.5rem] md:p-6 ${
+                    isUbud
+                      ? "border-emerald-200/90 bg-gradient-to-br from-emerald-50/50 to-white ring-1 ring-emerald-100"
+                      : "border-stone-200/90 hover:bg-white"
                   }`}
                 >
-                  <span className="text-[13px] font-semibold text-stone-900">{cat.title}</span>
-                  <span className="mt-1 line-clamp-2 text-xs leading-relaxed text-stone-500">{cat.description}</span>
-                  <span className="mt-3 text-xs font-medium text-emerald-800">
-                    {n === 0 ? "Open topic" : `${n} ${n === 1 ? "article" : "articles"}`}
-                    <span className="text-emerald-600"> →</span>
+                  <span
+                    className={`text-lg font-semibold tracking-tight group-hover:text-emerald-900 md:text-xl ${
+                      isUbud ? "text-emerald-950" : "text-stone-900"
+                    }`}
+                  >
+                    {cat.title}
+                  </span>
+                  <span className="mt-2 flex-1 text-sm leading-relaxed text-stone-600 md:text-[0.95rem]">
+                    {cat.description}
+                  </span>
+                  <span className="mt-4 text-sm font-semibold text-emerald-800">
+                    {n === 0 ? "Open section" : `${n} ${n === 1 ? "article" : "articles"}`}
+                    <span aria-hidden className="text-emerald-600">
+                      {" "}
+                      →
+                    </span>
                   </span>
                 </Link>
               );
