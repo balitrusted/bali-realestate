@@ -115,7 +115,7 @@ const AREA_GUIDES: AreaGuideConfig[] = [
       "More space and privacy than central Ubud pockets",
       "Strong supply of 2–4 bedroom long-term villas",
       "Calmer residential rhythm; popular with families",
-      "Pepito Lodtunduh and local shops for practical errands",
+      "Pepito Market Peliatan (short scooter ride) plus local warungs and minimarts",
     ],
     cons: [
       "Not walkable for daily life; scooter or car logic",
@@ -138,7 +138,7 @@ const AREA_GUIDES: AreaGuideConfig[] = [
       },
       {
         q: "How far is Lodtunduh from supermarkets and Ubud center?",
-        a: "Most people treat it as a short scooter ride to Pepito Lodtunduh and other local shops, then more time to central Ubud depending on traffic.",
+        a: "There is no Pepito in Lodtunduh itself. Most people ride to Pepito Market Peliatan (or other central Ubud supermarkets) for a full shop, use local warungs for top-ups, and allow extra time to Ubud center depending on traffic.",
       },
       {
         q: "What type of villas are common in Lodtunduh?",
@@ -184,6 +184,8 @@ const AREA_GUIDES: AreaGuideConfig[] = [
     whoFor: [
       "Couples and solo remote workers who want community",
       "People who want cafés and yoga without living in the busiest center",
+      "Yoga practitioners, retreat guests, and wellness-focused long stays (studios and teachers are nearby)",
+      "Creative people—artists, designers, writers—who like village lanes and a social-but-calm rhythm",
       "Renters who can handle slopes and scooter logic when needed",
     ],
     faqs: [
@@ -201,22 +203,28 @@ const AREA_GUIDES: AreaGuideConfig[] = [
       },
       {
         q: "Who usually chooses Penestanan?",
-        a: "People who want community and convenience—cafés, yoga, and a familiar expat rhythm without full central chaos.",
+        a: "Remote workers, yoga and retreat people, and creative residents who want community—cafés, studios, and walkable lanes—without full central chaos.",
       },
     ],
   },
   {
     subArea: "mas",
     excerpt:
-      "Mas is a craft-village atmosphere with rice-field edges and a calmer residential feel—often better value than the busiest Ubud pockets. Good for long-term renters who want space and quiet while staying close to town.",
-    seoTitle: "Mas Ubud Area Guide: Quiet Village Living & Villa Rentals | Balitrusted",
+      "Mas is one of Ubud’s greenest, fastest-growing residential pockets—craft-village roots, rice-field edges, and strong supply of 2–4 bedroom villas. Popular with families and couples with children; calmer than the café hills but still practical.",
+    seoTitle: "Mas Ubud Area Guide: Green Family Living & Villa Rentals | Balitrusted",
     seoDescription:
-      "Mas Ubud: crafts village, rice fields, value. What long-term renters should know—noise, roads, internet, prices, and villas in Mas.",
-    seoKeywords: ["Mas Ubud", "Mas villa rent", "quiet Ubud area", "long-term rental Mas"],
+      "Mas Ubud: green developing area, family-friendly villas (2–4 beds), schools nearby, craft village life. Long-term guide—noise, roads, prices, and rentals.",
+    seoKeywords: [
+      "Mas Ubud",
+      "Mas villa rent",
+      "family villa Ubud",
+      "long-term rental Mas",
+      "4 bedroom villa Mas",
+    ],
     intro:
-      "Mas is known for <strong>wood carving, workshops, and a more “real village” rhythm</strong> than the café-heavy hills. For long-term living, it often delivers <strong>more space per budget</strong> and a greener, slower feel—especially if your villa sits among rice plots or palm edges.",
+      "Mas is known for <strong>wood carving and workshops</strong>, but for long-term renters it is increasingly a <strong>green, developing residential corridor</strong> south-east of central Ubud. Many people describe it as one of the <strong>greenest pockets in Ubud that is still actively building</strong>—new villas, wider plots, and rice-field edges rather than lane-on-lane density. <strong>2–3–4 bedroom villas</strong> are what the market optimizes for here, and supply keeps growing.",
     atmosphere:
-      "Mas feels like Ubud’s craft corridor turned residential: galleries, workshops, and village life between green edges. It is less “scene” than Penestanan and more comfortable everyday living.",
+      "Mas feels like village life with momentum: craft showrooms on the main road, quieter residential lanes behind, and steady new construction aimed at families who want gardens and multiple bedrooms. It is less “scene” than Penestanan and more everyday-livable. Nearby <strong>Pejeng</strong> is also green and spacious, but Mas often wins on <strong>family logistics</strong> (school runs toward Peliatan/Lodtunduh) and the volume of newer family-sized villas.",
     noise:
       "Often more residential and less scene-heavy than central hills, but roosters, ceremonies, and construction still exist. Calm usually comes from layout and distance from busy roads—not from the area name alone.",
     roads:
@@ -224,259 +232,322 @@ const AREA_GUIDES: AreaGuideConfig[] = [
     internet:
       "Fine for remote work if the villa is set up for it—test speed, enclosed living, and backup power. Mas is not about café coworking density; it is about a good home base.",
     prices:
-      "Mas can offer better space-for-money than the busiest Ubud pockets, but premium design and views still cost more. Compare monthly vs yearly on <a href=\"/properties/rent/ubud/mas\">Mas rental villas</a>.",
+      "Mas is especially competitive for <strong>2–4 bedroom villas with pools and gardens</strong>—the layouts families actually want. Prices still depend on finish, outlook, and road access; premium design costs more everywhere. Compare monthly vs yearly on <a href=\"/properties/rent/ubud/mas\">Mas rental villas</a> and filter by bedroom count.",
     pros: [
-      "Often strong value for space and greenery",
-      "Calmer village rhythm; craft culture nearby",
-      "Straightforward access toward Ubud center when needed",
+      "Among the greenest, most actively developing residential areas in Ubud",
+      "Strong supply of 2–3–4 bedroom long-term villas (new builds continue)",
+      "Popular with families and couples with children",
+      "Schools and kindergartens within practical scooter range",
+      "Craft-village culture plus rice-field outlooks; calmer than café hills",
     ],
     cons: [
+      "Active development—check neighboring plots for future construction",
       "Not a walk-to-every-café neighborhood",
       "Internet and comfort depend heavily on the specific villa",
       "Some lanes are dark or slippery at night",
     ],
     whoFor: [
-      "Couples and remote workers who want calm over social density",
-      "Long-stay renters prioritizing villa quality and budget balance",
-      "People who like village life with rice-field outlooks",
+      "Families and couples with children who want space, gardens, and calmer roads",
+      "Renters looking for 2–3–4 bedroom villas (the most common Mas inventory)",
+      "People comparing Mas vs Pejeng who want greener living with stronger villa supply and school access",
+      "Remote workers who want a green home base over social density",
+      "Long-stay renters prioritizing villa size and value balance",
     ],
     faqs: [
       {
+        q: "Is Mas good for families with children?",
+        a: "Often yes—Mas is one of the greener, faster-growing family pockets in Ubud, with many 2–4 bedroom villas. Kindergartens and schools within a practical scooter ride include Waldorf Bali Madu (Mas/Sayan area), Empathy School (Peliatan), and Bali Hati International School (Lodtunduh). Pejeng is also green and spacious, but Mas usually feels more practical for daily family logistics and newer villa supply.",
+      },
+      {
         q: "Is Mas good for long-term villa rental in Ubud?",
-        a: "Yes, if you want value, greenery, and village pace more than walk-to-every-café convenience.",
+        a: "Yes, especially if you want greenery, multiple bedrooms, and village pace more than walk-to-every-café convenience.",
       },
       {
         q: "Is Mas quiet compared to Penestanan or central Ubud?",
-        a: "Often yes—more residential and less scene-heavy—but verify the exact lane before signing.",
+        a: "Often yes—more residential and less scene-heavy—but verify the exact lane before signing. Development noise can still appear on neighboring land.",
       },
       {
-        q: "Is Mas cheaper than other Ubud neighborhoods?",
-        a: "It can be for similar space, but price still depends on the villa. Compare a few listings and yearly vs monthly terms.",
+        q: "What villa sizes are common in Mas?",
+        a: "2–4 bedrooms with pools and gardens are the sweet spot—what families search for and what gets built most actively here.",
       },
       {
         q: "Do you need a scooter to live in Mas?",
-        a: "For most people, yes—for groceries and evenings out. Some lanes are walkable for short trips only.",
+        a: "For most people, yes—for groceries (e.g. Pepito Market Peliatan), school runs, and evenings out. Some lanes are walkable for short trips only.",
       },
     ],
   },
   {
     subArea: "gentong",
     excerpt:
-      "Gentong offers greener, quieter residential lanes north-east of Ubud—good access toward Tegallalang routes with a slower village pace. A solid long-term pocket when you want nature close and fewer crowds.",
-    seoTitle: "Gentong Ubud Area Guide: Green Living & Long-Term Rentals | Balitrusted",
+      "Gentong is green, quiet north-east Ubud with some of the island’s best yearly deals on 2-bedroom villas in nature—often 120–150M IDR/year. Narrow scenic lanes = scooter life; ideal for solitude and adventure-minded renters.",
+    seoTitle: "Gentong Ubud Area Guide: Value Villas in Nature & Yearly Rentals | Balitrusted",
     seoDescription:
-      "Gentong Ubud: greenery, residential calm, access notes. Long-term fit, noise, roads, costs, and villas for rent in Gentong.",
-    seoKeywords: ["Gentong Ubud", "Gentong villa rent", "quiet Ubud", "long-term rental Gentong"],
+      "Gentong Ubud: affordable 2-bed yearly villas in greenery, scooter-only lanes, yearly prices from ~120M IDR. Who it fits, access, and current listings.",
+    seoKeywords: [
+      "Gentong Ubud",
+      "Gentong villa rent",
+      "yearly rental Gentong",
+      "cheap 2 bedroom villa Ubud",
+      "long-term rental Gentong",
+    ],
     intro:
-      "Gentong sits slightly off Ubud’s busiest strips—<strong>quieter residential lanes</strong>, easy runs into central Ubud when needed, and a mix of newer builds and established homes. Good if you want calm without feeling remote.",
+      "Gentong sits north-east of central Ubud—<strong>deep green, spread-out, and full of villas tucked into rice and jungle edges</strong>. It is one of the few Ubud pockets where you can still find <strong>seriously affordable 2-bedroom villas in nature</strong>, especially on <strong>yearly contracts</strong>. The trade-off is access: many homes are reached only by <strong>narrow lanes on a scooter</strong>, often with beautiful, slightly “adventure” approaches rather than flat main-road driveways.",
     atmosphere:
-      "Think green edges, village rhythm, and fewer “tourist street” vibes than the center. Gentong suits renters who want to hear less traffic from their villa but still reach Ubud in a short ride.",
+      "Think village quiet, humid greenery, and a large inventory of similar 2-bed layouts hidden down parallel lanes. Gentong suits people who want <strong>seclusion and value</strong> more than walkable café culture. If you enjoy the ride home as part of the lifestyle—views, trees, a slower rhythm—it clicks. If you want to walk to dinner, look elsewhere.",
     noise:
       "Generally calmer than central zones, with the usual Bali caveats: roosters, ceremonies, and periodic construction. Proximity to roads toward Tegallalang can add motorbike noise on some lanes.",
     roads:
-      "Scooter or car for supermarkets (Pepito Andong / Delta Dewata are common references). Lane quality varies—visit after rain if possible.",
+      "<strong>Scooter-first is the norm.</strong> A huge share of Gentong villas are reachable only via <strong>narrow village roads</strong>—sometimes scenic ridge or rice-field lanes that feel like part of the experience. Cars may not reach every property; even when they can, owners often prefer scooters for daily life. Test your exact lane in daylight and after rain, with the bike you will actually ride. Supermarket runs usually mean Pepito Andong or Delta Dewata on a scooter.",
     internet:
-      "Treat internet like any Ubud villa decision: speed test, enclosed living, backup power. Gentong is not chosen for coworking density—it is chosen for the house and the green surroundings.",
+      "Treat internet like any Ubud villa decision: speed test, enclosed living, backup power. Gentong is not chosen for coworking density—it is chosen for the house, the price, and the green surroundings.",
     prices:
-      "Often balanced value—less “premium hill” pricing than Penestanan, more comfort than the most remote northern pockets. Browse <a href=\"/properties/rent/ubud/gentong\">Gentong listings</a>.",
+      "Gentong stands out for <strong>yearly value on 2-bedroom villas in nature</strong>. On yearly terms it is common to see <strong>roughly 120–150 million IDR per year</strong> (about 120, 130, 140, or 150M) for a 2-bed with pool in a green setting—price points that are <strong>very hard to match</strong> in Penestanan, Sayan, or central hills for the same bedroom count. Inventory is deep and many owners publish yearly rates. Always confirm what is included (cleaning, pool, electricity, internet). Filter yearly on <a href=\"/properties/rent/ubud/gentong?minDuration=12\">Gentong yearly rentals</a> or browse <a href=\"/properties/rent/ubud/gentong\">all Gentong listings</a>.",
     pros: [
+      "Among Ubud’s best value for 2-bedroom villas surrounded by nature",
+      "Large supply of yearly offers; 120–150M IDR/year for 2 beds is realistic here",
       "Greener, quieter feel than central Ubud",
-      "Practical access toward major supermarkets north-east",
-      "Good for renters who want calm but not isolation",
+      "Scenic lane access—appeals if you like “coming home through the green”",
+      "Practical scooter access to Pepito Andong / Delta Dewata",
     ],
     cons: [
-      "Not walkable for daily errands",
-      "Some pockets feel farther from café culture",
-      "Construction can appear on neighboring plots",
+      "Most villas: scooter-only or scooter-practical access on narrow roads",
+      "Not for people who dislike riding or need car-at-the-door daily",
+      "Not walkable for errands or café culture",
+      "Lane quality and rain grip vary—visit your exact road",
     ],
     whoFor: [
-      "Remote workers who want a calm home base",
-      "Couples who prefer nature edges over social hubs",
-      "Long-stay renters comparing value vs Penestanan",
+      "Confident scooter riders who are fine on narrow, scenic village lanes",
+      "Couples who want solitude, nature, and strong yearly value on a 2-bed villa",
+      "Long-stay renters hunting 120–150M IDR/year deals hard to find elsewhere in Ubud",
+      "People who enjoy privacy and “adventure” approaches more than convenience density",
+      "Remote workers with a solid home setup who rarely need walkable cafés",
     ],
     faqs: [
       {
+        q: "Why is Gentong famous for cheap 2-bedroom yearly rentals?",
+        a: "Large green inventory, competition between similar villas, and distance from premium hills keep yearly prices lower. Seeing 120–150 million IDR per year for a 2-bed in nature is common here and rare in many other Ubud pockets.",
+      },
+      {
+        q: "Do I need a scooter in Gentong?",
+        a: "For most villas, yes—many are reachable only via narrow lanes that are part of daily life, not an occasional shortcut. Test your lane before signing.",
+      },
+      {
         q: "Is Gentong good for long-term living?",
-        a: "Yes, if you want residential calm and green surroundings while keeping Ubud accessible by scooter.",
+        a: "Yes, if you want green value and yearly pricing and you accept scooter-first access. Less ideal if you want flat walks to cafés or car-only logistics.",
       },
       {
-        q: "How do you shop and eat out from Gentong?",
-        a: "Most people ride to Pepito Andong, Delta Dewata, or into central Ubud depending on habit.",
-      },
-      {
-        q: "Is Gentong very far from Ubud center?",
-        a: "It is usually a short scooter ride, but not a walking lifestyle for most renters.",
+        q: "How do you shop from Gentong?",
+        a: "Most people ride to Pepito Andong, Delta Dewata, or central Ubud depending on habit.",
       },
       {
         q: "What should I check during a villa viewing?",
-        a: "Road access in rain, neighbor construction, and whether the lane noise matches your sleep tolerance.",
+        a: "Lane access in rain, night riding comfort, neighbor construction, Wi‑Fi speed, and whether the yearly price includes utilities and pool care.",
       },
     ],
   },
   {
     subArea: "petulu",
     excerpt:
-      "Petulu is quieter and residential, known for evening herons and open views. Fits long-term renters who want peace and nature while staying within practical reach of Ubud.",
-    seoTitle: "Petulu Ubud Area Guide: Quiet Living & Villa Rentals | Balitrusted",
+      "Petulu is Gentong’s greener cousin—closer to town and Pepito Andong, famous for herons and a slow traditional village rhythm. Less “exclusive” than Gentong, but better west links toward Jalan Cinta and Pyramids of Chi.",
+    seoTitle: "Petulu Ubud Area Guide: Heron Village Living & Villa Rentals | Balitrusted",
     seoDescription:
-      "Petulu Ubud: village calm, herons, rice-field edges. Long-term guide—noise, roads, internet, prices, and villas in Petulu.",
-    seoKeywords: ["Petulu Ubud", "Petulu villa rent", "quiet Ubud", "long-term rental Petulu"],
+      "Petulu Ubud: heron village, slow lanes, Pepito Andong access, vs Gentong. Long-term living, roads west to Jalan Cinta, prices, and villas.",
+    seoKeywords: [
+      "Petulu Ubud",
+      "Petulu villa rent",
+      "Petulu herons",
+      "long-term rental Petulu",
+      "Pepito Andong",
+    ],
     intro:
-      "Petulu is known for <strong>calm village life, greenery, and the evening heron flights</strong>—a residential pocket north of central Ubud that has grown popular for longer stays. It is a strong “quiet but connected” choice if your villa is set up well.",
+      "Petulu feels <strong>similar to Gentong</strong> in spirit—green, residential, unhurried—but sits <strong>closer to “town” logistics</strong> and <strong>Pepito Andong</strong>. It is more <strong>traditional and tourist-facing</strong> because of the famous evening heron colony and the road visitors use to watch them. The village can feel <strong>a bit tight</strong>: crossing Petulu end-to-end takes time on slow lanes. Life here is <strong>very unhurried</strong>. Villa stock is a touch less “luxury/exclusive” than Gentong’s hidden-lane inventory, but Petulu wins on <strong>westbound access</strong>—you can ride straight toward <strong>Jalan Cinta</strong> and <strong>Pyramids of Chi</strong> without looping through Gentong’s north-east lanes.",
     atmosphere:
-      "Petulu feels more local and spread out than the café hills. Mornings are slow; evenings can be memorable when the herons return—an Ubud signature that many long-term renters enjoy.",
+      "Mornings are slow; evenings bring the heron spectacle and occasional visitor traffic on the main viewing corridor. Petulu is village Bali with a known postcard hook—not a café hill, not a resort strip. Compared with Gentong it feels <strong>more lived-in and slightly more on the map</strong>, with a denser weave of lanes and a pace that rewards patience.",
     noise:
-      "Often peaceful, but not immune to roosters, ceremonies, or construction. The best villas are set back from through-traffic lanes.",
+      "Residential lanes are often calm, but the <strong>heron road and tourist evenings</strong> add predictable activity. Roosters, ceremonies, and construction still apply. Set back from the main heron corridor if you want maximum quiet.",
     roads:
-      "Scooter logic for Pepito Andong, Delta Dewata, and central Ubud. Roads are manageable but not “city flat.”",
+      "Still mostly <strong>scooter logic</strong> on narrow village roads, but Petulu is <strong>closer to Pepito Andong and Delta Dewata</strong> than many Gentong pockets. Distinct advantage: easy runs <strong>west toward Jalan Cinta, Campuhan-side hills, and Pyramids of Chi</strong>—useful if your routine mixes north Ubud errands with west Ubud wellness and walks. Crossing the village itself can feel long and slow; plan time, not just distance.",
     internet:
       "Good for remote work when the villa has enclosed living and reliable Wi‑Fi. Test during viewing; do not assume café backup nearby.",
     prices:
-      "Pricing varies by villa finish and outlook. Petulu can offer a strong balance of calm and access compared to the most remote northern areas. See <a href=\"/properties/rent/ubud/petulu\">Petulu villas for rent</a>.",
+      "Often strong value on yearly stays, though Gentong still leads on the very lowest 2-bed yearly deals in deep green lanes. Petulu pricing reflects slightly more access and tourist familiarity. Compare on <a href=\"/properties/rent/ubud/petulu\">Petulu villas for rent</a> and filter yearly where published.",
     pros: [
-      "Quiet residential rhythm; popular for longer stays",
-      "Greenery and open views in many pockets",
-      "Reasonable access to larger supermarkets nearby",
+      "Green, slow village life—similar vibe to Gentong but closer to Ubud errands",
+      "Quick scooter access to Pepito Andong and Delta Dewata",
+      "Famous heron evenings (unique atmosphere)",
+      "Westbound links to Jalan Cinta and Pyramids of Chi—unlike Gentong’s north-east orientation",
+      "Good for long-stay renters who want nature without feeling “far north”",
     ],
     cons: [
-      "Limited walkable café culture on your doorstep",
-      "Herons are charming—but roosters and dogs still exist elsewhere",
-      "Villa quality varies; visit in person",
+      "More traditional/tourist touch than Gentong because of heron traffic",
+      "Village can feel cramped; end-to-end crossings take time",
+      "Slightly less “exclusive” villa stock than Gentong’s hidden-lane market",
+      "Not walkable for daily café life",
+      "Heron corridor can add evening activity",
     ],
     whoFor: [
-      "Remote workers who want peace and a nature-feel home",
-      "Couples avoiding central noise",
-      "Families who accept scooter logistics for school and shops",
+      "Renters who like Gentong’s green calm but want Pepito Andong closer and west Ubud within easy reach",
+      "People who enjoy slow village rhythm and do not mind a famous local landmark nearby",
+      "Couples and remote workers who accept scooter life on narrow lanes",
+      "Long-stay guests who sometimes head west (Jalan Cinta, Pyramids of Chi) as well as into central Ubud",
     ],
     faqs: [
       {
+        q: "Petulu vs Gentong—which should I choose?",
+        a: "Both are green and slow. Gentong often feels more secluded and can win on the lowest yearly 2-bed deals in deep lanes. Petulu is closer to town and Pepito Andong, more traditional/tourist because of the herons, a bit tighter to cross, slightly less “luxury” inventory—but better if you want quick westbound access to Jalan Cinta and Pyramids of Chi.",
+      },
+      {
         q: "Why is Petulu famous?",
-        a: "Many people know it for evening white heron flights and a calm village character with rice-field edges.",
+        a: "Evening white heron flights and the road visitors use to watch them—plus a calm rice-field village character.",
       },
       {
         q: "Is Petulu good for families?",
-        a: "It can be, especially if you want quieter surroundings and space. Check school commute realistically by scooter.",
+        a: "It can be, especially for space and calm. Check school and supermarket runs realistically—mostly scooter time.",
       },
       {
-        q: "Is Petulu walkable?",
-        a: "Some lanes are pleasant for walks, but daily errands are usually by scooter.",
-      },
-      {
-        q: "How does Petulu compare to Penestanan?",
-        a: "Petulu is usually quieter and less social; Penestanan is more walkable and café-dense.",
+        q: "Can you reach Pyramids of Chi easily from Petulu?",
+        a: "Yes—one of Petulu’s practical edges over Gentong is riding west toward Jalan Cinta and Pyramids of Chi without a long detour north-east.",
       },
     ],
   },
   {
     subArea: "kedewatan",
     excerpt:
-      "Kedewatan combines ridge-line breezes, river valley edges, and spacious residential plots—popular with renters who want views and a cooler feel than lower Ubud.",
-    seoTitle: "Kedewatan Ubud Area Guide: Ridge Views & Long-Term Rentals | Balitrusted",
+      "Kedewatan is Ubud’s old-luxury west—historic hotels, the valley’s grand road past rice fields and rivers, rafting and quad trails, and a straight run toward Kintamani. New Pepito Kedewatan underlines the premium turn.",
+    seoTitle: "Kedewatan Ubud Area Guide: Old Luxury, Valley & Kintamani Access | Balitrusted",
     seoDescription:
-      "Kedewatan Ubud: breezy ridges, views, residential space. Daily life, access, noise, costs, and villas for rent in Kedewatan.",
+      "Kedewatan Ubud: old-money feel, Ayung valley road, Kintamani access, Pepito Kedewatan. Long-term living, views, prices, and villas.",
     seoKeywords: [
       "Kedewatan Ubud",
       "Kedewatan villa rent",
-      "Ubud ridge living",
+      "Pepito Kedewatan",
+      "Kintamani from Ubud",
       "long-term rental Kedewatan",
     ],
     intro:
-      "Kedewatan is known for <strong>elevated settings, open outlooks, and a slightly cooler breeze</strong> than the lower town. It is popular with people who want views and residential space while staying within reach of Ubud and western corridors.",
+      "Kedewatan carries an <strong>older, established luxury feeling</strong>—less “new Bali Instagram” and more <strong>old money Ubud</strong>: legacy resorts, wide valley perspectives, and a sense that this corridor has mattered for decades. The area is tied to one of Ubud’s <strong>grandest, heaviest roads</strong>, running past <strong>colossal rice fields</strong>, rivers, rafting put-ins, quad-bike routes, and <strong>historic hotels</strong> people still talk about. For long-term renters it also means <strong>direct practical access toward Kintamani</strong>—the highland “pearl” many residents visit on weekends. The recently opened <strong>Pepito Kedewatan</strong> signals that premium direction: high-quality groceries and goods that were harder to source locally before.",
     atmosphere:
-      "Kedewatan can feel more “resort-adjacent calm” in places—green, airy, and spread out. It suits renters who care about outlook and privacy as much as bedroom count.",
+      "Kedewatan feels airy and established—ridge breezes, valley scale, and a slower prestige pace. Days can mix villa calm with valley activities (rafting, river viewpoints, rides into the hills). It suits people who want <strong>landscape drama and history</strong>, not village-lane bargain hunting.",
     noise:
-      "Often calm, but valley roads and occasional traffic to Sayan/Campuhan corridors can add sound in specific lanes. Construction on view plots happens—verify neighbors.",
+      "Often calm at villa level, but the main valley corridor carries daytime traffic to activities and viewpoints. Weekends and holiday peaks can add movement toward rafting/ATV hubs. Choose set-back villas if you are sensitive to through-road hum.",
     roads:
-      "Scooter or car is standard. Some access roads are steep; rainy-season grip matters. Pepito Kedewatan is a common shopping anchor.",
+      "The <strong>main Kedewatan road</strong> is the story—broad by Ubud standards, scenic, and busy with valley tourism infrastructure. Scooter or car both work on the corridor; villa lanes can still be steep. <strong>Kintamani-bound trips</strong> often start here without fighting central Ubud traffic. <strong>Pepito Kedewatan</strong> (newer, large-format) is now the anchor for premium shopping—previously residents relied on longer rides for the same product range.",
     internet:
       "Views do not guarantee great Wi‑Fi—test the villa. Enclosed living is valuable in breeze-heavy zones when rain blows through.",
     prices:
-      "View and land size push prices up compared to inland village pockets, but deals exist on longer terms. Browse <a href=\"/properties/rent/ubud/kedewatan\">Kedewatan rentals</a>.",
+      "Premium by Ubud standards—views, land size, and “established west” positioning matter. Yearly deals exist but rarely match Gentong-style 2-bed bargains. Browse <a href=\"/properties/rent/ubud/kedewatan\">Kedewatan rentals</a>.",
     pros: [
-      "Strong views and breezy ridge feel",
-      "Spacious residential plots",
-      "Good access toward western Ubud corridors",
+      "Distinct old-luxury / established-resort atmosphere",
+      "Iconic valley road—rice fields, rivers, rafting and quad access",
+      "Historic hotel strip and mature landscape scale",
+      "Strong route toward Kintamani highlands",
+      "New Pepito Kedewatan—premium groceries closer than before",
+      "Breezy ridges and spacious residential plots",
     ],
     cons: [
-      "Steep or winding access in some villas",
-      "Premium pricing for views and privacy",
-      "Not a dense walkable café neighborhood",
+      "Premium pricing vs green-value pockets like Gentong",
+      "Valley corridor tourism traffic in places",
+      "Steep villa lanes; rain grip varies",
+      "Not a walkable café neighborhood",
     ],
     whoFor: [
-      "Couples who want outlook and calm",
-      "Remote workers with a strong home-office setup",
-      "Renters who accept scooter logic for daily life",
+      "Renters who want established luxury vibes over raw village value",
+      "People who use Kintamani and highland weekends regularly",
+      "Couples and families who value views, space, and valley activities",
+      "Residents who appreciate Pepito-level shopping without always riding to central Ubud",
+      "Remote workers with a strong home setup who enjoy west Ubud scale",
     ],
     faqs: [
       {
-        q: "Is Kedewatan cooler than central Ubud?",
-        a: "Often slightly breezier on ridges, but Bali is still tropical—expect humidity and rain season.",
+        q: "What makes Kedewatan feel different from Gentong or Petulu?",
+        a: "Kedewatan is more established and premium—historic valley hotels, the grand road, rafting/quad tourism, and Kintamani access. Gentong/Petulu are greener village-value pockets; Kedewatan is old-luxury west Ubud.",
+      },
+      {
+        q: "Is Pepito Kedewatan new?",
+        a: "Yes—recently opened and widely seen as raising convenience in the corridor, with product range that was harder to get locally before.",
+      },
+      {
+        q: "Is Kedewatan good for Kintamani trips?",
+        a: "Yes—many residents treat Kedewatan as a practical west-side base for highland runs without crossing all of central Ubud first.",
       },
       {
         q: "Is Kedewatan good for views?",
-        a: "Yes—many renters choose it specifically for valley or greenery outlooks. Verify the view is not blocked by future builds.",
-      },
-      {
-        q: "How far is Kedewatan from Ubud center?",
-        a: "Usually a short scooter ride, depending on lane and traffic—not a walking lifestyle for most people.",
+        a: "Yes—valley and rice-field scale is the point. Verify views are not blocked by future builds.",
       },
       {
         q: "What should I check before renting?",
-        a: "Access road steepness, rain grip, Wi‑Fi speed, and whether enclosed living fits your work setup.",
+        a: "Distance to the main valley road, night noise, rain access on your lane, Wi‑Fi speed, and whether enclosed living fits your work setup.",
       },
     ],
   },
   {
     subArea: "sayan",
     excerpt:
-      "Sayan sits along the Ayung valley—jungle outlooks, calm pockets, and iconic ridge atmosphere. Best when views and privacy matter as much as the villa layout.",
-    seoTitle: "Sayan Ubud Area Guide: Valley Views & Villa Rentals | Balitrusted",
+      "Sayan is classic Ubud expat territory—valley calm near Sayan Market, a trio of supermarkets (Cocomart, Pepito, Popular), Rusters café, padel, and shortcuts toward Penestanan. 2–3 bed villas dominate; the pocket keeps developing.",
+    seoTitle: "Sayan Ubud Area Guide: Expat Classic, Market & Villa Rentals | Balitrusted",
     seoDescription:
-      "Sayan Ubud: Ayung valley, calm pockets, long-term living. Noise, roads, internet, prices, and villas in Sayan.",
-    seoKeywords: ["Sayan Ubud", "Sayan villa rent", "Ubud valley view", "long-term rental Sayan"],
+      "Sayan Ubud: expat hub, Sayan Market, Cocomart/Pepito/Popular, Rusters, padel, Penestanan shortcuts. Long-term villas, access to Canggu road, and listings.",
+    seoKeywords: [
+      "Sayan Ubud",
+      "Sayan villa rent",
+      "Sayan Market Ubud",
+      "expat Ubud",
+      "long-term rental Sayan",
+    ],
     intro:
-      "Sayan sits along the <strong>Ayung valley</strong>—jungle outlooks, calm pockets, and a refined residential feel that many long-term renters love. It is not about convenience density; it is about atmosphere.",
+      "Sayan is <strong>classic Ubud expat country</strong>—slightly aside from the noisiest center, but wired into daily life through <strong>Sayan Market</strong>, the area’s central <strong>produce market</strong> and one of the real hearts of west Ubud. The Ayung valley still defines the mood (green, airy, calmer than the main streets), yet Sayan is more <strong>practical</strong> than remote: a cluster of supermarkets, a famous café, new sport infrastructure, and paths—including a <strong>shortcut toward Penestanan</strong>. The corridor also sits closer to the <strong>Denpasar / Canggu road</strong>, which matters if you leave Ubud often. The area is <strong>gradually developing</strong>; inventory skews to <strong>2–3 bedroom villas</strong>, with some 1-bedroom options.",
     atmosphere:
-      "Sayan can feel like Ubud’s “quiet prestige” zone: green, airy, and slower. Days are shaped by the villa and the valley more than by a walkable café strip.",
+      "Sayan mixes valley prestige with expat routines: market mornings, supermarket runs, Rusters meetups, padel sessions, then home to a villa lane. You will hear many languages in the shops and see long-stay faces year-round. It feels established but not frozen—new retail and villas still appear.",
     noise:
-      "Often calm, but valley echoes, resort corridors, and road access can create surprises. Visit at night and early morning before you commit.",
+      "Usually calmer than central Ubud, but market mornings, supermarket traffic, and valley tourism can add daytime hum near the main crossroads. Villa lanes set back from the corridor are often peaceful—verify at night.",
     roads:
-      "Scooter or car; some villas have winding access. Pepito Sayan area is a common reference for shopping.",
+      "Scooter is default; car works on the main corridor. The <strong>Sayan crossroads</strong> is the anchor: <strong>Cocomart</strong> on the corner, with the newer <strong>Pepito</strong> and <strong>Popular</strong> supermarkets opposite—together they cover most weekly shopping. Numerous <strong>foot and scooter paths</strong> cut through to Penestanan and the hills. For south Bali, the <strong>Denpasar / Canggu axis</strong> is more convenient from here than from north-east pockets like Gentong.",
     internet:
-      "Remote work is possible with the right villa—test Wi‑Fi and enclosed living. Do not assume café backup is always nearby.",
+      "Remote work is common among expats here—test villa Wi‑Fi and enclosed living; cafés like Rusters are backup, not your office.",
     prices:
-      "Views and privacy often command higher prices, but long-term yearly deals vary. See <a href=\"/properties/rent/ubud/sayan\">Sayan villas for rent</a>.",
+      "Sayan is mid-to-upper Ubud for many 2–3 bed villas with valley outlooks, but yearly deals exist. One-bedrooms appear less often than family layouts. Browse <a href=\"/properties/rent/ubud/sayan\">Sayan villas for rent</a>.",
     pros: [
-      "Iconic valley atmosphere and greenery",
-      "Strong privacy in many pockets",
-      "Popular with long-stay renters who want calm",
+      "Established expat ecosystem—one of Ubud’s default long-stay addresses",
+      "Sayan Market for fresh produce and local rhythm",
+      "Supermarket triangle: Cocomart, Pepito, Popular at the crossroads",
+      "Rusters and growing leisure (padel nearby)",
+      "Paths and shortcuts toward Penestanan",
+      "Practical access toward Denpasar and Canggu",
+      "2–3 bedroom villas are the sweet spot; area still developing",
     ],
     cons: [
-      "Not walkable for daily errands",
-      "Premium pricing in view locations",
-      "Access roads can be steep or winding",
+      "Crossroads can feel busy at peak times",
+      "Premium valley villas still cost more than Gentong-value lanes",
+      "Some villa access roads are steep or winding",
+      "Not a single walkable “main street” like central Ubud",
     ],
     whoFor: [
-      "Couples who want outlook and calm",
-      "Renters who work from home and rarely need café density",
-      "People comparing Sayan vs Kedewatan for breeze and views",
+      "Long-term expats who want Ubud classic with market + supermarket convenience",
+      "Couples and families seeking 2–3 bedroom villas (plus some 1-bed options)",
+      "People who split time between Ubud hills and trips toward Canggu/Denpasar",
+      "Active residents who like padel, valley walks, and café culture (Rusters)",
+      "Renters comparing Sayan vs Kedewatan who prefer expat infrastructure over raw valley tourism",
     ],
     faqs: [
       {
-        q: "Is Sayan good for long-term living?",
-        a: "Yes, if you want valley atmosphere and privacy and you accept scooter logistics for daily life.",
+        q: "Why do so many expats choose Sayan?",
+        a: "It balances valley calm with Sayan Market, a strong supermarket cluster, familiar cafés, paths toward Penestanan, and easier south-road access—without living in the busiest central lanes.",
       },
       {
-        q: "Is Sayan walkable to Ubud center?",
-        a: "Not really—most people ride. Some walking paths exist for leisure, not for groceries.",
+        q: "Where do you shop in Sayan?",
+        a: "Daily produce at Sayan Market; weekly stock at Cocomart on the crossroads plus Pepito and Popular opposite. Rusters is the well-known café anchor.",
       },
       {
-        q: "Is Sayan quiet?",
-        a: "Often calm, but verify road access noise and neighbor construction.",
+        q: "Can you walk or ride to Penestanan from Sayan?",
+        a: "Yes—many people use local paths and shortcuts by foot or scooter rather than looping through central Ubud.",
       },
       {
-        q: "Sayan vs Penestanan—what is the difference?",
-        a: "Penestanan is more social and walkable; Sayan is more valley-calm and view-focused.",
+        q: "What villa sizes are common?",
+        a: "Most demand is for 2–3 bedrooms; one-bedroom villas exist but are less dominant than in café-hill micro-markets.",
+      },
+      {
+        q: "Sayan vs Penestanan?",
+        a: "Penestanan is more walkable and yoga/café dense; Sayan is more expat-market-supermarket practical with valley outlooks and a developing villa stock.",
       },
     ],
   },
@@ -715,6 +786,9 @@ const AREA_GUIDES: AreaGuideConfig[] = [
 
 export const ubudAreaGuideArticles: Article[] = AREA_GUIDES.map(toArticle);
 
+/** Display order for neighborhood chips on /guides and /guides/ubud */
+export const UBUD_AREA_GUIDE_SUBAREAS_ORDER: SubArea[] = AREA_GUIDES.map((g) => g.subArea);
+
 const UBUD_HUB_ARTICLE_ID = "article-1768495278928";
 const HUB_GUIDE_LINK_MARKER = "lodtunduh-area-guide-ubud";
 const HUB_INSERT_BEFORE =
@@ -738,11 +812,11 @@ export const UBUD_AREA_GUIDE_HUB_LINKS_HTML = `<h2 class="heading">Area guides w
 <ul>
 <li><p><a href="/guides/ubud/lodtunduh-area-guide-ubud"><strong>Lodtunduh</strong></a> — space, gardens, family-friendly long-term villas</p></li>
 <li><p><a href="/guides/ubud/penestanan-area-guide-ubud"><strong>Penestanan</strong></a> — walkable, creative, social-by-Ubud-standards living</p></li>
-<li><p><a href="/guides/ubud/mas-area-guide-ubud"><strong>Mas</strong></a> — craft-village calm, rice-field edges, strong value pockets</p></li>
-<li><p><a href="/guides/ubud/gentong-area-guide-ubud"><strong>Gentong</strong></a> — greener residential lanes north-east of town</p></li>
-<li><p><a href="/guides/ubud/petulu-area-guide-ubud"><strong>Petulu</strong></a> — quiet village life and heron-country atmosphere</p></li>
-<li><p><a href="/guides/ubud/kedewatan-area-guide-ubud"><strong>Kedewatan</strong></a> — breezy ridges and valley-edge outlooks</p></li>
-<li><p><a href="/guides/ubud/sayan-area-guide-ubud"><strong>Sayan</strong></a> — Ayung valley calm and iconic views</p></li>
+<li><p><a href="/guides/ubud/mas-area-guide-ubud"><strong>Mas</strong></a> — green, developing, family-friendly 2–4 bed villas</p></li>
+<li><p><a href="/guides/ubud/gentong-area-guide-ubud"><strong>Gentong</strong></a> — green value, yearly 2-bed deals, scooter lanes</p></li>
+<li><p><a href="/guides/ubud/petulu-area-guide-ubud"><strong>Petulu</strong></a> — heron village, Pepito Andong–close, west to Jalan Cinta</p></li>
+<li><p><a href="/guides/ubud/kedewatan-area-guide-ubud"><strong>Kedewatan</strong></a> — old luxury, valley road, Kintamani access</p></li>
+<li><p><a href="/guides/ubud/sayan-area-guide-ubud"><strong>Sayan</strong></a> — expat classic, Sayan Market, supermarket hub</p></li>
 <li><p><a href="/guides/ubud/tegallalang-area-guide-ubud"><strong>Tegallalang</strong></a> — terraces, scenery, immersion-first living</p></li>
 <li><p><a href="/guides/ubud/keliki-area-guide-ubud"><strong>Keliki</strong></a> — open landscapes and slower village pace</p></li>
 <li><p><a href="/guides/ubud/kemenuh-area-guide-ubud"><strong>Kemenuh</strong></a> — practical residential countryside</p></li>

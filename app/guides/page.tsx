@@ -4,15 +4,19 @@ import type { Article } from "@/types/article";
 import { getArticles } from "@/lib/articlesData";
 import {
   GUIDE_CATEGORIES,
+  UBUD_HUB_OVERVIEW_SLUG,
   articlePreview,
   articleReadingMinutes,
   articleSpotlightTeaser,
   commentCountForArticle,
   getApprovedCommentCountsByArticleId,
+  isUbudAreaGuideArticle,
   pickDailySpotlightArticle,
   publishedArticles,
   resolveArticleHeroImage,
 } from "@/lib/guideHub";
+import { UBUD_AREA_GUIDE_SUBAREAS_ORDER } from "@/lib/ubudAreaGuideArticles";
+import { subAreaNames } from "@/types/areas";
 import { formatLocaleDate } from "@/lib/formatDate";
 
 export const dynamic = "force-dynamic";
@@ -129,9 +133,23 @@ export default async function GuidesPage() {
     ? GUIDE_CATEGORIES.find((c) => c.slug === spotlightArticle.category)?.title ?? spotlightArticle.category
     : "";
 
-  const enrichedForLists = spotlightArticle
-    ? enriched.filter((x) => x.article.id !== spotlightArticle.id)
-    : enriched;
+  const enrichedForLists = (
+    spotlightArticle ? enriched.filter((x) => x.article.id !== spotlightArticle.id) : enriched
+  ).filter((x) => !isUbudAreaGuideArticle(x.article));
+
+  const ubudAreaGuideLinks = UBUD_AREA_GUIDE_SUBAREAS_ORDER.map((subArea) => {
+    const slug = `${subArea}-area-guide-ubud`;
+    const match = enriched.find((x) => x.article.category === "ubud" && x.article.slug === slug);
+    return {
+      subArea,
+      name: subAreaNames[subArea],
+      href: `/guides/ubud/${slug}`,
+      published: Boolean(match),
+    };
+  }).filter((x) => x.published);
+
+  const ubudOverviewHref = `/guides/ubud/${UBUD_HUB_OVERVIEW_SLUG}`;
+  const ubudAreaGuideCount = ubudAreaGuideLinks.length;
 
   const listsByCategory = new Map<string, typeof enriched>();
   for (const cat of GUIDE_CATEGORIES) {
@@ -182,6 +200,53 @@ export default async function GuidesPage() {
           ) : null}
         </header>
 
+        {ubudAreaGuideCount > 0 ? (
+          <section className="mb-12 md:mb-16" aria-labelledby="ubud-neighborhoods-heading">
+            <div className="rounded-3xl border border-emerald-200/70 bg-gradient-to-br from-emerald-50/80 via-white to-white p-5 shadow-sm md:p-7">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-emerald-800">Ubud</p>
+                  <h2 id="ubud-neighborhoods-heading" className="mt-1 text-xl font-semibold text-stone-900 md:text-2xl">
+                    Neighborhood guides with rentals
+                  </h2>
+                  <p className="mt-2 max-w-2xl text-sm leading-relaxed text-stone-600">
+                    {ubudAreaGuideCount} sub-areas with catalog-linked guides—daily life, trade-offs, and FAQs, then villas
+                    we list in each pocket.
+                  </p>
+                </div>
+                <Link
+                  href="/guides/ubud"
+                  className="shrink-0 text-sm font-medium text-emerald-800 hover:text-emerald-900"
+                >
+                  All Ubud articles →
+                </Link>
+              </div>
+              <nav className="mt-5" aria-label="Ubud neighborhood guides">
+                <ul className="flex flex-wrap gap-2">
+                  {ubudAreaGuideLinks.map(({ subArea, name, href }) => (
+                    <li key={subArea}>
+                      <Link
+                        href={href}
+                        className="inline-flex rounded-full border border-stone-200/90 bg-white px-3 py-1.5 text-sm font-medium text-stone-800 shadow-sm transition hover:border-emerald-300 hover:bg-emerald-50/90 hover:text-emerald-950"
+                      >
+                        {name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+              <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                <Link href={ubudOverviewHref} className="font-medium text-emerald-800 hover:text-emerald-900">
+                  Ubud areas overview →
+                </Link>
+                <Link href="/properties/rent/ubud" className="font-medium text-stone-600 hover:text-emerald-900">
+                  Villas for rent in Ubud →
+                </Link>
+              </div>
+            </div>
+          </section>
+        ) : null}
+
         <section className="mb-12 md:mb-16" aria-labelledby="topics-heading">
           <h2 id="topics-heading" className="sr-only">
             Browse by topic
@@ -193,7 +258,11 @@ export default async function GuidesPage() {
                 <Link
                   key={cat.slug}
                   href={`/guides/${cat.slug}`}
-                  className="flex flex-col rounded-2xl border border-stone-200/90 bg-white/90 p-4 shadow-sm transition hover:border-emerald-200 hover:bg-white"
+                  className={`flex flex-col rounded-2xl border bg-white/90 p-4 shadow-sm transition hover:border-emerald-200 hover:bg-white ${
+                    cat.slug === "ubud"
+                      ? "border-emerald-200/90 ring-1 ring-emerald-100"
+                      : "border-stone-200/90"
+                  }`}
                 >
                   <span className="text-[13px] font-semibold text-stone-900">{cat.title}</span>
                   <span className="mt-1 line-clamp-2 text-xs leading-relaxed text-stone-500">{cat.description}</span>
@@ -325,7 +394,11 @@ export default async function GuidesPage() {
           <div className="mt-8 space-y-12">
             {GUIDE_CATEGORIES.map((cat) => {
               const full = listsByCategory.get(cat.slug) ?? [];
-              const rows = full.slice(0, 3);
+              const rows = (
+                cat.slug === "ubud"
+                  ? full.filter((x) => !isUbudAreaGuideArticle(x.article))
+                  : full
+              ).slice(0, 3);
               const total = full.length;
               return (
                 <div key={cat.slug}>
@@ -339,7 +412,11 @@ export default async function GuidesPage() {
                     </Link>
                   </div>
                   {rows.length === 0 ? (
-                    <p className="text-sm text-stone-500">Articles for this topic are on the way.</p>
+                    <p className="text-sm text-stone-500">
+                      {cat.slug === "ubud" && total > 0
+                        ? "Neighborhood guides are listed at the top of this page."
+                        : "Articles for this topic are on the way."}
+                    </p>
                   ) : (
                     <ul className="divide-y divide-stone-100 rounded-2xl border border-stone-200/80 bg-white">
                       {rows.map(({ article, readingMinutes, views, comments, href, excerpt }) => (

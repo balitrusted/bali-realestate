@@ -3,14 +3,24 @@ import { getAllComments } from "@/lib/commentsPersistence";
 
 /** Ordered hub categories — keep in sync with routes `/guides/[slug]` */
 export const GUIDE_CATEGORIES = [
+  { slug: "ubud", title: "Ubud", description: "Neighborhoods, daily life, and how the area fits long-term stays." },
   { slug: "rent", title: "Long-term rental", description: "Villa rentals, search tips, and what to watch for on the ground." },
   { slug: "buy", title: "Purchase & investments", description: "What you actually buy in Bali, leasehold vs freehold, and realistic expectations." },
   { slug: "land", title: "Land", description: "Risks, zoning, and opportunities before you commit to a plot." },
   { slug: "legal", title: "Legal & safety", description: "Contracts, scams to avoid, and how deals usually work in practice." },
-  { slug: "ubud", title: "Ubud", description: "Neighborhoods, daily life, and how the area fits long-term stays." },
   { slug: "areas", title: "Other areas", description: "Canggu, Sanur, Seminyak, Uluwatu, and beyond — area-by-area notes." },
   { slug: "risks", title: "Mistakes & reality", description: "Expectations vs reality, common disappointments, and mindset." },
 ] as const;
+
+export const UBUD_AREA_GUIDE_SLUG_SUFFIX = "-area-guide-ubud";
+
+export const UBUD_HUB_OVERVIEW_SLUG =
+  "ubud-areas-and-surroundings-a-practical-guide-for-long-term-living";
+
+/** Catalog-linked neighborhood guides (display order on /guides). */
+export function isUbudAreaGuideArticle(article: Article): boolean {
+  return article.category === "ubud" && article.slug.endsWith(UBUD_AREA_GUIDE_SLUG_SUFFIX);
+}
 
 export type GuideCategorySlug = (typeof GUIDE_CATEGORIES)[number]["slug"];
 

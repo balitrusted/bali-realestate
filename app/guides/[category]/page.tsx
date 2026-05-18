@@ -4,12 +4,16 @@ import { Article } from "@/types/article";
 import { getArticles } from "@/lib/articlesData";
 import {
   GUIDE_CATEGORIES,
+  UBUD_HUB_OVERVIEW_SLUG,
   articlePreview,
   articleReadingMinutes,
   commentCountForArticle,
   getApprovedCommentCountsByArticleId,
+  isUbudAreaGuideArticle,
   publishedArticles,
 } from "@/lib/guideHub";
+import { UBUD_AREA_GUIDE_SUBAREAS_ORDER } from "@/lib/ubudAreaGuideArticles";
+import { subAreaNames } from "@/types/areas";
 import { formatLocaleDate } from "@/lib/formatDate";
 
 export const dynamic = "force-dynamic";
@@ -49,7 +53,30 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
 
   const [articles, commentMap] = await Promise.all([getArticlesByCategory(category), getApprovedCommentCountsByArticleId()]);
 
-  const rows = [...articles].sort((a, b) => +new Date(b.updatedAt) - +new Date(a.updatedAt));
+  const sorted = [...articles].sort((a, b) => +new Date(b.updatedAt) - +new Date(a.updatedAt));
+  const areaGuides =
+    category === "ubud"
+      ? sorted.filter(isUbudAreaGuideArticle)
+      : [];
+  const otherArticles =
+    category === "ubud"
+      ? sorted.filter((a) => !isUbudAreaGuideArticle(a))
+      : sorted;
+  const rows = otherArticles;
+
+  const ubudNeighborhoodLinks =
+    category === "ubud"
+      ? UBUD_AREA_GUIDE_SUBAREAS_ORDER.map((subArea) => {
+          const slug = `${subArea}-area-guide-ubud`;
+          const article = areaGuides.find((a) => a.slug === slug);
+          if (!article) return null;
+          return {
+            subArea,
+            name: subAreaNames[subArea],
+            href: `/guides/ubud/${slug}`,
+          };
+        }).filter((x): x is NonNullable<typeof x> => x !== null)
+      : [];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-stone-50 to-white">
@@ -61,13 +88,58 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-stone-900 md:text-4xl">{categoryInfo.title}</h1>
           <p className="mt-3 text-base leading-relaxed text-stone-600">{categoryInfo.description}</p>
           <p className="mt-2 text-sm text-stone-500">
-            {rows.length} {rows.length === 1 ? "article" : "articles"}
+            {articles.length} {articles.length === 1 ? "article" : "articles"}
+            {category === "ubud" && ubudNeighborhoodLinks.length > 0 ? (
+              <span className="text-stone-400">
+                {" "}
+                · {ubudNeighborhoodLinks.length} neighborhood guides
+              </span>
+            ) : null}
           </p>
         </div>
 
-        {rows.length === 0 ? (
+        {category === "ubud" && ubudNeighborhoodLinks.length > 0 ? (
+          <nav
+            className="mb-10 rounded-2xl border border-emerald-200/70 bg-emerald-50/40 p-5"
+            aria-label="Ubud neighborhood guides"
+          >
+            <p className="text-xs font-semibold uppercase tracking-widest text-emerald-800">Neighborhoods</p>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {ubudNeighborhoodLinks.map(({ subArea, name, href }) => (
+                <li key={subArea}>
+                  <Link
+                    href={href}
+                    className="inline-flex rounded-full border border-stone-200/90 bg-white px-3 py-1.5 text-sm font-medium text-stone-800 transition hover:border-emerald-300 hover:bg-emerald-50"
+                  >
+                    {name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+              <Link
+                href={`/guides/ubud/${UBUD_HUB_OVERVIEW_SLUG}`}
+                className="font-medium text-emerald-800 hover:text-emerald-900"
+              >
+                Ubud areas overview →
+              </Link>
+              <Link href="/properties/rent/ubud" className="font-medium text-stone-600 hover:text-emerald-900">
+                Villas for rent →
+              </Link>
+            </div>
+          </nav>
+        ) : null}
+
+        {articles.length === 0 ? (
           <div className="rounded-2xl border border-stone-200 bg-white px-6 py-12 text-center">
             <p className="text-stone-600">No published articles in this topic yet.</p>
+            <Link href="/guides" className="mt-4 inline-block text-sm font-medium text-emerald-800 hover:text-emerald-900">
+              Back to all guides
+            </Link>
+          </div>
+        ) : rows.length === 0 ? (
+          <div className="rounded-2xl border border-stone-200 bg-white px-6 py-8 text-center">
+            <p className="text-stone-600">Open a neighborhood guide above, or check back for more Ubud articles.</p>
             <Link href="/guides" className="mt-4 inline-block text-sm font-medium text-emerald-800 hover:text-emerald-900">
               Back to all guides
             </Link>
