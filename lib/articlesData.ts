@@ -1,5 +1,6 @@
 import { list, put } from "@vercel/blob";
 import type { Article } from "@/types/article";
+import { enrichArticlesWithUbudAreaGuides } from "@/lib/ubudAreaGuideArticles";
 
 const BLOB_KEY = "data/articles.json";
 const getBlobStoreBaseUrl = () => process.env.BLOB_STORE_URL?.trim().replace(/\/$/, "");
@@ -93,14 +94,16 @@ export async function getArticles(): Promise<Article[]> {
           }
         }
 
-        return Array.from(byId.values()).map(normalizeArticleDates);
+        return enrichArticlesWithUbudAreaGuides(
+          Array.from(byId.values()).map(normalizeArticleDates)
+        );
       }
     } catch {
       /* fall through to local */
     }
   }
 
-  return localArticles;
+  return enrichArticlesWithUbudAreaGuides(localArticles);
 }
 
 /**
