@@ -9,7 +9,7 @@ const PER_PAGE = 25;
 export { ALLOWED_BEDROOM_COUNTS } from "@/lib/catalogBedrooms";
 
 export const SEGMENT_TYPES = {
-  subArea: ["gentong", "kedewatan", "keliki", "kemenuh", "lodtunduh", "mas", "penestanan", "petulu", "sayan", "sukawati", "tegallalang"] as SubArea[],
+  subArea: ["gentong", "kedewatan", "keliki", "kemenuh", "lodtunduh", "mas", "peliatan", "penestanan", "petulu", "sayan", "sukawati", "tegallalang"] as SubArea[],
   bedroom: BEDROOM_SEGMENT_SLUGS,
   payment: ["monthly", "yearly"] as const,
   amenity: [

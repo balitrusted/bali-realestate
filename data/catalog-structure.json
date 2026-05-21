@@ -15,7 +15,7 @@
     { "slug": "tanah-lot", "nameEn": "Tanah Lot" }
   ],
   "segmentCategories": {
-    "subArea": ["gentong", "kedewatan", "keliki", "kemenuh", "lodtunduh", "penestanan", "petulu", "sayan", "sukawati", "tegallalang"],
+    "subArea": ["gentong", "kedewatan", "keliki", "kemenuh", "lodtunduh", "mas", "peliatan", "penestanan", "petulu", "sayan", "sukawati", "tegallalang"],
     "bedroom": ["1-bedroom-villa", "2-bedroom-villa", "3-bedroom-villa", "4-bedroom-villa", "5-bedroom-villa", "6-bedroom-villa", "7-bedroom-villa", "8-bedroom-villa"],
     "payment": ["monthly", "yearly"],
     "amenity": ["pool", "nature-view", "bathtub", "closed-kitchen", "enclosed-living", "pet-friendly", "car-park", "desk", "garage", "high-speed-wifi", "washing-machine"]

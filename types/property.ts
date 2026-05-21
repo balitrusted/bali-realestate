@@ -17,6 +17,7 @@ export type SubArea =
   | 'kemenuh'
   | 'lodtunduh'
   | 'mas'
+  | 'peliatan'
   | 'penestanan'
   | 'petulu'
   | 'sayan'

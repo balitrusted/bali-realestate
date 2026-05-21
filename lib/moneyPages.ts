@@ -1,4 +1,5 @@
-import type { MainArea, PropertyType } from "@/types/property";
+import type { MainArea, PropertyType, SubArea } from "@/types/property";
+import { getUbudSubAreaMoneyPage } from "@/lib/ubudSubAreaContent";
 
 type ParsedSegment = { kind: string | null; value: string | number };
 
@@ -23,6 +24,9 @@ function moneyKey(type: PropertyType | "villas", area: MainArea, segment: Parsed
   }
   if (segment.kind === "amenity") {
     return `${type}:${area}:amenity:${String(segment.value)}`;
+  }
+  if (segment.kind === "subArea" && area === "ubud") {
+    return `${type}:${area}:subArea:${String(segment.value)}`;
   }
   return null;
 }
@@ -197,6 +201,9 @@ export function getMoneyPageContent(
   area: MainArea,
   segment: ParsedSegment
 ): MoneyPageContent | null {
+  if (segment.kind === "subArea" && area === "ubud") {
+    return getUbudSubAreaMoneyPage(type, segment.value as SubArea);
+  }
   const key = moneyKey(type, area, segment);
   if (!key) return null;
   return UBUD_RENT_MONEY_PAGES[key] ?? null;
@@ -209,6 +216,9 @@ export function shouldIndexSegmentPage(
   resultsCount: number
 ): boolean {
   if (resultsCount === 0) return false;
+  if (segment.kind === "subArea" && area === "ubud") {
+    return getUbudSubAreaMoneyPage(type, segment.value as SubArea) !== null;
+  }
   return getMoneyPageContent(type, area, segment) !== null;
 }
 

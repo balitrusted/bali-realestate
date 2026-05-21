@@ -1,7 +1,7 @@
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 import { areas, subAreaNames } from "@/types/areas";
 import { resolveAreaLabel, resolveAreaSeoDescription } from "@/lib/mainAreaRegistry";
-import { ubudSubAreaIntro } from "@/lib/ubudSubAreaContent";
+import { ubudSubAreaIntro, ubudSubAreaSeoKeywords, ubudSubAreaSeoTitle } from "@/lib/ubudSubAreaContent";
 
 export type CatalogTypeForSeo = PropertyType | "villas";
 
@@ -71,6 +71,8 @@ export function buildTitle(
     return `${subject} with ${amenityLabel} for ${verb} in ${loc}${sub} | Balitrusted`;
   }
   if (segment?.kind === "subArea") {
+    const custom = subArea ? ubudSubAreaSeoTitle[subArea] : undefined;
+    if (custom) return custom;
     return `${subject} for ${verb} in ${subAreaNames[subArea!]}, Ubud | Balitrusted`;
   }
   if (area) {
@@ -128,6 +130,9 @@ export function buildH1(
     return `${subject} with ${amenityLabel} for ${verb} in ${loc}${sub}`;
   }
   if (segment?.kind === "subArea") {
+    if (subArea === "peliatan" && type === "rent") {
+      return "Villas for Rent in Peliatan, Ubud";
+    }
     return `${subject} for ${verb} in ${subAreaNames[subArea!]}, Ubud`;
   }
   if (area) {

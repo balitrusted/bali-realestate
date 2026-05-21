@@ -277,6 +277,77 @@ const AREA_GUIDES: AreaGuideConfig[] = [
     ],
   },
   {
+    subArea: "peliatan",
+    excerpt:
+      "Peliatan is practically the closest Ubud neighborhood to town—old and traditional, with developing villa pockets. Walk to Pepito Peliatan; Yoga Barn and central Ubud often 5–8 minutes by scooter.",
+    seoTitle: "Peliatan Ubud Area Guide: Near Center, Pepito & Yoga Barn | Balitrusted",
+    seoDescription:
+      "Peliatan Ubud: closest to central Ubud, Pepito corridor, walkable pockets, Empathy School. Trade-offs, access, and villas for rent in Peliatan.",
+    seoKeywords: [
+      "Peliatan Ubud",
+      "Peliatan villa rent",
+      "Pepito Peliatan",
+      "Yoga Barn Ubud",
+      "Ubud center",
+      "long-term rental Peliatan",
+    ],
+    intro:
+      "Peliatan is <strong>practically the closest residential neighborhood to central Ubud</strong>—an <strong>old, traditional, and genuinely interesting</strong> pocket that still has <strong>zones of new development</strong> (villa lanes and infill plots). From many villas you are in <strong>walking distance of Pepito Market Peliatan</strong>; <strong>Yoga Barn</strong>, central Ubud, and cult-favorite cafés are often <strong>5–8 minutes by scooter</strong> (sometimes up to ~10 depending on your exact lane). Neighbors on the short list are <strong>Lodtunduh</strong> and <strong>Mas</strong>—compare all three if you want south/east Ubud without feeling remote.",
+    atmosphere:
+      "Peliatan feels like Ubud’s cultural east gate: legong and gamelan heritage, palace-affiliated dance, and everyday banjar rhythm—not the expat-hill café scene of Penestanan. It is <strong>older and more traditional</strong>, but not frozen in time: new villas appear on side lanes while the village core keeps its character. You live here when you want <strong>center proximity</strong> with village texture rather than resort strips.",
+    noise:
+      "The <strong>key noise and traffic issue</strong> is the main corridor where <strong>Pepito Market Peliatan</strong> sits: a <strong>narrow, often jammed street</strong> with queues and exhaust at busy hours. That is probably Peliatan’s main disadvantage for light sleepers and anyone who hates idling in traffic. Set-back villas on parallel lanes can still be calm; ceremony and gamelan rehearsal remain part of local life—visit at the times you will actually be home.",
+    roads:
+      "Many errands are walkable from the right villa (Pepito, fuel, cafés). For Yoga Barn, central Ubud, and evening plans, plan <strong>5–8 minutes by scooter</strong> as the normal case. Roads on the Pepito corridor are the stressful part; residential lanes behind it are usually slower and quieter. Check rain access on your lane before signing.",
+    internet:
+      "Remote work is realistic if the villa is set up for it—test Wi‑Fi, enclosed living, and backup power. You are close enough to central Ubud for café backup, but the villa should still stand on its own for daily work.",
+    prices:
+      "Central proximity shows in pricing, but Peliatan can still offer strong value on <strong>2–3 bedroom long-term villas</strong> compared with premium west-hill outlooks. Inventory is growing as owners list new builds. Compare on <a href=\"/properties/rent/ubud/peliatan\">Peliatan villas for rent</a> and filter yearly where published.",
+    pros: [
+      "Among the closest neighborhoods to central Ubud and Yoga Barn",
+      "Walking distance to Pepito Market Peliatan from many villas",
+      "Fuel, supermarkets, and good cafés on practical routes",
+      "Old, traditional, culturally rich village atmosphere",
+      "Developing villa stock on quieter side lanes",
+      "Easy comparison with nearby Lodtunduh and Mas",
+    ],
+    cons: [
+      "Pepito corridor: narrow road, traffic jams, exhaust at peak times",
+      "Not Penestanan-level walkable café density on every lane",
+      "Ceremony, gamelan, and local life can add sound",
+      "Exact micro-location matters more than the area name",
+    ],
+    whoFor: [
+      "Renters who want central Ubud access without living on the busiest monkey-forest strips",
+      "People happy to walk to Pepito and scooter 5–8 minutes to Yoga Barn or town",
+      "Families using Empathy School and east-Ubud errands",
+      "Those comparing Peliatan vs Lodtunduh vs Mas for south/east Ubud",
+      "Culture lovers who accept traditional village rhythm and some traffic noise",
+    ],
+    faqs: [
+      {
+        q: "Is Peliatan the closest area to central Ubud?",
+        a: "For most practical purposes, yes—Peliatan is one of the nearest residential neighborhoods. Many people walk to Pepito Market Peliatan and scooter to central Ubud or Yoga Barn in a few minutes.",
+      },
+      {
+        q: "What is the main disadvantage of Peliatan?",
+        a: "The Pepito corridor road—narrow, often congested, with exhaust at busy times. Choose a villa off that through-street if that is your sensitivity.",
+      },
+      {
+        q: "Can you walk to Pepito or Yoga Barn from Peliatan?",
+        a: "Pepito Market Peliatan is walking distance from many villas. Yoga Barn and full central Ubud are usually a short scooter ride—often quoted as 5–8 minutes, up to ~10 by lane.",
+      },
+      {
+        q: "How does Peliatan compare to Lodtunduh and Mas?",
+        a: "Lodtunduh and Mas are the nearest neighboring areas. Mas is greener craft-village south; Lodtunduh is spacious family south; Peliatan wins on center proximity and the Pepito anchor.",
+      },
+      {
+        q: "Is Peliatan only old village, or is it developing?",
+        a: "Both—the core is old and traditional, but new villa lanes and developing plots appear, especially where renters want center access with a house and garden.",
+      },
+    ],
+  },
+  {
     subArea: "gentong",
     excerpt:
       "Gentong is green, quiet north-east Ubud with some of the island’s best yearly deals on 2-bedroom villas in nature—often 120–150M IDR/year. Narrow scenic lanes = scooter life; ideal for solitude and adventure-minded renters.",
@@ -813,6 +884,7 @@ export const UBUD_AREA_GUIDE_HUB_LINKS_HTML = `<h2 class="heading">Area guides w
 <li><p><a href="/guides/ubud/lodtunduh-area-guide-ubud"><strong>Lodtunduh</strong></a> — space, gardens, family-friendly long-term villas</p></li>
 <li><p><a href="/guides/ubud/penestanan-area-guide-ubud"><strong>Penestanan</strong></a> — walkable, creative, social-by-Ubud-standards living</p></li>
 <li><p><a href="/guides/ubud/mas-area-guide-ubud"><strong>Mas</strong></a> — green, developing, family-friendly 2–4 bed villas</p></li>
+<li><p><a href="/guides/ubud/peliatan-area-guide-ubud"><strong>Peliatan</strong></a> — nearest to central Ubud, Pepito, Yoga Barn access</p></li>
 <li><p><a href="/guides/ubud/gentong-area-guide-ubud"><strong>Gentong</strong></a> — green value, yearly 2-bed deals, scooter lanes</p></li>
 <li><p><a href="/guides/ubud/petulu-area-guide-ubud"><strong>Petulu</strong></a> — heron village, Pepito Andong–close, west to Jalan Cinta</p></li>
 <li><p><a href="/guides/ubud/kedewatan-area-guide-ubud"><strong>Kedewatan</strong></a> — old luxury, valley road, Kintamani access</p></li>

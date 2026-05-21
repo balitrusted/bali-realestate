@@ -70,6 +70,7 @@ const UBUD_SUBAREA_SLUGS = [
   "kemenuh",
   "lodtunduh",
   "mas",
+  "peliatan",
   "penestanan",
   "petulu",
   "sayan",

@@ -25,7 +25,7 @@ import {
 } from "@/lib/propertiesCatalog";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { buildTitle, buildH1, buildDescription, buildIntro, buildSeoText } from "@/lib/seoTemplates";
-import { ubudSubAreaFooterParagraphs } from "@/lib/ubudSubAreaContent";
+import { ubudAreaGuidePath, ubudSubAreaFooterParagraphs, ubudSubAreaSeoKeywords } from "@/lib/ubudSubAreaContent";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import { subAreaNames } from "@/types/areas";
 import {
@@ -37,6 +37,8 @@ import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 import Image from "next/image";
 import CatalogMapLink from "@/components/CatalogMapLink";
+import Link from "next/link";
+import UbudSubAreaCatalogNav from "@/components/UbudSubAreaCatalogNav";
 import { mergeSegmentIntoCatalogFilters } from "@/lib/parseCatalogSearchParams";
 import { getMoneyPageContent, shouldIndexSegmentPage } from "@/lib/moneyPages";
 
@@ -71,7 +73,8 @@ export async function generateMetadata({
   const canonicalPath = `/properties/${type}/${area}/${segment}`;
   const kwSub =
     parsed.kind === "subArea" && subArea
-      ? `${subAreaNames[subArea]}, Ubud, Bali, villa rental, villa for sale, long-term rent`
+      ? ubudSubAreaSeoKeywords[subArea] ??
+        `${subAreaNames[subArea]}, Ubud, Bali, villa rental, villa for sale, long-term rent`
       : undefined;
   const kwBedroom =
     parsed.kind === "bedroom" && Number.isFinite(Number(parsed.value)) && mainArea === "ubud" && catalogType === "rent"
@@ -282,6 +285,10 @@ export default async function PropertiesSegmentPage({
           </div>
         )}
 
+        {parsed.kind === "subArea" && subArea && (
+          <UbudSubAreaCatalogNav catalogType={catalogType} activeSubArea={subArea} />
+        )}
+
         <div className="space-y-6">
           <div>
             {items.length === 0 ? (
@@ -385,6 +392,14 @@ export default async function PropertiesSegmentPage({
                 {ubudSubAreaFooterParagraphs(subArea).map((para, i) => (
                   <p key={i}>{para}</p>
                 ))}
+                <p>
+                  <Link
+                    href={ubudAreaGuidePath(subArea)}
+                    className="font-medium text-emerald-800 underline hover:text-emerald-900"
+                  >
+                    {subAreaNames[subArea]} area guide (Knowledge base) →
+                  </Link>
+                </p>
               </div>
             ) : (
               <div className="space-y-4">

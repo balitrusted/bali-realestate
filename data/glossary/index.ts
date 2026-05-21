@@ -531,7 +531,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     seoTitle: "Peliatan village in Ubud | Balitrusted glossary",
     seoDescription:
       "Peliatan’s dance and music heritage and what it means for daily villa life east of Ubud.",
-    relatedGuideUrl: "/guides/ubud",
+    relatedGuideUrl: "/guides/ubud/peliatan-area-guide-ubud",
   },
   {
     id: "glossary-tebongkang",

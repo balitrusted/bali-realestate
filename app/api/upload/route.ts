@@ -60,18 +60,7 @@ export async function POST(request: Request) {
         villaNumber: villaNumber?.trim() || undefined,
         bedrooms: bedrooms != null ? Number(bedrooms) : 1,
         mainArea: (mainArea?.trim() || "ubud") as import("@/types/property").MainArea,
-        subArea: (subArea?.trim() || undefined) as
-          | "gentong"
-          | "kedewatan"
-          | "keliki"
-          | "kemenuh"
-          | "lodtunduh"
-          | "penestanan"
-          | "petulu"
-          | "sayan"
-          | "sukawati"
-          | "tegallalang"
-          | undefined,
+        subArea: (subArea?.trim() || undefined) as import("@/types/property").SubArea | undefined,
         types: (() => {
           try {
             if (typesStr) return JSON.parse(typesStr) as PropertyType[];
