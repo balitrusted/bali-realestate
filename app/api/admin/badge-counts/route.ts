@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 import { getRequests } from "@/lib/requestsData";
 import { getNotifyUnreadCount } from "@/lib/adminBadgeState";
 import { getAllComments } from "@/lib/commentsPersistence";
-import { getNotifyRequests } from "@/lib/notifyRequestsData";
 
 export const dynamic = "force-dynamic";
 
@@ -31,17 +30,7 @@ export async function GET() {
     const requestsNew = siteRequests.filter((r) => (r.status || "new") === "new").length;
 
     const notifySeenAtCookie = cookieStore.get("admin-notify-seen-at")?.value;
-    let notifyNew = 0;
-    if (notifySeenAtCookie) {
-      const since = Date.parse(notifySeenAtCookie);
-      const requests = await getNotifyRequests();
-      notifyNew = requests.filter((r) => {
-        const t = Date.parse(r.createdAt);
-        return Number.isFinite(t) && t > since;
-      }).length;
-    } else {
-      notifyNew = await getNotifyUnreadCount();
-    }
+    const notifyNew = await getNotifyUnreadCount(notifySeenAtCookie);
 
     return NextResponse.json({
       commentsPending,

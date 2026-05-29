@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { markNotifyRequestsSeen } from "@/lib/adminBadgeState";
+import { markNotifyRequestRead } from "@/lib/notifyRequestsData";
 
 export const dynamic = "force-dynamic";
 
@@ -17,8 +18,13 @@ export async function POST(request: Request) {
   try {
     const body = await request.json().catch(() => ({}));
     const section = body?.section as string | undefined;
+    const requestId = typeof body?.requestId === "string" ? body.requestId : undefined;
     if (section === "notify") {
-      await markNotifyRequestsSeen();
+      if (requestId) {
+        await markNotifyRequestRead(requestId);
+      } else {
+        await markNotifyRequestsSeen();
+      }
       const nowIso = new Date().toISOString();
       const response = NextResponse.json({ ok: true });
       response.cookies.set("admin-notify-seen-at", nowIso, {

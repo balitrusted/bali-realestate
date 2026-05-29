@@ -1,5 +1,8 @@
 import { list, put } from "@vercel/blob";
-import { getNotifyRequests } from "@/lib/notifyRequestsData";
+import {
+  getNotifyUnreadCount as getNotifyUnreadCountFromDb,
+  markAllNotifyRequestsRead,
+} from "@/lib/notifyRequestsData";
 
 const BLOB_KEY = "data/admin-badge-state.json";
 const getBlobStoreBaseUrl = () => process.env.BLOB_STORE_URL?.trim().replace(/\/$/, "");
@@ -97,17 +100,46 @@ export async function saveAdminBadgeState(state: AdminBadgeState): Promise<void>
   }
 }
 
-export async function getNotifyUnreadCount(): Promise<number> {
+/** Effective “seen” time: latest of blob state and per-browser cookie (legacy fallback). */
+export async function getLegacyNotifySeenAtMs(cookieSeenAt?: string): Promise<number> {
   const state = await readAdminBadgeState();
-  const requests = await getNotifyRequests();
-  const since = state.notifyLastSeenAt ? new Date(state.notifyLastSeenAt).getTime() : 0;
-  return requests.filter((r) => {
-    const t = new Date(r.createdAt).getTime();
-    return Number.isFinite(t) && t > since;
-  }).length;
+  const fromBlob = state.notifyLastSeenAt ? Date.parse(state.notifyLastSeenAt) : 0;
+  const fromCookie = cookieSeenAt ? Date.parse(cookieSeenAt) : 0;
+  return Math.max(
+    Number.isFinite(fromBlob) ? fromBlob : 0,
+    Number.isFinite(fromCookie) ? fromCookie : 0
+  );
+}
+
+/**
+ * Unread notify count. Prefer DB `read_at`; if column is missing, fall back to legacy timestamp.
+ */
+export async function getNotifyUnreadCount(cookieSeenAt?: string): Promise<number> {
+  try {
+    return await getNotifyUnreadCountFromDb();
+  } catch (e) {
+    console.error("getNotifyUnreadCount (db):", e);
+    try {
+      const { getNotifyRequests } = await import("@/lib/notifyRequestsData");
+      const since = await getLegacyNotifySeenAtMs(cookieSeenAt);
+      const requests = await getNotifyRequests();
+      return requests.filter((r) => {
+        const t = Date.parse(r.createdAt);
+        return Number.isFinite(t) && t > since;
+      }).length;
+    } catch (e2) {
+      console.error("getNotifyUnreadCount (legacy):", e2);
+      return 0;
+    }
+  }
 }
 
 export async function markNotifyRequestsSeen(): Promise<void> {
+  try {
+    await markAllNotifyRequestsRead();
+  } catch (e) {
+    console.error("markAllNotifyRequestsRead:", e);
+  }
   const state = await readAdminBadgeState();
   state.notifyLastSeenAt = new Date().toISOString();
   await saveAdminBadgeState(state);
