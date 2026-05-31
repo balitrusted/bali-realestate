@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useCatalogPageScroll } from "@/components/useCatalogPageScroll";
 
 interface TopPageNumbersProps {
   basePath: string;
@@ -16,6 +17,7 @@ export default function TopPageNumbers({
   searchParams,
 }: TopPageNumbersProps) {
   const router = useRouter();
+  useCatalogPageScroll(page);
   if (totalPages <= 1) return null;
 
   const params = new URLSearchParams(searchParams ?? {});
@@ -30,7 +32,6 @@ export default function TopPageNumbers({
   };
 
   const goToPage = (p: number) => {
-    // Keep scroll position on mobile Safari by disabling the scroll reset.
     router.push(pageUrl(p), { scroll: false });
   };
 

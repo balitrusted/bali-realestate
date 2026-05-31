@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useCatalogPageScroll } from "@/components/useCatalogPageScroll";
 
 interface PaginationProps {
   basePath: string;
@@ -19,6 +20,7 @@ export default function Pagination({
   navClassName,
 }: PaginationProps) {
   const router = useRouter();
+  useCatalogPageScroll(page);
   if (totalPages <= 1) return null;
 
   const params = new URLSearchParams(searchParams);

@@ -182,7 +182,7 @@ export default async function PropertiesCatalogPage({
 
           {items.length > 0 && (
             <>
-              <CatalogListingDivider className="my-6" />
+              <CatalogListingDivider id="catalog-listings-anchor" className="my-6 scroll-mt-8" />
               <Pagination
                 basePath="/properties"
                 page={currentPage}

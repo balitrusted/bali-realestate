@@ -53,7 +53,7 @@ export default async function ArchivedVillasPage({
           <p className="text-sm text-gray-500">No archived villas yet.</p>
         ) : (
           <>
-            <CatalogListingDivider className="my-6" />
+            <CatalogListingDivider id="catalog-listings-anchor" className="my-6 scroll-mt-8" />
             <Pagination
               basePath="/properties/archive"
               page={currentPage}
