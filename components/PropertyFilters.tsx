@@ -57,6 +57,46 @@ function taxonomySubAreaCount(mainArea?: MainArea): number {
   return entry?.subAreas?.length ?? 0;
 }
 
+/**
+ * Wizard skip flags live in React state; navigating e.g. /properties/rent → /properties/rent/ubud
+ * remounts the component. Infer completed steps from the URL so "Payment: Any" is not lost.
+ */
+function inferWizardSkippedFromFilters(
+  f: PropertyFiltersState,
+  pathname: string
+): WizardSkipState {
+  const pathType = parseTypeFromPropertiesPath(pathname);
+  const inferred: WizardSkipState = {
+    action: false,
+    payment: false,
+    subject: false,
+    area: false,
+    bedrooms: false,
+  };
+  if (pathType === "rent" || pathType === "sale" || pathType === "land" || pathType === "business") {
+    inferred.action = true;
+    inferred.subject = true;
+  }
+  if (f.minDuration === 1 || f.minDuration === 12) {
+    inferred.payment = true;
+  }
+  // Funnel order is payment → area; main area in the path means payment was already resolved (incl. "Any").
+  if (f.mainArea && f.type === "rent" && f.minDuration !== 1 && f.minDuration !== 12) {
+    inferred.payment = true;
+  }
+  return inferred;
+}
+
+function mergeWizardSkipped(user: WizardSkipState, inferred: WizardSkipState): WizardSkipState {
+  return {
+    action: user.action || inferred.action,
+    payment: user.payment || inferred.payment,
+    subject: user.subject || inferred.subject,
+    area: user.area || inferred.area,
+    bedrooms: user.bedrooms || inferred.bedrooms,
+  };
+}
+
 /** First step that still needs a choice; otherwise `"done"` when the funnel is satisfied. */
 function suggestedWizardStep(
   f: PropertyFiltersState,
@@ -751,6 +791,11 @@ export default function PropertyFilters({
 
   const visibleStepIds = useMemo(() => getVisibleStepIdsFor(filters), [filters, getVisibleStepIdsFor]);
 
+  const effectiveWizardSkipped = useMemo(
+    () => mergeWizardSkipped(wizardSkipped, inferWizardSkippedFromFilters(filters, pathname)),
+    [wizardSkipped, filters, pathname]
+  );
+
   const filtersRef = useRef(filters);
   filtersRef.current = filters;
   const wasCollapsedRef = useRef(true);
@@ -765,7 +810,7 @@ export default function PropertyFilters({
           showVillasSpecificBlocks,
           showSubjectBlock,
           subAreaPromptSkipped,
-          wizardSkipped
+          effectiveWizardSkipped
         )
       );
     }
@@ -781,7 +826,7 @@ export default function PropertyFilters({
     showVillasSpecificBlocks,
     showSubjectBlock,
     subAreaPromptSkipped,
-    wizardSkipped,
+    effectiveWizardSkipped,
   ]);
 
   /** When path or ?query changes (not on first open): keep step if still valid, else snap to suggested — avoids resetting to step 1 after Rent/Monthly/Ubud. */
@@ -804,7 +849,7 @@ export default function PropertyFilters({
         showVillasSpecificBlocks,
         showSubjectBlock,
         subAreaPromptSkipped,
-        wizardSkipped
+        effectiveWizardSkipped
       );
       if (complete) return "done";
 
@@ -815,7 +860,7 @@ export default function PropertyFilters({
           showVillasSpecificBlocks,
           showSubjectBlock,
           subAreaPromptSkipped,
-          wizardSkipped
+          effectiveWizardSkipped
         );
       }
       if (visible.includes(prev as WizardStepId)) return prev as WizardStepIdOrDone;
@@ -825,7 +870,7 @@ export default function PropertyFilters({
         showVillasSpecificBlocks,
         showSubjectBlock,
         subAreaPromptSkipped,
-        wizardSkipped
+        effectiveWizardSkipped
       );
     });
   }, [
@@ -840,7 +885,7 @@ export default function PropertyFilters({
     showVillasSpecificBlocks,
     showSubjectBlock,
     subAreaPromptSkipped,
-    wizardSkipped,
+    effectiveWizardSkipped,
     isCollapsed,
   ]);
 
