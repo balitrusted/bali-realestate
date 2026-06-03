@@ -38,7 +38,6 @@ import { PropertyType, MainArea, SubArea } from "@/types/property";
 import Image from "next/image";
 import CatalogMapLink from "@/components/CatalogMapLink";
 import Link from "next/link";
-import UbudSubAreaCatalogNav from "@/components/UbudSubAreaCatalogNav";
 import { mergeSegmentIntoCatalogFilters } from "@/lib/parseCatalogSearchParams";
 import { getMoneyPageContent, shouldIndexSegmentPage } from "@/lib/moneyPages";
 
@@ -283,10 +282,6 @@ export default async function PropertiesSegmentPage({
                 : areaInfo?.description ?? resolveAreaSeoDescription(area)}
             </p>
           </div>
-        )}
-
-        {parsed.kind === "subArea" && subArea && (
-          <UbudSubAreaCatalogNav catalogType={catalogType} activeSubArea={subArea} />
         )}
 
         <div className="space-y-6">

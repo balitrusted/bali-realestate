@@ -33,7 +33,6 @@ import {
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import Link from "next/link";
 import CatalogMapLink from "@/components/CatalogMapLink";
-import UbudSubAreaCatalogNav from "@/components/UbudSubAreaCatalogNav";
 import {
   buildH1,
   buildSeoText,
@@ -295,10 +294,6 @@ export default async function PropertiesByTypeAndAreaPage({
               </p>
             )}
           </div>
-        )}
-
-        {mainArea === "ubud" && (catalogType === "rent" || catalogType === "villas") && (
-          <UbudSubAreaCatalogNav catalogType={catalogType} />
         )}
 
         <div className="space-y-6">
