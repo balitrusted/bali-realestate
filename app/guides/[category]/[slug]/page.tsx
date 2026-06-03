@@ -77,20 +77,16 @@ export default async function ArticlePage({ params }: { params: Promise<{ catego
               {article.title}
             </h1>
             
-            <div className="flex items-center gap-4 text-sm text-gray-600 mb-8">
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-sm text-gray-600 mb-8">
               <span>By {article.author}</span>
-              {article.publishedAt && (
-                <span>• {formatLocaleDate(article.publishedAt)}</span>
-              )}
-              {article.tags.length > 0 && (
-                <div className="flex gap-2">
-                  {article.tags.map(tag => (
-                    <span key={tag} className="px-2 py-1 bg-gray-100 text-gray-700 rounded">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
+              {article.publishedAt ? (
+                <>
+                  <span className="text-gray-400 select-none" aria-hidden="true">
+                    ·
+                  </span>
+                  <time dateTime={article.publishedAt}>{formatLocaleDate(article.publishedAt)}</time>
+                </>
+              ) : null}
             </div>
 
             {article.featuredImage && (

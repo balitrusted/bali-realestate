@@ -71,7 +71,7 @@ function toArticle(c: AreaGuideConfig): Article {
     category: "ubud",
     content: buildAreaGuideHtml(c),
     excerpt: c.excerpt,
-    tags: ["ubud", c.subArea, "long-term rental", "area guide", "villa"],
+    tags: [],
     author: "Balitrusted Team",
     published: true,
     publishedAt: now,
