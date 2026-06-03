@@ -29,6 +29,7 @@ import {
   getAvailableSubAreas,
   getAvailableBedroomCounts,
   getAvailableAmenityFilterKeys,
+  parseCatalogSecondSegment,
 } from "@/lib/propertiesCatalog";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import Link from "next/link";
@@ -44,6 +45,8 @@ import {
 import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
 import Image from "next/image";
 import { getMoneyAreaHubContent } from "@/lib/moneyPages";
+import TypeSegmentCatalog, { typeSegmentMetadata } from "@/app/properties/[type]/TypeSegmentCatalog";
+
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -63,13 +66,22 @@ export async function generateMetadata({
   params: Promise<{ type: string; area: string }>;
 }): Promise<Metadata> {
   const { type, area } = await params;
-  const mainArea = area as MainArea;
 
-  if (!VALID_TYPE_SLUGS.includes(type as (typeof VALID_TYPE_SLUGS)[number]) || !isValidMainAreaSlug(area)) {
+  if (!VALID_TYPE_SLUGS.includes(type as (typeof VALID_TYPE_SLUGS)[number])) {
     return { title: "Properties Not Found" };
   }
 
   const catalogType = type as CatalogTypeForSeo;
+
+  if (!isValidMainAreaSlug(area)) {
+    const parsed = parseCatalogSecondSegment(area, catalogType);
+    if (!parsed) return { title: "Properties Not Found" };
+    const all = await loadAllPropertiesIncludingArchived();
+    const filtered = filterProperties(all, { type: catalogType }, parsed);
+    return typeSegmentMetadata(catalogType, area, parsed, filtered.length);
+  }
+
+  const mainArea = area as MainArea;
   const areaInfo = areas[mainArea as keyof typeof areas];
   const typeName = propertyTypeNames[type];
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://balitrusted.com";
@@ -134,10 +146,24 @@ export default async function PropertiesByTypeAndAreaPage({
 }) {
   const { type, area } = await params;
   const queryParams = await searchParams;
-  if (!VALID_TYPE_SLUGS.includes(type as (typeof VALID_TYPE_SLUGS)[number]) || !isValidMainAreaSlug(area)) {
+  if (!VALID_TYPE_SLUGS.includes(type as (typeof VALID_TYPE_SLUGS)[number])) {
     notFound();
   }
   const catalogType = type as CatalogTypeForSeo;
+
+  if (!isValidMainAreaSlug(area)) {
+    const parsed = parseCatalogSecondSegment(area, catalogType);
+    if (!parsed) notFound();
+    return (
+      <TypeSegmentCatalog
+        catalogType={catalogType}
+        segmentSlug={area}
+        parsed={parsed}
+        searchParams={queryParams}
+      />
+    );
+  }
+
   const mainArea = area as MainArea;
   const areaInfo = areas[mainArea as keyof typeof areas];
   const filters = parseQueryFilters(queryParams, catalogType, mainArea);

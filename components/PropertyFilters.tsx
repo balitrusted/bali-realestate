@@ -14,6 +14,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PropertyType, MainArea, SubArea } from "@/types/property";
 import { areas, subAreaNames } from "@/types/areas";
 import { getMergedAreaInfos, isValidMainAreaSlug } from "@/lib/mainAreaRegistry";
+import { catalogFilterSegmentSlug } from "@/lib/catalogPathSegments";
 import { ALLOWED_BEDROOM_COUNTS, bedroomSegmentSlug } from "@/lib/catalogBedrooms";
 import ToggleSwitch from "@/components/ToggleSwitch";
 
@@ -35,10 +36,6 @@ function parseTypeFromPropertiesPath(pathname: string): PropertyType | undefined
   return undefined;
 }
 
-function parseSegmentFromPropertiesPath(pathname: string): string | undefined {
-  const m = pathname.match(/^\/properties\/[^/]+\/[^/]+\/([^/?#]+)/);
-  return m?.[1];
-}
 
 const FILTERS_EXPANDED_KEY = "balitrusted-catalog-filters-expanded";
 
@@ -78,6 +75,9 @@ function inferWizardSkippedFromFilters(
     inferred.subject = true;
   }
   if (f.minDuration === 1 || f.minDuration === 12) {
+    inferred.payment = true;
+  }
+  if (/^\/properties\/(?:rent|villas)\/(monthly|yearly)(?:\/|$)/.test(pathname)) {
     inferred.payment = true;
   }
   // Funnel order is payment → area; main area in the path means payment was already resolved (incl. "Any").
@@ -221,7 +221,7 @@ function buildFiltersFromSearchParams(
 ): PropertyFiltersState {
   const pathMainArea = pathname ? parseMainAreaFromPropertiesPath(pathname) : undefined;
   const pathType = pathname ? parseTypeFromPropertiesPath(pathname) : undefined;
-  const pathSegment = pathname ? parseSegmentFromPropertiesPath(pathname) : undefined;
+  const pathSegment = pathname ? catalogFilterSegmentSlug(pathname) : undefined;
   const pathBedrooms = (() => {
     if (!pathSegment) return [] as number[];
     const m = pathSegment.match(/^(\d+)-bedroom-villa$/);
@@ -509,7 +509,11 @@ export default function PropertyFilters({
       const matchTypeOnly = currentPath.match(/^\/properties\/(rent|sale|land|business|villas)$/);
       const isTypeOnlyPath = !!matchTypeOnly;
       const pathType = matchSegment?.[1] ?? matchTypeOnly?.[1];
-      const pathArea = matchSegment?.[2];
+      const pathAreaRaw = matchSegment?.[2];
+      const pathGeoArea =
+        pathAreaRaw && isValidMainAreaSlug(pathAreaRaw) ? (pathAreaRaw as MainArea) : undefined;
+      const pathTypeLevelSegment =
+        pathAreaRaw && !pathGeoArea ? pathAreaRaw : undefined;
 
       const amenityKeys = [
         "hasBathtub",
@@ -605,6 +609,32 @@ export default function PropertyFilters({
         return null;
       };
 
+      const rentTypeCanonicalSegment = (): string | null => {
+        if (newFilters.mainArea) return null;
+        if (newFilters.type !== "rent") return null;
+
+        const beds = newFilters.bedrooms;
+        const minDur = newFilters.minDuration;
+        const amenities = selectedAmenitySlugs();
+
+        if (beds.length === 1) {
+          const n = beds[0]!;
+          if (Number.isFinite(n) && (ALLOWED_BEDROOM_COUNTS as readonly number[]).includes(n)) {
+            return bedroomSegmentSlug(n);
+          }
+        }
+        if (minDur === 1) return "monthly";
+        if (minDur === 12) return "yearly";
+        if (amenities.length === 1) return amenities[0]!;
+        return null;
+      };
+
+      const canonicalPathSegment = (): string | null => {
+        if (newFilters.mainArea === "ubud") return ubudRentCanonicalSegment();
+        if (!newFilters.mainArea && newFilters.type === "rent") return rentTypeCanonicalSegment();
+        return null;
+      };
+
       const stripRedundantUbudRentQuery = (qp: URLSearchParams, seg: string | null) => {
         if (!seg) return;
         if (seg.endsWith("-bedroom-villa")) {
@@ -671,20 +701,47 @@ export default function PropertyFilters({
           qp.delete("mainArea");
         }
 
-        stripRedundantUbudRentQuery(qp, ubudRentCanonicalSegment());
+        stripRedundantUbudRentQuery(qp, canonicalPathSegment());
 
         const s = qp.toString();
         return s ? `?${s}` : "";
       };
 
-      if (pathType && pathArea) {
+      if (pathType && pathTypeLevelSegment) {
+        const newType = newFilters.type || pathType;
+        if (newType === "villas") {
+          router.push(`/properties/villas${qsForPath("/properties/villas")}`, { scroll: false });
+          return;
+        }
+        if (newFilters.mainArea) {
+          const seg = newFilters.mainArea === "ubud" ? ubudRentCanonicalSegment() : null;
+          const dest =
+            newFilters.mainArea === "ubud" && newFilters.subArea.length === 1
+              ? `/properties/${newType}/ubud/${newFilters.subArea[0]}`
+              : seg
+                ? `/properties/${newType}/ubud/${seg}`
+                : `/properties/${newType}/${newFilters.mainArea}`;
+          const omitSub = newFilters.mainArea === "ubud" && newFilters.subArea.length === 1;
+          router.push(`${dest}${qsForPath(dest, omitSub)}`, { scroll: false });
+          return;
+        }
+        const seg = rentTypeCanonicalSegment();
+        const dest = seg ? `/properties/${newType}/${seg}` : `/properties/${newType}`;
+        router.push(`${dest}${qsForPath(dest)}`, { scroll: false });
+        return;
+      }
+
+      if (pathType && pathGeoArea) {
+        const pathArea = pathGeoArea;
         const newType = newFilters.type || pathType;
         if (newType === "villas") {
           router.push(`/properties/villas${qsForPath("/properties/villas")}`, { scroll: false });
           return;
         }
         if (!newFilters.mainArea) {
-          router.push(`/properties/${newType}${qsForPath(`/properties/${newType}`)}`, { scroll: false });
+          const seg = newType === "rent" ? rentTypeCanonicalSegment() : null;
+          const dest = seg ? `/properties/${newType}/${seg}` : `/properties/${newType}`;
+          router.push(`${dest}${qsForPath(dest)}`, { scroll: false });
           return;
         }
         const newArea = newFilters.mainArea;
@@ -717,7 +774,7 @@ export default function PropertyFilters({
         return;
       }
 
-      if (isTypeOnlyPath || (pathType && !pathArea)) {
+      if (isTypeOnlyPath || (pathType && !pathAreaRaw)) {
         const newType = newFilters.type || pathType;
         if (!newType) {
           router.push(`/properties${qsForPath("/properties")}`, { scroll: false });
@@ -738,7 +795,9 @@ export default function PropertyFilters({
           const omitSub = newFilters.mainArea === "ubud" && newFilters.subArea.length === 1;
           router.push(`${dest}${qsForPath(dest, omitSub)}`, { scroll: false });
         } else {
-          router.push(`/properties/${newType}${qsForPath(`/properties/${newType}`)}`, { scroll: false });
+          const seg = newType === "rent" ? rentTypeCanonicalSegment() : null;
+          const dest = seg ? `/properties/${newType}/${seg}` : `/properties/${newType}`;
+          router.push(`${dest}${qsForPath(dest)}`, { scroll: false });
         }
         return;
       }
@@ -754,7 +813,9 @@ export default function PropertyFilters({
         const omitSub = newFilters.mainArea === "ubud" && newFilters.subArea.length === 1;
         router.push(`${dest}${qsForPath(dest, omitSub)}`, { scroll: false });
       } else if (newFilters.type) {
-        router.push(`/properties/${newFilters.type}${qsForPath(`/properties/${newFilters.type}`)}`, { scroll: false });
+        const seg = newFilters.type === "rent" ? rentTypeCanonicalSegment() : null;
+        const dest = seg ? `/properties/${newFilters.type}/${seg}` : `/properties/${newFilters.type}`;
+        router.push(`${dest}${qsForPath(dest)}`, { scroll: false });
       } else {
         router.push(`/properties${qsForPath("/properties")}`, { scroll: false });
       }

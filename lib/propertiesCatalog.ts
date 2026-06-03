@@ -43,22 +43,40 @@ const amenityToFeature: Record<string, keyof Property["features"]> = {
 
 export type SegmentKind = "subArea" | "bedroom" | "payment" | "amenity" | null;
 
-export function parseSegment(segment: string, mainArea: MainArea, propertyType: PropertyType | "villas"): { kind: SegmentKind; value: string | number } | null {
-  if (SEGMENT_TYPES.subArea.includes(segment as SubArea) && mainArea === "ubud") {
-    return { kind: "subArea", value: segment };
-  }
+function parseNonAreaSegment(
+  segment: string,
+  propertyType: PropertyType | "villas"
+): { kind: SegmentKind; value: string | number } | null {
   if (SEGMENT_TYPES.bedroom.includes(segment as (typeof SEGMENT_TYPES.bedroom)[number])) {
     const m = segment.match(/^(\d+)-bedroom-villa$/);
     const num = m ? parseInt(m[1], 10) : parseInt(segment.charAt(0), 10);
     return { kind: "bedroom", value: num };
   }
-  if (SEGMENT_TYPES.payment.includes(segment as (typeof SEGMENT_TYPES.payment)[number]) && (propertyType === "rent" || propertyType === "villas")) {
+  if (
+    SEGMENT_TYPES.payment.includes(segment as (typeof SEGMENT_TYPES.payment)[number]) &&
+    (propertyType === "rent" || propertyType === "villas")
+  ) {
     return { kind: "payment", value: segment };
   }
   if (SEGMENT_TYPES.amenity.includes(segment as (typeof SEGMENT_TYPES.amenity)[number])) {
     return { kind: "amenity", value: segment };
   }
   return null;
+}
+
+/** Second path segment on `/properties/{type}/{slug}` when slug is not a main area (e.g. monthly). */
+export function parseCatalogSecondSegment(
+  segment: string,
+  propertyType: PropertyType | "villas"
+): { kind: SegmentKind; value: string | number } | null {
+  return parseNonAreaSegment(segment, propertyType);
+}
+
+export function parseSegment(segment: string, mainArea: MainArea, propertyType: PropertyType | "villas"): { kind: SegmentKind; value: string | number } | null {
+  if (SEGMENT_TYPES.subArea.includes(segment as SubArea) && mainArea === "ubud") {
+    return { kind: "subArea", value: segment };
+  }
+  return parseNonAreaSegment(segment, propertyType);
 }
 
 /** URL slug for catalog level 1: rent, sale, land, business, or villas (rent + sale). */

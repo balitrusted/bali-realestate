@@ -40,6 +40,23 @@ export function middleware(request: NextRequest) {
     }
   }
 
+  /** Canonical rent payment URLs: /properties/rent/monthly instead of ?minDuration=1 */
+  for (const rentType of ["rent", "villas"] as const) {
+    if (pathname === `/properties/${rentType}`) {
+      const md = request.nextUrl.searchParams.get("minDuration");
+      if (md === "1" || md === "12") {
+        const keys = Array.from(request.nextUrl.searchParams.keys());
+        const allowed = new Set(["minDuration", "page"]);
+        if (keys.every((k) => allowed.has(k))) {
+          const url = request.nextUrl.clone();
+          url.pathname = `/properties/${rentType}/${md === "12" ? "yearly" : "monthly"}`;
+          url.searchParams.delete("minDuration");
+          return NextResponse.redirect(url, 301);
+        }
+      }
+    }
+  }
+
   /** Canonical Ubud sub-area URLs: /properties/{type}/ubud/{subArea} instead of ?subArea= */
   const ubudArea = pathname.match(/^\/properties\/(villas|rent|sale|land|business)\/ubud$/);
   if (ubudArea) {
