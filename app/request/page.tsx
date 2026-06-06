@@ -146,6 +146,32 @@ function RequestForm() {
 
   useEffect(() => {
     if (prefillApplied) return;
+    const fromServices = searchParams.get("from") === "services";
+    if (fromServices) {
+      let summaryText: string | null = null;
+      try {
+        summaryText = sessionStorage.getItem("balitrusted-services-request-summary");
+        if (summaryText) sessionStorage.removeItem("balitrusted-services-request-summary");
+      } catch {
+        /* ignore */
+      }
+      const estimate = searchParams.get("estimate");
+      if (!summaryText && estimate) {
+        summaryText = `Services inquiry from balitrusted.com/services\n\nEstimated Balitrusted service fee: $${estimate}\n(Details were not stored — please list the services you selected.)`;
+      }
+      if (summaryText) {
+        setRequestType("client-other");
+        setRole("client");
+        setPhase("form");
+        setStepId("name");
+        setFormData((prev) => ({
+          ...prev,
+          message: summaryText!,
+        }));
+        setPrefillApplied(true);
+        return;
+      }
+    }
     if (idsParam) {
       const ids = idsParam.split(",").map((s) => s.trim()).filter(Boolean);
       setRequestType("client-rent");
@@ -173,7 +199,7 @@ function RequestForm() {
       }));
       setPrefillApplied(true);
     }
-  }, [idsParam, propertyId, prefillApplied]);
+  }, [idsParam, propertyId, prefillApplied, searchParams]);
 
   useEffect(() => {
     if (phase !== "form" || !requestType || steps.length === 0) return;

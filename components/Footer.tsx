@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SITE_DISCLAIMER } from "@/lib/siteDisclaimer";
 
 export default function Footer() {
   return (
@@ -37,6 +38,14 @@ export default function Footer() {
                   className="inline-block py-1 text-gray-600 hover:text-gray-900 touch-manipulation"
                 >
                   Archived villas
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services"
+                  className="inline-block py-1 text-gray-600 hover:text-gray-900 touch-manipulation"
+                >
+                  Services
                 </Link>
               </li>
               <li>
@@ -127,8 +136,11 @@ export default function Footer() {
           </div>
         </div>
         
-        <div className="mt-8 pt-8 border-t border-gray-200 text-center text-sm text-gray-600">
-          <p>
+        <div className="mt-8 border-t border-gray-200 pt-8">
+          <p className="mx-auto max-w-3xl text-center text-xs leading-relaxed text-gray-500">
+            <span className="font-medium text-gray-600">Disclaimer:</span> {SITE_DISCLAIMER}
+          </p>
+          <p className="mt-4 text-center text-sm text-gray-600">
             © {new Date().getFullYear()} Balitrusted. All rights reserved.
             {" · "}
             <Link href="/site-map" className="hover:text-gray-900 underline">

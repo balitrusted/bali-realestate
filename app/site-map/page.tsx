@@ -62,6 +62,11 @@ export default async function SitemapPage() {
                   </Link>
                 </li>
                 <li>
+                  <Link href="/services" className="text-gray-700 hover:text-gray-900 hover:underline">
+                    Services
+                  </Link>
+                </li>
+                <li>
                   <Link href="/request" className="text-gray-700 hover:text-gray-900 hover:underline">
                     Send Request
                   </Link>

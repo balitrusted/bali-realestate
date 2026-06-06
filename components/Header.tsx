@@ -48,6 +48,9 @@ export default function Header() {
             <Link href="/properties/map" className="text-gray-700 hover:text-gray-900">
               Map
             </Link>
+            <Link href="/services" className="text-gray-700 hover:text-gray-900">
+              Services
+            </Link>
             <Link href="/guides" className="text-gray-700 hover:text-gray-900">
               Knowledge Base
             </Link>
@@ -84,6 +87,9 @@ export default function Header() {
             </Link>
             <Link href="/properties/map" className="py-3 text-gray-700 hover:text-gray-900" onClick={() => setMobileMenuOpen(false)}>
               Map
+            </Link>
+            <Link href="/services" className="py-3 text-gray-700 hover:text-gray-900" onClick={() => setMobileMenuOpen(false)}>
+              Services
             </Link>
             <Link href="/guides" className="py-3 text-gray-700 hover:text-gray-900" onClick={() => setMobileMenuOpen(false)}>
               Knowledge Base

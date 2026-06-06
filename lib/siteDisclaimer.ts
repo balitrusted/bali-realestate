@@ -1,0 +1,2 @@
+export const SITE_DISCLAIMER =
+  "Information on Balitrusted is for general guidance only and may change without notice. We do not guarantee the accuracy of listing prices, availability, property condition, permits, zoning, or government regulations. Content and estimates are not legal, tax, or financial advice. You should conduct your own due diligence and consult qualified professionals before signing a lease or making a purchase.";
