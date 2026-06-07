@@ -126,7 +126,7 @@ const AREA_GUIDES: AreaGuideConfig[] = [
   {
     subArea: "lodtunduh",
     excerpt:
-      "Lodtunduh is south Ubud’s urban-meets-green pocket: close to center, strong Canggu road access, Titi Batu club life, and practical villa prices—if you pick the right micro-location north vs south.",
+      "Lodtunduh sits just south of central Ubud on Jl. A.A. Gede Rai. The north is urban and close to town; the far south opens into rice and trees. Daily life here revolves around Titi Batu, local cafés, and short rides to Pepito Peliatan.",
     seoTitle:
       "Lodtunduh Ubud Area Guide: Titi Batu, Canggu Access & Villa Rent | Balitrusted",
     seoDescription:
@@ -142,11 +142,11 @@ const AREA_GUIDES: AreaGuideConfig[] = [
     ],
     updatedAt: "2026-06-06T12:00:00.000Z",
     intro:
-      "Lodtunduh sits immediately south of central Ubud—one of the closest residential pockets if you want Ubud life without living on the monkey-forest hill lanes. It is <strong>not one uniform vibe</strong>: the north and central strips feel urban and built-up, while the far south opens into space, rice views, and older trees—but many villas there are <strong>12–15+ minutes from Ubud center</strong>. The area is cut by Jl. A.A. Gede Rai, which continues west toward Canggu and branches toward Jl. Raya Lod Tunduh. That road logic is the story: convenience, traffic, and choosing whether you want infrastructure at your doorstep or green at the cost of distance. Compare with <a href=\"/guides/ubud/peliatan-area-guide-ubud\">Peliatan</a> (closest Pepito) and <a href=\"/guides/ubud/mas-area-guide-ubud\">Mas</a> (greener south).",
+      "Lodtunduh sits immediately south of central Ubud—one of the closest residential pockets if you want Ubud life without living on the monkey-forest hill lanes. It is <strong>not one uniform vibe</strong>: the north and central strips feel urban and built-up, while the far south opens into space, rice views, and older trees—but many villas there are <strong>12–15 minutes from Ubud center</strong>. The area is cut by Jl. A.A. Gede Rai, which continues west toward Canggu and branches toward Jl. Raya Lod Tunduh. That road logic is the story: convenience, traffic, and choosing whether you want infrastructure at your doorstep or green at the cost of distance. Compare with <a href=\"/guides/ubud/peliatan-area-guide-ubud\">Peliatan</a> (closest Pepito) and <a href=\"/guides/ubud/mas-area-guide-ubud\">Mas</a> (greener south).",
     geography:
       `<p>Lodtunduh reads as <strong>two different areas in one name</strong>.</p>
 <p><strong>North and central Lodtunduh</strong> (closest to Ubud) is denser: more villa infill, more asphalt, fewer walkable green paths or parks. Daily life feels more urban—small shops, fruit stalls, fitness spots, and the main-road buzz. This is where most people end up if they want roughly <strong>5–10 minutes to Ubud center</strong> by scooter and easy access toward <a href="https://www.google.com/maps/search/?api=1&query=Pepito+Market+Peliatan+Ubud" target="_blank" rel="noopener noreferrer">Pepito Market Peliatan</a>.</p>
-<p><strong>South Lodtunduh</strong> loosens up: larger plots, rice-field edges, and the green belt around <a href="https://www.google.com/maps/search/?api=1&query=The+Westin+Resort+Spa+Ubud" target="_blank" rel="noopener noreferrer">The Westin Resort &amp; Spa Ubud</a>. You trade distance—many southern villas sit 12–15+ minutes from center even though the pin still says “Lodtunduh.”</p>
+<p><strong>South Lodtunduh</strong> loosens up: larger plots, rice-field edges, and the green belt around <a href="https://www.google.com/maps/search/?api=1&query=The+Westin+Resort+Spa+Ubud" target="_blank" rel="noopener noreferrer">The Westin Resort &amp; Spa Ubud</a>. You trade distance—many southern villas sit 12–15 minutes from center even though the pin still says “Lodtunduh.”</p>
 <p>The spine is <strong>Jl. A.A. Gede Rai</strong>. Follow it south and the character shifts; turn west on Jl. Raya Lod Tunduh toward Canggu and the views open up on the island’s western side—one of Lodtunduh’s hidden strengths.</p>
 <img src="/images/guides/lodtunduh-ubud-area-map.svg" alt="Schematic map of Lodtunduh Ubud showing Jl A.A. Gede Rai, Ambarawati crossroads, Titi Batu, Pepito Peliatan, and Canggu west access"><p class="article-image-caption">Lodtunduh area schematic — north urban vs south green, main roads and typical scooter times (traffic dependent). Balitrusted guide.</p>`,
     atmosphere:
@@ -171,7 +171,7 @@ const AREA_GUIDES: AreaGuideConfig[] = [
     noise:
       "Lodtunduh is not a silence pocket in the north. The <strong>Ambarawati × A.A. Gede Rai intersection</strong> is a serious crossroads—traffic queues, horns, and exhaust at peak hours. Right turn leads toward Mas; left and down connect toward Denpasar and Canggu. Temple days, roosters, and villa construction still apply everywhere in Ubud. Set-back villas on parallel lanes can be fine; villas fronting the spine or intersection need a honest morning-and-evening viewing. The Titi Batu tile lane and Westin green belt are usually calmer than the main-road strip.",
     roads:
-      "Lodtunduh’s strategic advantage is location on the way out of Ubud toward the west. For Canggu runs, this is often the most practical Ubud-side base—only <a href=\"/guides/ubud/sayan-area-guide-ubud\">Sayan</a> competes on “west exit” logic, with a different hill character. Toward Ubud center, expect roughly <strong>5–10 minutes by scooter</strong> from northern Lodtunduh (traffic dependent). Toward Canggu, plan <strong>35–50+ minutes</strong> depending on time of day—not close, but easier to commit to from here than from north Ubud hills. Jl. Raya Lod Tunduh west can be scenic. Southern Lodtunduh adds distance: 12–15+ minutes to center is normal. Most residents use a scooter daily; walking works only in short pockets (Titi Batu lane, some side paths)—not for full errands.",
+      "Lodtunduh’s strategic advantage is location on the way out of Ubud toward the west. For Canggu runs, this is often the most practical Ubud-side base—only <a href=\"/guides/ubud/sayan-area-guide-ubud\">Sayan</a> competes on “west exit” logic, with a different hill character. Toward Ubud center, expect roughly <strong>5–10 minutes by scooter</strong> from northern Lodtunduh (traffic dependent). Toward Canggu, plan <strong>35–50+ minutes</strong> depending on time of day—not close, but easier to commit to from here than from north Ubud hills. Jl. Raya Lod Tunduh west can be scenic. Southern Lodtunduh adds distance: 12–15 minutes to center is normal. Most residents use a scooter daily; walking works only in short pockets (Titi Batu lane, some side paths)—not for full errands.",
     internet:
       "Remote work is common, but <strong>internet quality is villa-specific</strong>—test Wi‑Fi on site, ask about power backup, and prefer enclosed living if you work through wet season. Titi Batu offers a social backup for café/work days; your villa should still stand alone for daily calls. Northern denser lanes may have more construction noise that interrupts outdoor calls—check your work hours against neighborhood activity.",
     prices:
@@ -199,7 +199,7 @@ const AREA_GUIDES: AreaGuideConfig[] = [
       "Ambarawati crossroads traffic and heat on the main asphalt spine",
       "Slightly hotter/drier feel than hill pockets like Tegallalang (micro-location dependent)",
       "No petrol in central Lodtunduh—plan Peliatan or south Mas",
-      "Deep south villas: 12–15+ minutes to Ubud center despite “Lodtunduh” label",
+      "Deep south villas: 12–15 minutes to Ubud center despite “Lodtunduh” label",
     ],
     whoFor: [
       "Renters who want Ubud close but need a fast west-island road (Canggu/Denpasar logic)",
@@ -224,7 +224,7 @@ const AREA_GUIDES: AreaGuideConfig[] = [
       },
       {
         q: "How far is Lodtunduh from supermarkets and Ubud center?",
-        a: "No large Pepito/Bintang/Delta inside Lodtunduh. Most people ride to Pepito Market Peliatan for a full shop (often ~5 minutes from northern pins) and allow 5–10 minutes to Ubud center traffic depending. Deep south adds 12–15+ minutes.",
+        a: "No large Pepito/Bintang/Delta inside Lodtunduh. Most people ride to Pepito Market Peliatan for a full shop (often ~5 minutes from northern pins) and allow 5–10 minutes to Ubud center traffic depending. Deep south adds 12–15 minutes.",
       },
       {
         q: "Is Lodtunduh quiet compared to central Ubud?",
