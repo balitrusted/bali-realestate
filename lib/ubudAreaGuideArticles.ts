@@ -9,7 +9,15 @@ export type AreaGuideConfig = {
   seoDescription: string;
   seoKeywords: string[];
   intro: string;
+  /** Optional schematic / hero image shown after intro */
+  featuredImage?: string;
+  /** North vs south layout, main roads — inserted after intro */
+  geography?: string;
   atmosphere: string;
+  /** Cafés, clubs, schools, errands — inserted after atmosphere */
+  landmarks?: string;
+  /** Author atmosphere picks — inserted after landmarks */
+  authorPicks?: string;
   noise: string;
   roads: string;
   internet: string;
@@ -18,10 +26,22 @@ export type AreaGuideConfig = {
   cons: string[];
   whoFor: string[];
   faqs: { q: string; a: string }[];
+  updatedAt?: string;
 };
 
 function li(items: string[]): string {
   return `<ul>${items.map((t) => `<li><p>${t}</p></li>`).join("")}</ul>`;
+}
+
+function sectionBody(html: string): string {
+  const trimmed = html.trim();
+  if (!trimmed) return "";
+  if (/^<(p|ul|ol|img|div|h[1-6]|blockquote)/i.test(trimmed)) return html;
+  return `<p>${html}</p>`;
+}
+
+function section(heading: string, html: string): string {
+  return `<h2 class="heading">${heading}</h2>${sectionBody(html)}`;
 }
 
 function buildAreaGuideHtml(c: AreaGuideConfig): string {
@@ -38,13 +58,28 @@ function buildAreaGuideHtml(c: AreaGuideConfig): string {
     )
     .join("");
 
+  const geographyBlock = c.geography
+    ? section("Geography: north, south, and the main road", c.geography)
+    : "";
+
+  const landmarksBlock = c.landmarks
+    ? section("Places that shape daily life", c.landmarks)
+    : "";
+
+  const authorPicksBlock = c.authorPicks
+    ? section("Atmospheric corners (author picks)", c.authorPicks)
+    : "";
+
   return [
     `<p>${c.intro}</p>`,
-    `<h2 class="heading">Atmosphere and daily rhythm</h2><p>${c.atmosphere}</p>`,
+    geographyBlock,
+    section("Atmosphere and daily rhythm", c.atmosphere),
+    landmarksBlock,
+    authorPicksBlock,
     `<h2 class="heading">Noise, ceremonies, and construction</h2><p>${c.noise}</p>`,
     `<h2 class="heading">Roads and access</h2><p>${c.roads}</p>`,
     `<h2 class="heading">Internet and remote work</h2><p>${c.internet}</p>`,
-    `<h2 class="heading">Rental prices and value</h2><p>${c.prices}</p>`,
+    `<h2 class="heading">Rental prices and value</h2>${c.prices.includes("<") ? c.prices : `<p>${c.prices}</p>`}`,
     `<h2 class="heading">Pros</h2>${li(c.pros)}`,
     `<h2 class="heading">Cons</h2>${li(c.cons)}`,
     `<h2 class="heading">Who ${name} is best for</h2>${li(c.whoFor)}`,
@@ -64,6 +99,7 @@ function buildAreaGuideHtml(c: AreaGuideConfig): string {
 function toArticle(c: AreaGuideConfig): Article {
   const name = subAreaNames[c.subArea];
   const now = "2026-05-18T12:00:00.000Z";
+  const updatedAt = c.updatedAt ?? now;
   return {
     id: `article-ubud-area-${c.subArea}`,
     title: `${name}, Ubud: Area Guide for Long-Term Living`,
@@ -71,12 +107,13 @@ function toArticle(c: AreaGuideConfig): Article {
     category: "ubud",
     content: buildAreaGuideHtml(c),
     excerpt: c.excerpt,
+    featuredImage: c.featuredImage,
     tags: [],
     author: "Balitrusted Team",
     published: true,
     publishedAt: now,
     createdAt: now,
-    updatedAt: now,
+    updatedAt,
     seoTitle: c.seoTitle,
     seoDescription: c.seoDescription,
     seoKeywords: c.seoKeywords,
@@ -89,60 +126,117 @@ const AREA_GUIDES: AreaGuideConfig[] = [
   {
     subArea: "lodtunduh",
     excerpt:
-      "Lodtunduh is Ubud’s “more space, slower days” pocket—larger plots, greener lanes, and plenty of long-term villas. Practical for families and remote workers who want calm without feeling stuck in the hills.",
-    seoTitle: "Lodtunduh Ubud Area Guide: Long-Term Rentals & Daily Life | Balitrusted",
+      "Lodtunduh is south Ubud’s urban-meets-green pocket: close to center, strong Canggu road access, Titi Batu club life, and practical villa prices—if you pick the right micro-location north vs south.",
+    seoTitle:
+      "Lodtunduh Ubud Area Guide: Titi Batu, Canggu Access & Villa Rent | Balitrusted",
     seoDescription:
-      "Lodtunduh near Ubud: space, calm, family-friendly long-term rentals. Noise, roads, internet, prices, and villas for rent in Lodtunduh.",
+      "Lodtunduh south Ubud: Jl A.A. Gede Rai, Ambarawati crossroads, Titi Batu club, Pepito Peliatan errands, Canggu access, villa prices, and long-term rentals.",
     seoKeywords: [
       "Lodtunduh Ubud",
       "Lodtunduh villa rent",
-      "long-term rental Ubud",
+      "villa near Titi Batu Ubud",
+      "Lodtunduh Canggu road",
+      "long-term rental Ubud south",
+      "Pelangi School Ubud",
       "annual villa Lodtunduh",
     ],
+    updatedAt: "2026-06-06T12:00:00.000Z",
     intro:
-      "If you want Ubud life with <strong>more garden, more privacy, and less lane density</strong>, Lodtunduh is often the first place that still feels residential. It is not central-walkable, but it is one of the stronger areas for <strong>long-term villa layouts</strong> (2–4 bedrooms, pools, enclosed living). The trade-off is simple: you gain space and quiet, and you accept scooter or car logic for daily errands.",
+      "Lodtunduh sits immediately south of central Ubud—one of the closest residential pockets if you want Ubud life without living on the monkey-forest hill lanes. It is <strong>not one uniform vibe</strong>: the north and central strips feel urban and built-up, while the far south opens into space, rice views, and older trees—but many villas there are <strong>12–15+ minutes from Ubud center</strong>. The area is cut by Jl. A.A. Gede Rai, which continues west toward Canggu and branches toward Jl. Raya Lod Tunduh. That road logic is the story: convenience, traffic, and choosing whether you want infrastructure at your doorstep or green at the cost of distance. Compare with <a href=\"/guides/ubud/peliatan-area-guide-ubud\">Peliatan</a> (closest Pepito) and <a href=\"/guides/ubud/mas-area-guide-ubud\">Mas</a> (greener south).",
+    geography:
+      `<p>Lodtunduh reads as <strong>two different areas in one name</strong>.</p>
+<p><strong>North and central Lodtunduh</strong> (closest to Ubud) is denser: more villa infill, more asphalt, fewer walkable green paths or parks. Daily life feels more urban—small shops, fruit stalls, fitness spots, and the main-road buzz. This is where most people end up if they want roughly <strong>5–10 minutes to Ubud center</strong> by scooter and easy access toward <a href="https://www.google.com/maps/search/?api=1&query=Pepito+Market+Peliatan+Ubud" target="_blank" rel="noopener noreferrer">Pepito Market Peliatan</a>.</p>
+<p><strong>South Lodtunduh</strong> loosens up: larger plots, rice-field edges, and the green belt around <a href="https://www.google.com/maps/search/?api=1&query=The+Westin+Resort+Spa+Ubud" target="_blank" rel="noopener noreferrer">The Westin Resort &amp; Spa Ubud</a>. You trade distance—many southern villas sit 12–15+ minutes from center even though the pin still says “Lodtunduh.”</p>
+<p>The spine is <strong>Jl. A.A. Gede Rai</strong>. Follow it south and the character shifts; turn west on Jl. Raya Lod Tunduh toward Canggu and the views open up on the island’s western side—one of Lodtunduh’s hidden strengths.</p>
+<img src="/images/guides/lodtunduh-ubud-area-map.svg" alt="Schematic map of Lodtunduh Ubud showing Jl A.A. Gede Rai, Ambarawati crossroads, Titi Batu, Pepito Peliatan, and Canggu west access"><p class="article-image-caption">Lodtunduh area schematic — north urban vs south green, main roads and typical scooter times (traffic dependent). Balitrusted guide.</p>`,
     atmosphere:
-      "Days in Lodtunduh often feel slower and more spread out than the café hills. You get larger plots, more separation between houses, and a stronger “home base” feeling—especially if your villa has a real garden. It suits people who treat Ubud as a place to live, not a place to party every night.",
+      "Morning here is often <strong>scooter logistics</strong>, not a slow walk to a café hill. In the north you live among villas, warungs, fruit stalls, and the hum of a main road; in the south the day can feel like a proper home base with garden and rice outlook. Lodtunduh suits people who want Ubud access plus <strong>west-island road logic</strong> (Canggu, Denpasar) without committing to the full hills lifestyle. It is popular with families, fitness-focused renters, and long-stayers who care about the house and club/school anchors more than Instagram café density.",
+    landmarks:
+      `<p><a href="https://www.google.com/maps/search/?api=1&query=Titi+Batu+Ubud+Club+Jl+Cempaka" target="_blank" rel="noopener noreferrer">Titi Batu Ubud Club</a> (<a href="https://www.titibatu.com/" target="_blank" rel="noopener noreferrer">titibatu.com</a>) is the area’s gravity point. Many renters explicitly search for housing <strong>near Titi Batu</strong>. It is a members-and-day-pass club—not a pretentious resort—with a 25 m lap pool, family pool, air-conditioned gym (Panatta equipment), sauna/steam/cold plunge, kids’ playroom, skate park, sports courts, healthy café food, and space to work or unwind. A newer padel/tennis court sits nearby. You can eat at the restaurant without buying a day pass if you are not using facilities—check their current rules before you go.</p>
+<p>On the same corridor: <a href="https://www.google.com/maps/search/?api=1&query=Waybu+Coffee+Eatery+Ubud" target="_blank" rel="noopener noreferrer">Waybu Coffee &amp; Eatery</a> and the tiled lane around Titi Batu—one of the few stretches where you can actually walk off the main road.</p>
+<p>On the main crossroads cluster: <a href="https://www.google.com/maps/search/?api=1&query=Usha+Cafe+and+Bakery+Ubud" target="_blank" rel="noopener noreferrer">Usha Cafe and Bakery</a>—a long-standing, unpretentious favorite (including Russian dishes and bakery items); <a href="https://www.google.com/maps/search/?api=1&query=7AM+Bakers+Ubud" target="_blank" rel="noopener noreferrer">7AM Bakers</a>, a reliable chain bakery that opened recently on the intersection; and across the road <a href="https://www.google.com/maps/search/?api=1&query=CrossFit+Ubud" target="_blank" rel="noopener noreferrer">Ubud Fitness and CrossFit Ubud</a> in a low valley with trees.</p>
+<p>Other anchors: <a href="https://www.google.com/maps/search/?api=1&query=Bebek+Tebasari+Resto+Ubud" target="_blank" rel="noopener noreferrer">Bebek Tebasari Resto</a>—an older restaurant with huge parking (tour buses still stop); <a href="https://www.google.com/maps/search/?api=1&query=Pelangi+School+International+Ubud" target="_blank" rel="noopener noreferrer">Pelangi School (International)</a>—a family draw near the Titi Batu corridor; affordable fruit stalls on Jl. A.A. Gede Rai; and personal favorite <a href="https://www.google.com/maps/search/?api=1&query=Bu+Ayu+fruit+shop+Lodtunduh+Ubud" target="_blank" rel="noopener noreferrer">Bu Ayu’s fruit shop</a>—worth visiting for fruit and a genuinely warm local welcome.</p>
+<p><strong>Errands Lodtunduh does not host:</strong> no full-size Pepito, Bintang, or Delta inside the pocket. Nearest big shop is <a href="https://www.google.com/maps/search/?api=1&query=Pepito+Market+Peliatan+Ubud" target="_blank" rel="noopener noreferrer">Pepito Market Peliatan</a> (Peliatan, toward center). Petrol: typically Peliatan (near Pepito) or further south toward Mas/Denpasar—not in central Lodtunduh itself.</p>
+<p><em>Boundary note:</em> On official maps, places like Titi Batu, Usha, 7AM, and Pelangi School often sit under Mas—Mas is traditionally the larger, greener, more “southern” village. In daily life, long-stayers treat this strip as Lodtunduh’s practical south-Ubud corridor because it feels closer to center and the A.A. Gede Rai spine. Mas itself—deeper, leafier, further from town—is covered in our <a href="/guides/ubud/mas-area-guide-ubud">Mas area guide</a>.</p>
+<img src="/images/guides/lodtunduh-key-places.svg" alt="Infographic of key places in Lodtunduh Ubud — Titi Batu, Usha Cafe, Pelangi School, Pepito errands, and Westin green belt"><p class="article-image-caption">Everyday anchors in Lodtunduh — clubs, cafés, school, and where errands actually happen. Balitrusted guide.</p>`,
+    authorPicks:
+      `<ol>
+<li><p>Jl. A.A. Gede Rai from Usha north to the <a href="https://www.google.com/maps/search/?api=1&query=Jl.+Ambarawati+Jl.+A.A.+Gede+Rai+Ubud" target="_blank" rel="noopener noreferrer">Ambarawati crossroads</a>—straight, lively, small shops, and a “runway” feel when traffic clears; it flows into the fitness valley below.</p></li>
+<li><p>The Ubud Fitness / CrossFit / Usha low pocket—a dip with trees; surprisingly green for such a central strip.</p></li>
+<li><p>The full Titi Batu lane—paved tiles, walkable, set back from the noisy main road; club life without highway stress.</p></li>
+<li><p>Westin surroundings—big old trees, rice-field exits, a river valley, and the kind of “old Ubud scale” that newer villa lanes lack.</p></li>
+<li><p>Jl. A.A. Gede Rai south from Bu Ayu’s fruit shop—scenic and fast when open; further south, rice views open up.</p></li>
+</ol>
+<p>Personal tip: say hello at Bu Ayu’s—Ayu is one of those people who make a neighborhood feel human.</p>`,
     noise:
-      "Lodtunduh is often quieter in a residential sense, but <strong>not magically silent</strong>. Roosters, temple events, and construction on neighboring land still happen—Ubud is developing everywhere. The difference is density: fewer “everything on one lane” situations than the busiest central strips. Always check the exact lane during a viewing (morning and evening).",
+      "Lodtunduh is not a silence pocket in the north. The <strong>Ambarawati × A.A. Gede Rai intersection</strong> is a serious crossroads—traffic queues, horns, and exhaust at peak hours. Right turn leads toward Mas; left and down connect toward Denpasar and Canggu. Temple days, roosters, and villa construction still apply everywhere in Ubud. Set-back villas on parallel lanes can be fine; villas fronting the spine or intersection need a honest morning-and-evening viewing. The Titi Batu tile lane and Westin green belt are usually calmer than the main-road strip.",
     roads:
-      "Most people use a scooter for groceries, school runs, and evenings out. Access roads vary: some lanes are smooth, others get slippery after rain. If you dislike riding at night, prioritize villas on well-lit access and ask how the lane behaves in wet season.",
+      "Lodtunduh’s strategic advantage is location on the way out of Ubud toward the west. For Canggu runs, this is often the most practical Ubud-side base—only <a href=\"/guides/ubud/sayan-area-guide-ubud\">Sayan</a> competes on “west exit” logic, with a different hill character. Toward Ubud center, expect roughly <strong>5–10 minutes by scooter</strong> from northern Lodtunduh (traffic dependent). Toward Canggu, plan <strong>35–50+ minutes</strong> depending on time of day—not close, but easier to commit to from here than from north Ubud hills. Jl. Raya Lod Tunduh west can be scenic. Southern Lodtunduh adds distance: 12–15+ minutes to center is normal. Most residents use a scooter daily; walking works only in short pockets (Titi Batu lane, some side paths)—not for full errands.",
     internet:
-      "Remote work is common here, but <strong>internet quality is villa-specific</strong>. Test Wi‑Fi during viewing, ask about power backup, and prefer enclosed living if you work through rain season. Many families choose Lodtunduh because the house matters more than the café scene.",
+      "Remote work is common, but <strong>internet quality is villa-specific</strong>—test Wi‑Fi on site, ask about power backup, and prefer enclosed living if you work through wet season. Titi Batu offers a social backup for café/work days; your villa should still stand alone for daily calls. Northern denser lanes may have more construction noise that interrupts outdoor calls—check your work hours against neighborhood activity.",
     prices:
-      "Prices depend on bedrooms, pool, enclosed living, and how finished the villa feels—not only the area name. Lodtunduh often offers strong space for money on longer stays. Compare monthly vs yearly when both are listed; yearly terms often reduce the effective monthly cost. Start with <a href=\"/properties/rent/ubud/lodtunduh\">current Lodtunduh listings</a>.",
+      `<p>Lodtunduh often delivers strong value for south-Ubud convenience—especially 1–2 bedroom private villas—with more supply of actual homes than guesthouse-style stock. Prices move with bedrooms, pool, enclosed kitchen/living, finish level, and exact micro-location (north vs deep south), not the area name alone.</p>
+<p>On <a href="/properties/rent/ubud/lodtunduh">listings we currently publish</a> (general guidance, not a market survey):</p>
+<ul>
+<li><p>1 bedroom with pool: often around <strong>IDR 8–10 million/month</strong>; some yearly terms land near IDR 9 million/month effective when annual pricing is published.</p></li>
+<li><p>2 bedrooms: roughly <strong>IDR 15–20 million/month</strong> on monthly terms; yearly listings sometimes cluster around IDR 7–7.5 million/month effective on simpler layouts without pool.</p></li>
+<li><p>3 bedrooms: fewer data points; expect <strong>IDR 25–30+ million/month</strong> when pool and enclosed living are included.</p></li>
+</ul>
+<p>What you get for the money: northern pins trade greenery for access; southern pins trade distance for space, rice outlook, and calmer lanes. <strong>Monthly vs yearly:</strong> when both exist, yearly often reduces the effective monthly cost—verify what is included (cleaning, pool, Wi‑Fi, electricity caps). Always view before paying; photos rarely show intersection noise or lane condition after rain.</p>
+<p>Need help shortlisting by budget and lane preference? <a href="/request">Send a request</a> or browse <a href="/properties/rent/ubud/lodtunduh?minDuration=12">yearly Lodtunduh villas</a>.</p>`,
     pros: [
-      "More space and privacy than central Ubud pockets",
-      "Strong supply of 2–4 bedroom long-term villas",
-      "Calmer residential rhythm; popular with families",
-      "Pepito Market Peliatan (short scooter ride) plus local warungs and minimarts",
+      "Among the closest south-Ubud pockets to central Ubud (north/central pins)",
+      "Best practical Ubud-side access toward Canggu and west-Bali roads",
+      "Strong everyday anchors: Titi Batu club, Usha, 7AM, fitness cluster",
+      "Pelangi School (International) for families",
+      "Good supply of 1–2 bedroom private villas; fewer guesthouses than central hills",
+      "Often accessible pricing vs premium west-hill outlook areas",
+      "Scenic southern lanes and Westin green belt for space seekers",
     ],
     cons: [
-      "Not walkable for daily life; scooter or car logic",
-      "Micro-location matters for construction and road noise",
-      "Evenings out usually mean a ride to central Ubud or south hubs",
+      "Urbanized north/central strip—less nature, fewer walkable green paths",
+      "No Pepito/Bintang/Delta inside Lodtunduh; errands in Peliatan or center",
+      "Ambarawati crossroads traffic and heat on the main asphalt spine",
+      "Slightly hotter/drier feel than hill pockets like Tegallalang (micro-location dependent)",
+      "No petrol in central Lodtunduh—plan Peliatan or south Mas",
+      "Deep south villas: 12–15+ minutes to Ubud center despite “Lodtunduh” label",
     ],
     whoFor: [
-      "Families who want gardens and separation between houses",
-      "Remote workers who prioritize the villa setup over café density",
-      "Long-stay renters (3–12+ months) who accept a short ride to “town”",
+      "Renters who want Ubud close but need a fast west-island road (Canggu/Denpasar logic)",
+      "Families using Pelangi School or Titi Batu kids’ facilities",
+      "Fitness-focused long-stayers (Titi Batu, Ubud Fitness, CrossFit cluster)",
+      "Remote workers prioritizing villa value and club backup over café-hill walks",
+      "People comparing Lodtunduh vs Peliatan vs Mas for south/east Ubud—see all three guides",
+      "Not ideal if you need walk-everywhere café life or hill-green silence on day one",
     ],
     faqs: [
       {
         q: "Is Lodtunduh good for long-term living in Ubud?",
-        a: "For many people, yes—especially if your priority is space, greenery, and a slower rhythm rather than walking to every café. It works well for longer stays when you want a villa that feels like a home base.",
+        a: "Often yes—if you choose north/central for access or south for space knowingly. It works well for families, fitness-focused renters, and people who want private villas without central-hill pricing. Pick micro-location carefully around the main road and intersection.",
       },
       {
-        q: "Is Lodtunduh quiet compared to central Ubud?",
-        a: "Often quieter in a spread-out residential way, but not automatically silent. Check the exact lane during viewing and ask about nearby construction.",
+        q: "Is Lodtunduh close to Canggu?",
+        a: "It is one of the better Ubud-side bases for Canggu runs—expect roughly 35–50+ minutes by scooter depending on traffic, not a daily commute for most people but practical for weekly trips. Sayan is the other west-exit comparison.",
+      },
+      {
+        q: "Should I rent near Titi Batu?",
+        a: "If club life (pool, gym, kids, social workspace) matters to you, yes—many renters anchor there deliberately. Verify noise from the main road vs the tiled side lane; walk the lane at the times you will actually be home.",
       },
       {
         q: "How far is Lodtunduh from supermarkets and Ubud center?",
-        a: "There is no Pepito in Lodtunduh itself. Most people ride to Pepito Market Peliatan (or other central Ubud supermarkets) for a full shop, use local warungs for top-ups, and allow extra time to Ubud center depending on traffic.",
+        a: "No large Pepito/Bintang/Delta inside Lodtunduh. Most people ride to Pepito Market Peliatan for a full shop (often ~5 minutes from northern pins) and allow 5–10 minutes to Ubud center traffic depending. Deep south adds 12–15+ minutes.",
       },
       {
-        q: "What type of villas are common in Lodtunduh?",
-        a: "You will see many 2–4 bedroom villas with pools and gardens, often aimed at long-term renters. Verify enclosed kitchen/living and internet on site.",
+        q: "Is Lodtunduh quiet compared to central Ubud?",
+        a: "South and set-back lanes can be calm, but the Ambarawati × A.A. Gede Rai intersection is busy and the north feels urban—not a nature silence pocket. Always view morning and evening.",
+      },
+      {
+        q: "Lodtunduh vs Mas—which is closer to Ubud?",
+        a: "Daily-life feel: this corridor is Lodtunduh—closer to center on the A.A. Gede Rai spine. Official Mas village extends greener and further south; many maps label Titi Batu/Usha as Mas even though renters treat them as Lodtunduh’s backyard.",
+      },
+      {
+        q: "What villa types are common in Lodtunduh?",
+        a: "Mostly private 1–3 bedroom villas; 2-bedroom family layouts are common. Pool and enclosed living vary—verify on site. Guesthouse-style stock is lower than in central tourist lanes.",
       },
     ],
   },
@@ -881,7 +975,7 @@ export function patchUbudHubContent(content: string): string {
 export const UBUD_AREA_GUIDE_HUB_LINKS_HTML = `<h2 class="heading">Area guides with current rental listings</h2>
 <p>These Ubud neighborhoods have dedicated guides linked to villas we list in our catalog. Each page covers daily life, trade-offs, and FAQ—then points you to rentals in that sub-area.</p>
 <ul>
-<li><p><a href="/guides/ubud/lodtunduh-area-guide-ubud"><strong>Lodtunduh</strong></a> — space, gardens, family-friendly long-term villas</p></li>
+<li><p><a href="/guides/ubud/lodtunduh-area-guide-ubud"><strong>Lodtunduh</strong></a> — south Ubud, Titi Batu corridor, Canggu road access, urban north vs green south</p></li>
 <li><p><a href="/guides/ubud/penestanan-area-guide-ubud"><strong>Penestanan</strong></a> — walkable, creative, social-by-Ubud-standards living</p></li>
 <li><p><a href="/guides/ubud/mas-area-guide-ubud"><strong>Mas</strong></a> — green, developing, family-friendly 2–4 bed villas</p></li>
 <li><p><a href="/guides/ubud/peliatan-area-guide-ubud"><strong>Peliatan</strong></a> — nearest to central Ubud, Pepito, Yoga Barn access</p></li>

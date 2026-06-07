@@ -29,7 +29,7 @@ export const ubudSubAreaIntro: Record<SubArea, string> = {
   kemenuh:
     "Kemenuh blends village life with practical access—handy for day-to-day errands while still feeling like Ubud’s countryside. A solid pick for families and remote workers who want space and calm.",
   lodtunduh:
-    "Lodtunduh is one of Ubud’s practical “south” pockets—often quicker access toward clubs and main roads, with plenty of newer long-term rentals. Ideal if you want convenience plus a residential vibe.",
+    "Lodtunduh is south Ubud’s urban-meets-green pocket—Titi Batu club life, Canggu road access, and practical villa prices. North/central pins are close to town; the far south opens into space and rice views.",
   mas:
     "Mas is famous for wood carving and craft workshops, with a relaxed village feel between rice plots and small roads. It is a strong match for quiet long-term living while staying within easy reach of central Ubud.",
   peliatan:

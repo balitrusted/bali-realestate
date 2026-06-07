@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" role="img" aria-labelledby="title desc">
+  <title id="title">Lodtunduh key places  everyday anchors</title>
+  <desc id="desc">Infographic listing Titi Batu, Usha Cafe, 7AM Bakers, Pelangi School, Pepito Peliatan, and Westin green belt in Lodtunduh Ubud.</desc>
+  <rect width="960" height="420" fill="#fafaf9"/>
+  <text x="32" y="40" font-family="system-ui,sans-serif" font-size="20" font-weight="700" fill="#1c1917">Everyday anchors in Lodtunduh</text>
+  <text x="32" y="64" font-family="system-ui,sans-serif" font-size="12" fill="#57534e">Places long-stay renters actually use  not a tourist checklist</text>
+
+  <!-- Row 1 cards -->
+  <g transform="translate(32,88)">
+    <rect width="200" height="120" rx="12" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="16" y="28" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#1d4ed8">Titi Batu Club</text>
+    <text x="16" y="50" font-family="system-ui,sans-serif" font-size="10" fill="#1e3a8a">Pool · gym · sauna</text>
+    <text x="16" y="66" font-family="system-ui,sans-serif" font-size="10" fill="#1e3a8a">Kids · padel · cowork</text>
+    <text x="16" y="82" font-family="system-ui,sans-serif" font-size="10" fill="#1e3a8a">Club vibe, not pretentious</text>
+    <text x="16" y="104" font-family="system-ui,sans-serif" font-size="9" fill="#64748b">#1 reason people search here</text>
+  </g>
+  <g transform="translate(252,88)">
+    <rect width="200" height="120" rx="12" fill="#fff7ed" stroke="#fdba74"/>
+    <text x="16" y="28" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#9a3412">Usha Cafe</text>
+    <text x="16" y="50" font-family="system-ui,sans-serif" font-size="10" fill="#7c2d12">Oldest local favorite</text>
+    <text x="16" y="66" font-family="system-ui,sans-serif" font-size="10" fill="#7c2d12">Russian menu + bakery</text>
+    <text x="16" y="82" font-family="system-ui,sans-serif" font-size="10" fill="#7c2d12">Unpretentious, reliable</text>
+  </g>
+  <g transform="translate(472,88)">
+    <rect width="200" height="120" rx="12" fill="#fefce8" stroke="#fde047"/>
+    <text x="16" y="28" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#854d0e">7AM Bakers</text>
+    <text x="16" y="50" font-family="system-ui,sans-serif" font-size="10" fill="#713f12">Chain bakery · new</text>
+    <text x="16" y="66" font-family="system-ui,sans-serif" font-size="10" fill="#713f12">On the main crossroads</text>
+    <text x="16" y="82" font-family="system-ui,sans-serif" font-size="10" fill="#713f12">Opposite fitness cluster</text>
+  </g>
+  <g transform="translate(692,88)">
+    <rect width="236" height="120" rx="12" fill="#f0fdf4" stroke="#86efac"/>
+    <text x="16" y="28" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#166534">Pelangi School</text>
+    <text x="16" y="50" font-family="system-ui,sans-serif" font-size="10" fill="#14532d">International school</text>
+    <text x="16" y="66" font-family="system-ui,sans-serif" font-size="10" fill="#14532d">Family draw for south Ubud</text>
+    <text x="16" y="82" font-family="system-ui,sans-serif" font-size="10" fill="#14532d">Near Titi Batu corridor</text>
+  </g>
+
+  <!-- Row 2 -->
+  <g transform="translate(32,232)">
+    <rect width="200" height="120" rx="12" fill="#fff1f2" stroke="#fda4af"/>
+    <text x="16" y="28" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#9f1239">Fitness cluster</text>
+    <text x="16" y="50" font-family="system-ui,sans-serif" font-size="10" fill="#881337">Ubud Fitness</text>
+    <text x="16" y="66" font-family="system-ui,sans-serif" font-size="10" fill="#881337">CrossFit Ubud</text>
+    <text x="16" y="82" font-family="system-ui,sans-serif" font-size="10" fill="#881337">Low valley + trees</text>
+  </g>
+  <g transform="translate(252,232)">
+    <rect width="200" height="120" rx="12" fill="#ecfdf5" stroke="#6ee7b7"/>
+    <text x="16" y="28" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#047857">Bu Ayu fruit shop</text>
+    <text x="16" y="50" font-family="system-ui,sans-serif" font-size="10" fill="#065f46">Affordable fruit stalls</text>
+    <text x="16" y="66" font-family="system-ui,sans-serif" font-size="10" fill="#065f46">On Jl A.A. Gede Rai</text>
+    <text x="16" y="82" font-family="system-ui,sans-serif" font-size="10" fill="#065f46">Personal local favorite</text>
+  </g>
+  <g transform="translate(472,232)">
+    <rect width="200" height="120" rx="12" fill="#f5f5f4" stroke="#d6d3d1"/>
+    <text x="16" y="28" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#44403c">Westin belt</text>
+    <text x="16" y="50" font-family="system-ui,sans-serif" font-size="10" fill="#57534e">Old-growth trees</text>
+    <text x="16" y="66" font-family="system-ui,sans-serif" font-size="10" fill="#57534e">Rice field exits</text>
+    <text x="16" y="82" font-family="system-ui,sans-serif" font-size="10" fill="#57534e">Old Ubud feeling</text>
+  </g>
+  <g transform="translate(692,232)">
+    <rect width="236" height="120" rx="12" fill="#fff7ed" stroke="#fdba74"/>
+    <text x="16" y="28" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#9a3412">Errands outside area</text>
+    <text x="16" y="50" font-family="system-ui,sans-serif" font-size="10" fill="#7c2d12">Pepito · Bintang · Delta</text>
+    <text x="16" y="66" font-family="system-ui,sans-serif" font-size="10" fill="#7c2d12">’ Peliatan / center</text>
+    <text x="16" y="82" font-family="system-ui,sans-serif" font-size="10" fill="#7c2d12">Fuel ’ Peliatan or south Mas</text>
+  </g>
+
+  <text x="32" y="396" font-family="system-ui,sans-serif" font-size="10" fill="#78716c">Balitrusted · Lodtunduh area guide · tap Google Maps links in the article for exact pins</text>
+</svg>
