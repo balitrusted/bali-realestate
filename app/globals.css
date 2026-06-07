@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../lib/ubudAreaGuideArticles.ts";
 
 :root {
   --background: #ffffff;
@@ -194,6 +195,33 @@ html {
   margin-bottom: 0.575rem;
 }
 
+/* Guide/article links — clearly clickable, not “Ctrl+U” underline */
+.prose.prose-article a {
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.prose.prose-article a[href^="#"] {
+  color: #2563eb;
+  border-bottom: 1px solid #bfdbfe;
+}
+
+.prose.prose-article a[href^="#"]:hover {
+  color: #1d4ed8;
+  border-bottom-color: #60a5fa;
+}
+
+.prose.prose-article a:not([href^="#"]) {
+  color: #047857;
+  border-bottom: 1px solid rgba(5, 150, 105, 0.35);
+}
+
+.prose.prose-article a:not([href^="#"]):hover {
+  color: #065f46;
+  border-bottom-color: #059669;
+}
+
 /* One bottom margin per paragraph; adjacent blocks collapse to the larger of adjoining margins */
 .prose.prose-article p {
   margin: 0 0 1.125rem;
@@ -222,8 +250,13 @@ html {
 }
 
 .prose.prose-article li {
-  margin-top: 0.4rem !important;
-  margin-bottom: 0.4rem !important;
+  margin-top: 0.2rem !important;
+  margin-bottom: 0.2rem !important;
+  line-height: 1.6 !important;
+}
+
+.prose.prose-article li p {
+  margin: 0 !important;
 }
 
 /* Figures + photo credits (blog / guides) */
