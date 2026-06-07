@@ -4,6 +4,8 @@ import { useEffect } from "react";
 
 interface ArticleContentProps {
   content: string;
+  /** Optional intro line — same typography as article body (not a separate “lead” style). */
+  lead?: string;
 }
 
 // Normalize ID - convert to lowercase and handle special cases
@@ -14,7 +16,7 @@ function normalizeId(id: string): string {
     .replace(/(^-|-$)/g, '');
 }
 
-export default function ArticleContent({ content }: ArticleContentProps) {
+export default function ArticleContent({ content, lead }: ArticleContentProps) {
   useEffect(() => {
     // Add IDs to all headings automatically if they don't have one
     const headings = document.querySelectorAll('.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6');
@@ -39,7 +41,7 @@ export default function ArticleContent({ content }: ArticleContentProps) {
         }
       }
     });
-  }, [content]);
+  }, [content, lead]);
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
@@ -83,10 +85,15 @@ export default function ArticleContent({ content }: ArticleContentProps) {
   };
 
   return (
-    <div
-      className="prose prose-article max-w-none"
-      dangerouslySetInnerHTML={{ __html: content }}
-      onClick={handleClick}
-    />
+    <>
+      {lead ? (
+        <p className="mb-6 rounded-xl border border-stone-200 border-l-4 border-l-stone-400 bg-stone-50 px-5 py-4 text-[1.0625rem] leading-[1.7] text-stone-700">
+          {lead}
+        </p>
+      ) : null}
+      <div className="prose prose-article max-w-none" onClick={handleClick}>
+        <div dangerouslySetInnerHTML={{ __html: content }} />
+      </div>
+    </>
   );
 }

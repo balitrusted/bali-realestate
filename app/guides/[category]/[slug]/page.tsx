@@ -101,13 +101,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ catego
               </div>
             )}
 
-            {article.excerpt && (
-              <p className="text-xl text-gray-700 mb-8 italic">
-                {article.excerpt}
-              </p>
-            )}
-            
-            <ArticleContent content={article.content} />
+            <ArticleContent content={article.content} lead={article.excerpt} />
           </article>
 
           {article.allowComments && (
