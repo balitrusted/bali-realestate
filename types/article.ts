@@ -1,3 +1,30 @@
+import type { SubArea } from "@/types/property";
+
+export interface ArticleGalleryItem {
+  src: string;
+  alt: string;
+  caption?: string;
+}
+
+export interface GuideMapPoi {
+  id: string;
+  label: string;
+  lat: number;
+  lng: number;
+  note?: string;
+  mapsUrl?: string;
+}
+
+export interface ArticleAreaMap {
+  boundaryUrl: string;
+  title?: string;
+  caption?: string;
+  /** Guide checkpoints (cafés, clubs, schools) - not listings */
+  pois?: GuideMapPoi[];
+  /** Future: catalog villa overlay on a separate map page */
+  listingSubArea?: SubArea;
+}
+
 export interface Article {
   id: string;
   title: string;
@@ -6,6 +33,10 @@ export interface Article {
   content: string; // HTML content
   excerpt?: string; // Short description for preview
   featuredImage?: string; // URL to featured image
+  /** Optional swipe carousel (area guides, photo essays) */
+  gallery?: ArticleGalleryItem[];
+  galleryTitle?: string;
+  areaMap?: ArticleAreaMap;
   images?: string[]; // Array of image URLs used in article
   tags: string[];
   author: string;

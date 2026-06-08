@@ -1,29 +1,47 @@
 "use client";
 
-import { useEffect } from "react";
+import { Fragment, useEffect } from "react";
+import GuideMediaCarousel from "@/components/GuideMediaCarousel";
+import AreaGuideMap from "@/components/AreaGuideMap";
+import { AREA_GUIDE_MAP_SLOT } from "@/lib/areaGuideMapSlot";
+import type { ArticleAreaMap, ArticleGalleryItem } from "@/types/article";
 
 interface ArticleContentProps {
   content: string;
   /** Optional intro line — same typography as article body (not a separate “lead” style). */
   lead?: string;
+  gallery?: ArticleGalleryItem[];
+  galleryTitle?: string;
+  areaMap?: ArticleAreaMap;
 }
 
 // Normalize ID - convert to lowercase and handle special cases
 function normalizeId(id: string): string {
   return id
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '');
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
 }
 
-export default function ArticleContent({ content, lead }: ArticleContentProps) {
+export default function ArticleContent({
+  content,
+  lead,
+  gallery,
+  galleryTitle,
+  areaMap,
+}: ArticleContentProps) {
+  const contentParts = content.includes(AREA_GUIDE_MAP_SLOT)
+    ? content.split(AREA_GUIDE_MAP_SLOT)
+    : [content];
+
   useEffect(() => {
     // Add IDs to all headings automatically if they don't have one
-    const headings = document.querySelectorAll('.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6');
+    const headings = document.querySelectorAll(
+      ".prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6"
+    );
     headings.forEach((heading) => {
       if (!heading.id) {
-        // Generate ID from text content
-        const text = heading.textContent || '';
+        const text = heading.textContent || "";
         const id = normalizeId(text);
         heading.id = id;
       }
@@ -32,12 +50,12 @@ export default function ArticleContent({ content, lead }: ArticleContentProps) {
     // Normalize all anchor links to use lowercase IDs
     const links = document.querySelectorAll('.prose a[href^="#"]');
     links.forEach((link) => {
-      const href = link.getAttribute('href');
-      if (href && href.startsWith('#')) {
+      const href = link.getAttribute("href");
+      if (href && href.startsWith("#")) {
         const id = href.substring(1);
         const normalizedId = normalizeId(id);
         if (id !== normalizedId) {
-          link.setAttribute('href', `#${normalizedId}`);
+          link.setAttribute("href", `#${normalizedId}`);
         }
       }
     });
@@ -45,18 +63,16 @@ export default function ArticleContent({ content, lead }: ArticleContentProps) {
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
-    if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
+    if (target.tagName === "A" && target.getAttribute("href")?.startsWith("#")) {
       e.preventDefault();
-      const href = target.getAttribute('href');
+      const href = target.getAttribute("href");
       if (href) {
         const id = normalizeId(href.substring(1));
-        
-        // Try to find element by normalized ID
+
         let element = document.getElementById(id);
-        
-        // If not found, try to find by original ID (case-insensitive)
+
         if (!element) {
-          const allElements = document.querySelectorAll('[id]');
+          const allElements = document.querySelectorAll("[id]");
           for (let el of allElements) {
             if (normalizeId(el.id) === id) {
               element = el as HTMLElement;
@@ -64,19 +80,18 @@ export default function ArticleContent({ content, lead }: ArticleContentProps) {
             }
           }
         }
-        
+
         if (element) {
-          const offset = 80; // Offset for fixed header if any
+          const offset = 80;
           const elementPosition = element.getBoundingClientRect().top;
           const offsetPosition = elementPosition + window.pageYOffset - offset;
 
           window.scrollTo({
             top: offsetPosition,
-            behavior: 'smooth'
+            behavior: "smooth",
           });
-          
-          // Update URL without reload
-          window.history.pushState(null, '', `#${id}`);
+
+          window.history.pushState(null, "", `#${id}`);
         } else {
           console.warn(`Element with ID "${id}" not found`);
         }
@@ -91,8 +106,23 @@ export default function ArticleContent({ content, lead }: ArticleContentProps) {
           {lead}
         </p>
       ) : null}
+      {gallery && gallery.length > 0 ? (
+        <GuideMediaCarousel items={gallery} title={galleryTitle} />
+      ) : null}
       <div className="prose prose-article max-w-none" onClick={handleClick}>
-        <div dangerouslySetInnerHTML={{ __html: content }} />
+        {contentParts.map((part, index) => (
+          <Fragment key={index}>
+            {index > 0 && areaMap ? (
+              <AreaGuideMap
+                boundaryUrl={areaMap.boundaryUrl}
+                title={areaMap.title}
+                caption={areaMap.caption}
+                pois={areaMap.pois}
+              />
+            ) : null}
+            <div dangerouslySetInnerHTML={{ __html: part }} />
+          </Fragment>
+        ))}
       </div>
     </>
   );

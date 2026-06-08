@@ -101,7 +101,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ catego
               </div>
             )}
 
-            <ArticleContent content={article.content} lead={article.excerpt} />
+            <ArticleContent
+              content={article.content}
+              lead={article.excerpt}
+              gallery={article.gallery}
+              galleryTitle={article.galleryTitle}
+              areaMap={article.areaMap}
+            />
           </article>
 
           {article.allowComments && (
