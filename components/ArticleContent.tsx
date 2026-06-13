@@ -3,7 +3,10 @@
 import { Fragment, useEffect } from "react";
 import GuideMediaCarousel from "@/components/GuideMediaCarousel";
 import AreaGuideMap from "@/components/AreaGuideMap";
-import { AREA_GUIDE_MAP_SLOT } from "@/lib/areaGuideMapSlot";
+import {
+  AREA_GUIDE_GALLERY_END_SLOT,
+  AREA_GUIDE_MAP_SLOT,
+} from "@/lib/areaGuideMapSlot";
 import type { ArticleAreaMap, ArticleGalleryItem } from "@/types/article";
 
 interface ArticleContentProps {
@@ -12,6 +15,8 @@ interface ArticleContentProps {
   lead?: string;
   gallery?: ArticleGalleryItem[];
   galleryTitle?: string;
+  galleryEnd?: ArticleGalleryItem[];
+  galleryEndTitle?: string;
   areaMap?: ArticleAreaMap;
 }
 
@@ -28,11 +33,21 @@ export default function ArticleContent({
   lead,
   gallery,
   galleryTitle,
+  galleryEnd,
+  galleryEndTitle,
   areaMap,
 }: ArticleContentProps) {
   const contentParts = content.includes(AREA_GUIDE_MAP_SLOT)
     ? content.split(AREA_GUIDE_MAP_SLOT)
     : [content];
+
+  const contentWithGalleryEnd = contentParts.map((part, mapIndex) => {
+    if (!part.includes(AREA_GUIDE_GALLERY_END_SLOT)) return [{ key: `${mapIndex}-0`, html: part }];
+    return part.split(AREA_GUIDE_GALLERY_END_SLOT).map((chunk, galleryIndex) => ({
+      key: `${mapIndex}-${galleryIndex}`,
+      html: chunk,
+    }));
+  });
 
   useEffect(() => {
     // Add IDs to all headings automatically if they don't have one
@@ -110,9 +125,9 @@ export default function ArticleContent({
         <GuideMediaCarousel items={gallery} title={galleryTitle} />
       ) : null}
       <div className="prose prose-article max-w-none" onClick={handleClick}>
-        {contentParts.map((part, index) => (
-          <Fragment key={index}>
-            {index > 0 && areaMap ? (
+        {contentWithGalleryEnd.map((sections, mapIndex) => (
+          <Fragment key={mapIndex}>
+            {mapIndex > 0 && areaMap ? (
               <AreaGuideMap
                 boundaryUrl={areaMap.boundaryUrl}
                 title={areaMap.title}
@@ -120,7 +135,17 @@ export default function ArticleContent({
                 pois={areaMap.pois}
               />
             ) : null}
-            <div dangerouslySetInnerHTML={{ __html: part }} />
+            {sections.map((section, sectionIndex) => (
+              <Fragment key={section.key}>
+                {sectionIndex > 0 && galleryEnd && galleryEnd.length > 0 ? (
+                  <GuideMediaCarousel
+                    items={galleryEnd}
+                    title={galleryEndTitle}
+                  />
+                ) : null}
+                <div dangerouslySetInnerHTML={{ __html: section.html }} />
+              </Fragment>
+            ))}
           </Fragment>
         ))}
       </div>

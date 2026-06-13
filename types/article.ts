@@ -36,6 +36,9 @@ export interface Article {
   /** Optional swipe carousel (area guides, photo essays) */
   gallery?: ArticleGalleryItem[];
   galleryTitle?: string;
+  /** Second carousel — rendered before Noise section in area guides */
+  galleryEnd?: ArticleGalleryItem[];
+  galleryEndTitle?: string;
   areaMap?: ArticleAreaMap;
   images?: string[]; // Array of image URLs used in article
   tags: string[];

@@ -106,6 +106,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ catego
               lead={article.excerpt}
               gallery={article.gallery}
               galleryTitle={article.galleryTitle}
+              galleryEnd={article.galleryEnd}
+              galleryEndTitle={article.galleryEndTitle}
               areaMap={article.areaMap}
             />
           </article>

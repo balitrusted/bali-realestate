@@ -3,7 +3,15 @@ import type { SubArea } from "@/types/property";
 import { subAreaNames } from "@/types/areas";
 import { lodtunduhGallery } from "@/lib/lodtunduhGallery";
 import { lodtunduhGuidePois } from "@/lib/lodtunduhGuidePois";
-import { AREA_GUIDE_MAP_SLOT } from "@/lib/areaGuideMapSlot";
+import {
+  penestananGalleryEnd,
+  penestananGalleryIntro,
+} from "@/lib/penestananGallery";
+import { penestananGuidePois } from "@/lib/penestananGuidePois";
+import {
+  AREA_GUIDE_GALLERY_END_SLOT,
+  AREA_GUIDE_MAP_SLOT,
+} from "@/lib/areaGuideMapSlot";
 
 export type AreaGuideConfig = {
   subArea: SubArea;
@@ -32,6 +40,9 @@ export type AreaGuideConfig = {
   /** Optional photo carousel (rendered after excerpt) */
   gallery?: ArticleGalleryItem[];
   galleryTitle?: string;
+  /** Second carousel before Noise section */
+  galleryEnd?: ArticleGalleryItem[];
+  galleryEndTitle?: string;
   areaMap?: ArticleAreaMap;
   updatedAt?: string;
 };
@@ -83,6 +94,7 @@ function buildAreaGuideHtml(c: AreaGuideConfig): string {
     section("Atmosphere and daily rhythm", c.atmosphere),
     landmarksBlock,
     authorPicksBlock,
+    AREA_GUIDE_GALLERY_END_SLOT,
     `<h2 class="heading">Noise, ceremonies, and construction</h2><p>${c.noise}</p>`,
     `<h2 class="heading">Roads and access</h2><p>${c.roads}</p>`,
     `<h2 class="heading">Internet and remote work</h2><p>${c.internet}</p>`,
@@ -130,6 +142,8 @@ function toArticle(c: AreaGuideConfig): Article {
     featuredImage: c.featuredImage,
     gallery: c.gallery,
     galleryTitle: c.galleryTitle,
+    galleryEnd: c.galleryEnd,
+    galleryEndTitle: c.galleryEndTitle,
     areaMap: c.areaMap,
     tags: [],
     author: "Balitrusted Team",
@@ -274,61 +288,138 @@ ${AREA_GUIDE_MAP_SLOT}`,
   {
     subArea: "penestanan",
     excerpt:
-      "Penestanan is walkable, creative, and social by Ubud standards - cafés, yoga, studios, and village lanes without full central chaos. A strong pick for long-term renters who want community and convenience.",
-    seoTitle: "Penestanan Ubud Area Guide: Walkable Living & Villa Rentals | Balitrusted",
+      "Penestanan spins around Jl. Penestanan - from Blanco, Plant Bistro, and hilltop Zest up through Alchemy, Bintang, and Campuhan. Ubud’s densest vegan-café hill and a top-three long-stay address.",
+    seoTitle:
+      "Penestanan Ubud Area Guide: Walkable Hills, Cafés & Villa Rentals | Balitrusted",
     seoDescription:
-      "Penestanan Ubud: creative village vibe, cafés, walkability. Long-term living, noise, access, costs, and rental villas in Penestanan.",
+      "Penestanan Ubud: Jl Penestanan, Zest, Plant Bistro, Alchemy, Moksa, Outpost, Campuhan Ridge, Bintang. Vegan cafés, hills, villa clusters, prices, and rentals.",
     seoKeywords: [
       "Penestanan Ubud",
       "Penestanan villa rent",
+      "Penestanan Kaja",
       "walkable Ubud",
+      "Bintang Supermarket Penestanan",
+      "Campuhan Ridge Penestanan",
+      "Zest Cafe Penestanan",
+      "Alchemy Ubud",
+      "Outpost Ubud coworking",
       "long-term rental Penestanan",
+      "Yoga Barn Ubud area",
     ],
+    updatedAt: "2026-06-10T12:00:00.000Z",
+    gallery: penestananGalleryIntro,
+    galleryTitle: "Penestanan in photos",
+    galleryEnd: penestananGalleryEnd,
+    galleryEndTitle: "More from the lanes and ridges",
+    areaMap: {
+      boundaryUrl: "/penestanan-photos/penestanan-boundary.geojson",
+      title: "Penestanan on the map",
+      caption:
+        "Approximate Desa Adat Penestanan outline (within Kelurahan Sayan). Pins match Google Maps place locations.",
+      pois: penestananGuidePois,
+    },
     intro:
-      "Penestanan is where many long-term renters land when they want <strong>“Ubud lifestyle” without committing to central noise</strong>. It is famous for a creative rhythm: cafés, yoga, small shops, and lanes you can move through on foot in parts. The catch: <strong>micro-location matters</strong> - two villas on the same hill can feel totally different depending on road noise, construction, and proximity to busy strips.",
+      "Penestanan sits <strong>just west of central Ubud</strong> - close enough for café and yoga routines, far enough to skip the densest monkey-forest lanes. Daily life here spins around <strong>Jl. Penestanan</strong> and the climb from its low start (museum-and-café bottom) up through the hill. It is one of Ubud’s most visited and most requested hills - creative, slightly old-village Ubud in feel, and among the top three districts people name when they say they want to live in Ubud. Officially it sits inside Kelurahan Sayan, but everyone says Penestanan. The catch is always the same: micro-location - slope, steps, last-mile access, and whether your villa sits behind Bintang, behind Alchemy, or on a Moksa-side path. Compare with <a href=\"/guides/ubud/sayan-area-guide-ubud\">Sayan</a> (market/supermarket expat practical) and <a href=\"/guides/ubud/kedewatan-area-guide-ubud\">Kedewatan</a> (valley prestige north).",
+    geography:
+      `<p>Penestanan reads as three zones in one famous name - Banjar Adat Penestanan Kaja and Penestanan Kelod are the traditional split - but daily life also maps onto <strong>Jl. Penestanan</strong> itself.</p>
+<p>The spine begins in a beautiful low pocket near <a href="https://www.google.com/maps/search/?api=1&query=Blanco+Renaissance+Museum+Ubud" target="_blank" rel="noopener noreferrer">Blanco Renaissance Museum</a>, <a href="https://www.google.com/maps/search/?api=1&query=Plant+Bistro+Penestanan+Ubud" target="_blank" rel="noopener noreferrer">Plant Bistro</a>, and the climb toward <a href="https://www.google.com/maps/search/?api=1&query=Zest+Ubud+Penestanan" target="_blank" rel="noopener noreferrer">Zest</a> - on the hill to your right as you rise from the bottom, with one of the hill’s best outlooks and moods. That low-to-high run is the geographic story: café bottom, steep middle, villa lanes above.</p>
+<p><strong>Penestanan Kaja</strong> (“kaja” toward the mountain) is the northern ridge pocket: quieter, more forest-thread paths, and often scooter-only or foot access on the last segment. Writers, yogis, and people who want slow-lane Ubud often land here - but check lighting, rain drainage, and the walk from parking before you assume “walkable.”</p>
+<p><strong>Central Penestanan</strong> around Jl. Raya Penestanan, <a href="https://www.google.com/maps/search/?api=1&query=Cafe+Vespa+Penestanan+Ubud" target="_blank" rel="noopener noreferrer">Cafe Vespa</a>, and the Bintang corridor is the most developed and practical strip - cafés, small shops, villas, and the shortest hops toward central Ubud.</p>
+<p><strong>Penestanan Kelod</strong> (“kelod” toward the sea) slopes south and east toward rice fields, Campuhan, and greener outlooks - including views along Jl. Penestanan Kelod. You often gain outlook and village calm but add steps, distance, or lane complexity.</p>
+<p><strong>Three rental clusters</strong> come up again and again when people search for a home (there are other lanes, but these three dominate):</p>
+<ul>
+<li><p><strong>Behind <a href="https://www.google.com/maps/search/?api=1&query=Bintang+Supermarket+Penestanan+Ubud" target="_blank" rel="noopener noreferrer">Bintang Supermarket</a></strong> - practical, central-hill living with errands on foot.</p></li>
+<li><p><strong>Behind Alchemy</strong> - a dense villa cluster with a niche wellness atmosphere that is hard to replicate elsewhere in Ubud.</p></li>
+<li><p><strong>Near <a href="https://www.google.com/maps/search/?api=1&query=Moksa+Ubud" target="_blank" rel="noopener noreferrer">Moksa Ubud</a></strong> - narrow paths, greenery, and a more romantic lane character.</p></li>
+</ul>
+<p>The east edge connects toward Campuhan and central Ubud; the west opens toward Sayan paths and the Ayung valley corridor.</p>
+${AREA_GUIDE_MAP_SLOT}`,
     atmosphere:
-      "Penestanan feels like a connected village: social but still Ubud-calm compared to coastal party zones. You can build routines - morning walk, café work session, yoga, scooter hop to central Ubud when needed.",
+      "Penestanan feels alive - creative workshops, wellness routines, yoga, and café culture stacked on a hilly village base. It keeps an older, traditional Ubud rhythm beneath the expat layer: ceremonies, banjar life, and painter history mixed with vegan menus and ecstatic-dance flyers. Mornings might be ridge walks or coffee with a view; mid-day can be Outpost, a Moksa class, or laptop work at a café; evenings bring tea circles, music, or a quiet lane home. The hills are part of the charm - not a bug. For many long-stayers it sits firmly in Ubud’s top three addresses: always visited, always in demand, and still distinct from central noise.",
+    landmarks:
+      `<p><strong>Author top picks (Penestanan and wider Ubud):</strong> Blanco Renaissance Museum, Plant Bistro, and Zest - three places that define the bottom of the hill and belong on any serious Ubud map, not only a neighborhood list.</p>
+<p><a href="https://www.google.com/maps/search/?api=1&query=Zest+Ubud+Penestanan" target="_blank" rel="noopener noreferrer">Zest</a> is as much a venue as a café - tea ceremonies, mantra gatherings, meetings with visiting teachers, live music, and bonfire dances show up on its calendar. <a href="https://www.google.com/maps/search/?api=1&query=Plant+Bistro+Penestanan+Ubud" target="_blank" rel="noopener noreferrer">Plant Bistro</a> anchors the plant-based strip near the museum bottom.</p>
+<p>Penestanan likely has Ubud’s highest concentration of vegan and health cafés. Beyond Zest and Plant Bistro, <a href="https://www.google.com/maps/search/?api=1&query=Alchemy+Ubud+Penestanan" target="_blank" rel="noopener noreferrer">Alchemy</a> is the famous anchor - busy, popular, and surrounded by its own ecosystem. More niche but deeply loved: <a href="https://www.google.com/maps/search/?api=1&query=Seeds+of+Life+Ubud" target="_blank" rel="noopener noreferrer">The Seeds of Life</a> and <a href="https://www.google.com/maps/search/?api=1&query=Moksa+Ubud" target="_blank" rel="noopener noreferrer">Moksa Ubud</a> - contact-improvisation dance sessions, classes, lectures, and masterclasses (search Google Maps for current schedules). Small but constant: <a href="https://www.google.com/maps/search/?api=1&query=Healthy+Ubud+Cafe+Penestanan" target="_blank" rel="noopener noreferrer">Healthy Ubud</a>.</p>
+<p>Practical note: almost every major café here also runs an eco shop - food, accessories, and lifestyle goods - not just a menu. Plan cupboard space accordingly.</p>
+<p>Across from Alchemy café sits <strong>Alchemy Yoga Center</strong> - yoga, ecstatic dance, and other events. Steps away, <a href="https://www.google.com/maps/search/?api=1&query=Outpost+Ubud+coworking" target="_blank" rel="noopener noreferrer">Outpost Ubud</a> is a strong two-storey coworking option for remote workers who want to live on the hill.</p>
+<p><a href="https://www.google.com/maps/search/?api=1&query=Bintang+Supermarket+Penestanan+Ubud" target="_blank" rel="noopener noreferrer">Bintang Supermarket Penestanan</a> remains the everyday grocery anchor - many listings still say “near Bintang.” <a href="https://www.google.com/maps/search/?api=1&query=Cafe+Vespa+Penestanan+Ubud" target="_blank" rel="noopener noreferrer">Cafe Vespa</a> on Jalan Katik Lantang is another social crossroads agents use as a pin.</p>
+<p>Wellness shopping beyond café shelves: <a href="https://www.google.com/maps/search/?api=1&query=Club+Sehat+Bali+Ubud" target="_blank" rel="noopener noreferrer">Club Sehat</a> is the daily draw for Ubud’s health crowd (#1 for many), plus places like <a href="https://www.google.com/maps/search/?api=1&query=Green+Habit+Store+Ubud" target="_blank" rel="noopener noreferrer">Green Habit Store Ubud</a> and similar niche shops.</p>
+<p><a href="https://www.google.com/maps/search/?api=1&query=Campuhan+Ridge+Walk+Ubud" target="_blank" rel="noopener noreferrer">Campuhan Ridge Walk</a> - one of Ubud’s most reviewed paths - starts on the Penestanan side at the border with the next village. It is scenic, authentic, and walker-only (no scooters on the ridge itself) - a major reason people accept Penestanan’s slopes.</p>
+<p><a href="https://www.google.com/maps/search/?api=1&query=Blanco+Renaissance+Museum+Ubud" target="_blank" rel="noopener noreferrer">Blanco Renaissance Museum</a> ties directly to Penestanan’s artist history. For The Yoga Barn and similar central-Ubud studios, see our <a href="/guides/ubud/peliatan-area-guide-ubud">Peliatan area guide</a> - that corridor sits east of the hill, not inside Penestanan daily life.</p>`,
     noise:
-      "Usually calmer than central Ubud, but not a silence guarantee. Construction cycles, roosters, and occasional event noise still appear. Penestanan’s “quiet” often means quieter than the center while still being social.",
+      "Penestanan is usually calmer than central Ubud on the ridge lanes, but the hill is not silent. The climb near Zest is its own landmark - traffic queues, a sharp uphill bend, and occasional scooter spills when inexperienced riders misjudge the turn (passengers too). Villas above Jl. Raya Penestanan or near busy cafés catch daytime hum; set-back lanes behind Bintang, Alchemy, or Moksa can feel much softer. Construction, temple days, and roosters still apply everywhere in Ubud.",
     roads:
-      "Walkable in many pockets, but expect steps, slopes, and dark lanes at night. Scooter trips are often short. Choose your villa after you walk the lane at the times you actually go out.",
+      "Penestanan is famous for walkable pockets, but the charm is the hills: steps, slopes, narrow gangs, and dark lanes at night. The Zest ascent is part of daily geography - plan extra time at peak hours and ride the bend carefully. Many villas are scooter-only or walking access on the last segment - confirm parking, rain access, and grocery carries up steps. Toward central Ubud, expect often 3-8 minutes by scooter from central pins (traffic dependent). Paths toward <a href=\"/guides/ubud/sayan-area-guide-ubud\">Sayan</a> matter if you shop at Sayan Market or the Sayan supermarket cluster.",
     internet:
-      "Strong area for remote workers because cafés and coworking culture are nearby, but <strong>test Wi‑Fi in the villa</strong>. Enclosed living helps in rain season; power backup is worth asking about.",
+      "Strong area for remote workers: café backup, yoga-studio culture, and <a href=\"https://www.google.com/maps/search/?api=1&query=Outpost+Ubud+coworking\" target=\"_blank\" rel=\"noopener noreferrer\">Outpost Ubud</a> a short ride from Alchemy. Still test Wi‑Fi in the villa on site, ask about power backup, and prefer enclosed living through wet season. Scooter-only villas can be peaceful for calls until rain hits path logistics.",
     prices:
-      "Penestanan often sits slightly higher than value pockets like Mas because convenience and atmosphere are priced in. Still, deals exist - especially on yearly terms. Compare listings on <a href=\"/properties/rent/ubud/penestanan\">Penestanan villas for rent</a>.",
+      `<p>Penestanan often sits <strong>above value pockets like Mas or Gentong</strong> because convenience, walkability, and atmosphere are priced in - but deals exist, especially on yearly terms. Prices move with bedrooms, pool, enclosed living, finish, and exact micro-location (Bintang vs Alchemy vs Moksa clusters, or deeper Kaja/Kelod lanes), not the area name alone.</p>
+<p>On <a href="/properties/rent/ubud/penestanan">listings we currently publish</a> (general guidance, not a market survey):</p>
+<ul>
+<li><p>1 bedroom with pool: often around <strong>IDR 12-15 million/month</strong> on monthly terms.</p></li>
+<li><p>2 bedrooms: roughly <strong>IDR 16-22 million/month</strong> on monthly terms when pool and enclosed living are included.</p></li>
+</ul>
+<p>What you pay for: lanes behind Bintang buy errands on foot; behind Alchemy buy wellness-cluster atmosphere; near Moksa buy path-and-green romance with extra steps. Monthly vs yearly: when both exist, yearly can reduce the effective monthly cost - verify what is included (cleaning, pool, Wi‑Fi, electricity). Always view before paying; photos rarely show stair count, night lighting, or the Zest-climb traffic you will hit daily.</p>
+<p>Browse <a href="/properties/rent/ubud/penestanan?minDuration=12">yearly Penestanan villas</a> or <a href="/request">send a request</a> if you want help shortlisting by lane type.</p>`,
     pros: [
-      "Walkable pockets; short hops to cafés and yoga",
-      "Creative/expat-friendly community rhythm",
-      "Good balance of nature and convenience",
+      "Among Ubud’s top three most requested long-stay hills",
+      "Jl. Penestanan spine - Blanco bottom, Zest hill, Alchemy corridor",
+      "Likely Ubud’s densest vegan and health-café concentration",
+      "Strong wellness ecosystem - Alchemy Yoga Center, Moksa, Outpost coworking",
+      "Three clear rental clusters: behind Bintang, behind Alchemy, near Moksa",
+      "Campuhan Ridge Walk starts on the Penestanan border (foot-only on the ridge)",
+      "Practical Bintang supermarket and short hops toward central Ubud",
+      "Creative workshops, events, and community rhythm year-round",
     ],
     cons: [
-      "Hills, steps, and uneven lanes - not flat city walking",
-      "Premium micro-locations can be pricey",
-      "Sound and construction vary street by street",
+      "Hills, steps, and uneven lanes - the Zest climb can jam and snag inexperienced riders",
+      "Many villas are scooter-only or foot access on the last segment",
+      "Premium micro-locations (Alchemy/Zest corridor) cost more than south/east value pockets",
+      "Busy café strips add daytime noise near the main spine",
+      "Dark or slippery lanes at night in parts of Kaja, Kelod, and Moksa paths",
+      "Administrative address often says Sayan even when daily life says Penestanan",
     ],
     whoFor: [
-      "Couples and solo remote workers who want community",
-      "People who want cafés and yoga without living in the busiest center",
-      "Yoga practitioners, retreat guests, and wellness-focused long stays (studios and teachers are nearby)",
-      "Creative people - artists, designers, writers - who like village lanes and a social-but-calm rhythm",
-      "Renters who can handle slopes and scooter logic when needed",
+      "Couples and solo remote workers who want café/yoga routine without central chaos",
+      "Wellness-led long-stayers - vegan food, Club Sehat runs, yoga and dance classes",
+      "Remote workers who want Outpost or café backup near Alchemy",
+      "Creative residents - artists, designers, writers - who like a buzzing hill village",
+      "Renters comparing Penestanan vs Sayan who prefer café-hill density over market-strip practical",
+      "People OK with hills, the Zest bend, and scooter logic when the lane requires it",
+      "Not ideal if you need flat car access to every villa or guaranteed silence on day one",
     ],
     faqs: [
       {
         q: "Is Penestanan walkable for daily life?",
-        a: "In many parts, yes - by Ubud standards. Expect lanes, steps, and sometimes dark paths at night.",
+        a: "In many central and café-corridor parts, yes - by Ubud standards. Expect steps, slopes, and sometimes dark paths at night. Kaja and deep Kelod pins can be peaceful but less “walk everywhere for errands.”",
+      },
+      {
+        q: "What is the difference between Penestanan Kaja and Kelod?",
+        a: "Kaja is the northern ridge pocket - quieter, often scooter-only paths. Kelod slopes south/east toward rice and Campuhan. For rentals, also think in three clusters: behind Bintang (practical), behind Alchemy (wellness niche), and near Moksa (paths and greenery).",
+      },
+      {
+        q: "Where should I rent in Penestanan?",
+        a: "Most searches converge on three clusters: lanes behind Bintang for errands, behind Alchemy for the wellness villa pocket, and near Moksa for narrow green paths. View at the time you commute - the Zest climb and café strips behave differently morning vs evening.",
       },
       {
         q: "Is Penestanan good for remote work?",
-        a: "It can be excellent if the villa has reliable internet and a workable indoor setup. Test Wi‑Fi during viewing.",
+        a: "It can be excellent if the villa has reliable internet and a workable indoor setup. Café backup is strong; still test Wi‑Fi during viewing and ask about power backup.",
+      },
+      {
+        q: "How far is Penestanan from Ubud center?",
+        a: "Often roughly 3-8 minutes by scooter from central pins depending on traffic and exact lane. Walking times vary widely - a Vespa-adjacent pin can be 10-20 minutes on foot to parts of central Ubud; deep Kaja paths are a different calculation.",
+      },
+      {
+        q: "Penestanan vs Sayan - which should I choose?",
+        a: "Penestanan is more walkable and yoga/café dense on the hill; Sayan is more expat-market-supermarket practical with valley outlooks. Many long-stayers compare both because paths connect them.",
       },
       {
         q: "Is Penestanan quiet?",
-        a: "Often calmer than central Ubud, but not guaranteed. Prioritize villas set back from main lanes.",
+        a: "Ridge and set-back lanes can be calm, but the Zest climb and main café spine get traffic and daytime hum. Villas above busy strips need honest morning-and-evening viewings.",
       },
       {
         q: "Who usually chooses Penestanan?",
-        a: "Remote workers, yoga and retreat people, and creative residents who want community - cafés, studios, and walkable lanes - without full central chaos.",
+        a: "Remote workers, yoga-led long stays, and creative residents who want community - cafés, studios, and walkable lanes - without full central chaos.",
       },
     ],
   },
