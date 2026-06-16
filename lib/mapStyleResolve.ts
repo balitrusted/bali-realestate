@@ -3,6 +3,7 @@ import type { StyleSpecification } from "maplibre-gl";
 /** OSM raster fallback; inline object avoids MapLibre `loadURL` races with React Strict Mode. */
 export const OSM_RASTER_STYLE: StyleSpecification = {
   version: 8,
+  glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
   projection: { type: "mercator" },
   sources: {
     osm: {

@@ -101,6 +101,21 @@ export default function PropertiesMapClient({ pins }: { pins: PropertyMapPin[] }
         });
 
         map.addLayer({
+          id: "cluster-count",
+          type: "symbol",
+          source: "listings",
+          filter: ["has", "point_count"],
+          layout: {
+            "text-field": ["get", "point_count_abbreviated"],
+            "text-font": ["Open Sans Bold"],
+            "text-size": 13,
+          },
+          paint: {
+            "text-color": "#ffffff",
+          },
+        });
+
+        map.addLayer({
           id: "unclustered-point",
           type: "circle",
           source: "listings",
@@ -121,8 +136,8 @@ export default function PropertiesMapClient({ pins }: { pins: PropertyMapPin[] }
           map.fitBounds(b, { padding: 72, maxZoom: 12, duration: 0 });
         }
 
-        map.on("click", "clusters", async (e) => {
-          const features = map.queryRenderedFeatures(e.point, { layers: ["clusters"] });
+        const zoomCluster = async (e: MapLayerMouseEvent) => {
+          const features = map.queryRenderedFeatures(e.point, { layers: ["clusters", "cluster-count"] });
           const clusterId = features[0]?.properties?.cluster_id as number | undefined;
           if (clusterId === undefined || !features[0]) return;
           const source = map.getSource("listings") as maplibregl.GeoJSONSource;
@@ -133,7 +148,10 @@ export default function PropertiesMapClient({ pins }: { pins: PropertyMapPin[] }
           } catch {
             /* ignore */
           }
-        });
+        };
+
+        map.on("click", "clusters", zoomCluster);
+        map.on("click", "cluster-count", zoomCluster);
 
         map.on("click", "unclustered-point", (e: MapLayerMouseEvent) => {
           const f = e.features?.[0];
@@ -152,6 +170,12 @@ export default function PropertiesMapClient({ pins }: { pins: PropertyMapPin[] }
           map.getCanvas().style.cursor = "pointer";
         });
         map.on("mouseleave", "clusters", () => {
+          map.getCanvas().style.cursor = "";
+        });
+        map.on("mouseenter", "cluster-count", () => {
+          map.getCanvas().style.cursor = "pointer";
+        });
+        map.on("mouseleave", "cluster-count", () => {
           map.getCanvas().style.cursor = "";
         });
         map.on("mouseenter", "unclustered-point", () => {
