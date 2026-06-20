@@ -291,7 +291,7 @@ export function getAvailableMainAreas(
   const list = filterProperties(properties, filtersSansMainArea, segment ?? undefined);
   const s = new Set<MainArea>();
   for (const p of list) {
-    if (p.mainArea) s.add(p.mainArea);
+    if (!p.archived && p.mainArea) s.add(p.mainArea);
   }
   return Array.from(s).sort((a, b) =>
     (areas[a]?.nameEn ?? a).localeCompare(areas[b]?.nameEn ?? b)

@@ -38,6 +38,24 @@ function parseTypeFromPropertiesPath(pathname: string): PropertyType | undefined
 
 
 const FILTERS_EXPANDED_KEY = "balitrusted-catalog-filters-expanded";
+const WIZARD_SKIPPED_KEY = "balitrusted-catalog-wizard-skipped";
+const WIZARD_STEP_KEY = "balitrusted-catalog-wizard-step";
+
+const EMPTY_WIZARD_SKIPPED: WizardSkipState = {
+  action: false,
+  payment: false,
+  subject: false,
+  area: false,
+  bedrooms: false,
+};
+
+function persistWizardSkipped(next: WizardSkipState) {
+  try {
+    sessionStorage.setItem(WIZARD_SKIPPED_KEY, JSON.stringify(next));
+  } catch {
+    /* ignore */
+  }
+}
 
 type WizardStepIdOrDone = WizardStepId | "done";
 
@@ -358,13 +376,17 @@ export default function PropertyFilters({
   const [isCollapsed, setIsCollapsed] = useState(true);
   /** After "Any" on sub-areas, stop forcing the sub-area step when reopening the wizard. */
   const [subAreaPromptSkipped, setSubAreaPromptSkipped] = useState(false);
-  const [wizardSkipped, setWizardSkipped] = useState<WizardSkipState>({
-    action: false,
-    payment: false,
-    subject: false,
-    area: false,
-    bedrooms: false,
-  });
+  const [wizardSkipped, setWizardSkippedState] = useState<WizardSkipState>(EMPTY_WIZARD_SKIPPED);
+  const setWizardSkipped = useCallback(
+    (updater: WizardSkipState | ((prev: WizardSkipState) => WizardSkipState)) => {
+      setWizardSkippedState((prev) => {
+        const next = typeof updater === "function" ? updater(prev) : updater;
+        persistWizardSkipped(next);
+        return next;
+      });
+    },
+    []
+  );
   const [filters, setFilters] = useState<PropertyFiltersState>(() =>
     buildFiltersFromSearchParams(searchParams, defaultMainArea, defaultType, pathSubArea, pathname)
   );
@@ -381,8 +403,26 @@ export default function PropertyFilters({
   /** Stay expanded across client navigations (RSC remount resets useState); first visit stays collapsed. */
   useEffect(() => {
     try {
-      if (typeof window !== "undefined" && sessionStorage.getItem(FILTERS_EXPANDED_KEY) === "1") {
+      if (typeof window === "undefined") return;
+      if (sessionStorage.getItem(FILTERS_EXPANDED_KEY) === "1") {
         setIsCollapsed(false);
+      }
+      const rawSkipped = sessionStorage.getItem(WIZARD_SKIPPED_KEY);
+      if (rawSkipped) {
+        setWizardSkippedState({ ...EMPTY_WIZARD_SKIPPED, ...JSON.parse(rawSkipped) });
+      }
+      const pendingStep = sessionStorage.getItem(WIZARD_STEP_KEY);
+      if (
+        pendingStep === "action" ||
+        pendingStep === "payment" ||
+        pendingStep === "subject" ||
+        pendingStep === "area" ||
+        pendingStep === "subarea" ||
+        pendingStep === "bedrooms" ||
+        pendingStep === "done"
+      ) {
+        setCurrentStepId(pendingStep);
+        sessionStorage.removeItem(WIZARD_STEP_KEY);
       }
     } catch {
       /* ignore */
@@ -429,16 +469,12 @@ export default function PropertyFilters({
   /** Full reset to clean SEO hub URLs (no query) — same entry points as legacy redirects. */
   const clearFilters = useCallback(() => {
     setSubAreaPromptSkipped(false);
-    setWizardSkipped({
-      action: false,
-      payment: false,
-      subject: false,
-      area: false,
-      bedrooms: false,
-    });
+    setWizardSkipped({ ...EMPTY_WIZARD_SKIPPED });
     setIsCollapsed(true);
     try {
       sessionStorage.removeItem(FILTERS_EXPANDED_KEY);
+      sessionStorage.removeItem(WIZARD_SKIPPED_KEY);
+      sessionStorage.removeItem(WIZARD_STEP_KEY);
     } catch {
       /* ignore */
     }
@@ -467,11 +503,10 @@ export default function PropertyFilters({
     allowedSubAreas !== undefined && allowedSubAreas.length > 0
       ? allowedSubAreas
       : staticSubAreasForMain;
-  const areaList = getMergedAreaInfos();
-  const areasToShow =
-    allowedMainAreas !== undefined
-      ? areaList.filter((a) => allowedMainAreas.includes(a.id))
-      : areaList;
+  const areasToShow = useMemo(() => {
+    if (allowedMainAreas === undefined) return [];
+    return getMergedAreaInfos().filter((a) => allowedMainAreas.includes(a.id));
+  }, [allowedMainAreas]);
 
   const getVisibleStepIdsFor = useCallback(
     (f: PropertyFiltersState): WizardStepId[] => {
@@ -489,7 +524,7 @@ export default function PropertyFilters({
           case "subject":
             return showSubjectBlock;
           case "area":
-            return true;
+            return areasToShow.length > 0;
           case "subarea":
             return staticSub.length > 0;
           case "bedrooms":
@@ -499,7 +534,7 @@ export default function PropertyFilters({
         }
       });
     },
-    [showVillasSpecificBlocks, showSubjectBlock]
+    [showVillasSpecificBlocks, showSubjectBlock, areasToShow.length]
   );
 
   const updateURL = useCallback(
@@ -1073,10 +1108,15 @@ export default function PropertyFilters({
       } else if (step === "bedrooms") {
         setWizardSkipped((s) => ({ ...s, bedrooms: false }));
       }
+      try {
+        sessionStorage.setItem(WIZARD_STEP_KEY, step);
+      } catch {
+        /* ignore */
+      }
       setCurrentStepId(step);
       applyFilterNav(newFilters, false);
     },
-    [applyFilterNav]
+    [applyFilterNav, setWizardSkipped]
   );
 
   const isSubAreaChecked = (s: SubArea) => filters.subArea.includes(s);
@@ -1255,11 +1295,19 @@ export default function PropertyFilters({
     }
   })();
 
+  /** Rent path includes Payment; count it in the label before Rent is chosen (Buy stays at 3 steps). */
+  const wizardStepTotal = useMemo(() => {
+    if (visibleStepIds.length === 0) return 0;
+    const rentPathMayIncludePayment =
+      showVillasSpecificBlocks && filters.type !== "sale" && !visibleStepIds.includes("payment");
+    return rentPathMayIncludePayment ? visibleStepIds.length + 1 : visibleStepIds.length;
+  }, [visibleStepIds, showVillasSpecificBlocks, filters.type]);
+
   const stepIndexLabel =
     safeStepId === "done"
       ? ""
-      : visibleStepIds.length > 0
-        ? `Step ${visibleStepIds.indexOf(safeStepId as WizardStepId) + 1} / ${visibleStepIds.length}`
+      : visibleStepIds.length > 0 && wizardStepTotal > 0
+        ? `Step ${visibleStepIds.indexOf(safeStepId as WizardStepId) + 1} / ${wizardStepTotal}`
         : "";
 
   return (
