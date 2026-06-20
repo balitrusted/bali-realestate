@@ -736,7 +736,8 @@ export default function PropertyFilters({
           qp.delete("mainArea");
         }
 
-        stripRedundantUbudRentQuery(qp, canonicalPathSegment());
+        // Strip query only when that value is represented in the destination path (not e.g. monthly in filters while path is a sub-area slug).
+        stripRedundantUbudRentQuery(qp, catalogFilterSegmentSlug(pn) ?? null);
 
         const s = qp.toString();
         return s ? `?${s}` : "";
