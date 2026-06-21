@@ -8,6 +8,8 @@ import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import Link from "next/link";
 import CatalogMapLink from "@/components/CatalogMapLink";
 import CatalogFeedbackForm from "@/components/CatalogFeedbackForm";
+import CatalogPopularSearches from "@/components/CatalogPopularSearches";
+import { resolvePopularSearches } from "@/lib/catalogPopularSearches";
 import {
   loadAllPropertiesIncludingArchived,
   loadAllPropertiesForSlugIndex,
@@ -109,6 +111,7 @@ export default async function PropertiesCatalogPage({
   const { items, total, totalPages, page: currentPage } = paginate(filtered, page);
   const activeItems = items.filter((p) => !p.archived);
   const archivedItems = items.filter((p) => !!p.archived);
+  const popularSearchGroups = resolvePopularSearches(all);
 
   const searchParamsForPagination: Record<string, string> = {};
   Object.entries(query).forEach(([k, v]) => {
@@ -163,6 +166,8 @@ export default async function PropertiesCatalogPage({
             </Link>
           </div>
         </div>
+
+        <CatalogPopularSearches groups={popularSearchGroups} />
 
         <div className="mt-3">
           {/* RESTORE-CATALOG-TOP-COUNT-PAGINATION — temporarily hidden. Tell the assistant: "restore RESTORE-CATALOG-TOP-COUNT-PAGINATION" to bring back the "Found N properties" row + top page number buttons. */}

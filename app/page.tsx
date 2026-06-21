@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { loadAllProperties, loadAllPropertiesForSlugIndex } from "@/lib/propertiesCatalog";
+import { loadAllProperties, loadAllPropertiesForSlugIndex, loadAllPropertiesIncludingArchived } from "@/lib/propertiesCatalog";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { getGlossaryTerms } from "@/lib/glossaryData";
 import { getBlogPosts } from "@/lib/blogData";
 import { glossaryCategoryLabel } from "@/lib/glossaryHub";
 import HomePropertyCard from "@/components/HomePropertyCard";
 import HomeLatestBlogPosts from "@/components/HomeLatestBlogPosts";
+import CatalogPopularSearches from "@/components/CatalogPopularSearches";
+import { resolvePopularSearches } from "@/lib/catalogPopularSearches";
 
 const HOME_LATEST_BLOG_COUNT = 5;
 
@@ -51,11 +53,12 @@ function shuffle<T>(arr: T[], daySeed: number): T[] {
 export default async function Home() {
   const daySeed = Math.floor(Date.now() / (1000 * 60 * 60 * 24)); // changes once per day
 
-  const [allProperties, allForSlugs, glossaryTerms, blogPosts] = await Promise.all([
+  const [allProperties, allForSlugs, glossaryTerms, blogPosts, allForPopularSearches] = await Promise.all([
     loadAllProperties(),
     loadAllPropertiesForSlugIndex(),
     getGlossaryTerms(),
     getBlogPosts(),
+    loadAllPropertiesIncludingArchived(),
   ]);
 
   const slugIdx = buildPropertySlugIndex(allForSlugs);
@@ -65,6 +68,7 @@ export default async function Home() {
   const latestBlogPosts = [...blogPosts]
     .sort((a, b) => +new Date(b.updatedAt) - +new Date(a.updatedAt))
     .slice(0, HOME_LATEST_BLOG_COUNT);
+  const homePopularSearches = resolvePopularSearches(allForPopularSearches);
 
   return (
     <div className="bg-white">
@@ -152,6 +156,12 @@ export default async function Home() {
       )}
 
       <HomeLatestBlogPosts posts={latestBlogPosts} />
+
+      <CatalogPopularSearches
+        groups={homePopularSearches}
+        variant="compact"
+        viewAllHref="/properties#popular-searches"
+      />
 
       {/* For Whom */}
       <section className="bg-gray-50 py-10">

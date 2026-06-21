@@ -32,6 +32,24 @@ function moneyKey(type: PropertyType | "villas", area: MainArea, segment: Parsed
 }
 
 const UBUD_RENT_MONEY_PAGES: Record<string, MoneyPageContent> = {
+  "rent:ubud:bedroom:1": {
+    intro:
+      "1-bedroom villas in Ubud are a practical choice for solo renters, couples, and remote workers who want a private home without paying for unused space. This page groups long-term options across Ubud sub-areas so you can compare layout, pool access, enclosed living, and monthly vs yearly value. Use filters to narrow by neighborhood and amenities before you shortlist for viewings.",
+    faqs: [
+      {
+        q: "Are 1-bedroom villas common in Ubud?",
+        a: "Yes. One-bedroom stock is one of the most active segments for long-term rent, especially in quieter Ubud pockets.",
+      },
+      {
+        q: "Can I filter by pool or enclosed living?",
+        a: "Yes. Combine this page with amenity filters to match daily comfort priorities.",
+      },
+      {
+        q: "Should I compare monthly and yearly prices?",
+        a: "When both are listed, compare total annual cost and payment flexibility, not only the headline monthly figure.",
+      },
+    ],
+  },
   "rent:ubud:bedroom:2": {
     intro:
       "2-bedroom villas are one of the most requested formats in Ubud for couples, small families, and remote-working pairs. On this page you can compare long-term options with a practical focus: layout efficiency, privacy, and budget fit. Use filters to narrow by sub-area, enclosed living, pool, pet policy, and payment structure. If monthly and yearly prices are both available, compare total annual cost and flexibility before deciding.",
@@ -191,6 +209,60 @@ const UBUD_RENT_MONEY_PAGES: Record<string, MoneyPageContent> = {
       {
         q: "Can I filter enclosed living with monthly/yearly terms?",
         a: "Yes. Segment and amenity filters can be combined for a tighter shortlist.",
+      },
+    ],
+  },
+  "rent:ubud:amenity:closed-kitchen": {
+    intro:
+      "Enclosed-kitchen villas in Ubud are a frequent long-stay request: cooking smells stay contained, AC works more predictably, and daily cleanup is easier than in fully open tropical layouts. This page groups rentals tagged with a closed or separate kitchen so you can compare size, area, and price without guessing from photos alone.",
+    faqs: [
+      {
+        q: "What does enclosed kitchen mean on Balitrusted?",
+        a: "It means the listing is tagged as having a closed or separate kitchen area, not an fully open-plan cook space.",
+      },
+      {
+        q: "Can I combine kitchen type with bedroom count?",
+        a: "Yes. Use bedroom and sub-area filters together with this category.",
+      },
+      {
+        q: "Is enclosed kitchen the same as enclosed living?",
+        a: "Not always. Some villas have both; others only enclose the kitchen. Check each listing’s feature tags.",
+      },
+    ],
+  },
+  "rent:ubud:amenity:car-park": {
+    intro:
+      "Car-park or on-site parking matters quickly in Ubud once you rely on a scooter or car for daily errands. This page lists long-term villas where parking is explicitly tagged, so you can shortlist homes that fit your transport setup without assuming every lane has easy parking.",
+    faqs: [
+      {
+        q: "Does car park mean a garage?",
+        a: "Not necessarily. It can mean dedicated car space, carport, or secure on-site parking as described in the listing.",
+      },
+      {
+        q: "Can I filter parking with pool or bedrooms?",
+        a: "Yes. Combine this page with bedroom count, payment terms, and other amenity filters.",
+      },
+      {
+        q: "Should I confirm access in person?",
+        a: "Yes. Lane width, turning space, and night access vary a lot between neighborhoods.",
+      },
+    ],
+  },
+  "rent:ubud:amenity:washing-machine": {
+    intro:
+      "A washing machine on-site is a practical long-stay upgrade in Ubud—especially for families and remote workers who want fewer laundry runs into town. This page groups villas where a machine is tagged as available, so you can compare layouts and neighborhoods with that daily convenience in mind.",
+    faqs: [
+      {
+        q: "Is a washing machine always included in rent?",
+        a: "The tag means the property has one; confirm maintenance, detergent supply, and any usage rules in the contract.",
+      },
+      {
+        q: "Can I combine this filter with monthly rent?",
+        a: "Yes. Use payment and bedroom filters alongside this category.",
+      },
+      {
+        q: "What if I also need enclosed living?",
+        a: "Use multiple amenity filters or browse listing pages to match both priorities.",
       },
     ],
   },
