@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { areas } from "@/types/areas";
 import { loadAllProperties, loadAllPropertiesForSlugIndex } from "@/lib/propertiesCatalog";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { getGlossaryTerms } from "@/lib/glossaryData";
+import { getBlogPosts } from "@/lib/blogData";
 import { glossaryCategoryLabel } from "@/lib/glossaryHub";
 import HomePropertyCard from "@/components/HomePropertyCard";
+import HomeLatestBlogPosts from "@/components/HomeLatestBlogPosts";
+
+const HOME_LATEST_BLOG_COUNT = 5;
 
 const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://balitrusted.com";
 
@@ -30,8 +33,6 @@ export const metadata: Metadata = {
   },
 };
 
-const POPULAR_AREAS = ["ubud", "sanur", "seminyak", "kerobokan"] as const;
-
 /** Seeded shuffle so the homepage selection rotates daily without client randomness. */
 function shuffle<T>(arr: T[], daySeed: number): T[] {
   let s = daySeed;
@@ -50,16 +51,20 @@ function shuffle<T>(arr: T[], daySeed: number): T[] {
 export default async function Home() {
   const daySeed = Math.floor(Date.now() / (1000 * 60 * 60 * 24)); // changes once per day
 
-  const [allProperties, allForSlugs, glossaryTerms] = await Promise.all([
+  const [allProperties, allForSlugs, glossaryTerms, blogPosts] = await Promise.all([
     loadAllProperties(),
     loadAllPropertiesForSlugIndex(),
     getGlossaryTerms(),
+    getBlogPosts(),
   ]);
 
   const slugIdx = buildPropertySlugIndex(allForSlugs);
   const available = allProperties.filter((p) => !p.archived);
   const randomProperties = shuffle(available, daySeed).slice(0, 12);
   const wikiTerms = shuffle(glossaryTerms, daySeed + 17).slice(0, 4);
+  const latestBlogPosts = [...blogPosts]
+    .sort((a, b) => +new Date(b.updatedAt) - +new Date(a.updatedAt))
+    .slice(0, HOME_LATEST_BLOG_COUNT);
 
   return (
     <div className="bg-white">
@@ -146,65 +151,7 @@ export default async function Home() {
         </section>
       )}
 
-      {/* Popular Areas */}
-      <section className="bg-gray-50 py-8">
-        <div className="container mx-auto px-4">
-          <h2 className="text-[1.375rem] font-bold text-gray-900 mb-5 text-center">
-            Popular Areas
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto">
-            {POPULAR_AREAS.map((areaId) => {
-              const area = areas[areaId];
-              return (
-                <Link
-                  key={areaId}
-                  href={`/properties/rent/${areaId}`}
-                  className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow text-center"
-                >
-                  <span className="font-semibold text-gray-900">
-                    {area.nameEn} Villas
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Start Here */}
-      <section className="py-10">
-        <div className="container mx-auto px-4">
-          <h2 className="text-[1.375rem] font-bold text-gray-900 mb-5 text-center">
-            Start Here
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            <Link
-              href="/properties"
-              className="bg-gray-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow"
-            >
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Property Catalog
-              </h3>
-              <p className="text-gray-600 mb-3 text-sm">
-                Carefully selected real estate in Bali for living and investment
-              </p>
-              <span className="text-gray-900 font-medium">View →</span>
-            </Link>
-            <Link
-              href="/guides"
-              className="bg-gray-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow"
-            >
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Knowledge Base
-              </h3>
-              <p className="text-gray-600 mb-3 text-sm">
-                Practical articles about rentals, purchases, legal aspects, and areas
-              </p>
-              <span className="text-gray-900 font-medium">Explore →</span>
-            </Link>
-          </div>
-        </div>
-      </section>
+      <HomeLatestBlogPosts posts={latestBlogPosts} />
 
       {/* For Whom */}
       <section className="bg-gray-50 py-10">
