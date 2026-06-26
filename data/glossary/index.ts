@@ -3645,17 +3645,37 @@ export const glossaryTerms: GlossaryTerm[] = [
     relatedGuideUrl: "/guides/ubud",
   },
   {
+    id: "glossary-terima-kasih",
+    slug: "terima-kasih-thank-you-indonesian",
+    title: "Terima kasih",
+    category: "living",
+    summary:
+      "Standard Indonesian for “thank you”—the everyday phrase you will use most often in Bali, from shops to villa staff.",
+    content: `<p><strong>Terima kasih</strong> (pronounced roughly <em>teh-REE-mah KAH-see</em>) is standard Indonesian for <strong>“thank you.”</strong> It works across Bali in minimarkets, cafés, clinics, offices, and villa staff chat—Bahasa Indonesia is the shared language even when people also speak Balinese at home.</p>
+<p>Literally, <em>terima</em> means “receive” and <em>kasih</em> can mean “love” or “giving”—so the phrase carries a little more warmth than English “thanks,” even when said casually.</p>
+<p>The usual reply is <a href="/glossary/sama-sama-you-are-welcome">sama-sama</a> (“you’re welcome,” literally “same-same”). You will hear that loop dozens of times a week: driver drops you off, you thank, they answer sama-sama.</p>
+<p>When you want deeper thanks with Balinese speakers—after extra help, a ceremony, or a thoughtful gesture—<a href="/glossary/matur-suksma-thank-you-balinese">matur suksma</a> (“thank you very much” in Balinese) often lands with more personal warmth. You do not have to choose one forever; many long-stayers use <em>terima kasih</em> daily and reach for <em>matur suksma</em> when it genuinely fits.</p>
+<p>Neither phrase substitutes respectful address. With owners, officials, or senior neighbors, pair thanks with <a href="/glossary/bapak-title-respect-bali">Bapak</a> / <a href="/glossary/ibu-title-respect-bali">Ibu</a> and a calm tone—especially in money or contract conversations.</p>`,
+    published: true,
+    createdAt: "2026-06-20T12:00:00.000Z",
+    updatedAt: "2026-06-20T12:00:00.000Z",
+    seoTitle: "Terima kasih meaning — thank you in Indonesian | Balitrusted glossary",
+    seoDescription:
+      "What terima kasih means, how to pronounce it, typical replies (sama-sama), and when to use Balinese matur suksma instead.",
+    relatedGuideUrl: "/guides/ubud",
+  },
+  {
     id: "glossary-sama-sama",
     slug: "sama-sama-you-are-welcome",
     title: "Sama-Sama",
     category: "living",
     summary:
       "A common Indonesian response meaning “you’re welcome” in everyday polite exchange.",
-    content: `<p><strong>Sama-sama</strong> is the typical response to “Terima Kasih” (thank you).</p>
-<p>Using it correctly is a small but meaningful signal of respectful local communication.</p>`,
+    content: `<p><strong>Sama-sama</strong> is the typical response to <a href="/glossary/terima-kasih-thank-you-indonesian">terima kasih</a> (thank you)—roughly “you’re welcome” in everyday Indonesian.</p>
+<p>Using it correctly is a small but meaningful signal of respectful local communication. It also appears in light social smoothing alongside phrases like <a href="/glossary/tidak-apa-apa-easygoing-reply">tidak apa-apa</a>.</p>`,
     published: true,
     createdAt: "2026-04-27T13:10:00.000Z",
-    updatedAt: "2026-04-27T13:10:00.000Z",
+    updatedAt: "2026-06-20T12:00:00.000Z",
     seoTitle: "Sama-sama meaning — glossary | Balitrusted",
     seoDescription: "What sama-sama means in basic Indonesian politeness used in Bali.",
     relatedGuideUrl: "/guides/ubud",

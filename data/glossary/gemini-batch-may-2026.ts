@@ -451,15 +451,18 @@ export const glossaryGeminiMay2026Batch: GlossaryTerm[] = [
     title: "Matur suksma",
     category: "living",
     summary:
-      "Balinese thank-you carrying extra warmth than generic Indonesian—pairs well with calm tone in negotiations.",
-    content: `<p><strong>Matur suksma</strong> is Balinese for deep thanks—locals notice when foreigners reach for it alongside Indonesian basics.</p>
-<p>Compare everyday <em>terima kasih</em>; neither replaces respectful titles—see <a href="/glossary/bapak-title-respect-bali">Bapak</a> / <a href="/glossary/ibu-title-respect-bali">Ibu</a>.</p>`,
+      "Balinese for “thank you very much”—warmer and more personal than everyday Indonesian; locals notice when foreigners use it sincerely.",
+    content: `<p><strong>Matur suksma</strong> (pronounced roughly <em>MA-toor SOOK-sma</em>) is Balinese for <strong>“thank you very much.”</strong> In plain English it lands closer to heartfelt thanks than a quick polite nod—something like “I’m deeply grateful,” not just “thanks.”</p>
+<p>The word <strong>suksma</strong> points to inner spirit or divine essence in Balinese Hindu thought; <strong>matur</strong> carries the sense of paying respect. Together the phrase signals that you noticed someone’s effort or kindness—not only that a transaction ended.</p>
+<p>Use it with Balinese staff, banjar contacts, neighbors, and owners when you want extra warmth: after a viewing, when someone fixes a problem fast, at the end of a calm negotiation, or when you leave a ceremony. It pairs well with respectful titles—<a href="/glossary/bapak-title-respect-bali">Bapak</a> / <a href="/glossary/ibu-title-respect-bali">Ibu</a>—and a calm tone. People often answer with <em>matur suksma</em> back or a short <em>suksma</em>.</p>
+<p>For everyday situations across Bali, standard Indonesian <a href="/glossary/terima-kasih-thank-you-indonesian">terima kasih</a> (“thank you”) still works everywhere and is never wrong. Think of the split like this: <em>terima kasih</em> for routine politeness; <em>matur suksma</em> when you mean it and the person is Balinese—or when you want to show you have learned a little local language beyond tourist basics.</p>
+<p>Do not perform it loudly or ironically; one sincere line beats repeating it for effect. Neither phrase replaces titles or calm body language in disputes over deposits, repairs, or contract terms.</p>`,
     published: true,
     createdAt: ISO,
-    updatedAt: ISO,
-    seoTitle: "Matur suksma thank you Balinese | Balitrusted glossary",
+    updatedAt: "2026-06-20T12:00:00.000Z",
+    seoTitle: "Matur suksma meaning — thank you very much in Balinese | Balitrusted",
     seoDescription:
-      "How matur suksma differs from generic Indonesian thank-you phrases.",
+      "Matur suksma means thank you very much in Balinese—when to use it vs Indonesian terima kasih, pronunciation, and tone in villa life.",
     relatedGuideUrl: "/guides/ubud",
   },
   {
@@ -953,7 +956,7 @@ export const glossaryGeminiMay2026Batch: GlossaryTerm[] = [
     summary:
       "Literally no worries—social smoothing phrase after minor mistakes or hospitality thanks.",
     content: `<p><strong>Tidak apa-apa</strong> reassures someone their slip was harmless—tone stays light.</p>
-<p>Pairs culturally with <a href="/glossary/sama-sama-you-are-welcome">Sama-sama</a> loops.</p>`,
+<p>Pairs culturally with <a href="/glossary/sama-sama-you-are-welcome">sama-sama</a> and <a href="/glossary/terima-kasih-thank-you-indonesian">terima kasih</a> in everyday politeness loops.</p>`,
     published: true,
     createdAt: ISO,
     updatedAt: ISO,
