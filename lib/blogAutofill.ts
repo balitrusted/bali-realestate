@@ -74,6 +74,7 @@ const UBUD_SUBAREA_SLUGS = [
   "penestanan",
   "petulu",
   "sayan",
+  "singakerta",
   "sukawati",
   "tegallalang",
 ] as const;

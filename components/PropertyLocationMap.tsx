@@ -39,7 +39,7 @@ function getUbudEta(mainArea: MainArea, coords: [number, number] | null, subArea
   if (mainArea !== "ubud") return null;
   if (!coords) return "Estimated to Ubud Center: by scooter 8-20 min · by car 10-25 min";
 
-  const south = new Set<SubArea>(["lodtunduh", "kemenuh", "sayan", "sukawati"]);
+  const south = new Set<SubArea>(["lodtunduh", "kemenuh", "sayan", "singakerta", "sukawati"]);
   const north = new Set<SubArea>(["gentong", "petulu"]);
   // Internal anchors only for ETA math (not displayed to users).
   const centerSouth: [number, number] = [-8.5208, 115.2674];

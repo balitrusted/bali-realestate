@@ -56,7 +56,7 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
 
       // Penalize geo-only utility lines (distance, maps, nearest cafe, etc.)
       if (
-        /walking distance|minutes? to|close to|nearby|google maps|location|area\b|center\b|ubud\b|penestanan\b|peliatan\b|lodtunduh\b|petulu\b|sayan\b|tegallalang\b|gentong\b|mas\b/.test(
+        /walking distance|minutes? to|close to|nearby|google maps|location|area\b|center\b|ubud\b|penestanan\b|peliatan\b|lodtunduh\b|petulu\b|sayan\b|singakerta\b|tegallalang\b|gentong\b|mas\b/.test(
           t
         )
       ) {

@@ -21,6 +21,7 @@ export type SubArea =
   | 'penestanan'
   | 'petulu'
   | 'sayan'
+  | 'singakerta'
   | 'sukawati'
   | 'tegallalang';
 /** Built-in slugs + any extra slug from `data/catalog-structure.json` (admin-managed). */

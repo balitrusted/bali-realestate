@@ -40,6 +40,8 @@ export const ubudSubAreaIntro: Record<SubArea, string> = {
     "Petulu is quieter and more residential, known for evening herons and open views in places. It fits renters who want peace, local rhythm, and a bit more room to breathe away from the busiest strips.",
   sayan:
     "Sayan sits along the dramatic Ayung valley - jungle outlooks, resort-adjacent calm, and iconic ridge views. Perfect when views and atmosphere matter as much as bedroom count.",
+  singakerta:
+    "Singakerta is a green southwest Ubud pocket between Penestanan, Sayan, and the Campuhan valley - village lanes, rice edges, and a calmer residential rhythm than central Ubud.",
   sukawati:
     "Sukawati is more everyday Bali - markets, local traffic, and practical shopping nearby - while still feeding quickly into Ubud’s hills. Useful if you want value and connectivity alongside a private villa base.",
   tegallalang:

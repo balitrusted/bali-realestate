@@ -839,6 +839,68 @@ ${AREA_GUIDE_MAP_SLOT}`,
     ],
   },
   {
+    subArea: "singakerta",
+    excerpt:
+      "Singakerta is southwest Ubud between Penestanan, Sayan, and the Campuhan valley - green lanes, rice edges, and a calmer residential rhythm than central Ubud.",
+    seoTitle: "Singakerta Ubud Area Guide: Southwest Ubud & Villa Rentals | Balitrusted",
+    seoDescription:
+      "Singakerta Ubud: southwest pocket between Penestanan and Sayan. Long-term guide - atmosphere, roads, noise, prices, and villas in Singakerta.",
+    seoKeywords: [
+      "Singakerta Ubud",
+      "Singakerta villa rent",
+      "southwest Ubud",
+      "long-term rental Singakerta",
+    ],
+    intro:
+      "Singakerta is a <strong>green southwest Ubud pocket</strong> between Penestanan, Sayan, and the Campuhan valley - village lanes, rice edges, and a calmer residential rhythm than central Ubud. It suits renters who want Ubud’s hill-country feel without living on the busiest café strips.",
+    atmosphere:
+      "Singakerta feels residential and leafy: less “walkable hill café scene,” more everyday villa lanes with green outlooks nearby. You are close to west-Ubud landmarks without being inside Penestanan’s densest social spine.",
+    noise:
+      "Usually quieter than central Ubud, but ceremonies, construction, and valley tourism can still reach villa lanes. Verify your exact plot and neighbor activity at night.",
+    roads:
+      "Scooter is default; many villas sit on lanes that branch off the west-Ubud hills. Toward central Ubud, plan a few minutes by scooter depending on your pin (traffic dependent). Paths toward <a href=\"/guides/ubud/penestanan-area-guide-ubud\">Penestanan</a> and <a href=\"/guides/ubud/sayan-area-guide-ubud\">Sayan</a> matter for errands and shortcuts.",
+    internet:
+      "Treat as villa-specific: test Wi‑Fi, enclosed living, and power backup for remote work.",
+    prices:
+      "Pricing depends on villa size, finish, and outlook. Singakerta can offer practical southwest-Ubud value compared with premium valley-front addresses. Browse <a href=\"/properties/rent/ubud/singakerta\">Singakerta villas</a>.",
+    pros: [
+      "Green southwest Ubud pocket with calmer residential lanes",
+      "Close to Penestanan and Sayan without their busiest strips",
+      "Good for renters who want hill-country calm over café density",
+      "Often practical for central Ubud errands by scooter",
+    ],
+    cons: [
+      "Not a dense walkable café hub like Penestanan",
+      "Lane access and parking vary villa to villa",
+      "Construction can appear on nearby plots",
+      "Fewer named landmarks than Sayan Market corridor",
+    ],
+    whoFor: [
+      "Renters wanting southwest Ubud calm between Penestanan and Sayan",
+      "Remote workers who prioritize villa setup over café coworking density",
+      "Couples and families comparing Singakerta vs Penestanan for quieter lanes",
+      "People who like green outlooks without premium valley-front pricing",
+    ],
+    faqs: [
+      {
+        q: "Where is Singakerta in Ubud?",
+        a: "Southwest Ubud - between Penestanan, Sayan, and the Campuhan valley, with green lanes and rice edges rather than central Ubud’s busiest strips.",
+      },
+      {
+        q: "Is Singakerta walkable?",
+        a: "Some local walks exist, but daily errands are usually by scooter - similar to many west-Ubud villa pockets.",
+      },
+      {
+        q: "Singakerta vs Penestanan?",
+        a: "Penestanan is more walkable and café-dense; Singakerta is calmer and more residential while staying close to west-Ubud landmarks.",
+      },
+      {
+        q: "What should I verify on viewing?",
+        a: "Road access, internet speed, enclosed living, valley outlook vs traffic noise, and nearby construction.",
+      },
+    ],
+  },
+  {
     subArea: "tegallalang",
     excerpt:
       "Tegallalang is postcard Ubud - terraces, ridges, and village pace north of town. Best for renters who want nature and immersion, not maximum convenience.",
@@ -1105,6 +1167,7 @@ export const UBUD_AREA_GUIDE_HUB_LINKS_HTML = `<h2 class="heading">Area guides w
 <li><p><a href="/guides/ubud/petulu-area-guide-ubud"><strong>Petulu</strong></a> - heron village, Pepito Andong-close, west to Jalan Cinta</p></li>
 <li><p><a href="/guides/ubud/kedewatan-area-guide-ubud"><strong>Kedewatan</strong></a> - old luxury, valley road, Kintamani access</p></li>
 <li><p><a href="/guides/ubud/sayan-area-guide-ubud"><strong>Sayan</strong></a> - expat classic, Sayan Market, supermarket hub</p></li>
+<li><p><a href="/guides/ubud/singakerta-area-guide-ubud"><strong>Singakerta</strong></a> - southwest Ubud, green lanes between Penestanan and Sayan</p></li>
 <li><p><a href="/guides/ubud/tegallalang-area-guide-ubud"><strong>Tegallalang</strong></a> - terraces, scenery, immersion-first living</p></li>
 <li><p><a href="/guides/ubud/keliki-area-guide-ubud"><strong>Keliki</strong></a> - open landscapes and slower village pace</p></li>
 <li><p><a href="/guides/ubud/kemenuh-area-guide-ubud"><strong>Kemenuh</strong></a> - practical residential countryside</p></li>
