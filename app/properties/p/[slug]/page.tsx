@@ -3,8 +3,7 @@ import { loadAllPropertiesForSlugIndex } from "@/lib/propertiesCatalog";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { sanitizeReturnTo } from "@/lib/propertyViewNavigation";
 import PropertyDetailView from "@/components/PropertyDetailView";
-import { areas } from "@/types/areas";
-import { getPropertyDisplayTitle, fixDescriptionDisplay } from "@/lib/propertyUtils";
+import { buildPropertyPageMetadata } from "@/lib/propertyMetadata";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -17,16 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!property) {
     return { title: "Property Not Found" };
   }
-  const areaInfo = property.mainArea ? areas[property.mainArea] : null;
-  const areaName = areaInfo?.nameEn || property.mainArea || "Bali";
-  const displayTitle = getPropertyDisplayTitle(property);
-  const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000").replace(/\/$/, "");
-  const canonicalPath = idx.pathFor(property);
-  return {
-    title: `${displayTitle} - ${areaName}`,
-    description: fixDescriptionDisplay(property.description || "").substring(0, 160),
-    alternates: { canonical: `${baseUrl}${canonicalPath}` },
-  };
+  return buildPropertyPageMetadata(property, all);
 }
 
 export default async function PropertyBySlugPage({

@@ -2,8 +2,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { loadFullPropertyList } from "@/lib/propertiesStorage";
 import { loadAllPropertiesForSlugIndex } from "@/lib/propertiesCatalog";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
-import { areas } from "@/types/areas";
-import { getPropertyDisplayTitle, fixDescriptionDisplay } from "@/lib/propertyUtils";
+import { buildPropertyPageMetadata } from "@/lib/propertyMetadata";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -25,16 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     return { title: "Property Not Found" };
   }
   const all = await loadAllPropertiesForSlugIndex();
-  const canonicalPath = buildPropertySlugIndex(all).pathFor(property);
-  const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000").replace(/\/$/, "");
-  const areaInfo = property.mainArea ? areas[property.mainArea] : null;
-  const areaName = areaInfo?.nameEn || property.mainArea || "Bali";
-  const displayTitle = getPropertyDisplayTitle(property);
-  return {
-    title: `${displayTitle} - ${areaName}`,
-    description: fixDescriptionDisplay(property.description || "").substring(0, 160),
-    alternates: { canonical: `${baseUrl}${canonicalPath}` },
-  };
+  return buildPropertyPageMetadata(property, all);
 }
 
 /** Legacy `/properties/view/[id]` → canonical `/properties/{slug}` */

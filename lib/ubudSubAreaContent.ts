@@ -1,6 +1,7 @@
 import { subAreaNames } from "@/types/areas";
 import type { SubArea } from "@/types/property";
 import type { CatalogTypeForSeo } from "@/lib/seoTemplates";
+import { getUbudSubAreaCatalogFaqs } from "@/lib/ubudSubAreaCatalogFaqs";
 
 export type UbudSubAreaMoneyPage = {
   intro: string;
@@ -23,7 +24,7 @@ export const ubudSubAreaIntro: Record<SubArea, string> = {
   gentong:
     "Gentong sits slightly off Ubud’s busiest strips - think quieter residential lanes, easy runs into central Ubud, and a mix of newer builds and established homes. Good if you want calm without feeling remote.",
   kedewatan:
-    "Kedewatan is known for elevated views and breezy ridge-line settings above the valley - popular with people who like open outlooks and a slightly cooler feel than the lower town.",
+    "Kedewatan is west Ubud’s established valley corridor - breezy ridge villas, historic hotels, Pepito Kedewatan, and practical access toward Kintamani. Popular when views and space matter more than walkable café density.",
   keliki:
     "Keliki is a greener, more spread-out side of Ubud - rice pockets, small lanes, and a slower rhythm. It suits longer stays when you want nature close by and do not mind a few extra minutes to the main hubs.",
   kemenuh:
@@ -48,35 +49,52 @@ export const ubudSubAreaIntro: Record<SubArea, string> = {
     "Tegallalang is postcard Ubud - famous terraces, scenic ridges, and a tourist corridor that still hides peaceful pockets. Great for views and inspiration; expect more variation in access and lane conditions.",
 };
 
-/** Optional stronger SEO title for catalog sub-area pages */
-export const ubudSubAreaSeoTitle: Partial<Record<SubArea, string>> = {
+/** SEO title for catalog sub-area pages (/properties/rent/ubud/{subArea}). */
+export const ubudSubAreaSeoTitle: Record<SubArea, string> = {
+  gentong: "Villas for Rent in Gentong, Ubud | Green Value | Balitrusted",
+  kedewatan: "Villas for Rent in Kedewatan, Ubud | Valley Views | Balitrusted",
+  keliki: "Villas for Rent in Keliki, Ubud | Village Pace | Balitrusted",
+  kemenuh: "Villas for Rent in Kemenuh, Ubud | Family-Friendly | Balitrusted",
+  lodtunduh: "Villas for Rent in Lodtunduh, Ubud | South Ubud | Balitrusted",
+  mas: "Villas for Rent in Mas, Ubud | Craft Village Calm | Balitrusted",
   peliatan: "Villas for Rent in Peliatan, Ubud | Near Center & Pepito | Balitrusted",
+  penestanan: "Villas for Rent in Penestanan, Ubud | Walkable Hill | Balitrusted",
+  petulu: "Villas for Rent in Petulu, Ubud | Quiet Residential | Balitrusted",
+  sayan: "Villas for Rent in Sayan, Ubud | Valley & Market | Balitrusted",
+  singakerta: "Villas for Rent in Singakerta, Ubud | Southwest Ubud | Balitrusted",
+  sukawati: "Villas for Rent in Sukawati, Ubud | Local Life & Value | Balitrusted",
+  tegallalang: "Villas for Rent in Tegallalang, Ubud | Rice Terraces | Balitrusted",
 };
 
-/** Extra meta keywords for catalog sub-area pages */
-export const ubudSubAreaSeoKeywords: Partial<Record<SubArea, string>> = {
+/** Meta keywords for catalog sub-area pages. */
+export const ubudSubAreaSeoKeywords: Record<SubArea, string> = {
+  gentong:
+    "Gentong Ubud, villa rent Gentong, yearly rental Ubud, long-term rental Gentong, Ubud neighborhoods",
+  kedewatan:
+    "Kedewatan Ubud, villa Kedewatan, Kedewatan villa rent, Pepito Kedewatan, valley villa Ubud, long-term rental Kedewatan",
+  keliki:
+    "Keliki Ubud, villa rent Keliki, long-term rental Keliki, Ubud village living",
+  kemenuh:
+    "Kemenuh Ubud, villa rent Kemenuh, family villa Ubud, long-term rental Kemenuh",
+  lodtunduh:
+    "Lodtunduh Ubud, villa rent Lodtunduh, south Ubud rental, long-term rental Lodtunduh",
+  mas:
+    "Mas Ubud, villa rent Mas, family villa Mas, long-term rental Ubud, wood carving village",
   peliatan:
     "Peliatan Ubud, villa rent Peliatan, Pepito Peliatan, Yoga Barn, Ubud center, long-term rental, Empathy School",
+  penestanan:
+    "Penestanan Ubud, villa rent Penestanan, walkable Ubud, long-term rental Penestanan, Yoga Barn area",
+  petulu:
+    "Petulu Ubud, villa rent Petulu, heron village Ubud, long-term rental Petulu",
+  sayan:
+    "Sayan Ubud, Sayan villa rent, Sayan Market Ubud, expat Ubud, long-term rental Sayan",
+  singakerta:
+    "Singakerta Ubud, villa rent Singakerta, southwest Ubud, long-term rental Singakerta",
+  sukawati:
+    "Sukawati Ubud, villa rent Sukawati, east Ubud living, long-term rental Sukawati",
+  tegallalang:
+    "Tegallalang Ubud, Tegallalang villa rent, rice terrace Ubud, long-term rental Tegallalang",
 };
-
-const PELIATAN_CATALOG_FAQS = [
-  {
-    q: "Is Peliatan close to central Ubud?",
-    a: "Yes - Peliatan is one of the nearest residential neighborhoods to central Ubud. Many errands are 5-8 minutes by scooter; some villas are walking distance to Pepito Market Peliatan.",
-  },
-  {
-    q: "What is the main downside of living in Peliatan?",
-    a: "The Pepito corridor can be a narrow, busy street with traffic jams and exhaust at peak times. Choose a villa set back from that through-road if that bothers you.",
-  },
-  {
-    q: "Which areas are next to Peliatan?",
-    a: "Lodtunduh and Mas are the closest neighboring pockets - useful references when you compare south/east Ubud options.",
-  },
-  {
-    q: "Is there an area guide for Peliatan?",
-    a: "Yes - read the Peliatan area guide in our Knowledge base (/guides/ubud/peliatan-area-guide-ubud) for daily life, the Pepito corridor trade-off, and comparisons with Lodtunduh and Mas.",
-  },
-];
 
 const sharedClosing = (label: string) =>
   `Filter by bedrooms, rent or sale, payment terms where relevant, and amenities - pool, enclosed living, bathtub, nature views, and more. Each listing page shows pricing context and what we have verified so you can shortlist with confidence. If you are comparing ${label} with other Ubud neighborhoods, start here and widen to the main Ubud hub when you want the full island-wide catalogue.`;
@@ -89,6 +107,15 @@ export function ubudSubAreaFooterParagraphs(subArea: SubArea): string[] {
       `${label} is among the most central-feeling Ubud neighborhoods: old and traditional in character, with newer villa pockets still opening. Long-term renters often choose it for Pepito Market Peliatan, fuel stations, good cafés, and quick runs to Yoga Barn or central Ubud - without living on the busiest monkey-forest lanes.`,
       `The trade-off is the main shopping corridor: a narrow road that can queue badly and carry exhaust at busy hours. Villas on quiet side lanes can still feel residential; always visit your exact access at rush hour.`,
       `On this page you can browse villas we list in ${label} - for rent on monthly or yearly terms where published. Compare with nearby Lodtunduh and Mas if you are shortlisting south/east Ubud.`,
+      sharedClosing(label),
+    ];
+  }
+
+  if (subArea === "kedewatan") {
+    return [
+      `${label} carries an older, established luxury feel - valley scale, ridge breezes, and the grand west-Ubud road past rice fields and river activities. Long-term renters often choose it for outlooks, space, and straightforward highland runs toward Kintamani.`,
+      `Pepito Kedewatan raised everyday shopping convenience in the corridor. Premium pricing is normal here compared with value pockets like Gentong - verify distance to the main valley road, night noise, and Wi-Fi before you commit.`,
+      `On this page you can browse villas we list in ${label} - for rent on monthly or yearly terms where published. Compare with Sayan or Penestanan if you are weighing west-Ubud options.`,
       sharedClosing(label),
     ];
   }
@@ -115,27 +142,6 @@ export function getUbudSubAreaMoneyPage(
 ): UbudSubAreaMoneyPage | null {
   if (type !== "rent" && type !== "villas") return null;
   const intro = ubudSubAreaIntro[subArea];
-  const label = subAreaNames[subArea];
 
-  if (subArea === "peliatan") {
-    return { intro, faqs: PELIATAN_CATALOG_FAQS };
-  }
-
-  return {
-    intro,
-    faqs: [
-      {
-        q: `Why rent a villa in ${label}, Ubud?`,
-        a: `${label} is a named Ubud pocket - filtering here keeps your search aligned with how locals describe the area, not only the word “Ubud.”`,
-      },
-      {
-        q: "Can I filter by bedrooms and amenities?",
-        a: "Yes - use bedrooms, pool, enclosed living, payment terms, and other tags on this page before you shortlist.",
-      },
-      {
-        q: `Is there a neighborhood guide for ${label}?`,
-        a: `See our ${label} area guide in the Knowledge base for daily life notes and links back to this catalog.`,
-      },
-    ],
-  };
+  return { intro, faqs: getUbudSubAreaCatalogFaqs(subArea) };
 }

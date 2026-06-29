@@ -1,5 +1,6 @@
-import { filterProperties, type SegmentKind } from "@/lib/propertiesCatalog";
+import { filterProperties, SEGMENT_TYPES, type SegmentKind } from "@/lib/propertiesCatalog";
 import type { Property } from "@/types/property";
+import { subAreaNames } from "@/types/areas";
 
 export type PopularSearchGroupId = "ubud-rent" | "bedrooms" | "features" | "neighborhoods";
 
@@ -38,14 +39,13 @@ export const POPULAR_SEARCH_DEFINITIONS: PopularSearchDefinition[] = [
   { label: "Villas with car park", href: "/properties/rent/ubud/car-park", group: "features", segment: { kind: "amenity", value: "car-park" } },
   { label: "Villas with washing machine", href: "/properties/rent/ubud/washing-machine", group: "features", segment: { kind: "amenity", value: "washing-machine" } },
 
-  // D — Sub-areas
-  { label: "Penestanan", href: "/properties/rent/ubud/penestanan", group: "neighborhoods", segment: { kind: "subArea", value: "penestanan" } },
-  { label: "Lodtunduh", href: "/properties/rent/ubud/lodtunduh", group: "neighborhoods", segment: { kind: "subArea", value: "lodtunduh" } },
-  { label: "Sayan", href: "/properties/rent/ubud/sayan", group: "neighborhoods", segment: { kind: "subArea", value: "sayan" } },
-  { label: "Singakerta", href: "/properties/rent/ubud/singakerta", group: "neighborhoods", segment: { kind: "subArea", value: "singakerta" } },
-  { label: "Gentong", href: "/properties/rent/ubud/gentong", group: "neighborhoods", segment: { kind: "subArea", value: "gentong" } },
-  { label: "Mas", href: "/properties/rent/ubud/mas", group: "neighborhoods", segment: { kind: "subArea", value: "mas" } },
-  { label: "Petulu", href: "/properties/rent/ubud/petulu", group: "neighborhoods", segment: { kind: "subArea", value: "petulu" } },
+  // D — Sub-areas (all Ubud neighborhoods)
+  ...SEGMENT_TYPES.subArea.map((slug) => ({
+    label: subAreaNames[slug],
+    href: `/properties/rent/ubud/${slug}`,
+    group: "neighborhoods" as const,
+    segment: { kind: "subArea" as const, value: slug },
+  })),
 ];
 
 export type ResolvedPopularSearchLink = Pick<PopularSearchDefinition, "label" | "href">;

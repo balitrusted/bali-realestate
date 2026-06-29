@@ -2,7 +2,9 @@ import type { Property } from "@/types/property";
 import { featureIsYes } from "@/lib/featureState";
 import { findSimilarProperties } from "@/lib/similarProperties";
 import { getPropertyBackNavigation, similarSectionReturnPath } from "@/lib/propertyViewNavigation";
+import Link from "next/link";
 import PropertyBackNav from "@/components/PropertyBackNav";
+import PropertyLocationLinks from "@/components/PropertyLocationLinks";
 import PropertyImages from "@/components/PropertyImages";
 import NotifyWhenAvailableForm from "@/components/NotifyWhenAvailableForm";
 import PropertyLocationMap from "@/components/PropertyLocationMap";
@@ -13,6 +15,7 @@ import PropertyDetailLeadButtons from "@/components/PropertyDetailLeadButtons";
 import PriceText from "@/components/PriceText";
 import { subAreaNames, areas, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
 import { resolveAreaLabel } from "@/lib/mainAreaRegistry";
+import { subAreaBrowseLinkLabel, subAreaCatalogHref } from "@/lib/propertyCatalogLinks";
 import {
   getPropertyDisplayTitle,
   fixDescriptionDisplay,
@@ -99,11 +102,8 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
     if (showBeds && beds > 0) return `${bedLabel} villa · ${dealLabel}`;
     return `${dealLabel} property`;
   })();
-  const locationLabel = `${areaLabel} • ${
-    property.subArea != null
-      ? subAreaNames[property.subArea] || property.subArea
-      : SUBAREA_UNSPECIFIED_LABEL
-  }`;
+  const subAreaMoreHref = subAreaCatalogHref(property);
+  const subAreaMoreLabel = subAreaBrowseLinkLabel(property);
 
   return (
     <>
@@ -118,11 +118,25 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
               </span>
             </div>
           )}
-          <PropertyBackNav
-            property={property}
-            returnToFromQuery={returnToFromQuery}
-            fallbackNav={fallbackBackNav}
-          />
+          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <PropertyBackNav
+              property={property}
+              returnToFromQuery={returnToFromQuery}
+              fallbackNav={fallbackBackNav}
+              className="mb-0"
+            />
+            {subAreaMoreHref && subAreaMoreLabel ? (
+              <Link
+                href={subAreaMoreHref}
+                className="inline-flex items-center text-sm font-medium text-emerald-800 hover:text-emerald-900 sm:justify-end"
+              >
+                {subAreaMoreLabel}
+                <span aria-hidden className="ml-1">
+                  →
+                </span>
+              </Link>
+            ) : null}
+          </div>
 
           <div className="grid lg:grid-cols-2 gap-8 mb-8">
             <div>
@@ -142,7 +156,7 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
               </div>
 
               <div className="mb-4 text-sm text-gray-500">
-                <span>{locationLabel}</span>
+                <PropertyLocationLinks property={property} />
               </div>
 
               <div className="mb-5">
@@ -238,7 +252,12 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
                 <h2 className="text-lg font-semibold text-gray-900 mb-3">Location</h2>
                 <PropertyLocationMap
                   title={headingTitle}
-                  areaLabel={locationLabel}
+                  areaLabel={[
+                    areaLabel,
+                    property.subArea != null
+                      ? subAreaNames[property.subArea] || property.subArea
+                      : SUBAREA_UNSPECIFIED_LABEL,
+                  ].join(" • ")}
                   displayLocation={property.displayLocation}
                   mainArea={property.mainArea}
                   subArea={property.subArea}

@@ -348,5 +348,32 @@ export function paginate<T>(items: T[], page: number): { items: T[]; total: numb
   return { items: itemsPage, total, totalPages, page: p };
 }
 
+/** Sub-area catalogs: paginate active listings; show all archived on page 1 for SEO. */
+export function sliceSubAreaCatalogListings(
+  filtered: Property[],
+  page: number
+): {
+  activeItems: Property[];
+  archivedItems: Property[];
+  activeTotal: number;
+  archivedTotal: number;
+  total: number;
+  totalPages: number;
+  page: number;
+} {
+  const activeFiltered = filtered.filter((p) => !p.archived);
+  const archivedFiltered = filtered.filter((p) => !!p.archived);
+  const pg = paginate(activeFiltered, page);
+  return {
+    activeItems: pg.items,
+    archivedItems: pg.page === 1 ? archivedFiltered : [],
+    activeTotal: activeFiltered.length,
+    archivedTotal: archivedFiltered.length,
+    total: activeFiltered.length + archivedFiltered.length,
+    totalPages: pg.totalPages,
+    page: pg.page,
+  };
+}
+
 export { PER_PAGE };
 export { areas };

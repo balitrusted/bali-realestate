@@ -1,6 +1,7 @@
 import PropertyImageWithFallback from "@/components/PropertyImageWithFallback";
 import PropertyCardActions from "@/components/PropertyCardActions";
 import PropertyViewLink from "@/components/PropertyViewLink";
+import PropertyLocationLinks from "@/components/PropertyLocationLinks";
 import PriceText from "@/components/PriceText";
 import { Property } from "@/types/property";
 import { featureIsYes } from "@/lib/featureState";
@@ -285,7 +286,7 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
           </h3>
           {topSubline && (
             <p className="mt-1 text-sm text-gray-600 select-text">
-              {topSubline}
+              <PropertyLocationLinks property={property} />
             </p>
           )}
         </div>

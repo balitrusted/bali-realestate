@@ -11,6 +11,7 @@ import {
   loadAllPropertiesForSlugIndex,
   filterProperties,
   paginate,
+  sliceSubAreaCatalogListings,
   parseSegment,
   CatalogFilters,
   areas,
@@ -153,9 +154,24 @@ export default async function PropertiesSegmentPage({
   const allForSlugs = await loadAllPropertiesForSlugIndex();
   const slugIdx = buildPropertySlugIndex(allForSlugs);
   const filtered = filterProperties(all, filters, parsed);
-  const { items, total, totalPages, page: currentPage } = paginate(filtered, page);
-  const activeItems = items.filter((p) => !p.archived);
-  const archivedItems = items.filter((p) => !!p.archived);
+  const isSubAreaCatalog = parsed.kind === "subArea";
+  const listingSlice = isSubAreaCatalog
+    ? sliceSubAreaCatalogListings(filtered, page)
+    : (() => {
+        const pg = paginate(filtered, page);
+        const pageItems = pg.items;
+        return {
+          activeItems: pageItems.filter((p) => !p.archived),
+          archivedItems: pageItems.filter((p) => !!p.archived),
+          activeTotal: filtered.filter((p) => !p.archived).length,
+          archivedTotal: filtered.filter((p) => !!p.archived).length,
+          total: pg.total,
+          totalPages: pg.totalPages,
+          page: pg.page,
+        };
+      })();
+  const { activeItems, archivedItems, total, totalPages, page: currentPage } = listingSlice;
+  const items = [...activeItems, ...archivedItems];
 
   const subArea = parsed.kind === "subArea" ? (parsed.value as SubArea) : undefined;
   const areaInfo = areas[mainArea as keyof typeof areas];
@@ -238,9 +254,9 @@ export default async function PropertiesSegmentPage({
           />
           <CatalogMapLink filters={mapFilters} />
         </div>
-        {items.length > 0 && (
+        {filtered.length > 0 && (
           <CatalogStructuredData
-            properties={items}
+            properties={isSubAreaCatalog ? filtered : items}
             baseUrl={baseUrl}
             listName={buildH1(catalogType, mainArea, subArea, parsed)}
             allPropertiesForSlugs={allForSlugs}
