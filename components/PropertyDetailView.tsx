@@ -123,27 +123,27 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
 
       <div className="mb-0 lg:mb-5">
         {forSale != null && isSale && (
-          <p className="text-lg font-semibold text-gray-900 sm:text-2xl lg:text-3xl">
+          <p className="text-base font-semibold text-gray-900 sm:text-lg lg:text-xl">
             <PriceText amount={forSale} sourceCurrency={p.currency} />
-            <span className="text-sm font-normal text-gray-500 sm:text-lg ml-2">· for sale</span>
+            <span className="text-xs font-normal text-gray-500 sm:text-sm ml-2">· for sale</span>
           </p>
         )}
         {(monthly == null || monthly <= 0) && yearly != null && yearly > 0 && !isSale && (
-          <p className="text-lg font-semibold text-gray-900 sm:text-2xl lg:text-3xl">
+          <p className="text-base font-semibold text-gray-900 sm:text-lg lg:text-xl">
             <PriceText amount={yearly} sourceCurrency={p.currency} />
-            <span className="text-sm font-normal text-gray-500 sm:text-lg ml-2">/ year</span>
+            <span className="text-xs font-normal text-gray-500 sm:text-sm ml-2">/ year</span>
           </p>
         )}
         {monthly != null && monthly > 0 && (
           <>
             {forSale != null && isSale && <div className="mt-2" />}
-            <p className="text-lg font-semibold text-gray-900 sm:text-2xl lg:text-3xl">
+            <p className="text-base font-semibold text-gray-900 sm:text-lg lg:text-xl">
               <PriceText amount={monthly} sourceCurrency={p.currency} />
-              <span className="text-sm font-normal text-gray-500 sm:text-lg ml-2">/ month</span>
+              <span className="text-xs font-normal text-gray-500 sm:text-sm ml-2">/ month</span>
             </p>
             {yearly != null && (
               <div className="mt-1.5 sm:mt-2 flex flex-wrap items-center gap-3">
-                <p className="text-base text-gray-700 sm:text-lg">
+                <p className="text-sm text-gray-700 sm:text-base">
                   <PriceText amount={yearly} sourceCurrency={p.currency} /> / year
                 </p>
                 {hasDiscount && discountPercent > 0 && (
