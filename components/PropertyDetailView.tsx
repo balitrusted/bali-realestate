@@ -3,7 +3,7 @@ import { featureIsYes } from "@/lib/featureState";
 import { findSimilarProperties } from "@/lib/similarProperties";
 import { getPropertyBackNavigation, similarSectionReturnPath } from "@/lib/propertyViewNavigation";
 import Link from "next/link";
-import PropertyBackNav, { PROPERTY_NAV_LINK_CLASS } from "@/components/PropertyBackNav";
+import PropertyBackNav, { PropertyNavLink } from "@/components/PropertyBackNav";
 import PropertyLocationLinks from "@/components/PropertyLocationLinks";
 import PropertyImages from "@/components/PropertyImages";
 import NotifyWhenAvailableForm from "@/components/NotifyWhenAvailableForm";
@@ -107,15 +107,18 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
 
   const propertyHeader = (
     <>
-      <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
-        <h1 className="text-xl font-bold leading-snug tracking-tight text-gray-900 sm:text-2xl lg:text-3xl flex-1 min-w-0 pr-2">
-          {headingTitle}
-        </h1>
-        <PropertyCardActions propertyId={String(property.id)} layout="inline" />
-      </div>
-
-      <div className="mb-4 text-sm text-gray-500">
-        <PropertyLocationLinks property={property} />
+      <div className="mb-3 sm:mb-4">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="flex-1 min-w-0 pr-2">
+            <h1 className="text-xl font-bold leading-snug tracking-tight text-gray-900 sm:text-2xl lg:text-3xl">
+              {headingTitle}
+            </h1>
+            <div className="mt-1 text-sm text-gray-500">
+              <PropertyLocationLinks property={property} />
+            </div>
+          </div>
+          <PropertyCardActions propertyId={String(property.id)} layout="inline" />
+        </div>
       </div>
 
       <div className="mb-0 lg:mb-5">
@@ -186,14 +189,10 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
               fallbackNav={fallbackBackNav}
               className="mb-0 w-fit"
             />
-            {subAreaMoreHref && subAreaMoreLabel && property.subArea ? (
-              <Link href={subAreaMoreHref} className={`${PROPERTY_NAV_LINK_CLASS} w-fit sm:ml-auto`}>
-                <span className="sm:hidden">All villas in {subAreaNames[property.subArea]}</span>
-                <span className="hidden sm:inline">{subAreaMoreLabel}</span>
-                <span aria-hidden className="ml-1 text-stone-400">
-                  →
-                </span>
-              </Link>
+            {subAreaMoreHref && subAreaMoreLabel ? (
+              <PropertyNavLink href={subAreaMoreHref} className="mb-0 w-fit sm:ml-auto">
+                {subAreaMoreLabel}
+              </PropertyNavLink>
             ) : null}
           </nav>
 

@@ -32,10 +32,10 @@ export function subAreaBrowseLinkLabel(property: Property): string | null {
   if (!property.subArea || property.mainArea !== "ubud") return null;
   const label = subAreaNames[property.subArea];
   const deal = propertyCatalogDealType(property);
-  if (deal === "sale") return `More villas for sale in ${label}`;
-  if (deal === "land") return `More land in ${label}`;
-  if (deal === "business") return `More businesses in ${label}`;
-  return `More villas for rent in ${label}`;
+  if (deal === "sale") return `All villas for sale in ${label}`;
+  if (deal === "land") return `All land in ${label}`;
+  if (deal === "business") return `All business in ${label}`;
+  return `All villas in ${label}`;
 }
 
 export function mainAreaCatalogLabel(property: Property): string | null {
