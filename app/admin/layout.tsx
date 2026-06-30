@@ -185,7 +185,7 @@ export default function AdminLayout({
           </div>
         </div>
       </nav>
-      <main className="mx-auto w-full max-w-6xl px-4 sm:px-6 py-8">{children}</main>
+      <main lang="en" className="mx-auto w-full max-w-6xl px-4 sm:px-6 py-8">{children}</main>
     </div>
   );
 }

@@ -28,6 +28,7 @@ import { areas, subAreaNames, SUBAREA_UNSPECIFIED_LABEL, isSubAreaOfMainArea } f
 import { getMergedAreaInfos } from "@/lib/mainAreaRegistry";
 import { fixVillaNumberDisplay, fixDescriptionDisplay } from "@/lib/propertyUtils";
 import { PriceInput } from "@/components/admin/PriceInput";
+import AdminDateInput from "@/components/admin/AdminDateInput";
 import { ALLOWED_BEDROOM_COUNTS } from "@/lib/catalogBedrooms";
 import { normalizeAvailableFrom } from "@/lib/availability";
 
@@ -438,17 +439,14 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
             </label>
             {formData.availableFrom != null && formData.availableFrom !== "" && (
               <>
-                <input
-                  type="date"
+                <AdminDateInput
                   value={formData.availableFrom}
-                  onChange={(e) =>
+                  onChange={(next) =>
                     setFormData({
                       ...formData,
-                      availableFrom: normalizeAvailableFrom(e.target.value || null) ?? null,
+                      availableFrom: normalizeAvailableFrom(next || null) ?? null,
                     })
                   }
-                  lang="en-GB"
-                  className="px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:ring-gray-500 focus:border-gray-500"
                 />
                 <button
                   type="button"

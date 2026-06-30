@@ -8,6 +8,7 @@ import Link from "@tiptap/extension-link";
 import Underline from "@tiptap/extension-underline";
 import { ParagraphWithClass } from "@/lib/tiptap/paragraphWithClass";
 import { buildBlogAutofill } from "@/lib/blogAutofill";
+import { AdminDatetimeLocalInput } from "@/components/admin/AdminDateInput";
 import type { BlogPost } from "@/types/blog";
 
 interface BlogPostFormProps {
@@ -655,11 +656,9 @@ export default function BlogPostForm({ post, onSave }: BlogPostFormProps) {
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-900 mb-2">Published date (local)</label>
-              <input
-                type="datetime-local"
+              <AdminDatetimeLocalInput
                 value={formData.publishedAtLocal}
-                onChange={(e) => setFormData({ ...formData, publishedAtLocal: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+                onChange={(publishedAtLocal) => setFormData({ ...formData, publishedAtLocal })}
               />
             </div>
             <div className="flex items-end pb-2">

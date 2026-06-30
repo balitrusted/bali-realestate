@@ -105,6 +105,64 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
   const subAreaMoreHref = subAreaCatalogHref(property);
   const subAreaMoreLabel = subAreaBrowseLinkLabel(property);
 
+  const propertyHeader = (
+    <>
+      <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex-1 min-w-0 pr-2">
+          {headingTitle}
+        </h1>
+        <PropertyCardActions propertyId={String(property.id)} layout="inline" />
+      </div>
+
+      <div className="mb-4 text-sm text-gray-500">
+        <PropertyLocationLinks property={property} />
+      </div>
+
+      <div className="mb-0 lg:mb-5">
+        {forSale != null && isSale && (
+          <p className="text-2xl sm:text-3xl font-semibold text-gray-900">
+            <PriceText amount={forSale} sourceCurrency={p.currency} />
+            <span className="text-lg font-normal text-gray-500 ml-2">· for sale</span>
+          </p>
+        )}
+        {(monthly == null || monthly <= 0) && yearly != null && yearly > 0 && !isSale && (
+          <p className="text-2xl sm:text-3xl font-semibold text-gray-900">
+            <PriceText amount={yearly} sourceCurrency={p.currency} />
+            <span className="text-lg font-normal text-gray-500 ml-2">/ year</span>
+          </p>
+        )}
+        {monthly != null && monthly > 0 && (
+          <>
+            {forSale != null && isSale && <div className="mt-2" />}
+            <p className="text-2xl sm:text-3xl font-semibold text-gray-900">
+              <PriceText amount={monthly} sourceCurrency={p.currency} />
+              <span className="text-lg font-normal text-gray-500 ml-2">/ month</span>
+            </p>
+            {yearly != null && (
+              <div className="mt-2 flex flex-wrap items-center gap-3">
+                <p className="text-lg text-gray-700">
+                  <PriceText amount={yearly} sourceCurrency={p.currency} /> / year
+                </p>
+                {hasDiscount && discountPercent > 0 && (
+                  <span className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-emerald-100 text-emerald-800">
+                    Save {discountPercent}%
+                  </span>
+                )}
+              </div>
+            )}
+          </>
+        )}
+        {showAvailability && (
+          <div className="mt-3">
+            <span className="inline-flex items-center rounded-md border border-stone-200 px-2.5 py-1 text-xs font-medium text-stone-700">
+              Available: {availableFrom ? formatLocaleDate(availableFrom) : "Now"}
+            </span>
+          </div>
+        )}
+      </div>
+    </>
+  );
+
   return (
     <>
       <PropertyStructuredData property={property} baseUrl={baseUrl} propertyUrl={propertyUrl} />
@@ -138,8 +196,10 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
             ) : null}
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 mb-8">
-            <div>
+          <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:gap-8 mb-8">
+            <div className="order-1 lg:order-none lg:col-start-2 lg:row-start-1">{propertyHeader}</div>
+
+            <div className="order-2 lg:order-none lg:col-start-1 lg:row-start-1 lg:row-span-2">
               <PropertyImages
                 images={property.images || []}
                 title={getPropertyDisplayTitle(property)}
@@ -147,61 +207,7 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
               />
             </div>
 
-            <div>
-              <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
-                <h1 className="text-3xl font-bold text-gray-900 flex-1 min-w-0 pr-2">
-                  {headingTitle}
-                </h1>
-                <PropertyCardActions propertyId={String(property.id)} layout="inline" />
-              </div>
-
-              <div className="mb-4 text-sm text-gray-500">
-                <PropertyLocationLinks property={property} />
-              </div>
-
-              <div className="mb-5">
-                {forSale != null && isSale && (
-                  <p className="text-3xl font-semibold text-gray-900">
-                    <PriceText amount={forSale} sourceCurrency={p.currency} />
-                    <span className="text-lg font-normal text-gray-500 ml-2">· for sale</span>
-                  </p>
-                )}
-                {(monthly == null || monthly <= 0) && yearly != null && yearly > 0 && !isSale && (
-                  <p className="text-3xl font-semibold text-gray-900">
-                    <PriceText amount={yearly} sourceCurrency={p.currency} />
-                    <span className="text-lg font-normal text-gray-500 ml-2">/ year</span>
-                  </p>
-                )}
-                {monthly != null && monthly > 0 && (
-                  <>
-                    {forSale != null && isSale && <div className="mt-2" />}
-                    <p className="text-3xl font-semibold text-gray-900">
-                      <PriceText amount={monthly} sourceCurrency={p.currency} />
-                      <span className="text-lg font-normal text-gray-500 ml-2">/ month</span>
-                    </p>
-                    {yearly != null && (
-                      <div className="mt-2 flex flex-wrap items-center gap-3">
-                        <p className="text-lg text-gray-700">
-                          <PriceText amount={yearly} sourceCurrency={p.currency} /> / year
-                        </p>
-                        {hasDiscount && discountPercent > 0 && (
-                          <span className="inline-flex items-center px-3 py-1 rounded-md text-sm font-medium bg-emerald-100 text-emerald-800">
-                            Save {discountPercent}%
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </>
-                )}
-                {showAvailability && (
-                  <div className="mt-3">
-                    <span className="inline-flex items-center rounded-md border border-stone-200 px-2.5 py-1 text-xs font-medium text-stone-700">
-                      Available: {availableFrom ? formatLocaleDate(availableFrom) : "Now"}
-                    </span>
-                  </div>
-                )}
-              </div>
-
+            <div className="order-3 lg:order-none lg:col-start-2 lg:row-start-2 flex flex-col">
               {property.description?.trim() && (
                 <div className="mb-6">
                   <h2 className="text-lg font-semibold text-gray-900 mb-3">Description</h2>
