@@ -3,7 +3,7 @@ import { featureIsYes } from "@/lib/featureState";
 import { findSimilarProperties } from "@/lib/similarProperties";
 import { getPropertyBackNavigation, similarSectionReturnPath } from "@/lib/propertyViewNavigation";
 import Link from "next/link";
-import PropertyBackNav from "@/components/PropertyBackNav";
+import PropertyBackNav, { PROPERTY_NAV_LINK_CLASS } from "@/components/PropertyBackNav";
 import PropertyLocationLinks from "@/components/PropertyLocationLinks";
 import PropertyImages from "@/components/PropertyImages";
 import NotifyWhenAvailableForm from "@/components/NotifyWhenAvailableForm";
@@ -177,21 +177,17 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
             </div>
           )}
           <nav
-            className="mb-6 flex flex-col gap-1.5 border-b border-stone-200 pb-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+            className="mb-6 flex flex-col gap-2 border-b border-stone-200 pb-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3"
             aria-label="Listing navigation"
           >
             <PropertyBackNav
               property={property}
               returnToFromQuery={returnToFromQuery}
               fallbackNav={fallbackBackNav}
-              className="mb-0 text-stone-600 hover:text-stone-900"
-              size="sm"
+              className="mb-0 w-fit"
             />
             {subAreaMoreHref && subAreaMoreLabel && property.subArea ? (
-              <Link
-                href={subAreaMoreHref}
-                className="inline-flex items-center text-sm font-normal text-stone-600 hover:text-stone-900 pl-5 sm:pl-0 sm:justify-end"
-              >
+              <Link href={subAreaMoreHref} className={`${PROPERTY_NAV_LINK_CLASS} w-fit sm:ml-auto`}>
                 <span className="sm:hidden">All villas in {subAreaNames[property.subArea]}</span>
                 <span className="hidden sm:inline">{subAreaMoreLabel}</span>
                 <span aria-hidden className="ml-1 text-stone-400">

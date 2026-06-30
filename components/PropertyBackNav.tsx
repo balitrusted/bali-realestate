@@ -8,6 +8,9 @@ import { readPersistedListingReturnPath } from "@/lib/listingReturnStorage";
 
 type Nav = { href: string; label: string };
 
+export const PROPERTY_NAV_LINK_CLASS =
+  "inline-flex items-center rounded-md border border-stone-200 px-2.5 py-1 text-sm font-normal leading-none text-stone-600 hover:border-stone-300 hover:text-stone-900 transition-colors";
+
 /**
  * Back link: legacy ?returnTo= (SSR), else sessionStorage from last listing click, else fallback.
  */
@@ -16,13 +19,11 @@ export default function PropertyBackNav({
   returnToFromQuery,
   fallbackNav,
   className = "mb-6",
-  size = "default",
 }: {
   property: Property;
   returnToFromQuery: string | null;
   fallbackNav: Nav;
   className?: string;
-  size?: "default" | "sm";
 }) {
   const [nav, setNav] = useState<Nav>(() =>
     returnToFromQuery ? getPropertyBackNavigation(property, returnToFromQuery) : fallbackNav
@@ -36,17 +37,11 @@ export default function PropertyBackNav({
     }
   }, [property, returnToFromQuery]);
 
-  const iconClass = size === "sm" ? "w-4 h-4 mr-1.5 shrink-0" : "w-5 h-5 mr-2 shrink-0";
-  const textClass = size === "sm" ? "text-sm" : "";
-
   return (
-    <Link
-      href={nav.href}
-      className={`inline-flex items-center font-normal text-gray-600 hover:text-gray-900 ${textClass} ${className}`}
-    >
-      <svg className={iconClass} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-      </svg>
+    <Link href={nav.href} className={`${PROPERTY_NAV_LINK_CLASS} ${className}`}>
+      <span aria-hidden className="mr-1 text-stone-400">
+        ←
+      </span>
       {nav.label}
     </Link>
   );
