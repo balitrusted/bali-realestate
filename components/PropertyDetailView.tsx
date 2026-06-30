@@ -108,7 +108,7 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
   const propertyHeader = (
     <>
       <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex-1 min-w-0 pr-2">
+        <h1 className="text-xl font-bold leading-snug tracking-tight text-gray-900 sm:text-2xl lg:text-3xl flex-1 min-w-0 pr-2">
           {headingTitle}
         </h1>
         <PropertyCardActions propertyId={String(property.id)} layout="inline" />
@@ -120,27 +120,27 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
 
       <div className="mb-0 lg:mb-5">
         {forSale != null && isSale && (
-          <p className="text-2xl sm:text-3xl font-semibold text-gray-900">
+          <p className="text-lg font-semibold text-gray-900 sm:text-2xl lg:text-3xl">
             <PriceText amount={forSale} sourceCurrency={p.currency} />
-            <span className="text-lg font-normal text-gray-500 ml-2">· for sale</span>
+            <span className="text-sm font-normal text-gray-500 sm:text-lg ml-2">· for sale</span>
           </p>
         )}
         {(monthly == null || monthly <= 0) && yearly != null && yearly > 0 && !isSale && (
-          <p className="text-2xl sm:text-3xl font-semibold text-gray-900">
+          <p className="text-lg font-semibold text-gray-900 sm:text-2xl lg:text-3xl">
             <PriceText amount={yearly} sourceCurrency={p.currency} />
-            <span className="text-lg font-normal text-gray-500 ml-2">/ year</span>
+            <span className="text-sm font-normal text-gray-500 sm:text-lg ml-2">/ year</span>
           </p>
         )}
         {monthly != null && monthly > 0 && (
           <>
             {forSale != null && isSale && <div className="mt-2" />}
-            <p className="text-2xl sm:text-3xl font-semibold text-gray-900">
+            <p className="text-lg font-semibold text-gray-900 sm:text-2xl lg:text-3xl">
               <PriceText amount={monthly} sourceCurrency={p.currency} />
-              <span className="text-lg font-normal text-gray-500 ml-2">/ month</span>
+              <span className="text-sm font-normal text-gray-500 sm:text-lg ml-2">/ month</span>
             </p>
             {yearly != null && (
-              <div className="mt-2 flex flex-wrap items-center gap-3">
-                <p className="text-lg text-gray-700">
+              <div className="mt-1.5 sm:mt-2 flex flex-wrap items-center gap-3">
+                <p className="text-base text-gray-700 sm:text-lg">
                   <PriceText amount={yearly} sourceCurrency={p.currency} /> / year
                 </p>
                 {hasDiscount && discountPercent > 0 && (
@@ -176,25 +176,30 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
               </span>
             </div>
           )}
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <nav
+            className="mb-6 flex flex-col gap-1.5 border-b border-stone-200 pb-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+            aria-label="Listing navigation"
+          >
             <PropertyBackNav
               property={property}
               returnToFromQuery={returnToFromQuery}
               fallbackNav={fallbackBackNav}
-              className="mb-0"
+              className="mb-0 text-stone-600 hover:text-stone-900"
+              size="sm"
             />
-            {subAreaMoreHref && subAreaMoreLabel ? (
+            {subAreaMoreHref && subAreaMoreLabel && property.subArea ? (
               <Link
                 href={subAreaMoreHref}
-                className="inline-flex items-center text-sm font-medium text-emerald-800 hover:text-emerald-900 sm:justify-end"
+                className="inline-flex items-center text-sm font-normal text-stone-600 hover:text-stone-900 pl-5 sm:pl-0 sm:justify-end"
               >
-                {subAreaMoreLabel}
-                <span aria-hidden className="ml-1">
+                <span className="sm:hidden">All villas in {subAreaNames[property.subArea]}</span>
+                <span className="hidden sm:inline">{subAreaMoreLabel}</span>
+                <span aria-hidden className="ml-1 text-stone-400">
                   →
                 </span>
               </Link>
             ) : null}
-          </div>
+          </nav>
 
           <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:gap-8 mb-8">
             <div className="order-1 lg:order-none lg:col-start-2 lg:row-start-1">{propertyHeader}</div>
