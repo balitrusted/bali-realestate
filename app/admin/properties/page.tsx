@@ -23,7 +23,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Property } from "@/types/property";
 import { propertyHasUnknownAmenities } from "@/lib/featureState";
 import PropertyImageWithFallback from "@/components/PropertyImageWithFallback";
-import PropertyCommentModal from "@/components/admin/PropertyCommentModal";
+import PropertyArchiveModal from "@/components/admin/PropertyArchiveModal";
 import { getPropertyDisplayTitle, fixDescriptionDisplay } from "@/lib/propertyUtils";
 import { formatLocaleDate } from "@/lib/formatDate";
 import { normalizeAvailableFrom } from "@/lib/availability";
@@ -386,7 +386,7 @@ export default function AdminPropertiesPage() {
         </DndContext>
       )}
 
-      <PropertyCommentModal
+      <PropertyArchiveModal
         open={archiveTarget != null}
         title="Archive listing"
         description={
@@ -394,17 +394,13 @@ export default function AdminPropertiesPage() {
             ? `Send "${getPropertyDisplayTitle(archiveTarget)}" to archive? It will disappear from the catalog and main list.`
             : undefined
         }
-        commentLabel="Reason / comment"
-        commentPlaceholder="e.g. Rented by us — guest John Smith"
-        submitLabel="Archive"
-        submitClassName="bg-amber-600 hover:bg-amber-700"
         loading={archiveSubmitting}
         onClose={() => {
           if (!archiveSubmitting) setArchiveTarget(null);
         }}
-        onSubmit={(comment) => {
+        onSubmit={(historyComment) => {
           if (archiveTarget) {
-            void handleArchiveOne(archiveTarget, comment);
+            void handleArchiveOne(archiveTarget, historyComment);
           }
         }}
       />
