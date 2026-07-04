@@ -38,6 +38,8 @@ import {
   normalizeAvailableFrom,
   propertyWithNormalizedAvailability,
 } from "@/lib/availability";
+import { diffPropertyFields } from "@/lib/propertyChangeDiff";
+import { safeAppendPropertyEvent } from "@/lib/propertyEvents";
 
 /** Admin and catalog must never serve stale JSON from edge/browser caches. */
 export const dynamic = "force-dynamic";
@@ -206,6 +208,73 @@ function updateSingleProperty(
   };
 
   return properties;
+}
+
+type PendingPropertyEvent = {
+  propertyId: string;
+  eventType: "created" | "updated" | "archived" | "restored" | "deleted";
+  comment?: string;
+  changedFields?: Record<string, { from: unknown; to: unknown }>;
+};
+
+async function flushPropertyEvents(events: PendingPropertyEvent[]): Promise<void> {
+  for (const event of events) {
+    await safeAppendPropertyEvent(event);
+  }
+}
+
+function requireArchiveComment(raw: unknown): string {
+  const comment = typeof raw === "string" ? raw.trim() : "";
+  if (!comment) {
+    throw new MutationHttpError(
+      apiJson({ error: "Comment is required when archiving a listing." }, { status: 400 })
+    );
+  }
+  return comment;
+}
+
+function requireDeleteComment(raw: unknown): string {
+  const comment = typeof raw === "string" ? raw.trim() : "";
+  if (!comment) {
+    throw new MutationHttpError(
+      apiJson({ error: "Comment is required when permanently deleting a listing." }, { status: 400 })
+    );
+  }
+  return comment;
+}
+
+function collectUpdateEvents(
+  before: Property,
+  after: Property,
+  historyComment?: string
+): PendingPropertyEvent[] {
+  const events: PendingPropertyEvent[] = [];
+  const wasArchived = before.archived === true;
+  const isArchived = after.archived === true;
+
+  if (!wasArchived && isArchived) {
+    events.push({
+      propertyId: after.id,
+      eventType: "archived",
+      comment: historyComment,
+    });
+  } else if (wasArchived && !isArchived) {
+    events.push({
+      propertyId: after.id,
+      eventType: "restored",
+    });
+  }
+
+  const fieldChanges = diffPropertyFields(before, after);
+  if (Object.keys(fieldChanges).length > 0) {
+    events.push({
+      propertyId: after.id,
+      eventType: "updated",
+      changedFields: fieldChanges,
+    });
+  }
+
+  return events;
 }
 
 function hasValidPrice(p: Property): boolean {
@@ -410,6 +479,10 @@ export async function POST(request: Request) {
         },
       });
 
+      await flushPropertyEvents([
+        { propertyId: newProperty.id, eventType: "created" },
+      ]);
+
       return apiJson({
         property: newProperty,
         ...buildListsWithSlugs(finalList),
@@ -437,7 +510,8 @@ export async function PUT(request: Request) {
     const body = await request.json();
 
     return await runExclusiveCatalogWrite(async () => {
-      const { action, property, newOrder } = body;
+      const { action, property, newOrder, historyComment } = body;
+      const pendingEvents: PendingPropertyEvent[] = [];
 
       const finalList = await writeBlobJsonArrayWithRetry({
         read: loadFullPropertyList,
@@ -455,32 +529,27 @@ export async function PUT(request: Request) {
           }
 
           if (action === "update" && property) {
-            return updateSingleProperty(properties, property);
-          }
-
-          if (action === "bulkArchive" && Array.isArray(body.ids)) {
-            const ids = body.ids
-              .map((id: unknown) => String(id))
-              .filter(Boolean);
-            const idSet = new Set(ids);
-            if (idSet.size === 0) {
-              throw new MutationHttpError(
-                apiJson({ error: "No properties selected" }, { status: 400 })
-              );
-            }
-            const missingId = ids.find(
-              (id: string) => !properties.some((p) => p.id === id)
-            );
-            if (missingId) {
+            const before = properties.find((p) => p.id === property.id);
+            if (!before) {
               throw new MutationHttpError(
                 apiJson(
-                  { error: `Property not found in data file: ${missingId}` },
+                  { error: `Property not found in data file: ${String(property.id)}` },
                   { status: 404 }
                 )
               );
             }
-            for (const id of ids) {
-              updateSingleProperty(properties, { id, archived: true });
+
+            const willBeArchived = property.archived === true;
+            const wasArchived = before.archived === true;
+            let archiveComment: string | undefined;
+            if (!wasArchived && willBeArchived) {
+              archiveComment = requireArchiveComment(historyComment);
+            }
+
+            updateSingleProperty(properties, property);
+            const after = properties.find((p) => p.id === property.id);
+            if (after) {
+              pendingEvents.push(...collectUpdateEvents(before, after, archiveComment));
             }
             return properties;
           }
@@ -490,6 +559,8 @@ export async function PUT(request: Request) {
           );
         },
       });
+
+      await flushPropertyEvents(pendingEvents);
 
       return apiJson({
         success: true,
@@ -521,7 +592,22 @@ export async function DELETE(request: Request) {
       return apiJson({ error: "ID required" }, { status: 400 });
     }
 
+    let deleteComment = "";
+    try {
+      const body = await request.json();
+      deleteComment = requireDeleteComment(body.comment);
+    } catch (error) {
+      if (error instanceof MutationHttpError) {
+        return error.response;
+      }
+      return apiJson(
+        { error: "Comment is required when permanently deleting a listing." },
+        { status: 400 }
+      );
+    }
+
     return await runExclusiveCatalogWrite(async () => {
+      let propertyExists = false;
       const finalList = await writeBlobJsonArrayWithRetry({
         read: loadFullPropertyList,
         write: persistPropertyList,
@@ -529,8 +615,20 @@ export async function DELETE(request: Request) {
           ? verifyPropertyCatalogWrite
           : fastCatalogWriteVerify,
         maxAttempts: useStrictCatalogWriteVerification ? 28 : 1,
-        mutate: async (properties) => properties.filter((p) => p.id !== id),
+        mutate: async (properties) => {
+          propertyExists = properties.some((p) => p.id === id);
+          if (!propertyExists) {
+            throw new MutationHttpError(
+              apiJson({ error: `Property not found in data file: ${id}` }, { status: 404 })
+            );
+          }
+          return properties.filter((p) => p.id !== id);
+        },
       });
+
+      await flushPropertyEvents([
+        { propertyId: id, eventType: "deleted", comment: deleteComment },
+      ]);
 
       return apiJson({
         success: true,

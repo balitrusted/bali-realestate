@@ -3,12 +3,16 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import PropertyImageWithFallback from "@/components/PropertyImageWithFallback";
+import PropertyCommentModal from "@/components/admin/PropertyCommentModal";
 import { Property } from "@/types/property";
 import { getPropertyDisplayTitle } from "@/lib/propertyUtils";
 
 export default function AdminArchivePage() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteTarget, setDeleteTarget] = useState<Property | null>(null);
+  const [deleteSubmitting, setDeleteSubmitting] = useState(false);
+  const [restoringId, setRestoringId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchArchived = async () => {
@@ -28,17 +32,14 @@ export default function AdminArchivePage() {
     fetchArchived();
   }, []);
 
-  const handleDelete = async (property: Property) => {
-    if (
-      !confirm(
-        `Permanently delete "${getPropertyDisplayTitle(property)}"?\n\nThis cannot be undone. Use only if this listing should never appear on the site again.`
-      )
-    )
-      return;
+  const handleDelete = async (property: Property, comment: string) => {
+    setDeleteSubmitting(true);
     try {
       const res = await fetch(`/api/properties?id=${encodeURIComponent(property.id)}`, {
         method: "DELETE",
+        headers: { "Content-Type": "application/json" },
         cache: "no-store",
+        body: JSON.stringify({ comment }),
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
@@ -49,17 +50,20 @@ export default function AdminArchivePage() {
         } else {
           setProperties((prev) => prev.filter((p) => p.id !== property.id));
         }
+        setDeleteTarget(null);
       } else {
-        alert("Failed to delete");
+        alert(typeof data?.error === "string" ? data.error : "Failed to delete");
       }
     } catch (e) {
       console.error(e);
       alert("Failed to delete");
+    } finally {
+      setDeleteSubmitting(false);
     }
   };
 
   const handleRestore = async (property: Property) => {
-    if (!confirm(`Restore "${getPropertyDisplayTitle(property)}" to the main list?`)) return;
+    setRestoringId(property.id);
     try {
       const res = await fetch("/api/properties", {
         method: "PUT",
@@ -80,11 +84,13 @@ export default function AdminArchivePage() {
           setProperties((prev) => prev.filter((p) => p.id !== property.id));
         }
       } else {
-        alert("Failed to restore");
+        alert(typeof data?.error === "string" ? data.error : "Failed to restore");
       }
     } catch (e) {
       console.error(e);
       alert("Failed to restore");
+    } finally {
+      setRestoringId(null);
     }
   };
 
@@ -171,10 +177,11 @@ export default function AdminArchivePage() {
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 shrink-0">
                   <button
                     type="button"
-                    onClick={() => handleRestore(property)}
-                    className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors text-sm whitespace-nowrap"
+                    onClick={() => void handleRestore(property)}
+                    disabled={restoringId === property.id}
+                    className="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors text-sm whitespace-nowrap disabled:opacity-60"
                   >
-                    Restore
+                    {restoringId === property.id ? "Restoring..." : "Restore"}
                   </button>
                   <Link
                     href={`/admin/properties/edit/${property.id}`}
@@ -184,7 +191,7 @@ export default function AdminArchivePage() {
                   </Link>
                   <button
                     type="button"
-                    onClick={() => handleDelete(property)}
+                    onClick={() => setDeleteTarget(property)}
                     className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm whitespace-nowrap"
                   >
                     Delete permanently
@@ -195,6 +202,29 @@ export default function AdminArchivePage() {
           })}
         </div>
       )}
+
+      <PropertyCommentModal
+        open={deleteTarget != null}
+        title="Delete listing permanently"
+        description={
+          deleteTarget
+            ? `Permanently delete "${getPropertyDisplayTitle(deleteTarget)}"? This cannot be undone.`
+            : undefined
+        }
+        commentLabel="Comment"
+        commentPlaceholder="Why is this listing being removed permanently?"
+        submitLabel="Delete permanently"
+        submitClassName="bg-red-600 hover:bg-red-700"
+        loading={deleteSubmitting}
+        onClose={() => {
+          if (!deleteSubmitting) setDeleteTarget(null);
+        }}
+        onSubmit={(comment) => {
+          if (deleteTarget) {
+            void handleDelete(deleteTarget, comment);
+          }
+        }}
+      />
     </div>
   );
 }

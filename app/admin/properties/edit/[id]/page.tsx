@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import PropertyForm from "@/components/admin/PropertyForm";
+import PropertyHistoryPanel from "@/components/admin/PropertyHistoryPanel";
 import { Property } from "@/types/property";
 
 export default function EditPropertyPage() {
@@ -68,6 +69,7 @@ export default function EditPropertyPage() {
     <div className="mx-auto w-full max-w-4xl">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Edit Property</h1>
       <PropertyForm property={property} onSave={handleSave} />
+      <PropertyHistoryPanel propertyId={property.id} />
     </div>
   );
 }

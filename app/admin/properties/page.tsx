@@ -23,6 +23,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Property } from "@/types/property";
 import { propertyHasUnknownAmenities } from "@/lib/featureState";
 import PropertyImageWithFallback from "@/components/PropertyImageWithFallback";
+import PropertyCommentModal from "@/components/admin/PropertyCommentModal";
 import { getPropertyDisplayTitle, fixDescriptionDisplay } from "@/lib/propertyUtils";
 import { formatLocaleDate } from "@/lib/formatDate";
 import { normalizeAvailableFrom } from "@/lib/availability";
@@ -47,16 +48,12 @@ function getPayloadError(payload: MutationListsPayload, fallback = "Failed"): st
 
 function SortablePropertyItem({
   property,
-  selected,
   archiving,
-  onToggleSelected,
   onArchive,
 }: {
   property: Property;
-  selected: boolean;
   archiving: boolean;
-  onToggleSelected: (propertyId: string) => void;
-  onArchive: (property: Property) => Promise<void>;
+  onArchive: (property: Property) => void;
 }) {
   const {
     attributes,
@@ -97,17 +94,6 @@ function SortablePropertyItem({
       style={style}
       className="bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center gap-4"
     >
-      <label className="self-start pt-1">
-        <input
-          type="checkbox"
-          checked={selected}
-          disabled={archiving}
-          onChange={() => onToggleSelected(property.id)}
-          className="rounded border-gray-300 text-gray-900 focus:ring-gray-500"
-          aria-label={`Select ${getPropertyDisplayTitle(property)}`}
-        />
-      </label>
-
       <div
         {...attributes}
         {...listeners}
@@ -190,16 +176,7 @@ function SortablePropertyItem({
         <button
           type="button"
           disabled={archiving}
-          onClick={async () => {
-            if (
-              !confirm(
-                "Send this villa to archive?\n\nIt will disappear from the catalog and main list. You can restore or permanently delete it from Archive."
-              )
-            ) {
-              return;
-            }
-            await onArchive(property);
-          }}
+          onClick={() => onArchive(property)}
           className="w-full px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors text-sm text-center whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {archiving ? "Archiving..." : "To archive"}
@@ -214,9 +191,9 @@ const SCROLL_STORAGE_KEY = "adminPropertiesScrollToId";
 export default function AdminPropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [archivingIds, setArchivingIds] = useState<string[]>([]);
-  const [bulkArchiving, setBulkArchiving] = useState(false);
+  const [archiveTarget, setArchiveTarget] = useState<Property | null>(null);
+  const [archiveSubmitting, setArchiveSubmitting] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const scrollDoneRef = useRef(false);
@@ -236,7 +213,6 @@ export default function AdminPropertiesPage() {
       const data = await response.json();
       const validProperties = (data.properties || []).filter((p: any) => p && p.id);
       setProperties(validProperties);
-      setSelectedIds((prev) => prev.filter((id) => validProperties.some((p: Property) => p.id === id)));
     } catch (error) {
       console.error("Error fetching properties:", error);
       setProperties([]);
@@ -274,27 +250,17 @@ export default function AdminPropertiesPage() {
 
   const applyListsFromMutation = (payload: MutationListsPayload) => {
     if (Array.isArray(payload.properties)) {
-      const nextProperties = payload.properties.filter((p) => p?.id);
-      setProperties(nextProperties);
-      setSelectedIds((prev) => prev.filter((id) => nextProperties.some((p) => p.id === id)));
+      setProperties(payload.properties.filter((p) => p?.id));
       return;
     }
     void fetchProperties();
   };
 
-  const toggleSelected = (propertyId: string) => {
-    setSelectedIds((prev) =>
-      prev.includes(propertyId)
-        ? prev.filter((id) => id !== propertyId)
-        : [...prev, propertyId]
-    );
-  };
-
-  const handleArchiveOne = async (property: Property) => {
+  const handleArchiveOne = async (property: Property, historyComment: string) => {
     const previousProperties = properties;
+    setArchiveSubmitting(true);
     setArchivingIds((prev) => [...prev, property.id]);
     setProperties((prev) => prev.filter((p) => p.id !== property.id));
-    setSelectedIds((prev) => prev.filter((id) => id !== property.id));
 
     try {
       const res = await fetch("/api/properties", {
@@ -304,11 +270,13 @@ export default function AdminPropertiesPage() {
         body: JSON.stringify({
           action: "update",
           property: { ...property, archived: true },
+          historyComment,
         }),
       });
       const payload: MutationListsPayload = await res.json().catch(() => ({}));
       if (res.ok) {
         applyListsFromMutation(payload);
+        setArchiveTarget(null);
       } else {
         setProperties(previousProperties);
         alert(getPayloadError(payload));
@@ -317,59 +285,13 @@ export default function AdminPropertiesPage() {
       setProperties(previousProperties);
       alert("Failed");
     } finally {
+      setArchiveSubmitting(false);
       setArchivingIds((prev) => prev.filter((id) => id !== property.id));
     }
   };
 
-  const handleBulkArchive = async () => {
-    if (selectedIds.length === 0 || bulkArchiving) return;
-    if (
-      !confirm(
-        `Send ${selectedIds.length} selected propert${selectedIds.length === 1 ? "y" : "ies"} to archive?\n\nThey will disappear from the main list and move to Archive.`
-      )
-    ) {
-      return;
-    }
-
-    const previousProperties = properties;
-    const idsToArchive = [...selectedIds];
-    const idSet = new Set(idsToArchive);
-
-    setBulkArchiving(true);
-    setArchivingIds((prev) => [...new Set([...prev, ...idsToArchive])]);
-    setProperties((prev) => prev.filter((p) => !idSet.has(p.id)));
-    setSelectedIds([]);
-
-    try {
-      const res = await fetch("/api/properties", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        cache: "no-store",
-        body: JSON.stringify({
-          action: "bulkArchive",
-          ids: idsToArchive,
-        }),
-      });
-      const payload: MutationListsPayload = await res.json().catch(() => ({}));
-      if (res.ok) {
-        applyListsFromMutation(payload);
-      } else {
-        setProperties(previousProperties);
-        setSelectedIds(idsToArchive);
-        alert(getPayloadError(payload));
-      }
-    } catch {
-      setProperties(previousProperties);
-      setSelectedIds(idsToArchive);
-      alert("Failed");
-    } finally {
-      setBulkArchiving(false);
-      setArchivingIds((prev) => prev.filter((id) => !idSet.has(id)));
-    }
-  };
-
   const handleDragEnd = async (event: DragEndEvent) => {
-    if (bulkArchiving || archivingIds.length > 0) return;
+    if (archivingIds.length > 0) return;
 
     const { active, over } = event;
     if (over && active.id !== over.id) {
@@ -410,9 +332,6 @@ export default function AdminPropertiesPage() {
   }
 
   const propertyIds = properties.map((p) => p.id).filter(Boolean);
-  const selectedCount = selectedIds.length;
-  const allSelected = properties.length > 0 && selectedCount === properties.length;
-
   const activeCount = properties.length;
 
   return (
@@ -438,35 +357,6 @@ export default function AdminPropertiesPage() {
         Drag properties to reorder them. Properties with lower order numbers appear first on the site.
       </p>
 
-      {properties.length > 0 && (
-        <div className="mb-6 flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
-          <label className="inline-flex items-center gap-2 text-sm text-gray-700">
-            <input
-              type="checkbox"
-              checked={allSelected}
-              onChange={() =>
-                setSelectedIds(allSelected ? [] : properties.map((property) => property.id))
-              }
-              className="rounded border-gray-300 text-gray-900 focus:ring-gray-500"
-            />
-            Select all visible
-          </label>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-600">
-              {selectedCount > 0 ? `${selectedCount} selected` : "Select properties to archive them together"}
-            </span>
-            <button
-              type="button"
-              onClick={handleBulkArchive}
-              disabled={selectedCount === 0 || bulkArchiving}
-              className="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors text-sm disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {bulkArchiving ? "Archiving..." : `Archive selected${selectedCount > 0 ? ` (${selectedCount})` : ""}`}
-            </button>
-          </div>
-        </div>
-      )}
-
       {properties.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
           <p className="text-gray-600 mb-4">No properties yet.</p>
@@ -488,15 +378,36 @@ export default function AdminPropertiesPage() {
               <SortablePropertyItem
                 key={property.id}
                 property={property}
-                selected={selectedIds.includes(property.id)}
                 archiving={archivingIds.includes(property.id)}
-                onToggleSelected={toggleSelected}
-                onArchive={handleArchiveOne}
+                onArchive={setArchiveTarget}
               />
             ))}
           </SortableContext>
         </DndContext>
       )}
+
+      <PropertyCommentModal
+        open={archiveTarget != null}
+        title="Archive listing"
+        description={
+          archiveTarget
+            ? `Send "${getPropertyDisplayTitle(archiveTarget)}" to archive? It will disappear from the catalog and main list.`
+            : undefined
+        }
+        commentLabel="Reason / comment"
+        commentPlaceholder="e.g. Rented by us — guest John Smith"
+        submitLabel="Archive"
+        submitClassName="bg-amber-600 hover:bg-amber-700"
+        loading={archiveSubmitting}
+        onClose={() => {
+          if (!archiveSubmitting) setArchiveTarget(null);
+        }}
+        onSubmit={(comment) => {
+          if (archiveTarget) {
+            void handleArchiveOne(archiveTarget, comment);
+          }
+        }}
+      />
     </div>
   );
 }
