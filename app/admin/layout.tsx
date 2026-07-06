@@ -15,6 +15,7 @@ export default function AdminLayout({
     commentsPending: 0,
     requestsNew: 0,
     notifyNew: 0,
+    qaPending: 0,
   });
   const router = useRouter();
   const pathname = usePathname();
@@ -65,6 +66,7 @@ export default function AdminLayout({
           commentsPending: data.commentsPending ?? 0,
           requestsNew: data.requestsNew ?? 0,
           notifyNew: data.notifyNew ?? 0,
+          qaPending: data.qaPending ?? 0,
         });
       } catch {
         /* ignore */
@@ -135,6 +137,9 @@ export default function AdminLayout({
               <Link href="/admin/glossary" className="text-gray-700 hover:text-gray-900">
                 Glossary
               </Link>
+              <AdminNavLinkWithBadge href="/admin/qa" count={badgeCounts.qaPending}>
+                Q&amp;A
+              </AdminNavLinkWithBadge>
               <AdminNavLinkWithBadge href="/admin/comments" count={badgeCounts.commentsPending}>
                 Comments
               </AdminNavLinkWithBadge>

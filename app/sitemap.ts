@@ -3,6 +3,8 @@ import { getArticles } from '@/lib/articlesData'
 import { loadFullPropertyList } from '@/lib/propertiesStorage'
 import { getBlogPosts } from '@/lib/blogData'
 import { getGlossaryTerms } from '@/lib/glossaryData'
+import { getPublishedQuestions } from '@/lib/qaPersistence'
+import { QA_CATEGORY_ORDER } from '@/lib/qaHub'
 import { loadAllPropertiesIncludingArchived, filterProperties, parseSegment, SEGMENT_TYPES } from '@/lib/propertiesCatalog'
 import { buildPropertySlugIndex } from '@/lib/propertySlug'
 import type { PropertyType, MainArea } from '@/types/property'
@@ -231,5 +233,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Error loading glossary for sitemap:', error)
   }
 
-  return [...staticPages, ...propertyPages, ...guideCategoryPages, ...propertyDetailPages, ...articlePages, ...blogPages, ...glossaryPages]
+  let qaPages: MetadataRoute.Sitemap = []
+  try {
+    const qaCategoryPages = QA_CATEGORY_ORDER.map((cat) => ({
+      url: `${baseUrl}/qa/${cat}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.72,
+    }))
+    const questions = await getPublishedQuestions()
+    const qaQuestionPages = questions.map((q) => ({
+      url: `${baseUrl}/qa/${q.slug}`,
+      lastModified: q.updatedAt ? new Date(q.updatedAt) : new Date(q.createdAt),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    }))
+    qaPages = [...qaCategoryPages, ...qaQuestionPages]
+  } catch (error) {
+    console.error('Error loading Q&A for sitemap:', error)
+  }
+
+  return [...staticPages, ...propertyPages, ...guideCategoryPages, ...propertyDetailPages, ...articlePages, ...blogPages, ...glossaryPages, ...qaPages]
 }

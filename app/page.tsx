@@ -7,6 +7,7 @@ import { getBlogPosts } from "@/lib/blogData";
 import { glossaryCategoryLabel } from "@/lib/glossaryHub";
 import HomePropertyCard from "@/components/HomePropertyCard";
 import HomeLatestBlogPosts from "@/components/HomeLatestBlogPosts";
+import HomeQaTicker from "@/components/HomeQaTicker";
 import CatalogPopularSearches from "@/components/CatalogPopularSearches";
 import { resolvePopularSearches } from "@/lib/catalogPopularSearches";
 
@@ -126,6 +127,8 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      <HomeQaTicker />
 
       {/* Random selection from catalog */}
       {randomProperties.length > 0 && (
