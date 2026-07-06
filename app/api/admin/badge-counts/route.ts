@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { getRequests } from "@/lib/requestsData";
 import { getNotifyUnreadCount } from "@/lib/adminBadgeState";
-import { getAllComments } from "@/lib/commentsPersistence";
+import { countPendingQaModeration } from "@/lib/qaPersistence";
 
 export const dynamic = "force-dynamic";
 
@@ -32,15 +32,23 @@ export async function GET() {
     const notifySeenAtCookie = cookieStore.get("admin-notify-seen-at")?.value;
     const notifyNew = await getNotifyUnreadCount(notifySeenAtCookie);
 
+    let qaPending = 0;
+    try {
+      qaPending = await countPendingQaModeration();
+    } catch {
+      /* ignore */
+    }
+
     return NextResponse.json({
       commentsPending,
       requestsNew,
       notifyNew,
+      qaPending,
     });
   } catch (e) {
     console.error("badge-counts:", e);
     return NextResponse.json(
-      { commentsPending: 0, requestsNew: 0, notifyNew: 0 },
+      { commentsPending: 0, requestsNew: 0, notifyNew: 0, qaPending: 0 },
       { status: 200 }
     );
   }
