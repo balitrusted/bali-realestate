@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { getRequests } from "@/lib/requestsData";
 import { getNotifyUnreadCount } from "@/lib/adminBadgeState";
+import { getAllComments } from "@/lib/commentsPersistence";
 import { countPendingQaModeration } from "@/lib/qaPersistence";
 
 export const dynamic = "force-dynamic";
