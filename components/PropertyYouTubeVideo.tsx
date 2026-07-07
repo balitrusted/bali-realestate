@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { youtubeEmbedUrl, youtubeThumbnailUrl, youtubeWatchUrl } from "@/lib/youtube";
+import { youtubeEmbedUrl, youtubeThumbnailUrl } from "@/lib/youtube";
 
 interface PropertyYouTubeVideoProps {
   videoId: string;
@@ -10,12 +10,12 @@ interface PropertyYouTubeVideoProps {
 
 export default function PropertyYouTubeVideo({ videoId, title }: PropertyYouTubeVideoProps) {
   const [embedSrc, setEmbedSrc] = useState<string | null>(null);
-  const watchUrl = youtubeWatchUrl(videoId);
 
   const startEmbed = () => {
     setEmbedSrc(
       youtubeEmbedUrl(videoId, {
         origin: window.location.origin,
+        autoplay: true,
       })
     );
   };
@@ -55,31 +55,6 @@ export default function PropertyYouTubeVideo({ videoId, title }: PropertyYouTube
           </button>
         )}
       </div>
-      <p className="mt-2 text-sm text-gray-600">
-        {embedSrc ? (
-          <>
-            If the player does not load,{" "}
-            <a
-              href={watchUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-900 underline underline-offset-2 hover:text-gray-700"
-            >
-              watch on YouTube
-            </a>
-            .
-          </>
-        ) : (
-          <a
-            href={watchUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-900 underline underline-offset-2 hover:text-gray-700"
-          >
-            Open on YouTube
-          </a>
-        )}
-      </p>
     </section>
   );
 }

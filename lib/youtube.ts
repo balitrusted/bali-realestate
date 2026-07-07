@@ -47,10 +47,6 @@ export function youtubeEmbedUrl(videoId: string, options: YouTubeEmbedOptions = 
   return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
 }
 
-export function youtubeWatchUrl(videoId: string): string {
-  return `https://www.youtube.com/watch?v=${videoId}`;
-}
-
 export function youtubeThumbnailUrl(videoId: string): string {
   return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
 }
