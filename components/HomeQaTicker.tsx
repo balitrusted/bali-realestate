@@ -19,8 +19,12 @@ function timeAgo(iso: string): string {
   return `${days}d ago`;
 }
 
-export default function HomeQaTicker() {
-  const [items, setItems] = useState<QaRecentItem[]>([]);
+interface HomeQaTickerProps {
+  initialItems?: QaRecentItem[];
+}
+
+export default function HomeQaTicker({ initialItems = [] }: HomeQaTickerProps) {
+  const [items, setItems] = useState<QaRecentItem[]>(initialItems);
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);
 
@@ -58,7 +62,15 @@ export default function HomeQaTicker() {
     return () => clearInterval(timer);
   }, [items.length]);
 
-  if (items.length === 0) return null;
+  if (items.length === 0) {
+    return (
+      <section className="border-y border-emerald-100 bg-emerald-50/60">
+        <div className="container mx-auto px-4 py-3">
+          <div className="max-w-5xl mx-auto min-h-[44px]" />
+        </div>
+      </section>
+    );
+  }
 
   const item = items[index % items.length];
   const action =
@@ -71,7 +83,7 @@ export default function HomeQaTicker() {
   return (
     <section className="border-y border-emerald-100 bg-emerald-50/60">
       <div className="container mx-auto px-4 py-3">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 max-w-5xl mx-auto">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 max-w-5xl mx-auto min-h-[44px]">
           <div className="flex items-center gap-2 shrink-0">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-60" />

@@ -5,6 +5,7 @@ import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { getGlossaryTerms } from "@/lib/glossaryData";
 import { getBlogPosts } from "@/lib/blogData";
 import { glossaryCategoryLabel } from "@/lib/glossaryHub";
+import { getRecentActivity } from "@/lib/qaPersistence";
 import HomePropertyCard from "@/components/HomePropertyCard";
 import HomeLatestBlogPosts from "@/components/HomeLatestBlogPosts";
 import HomeQaTicker from "@/components/HomeQaTicker";
@@ -54,12 +55,13 @@ function shuffle<T>(arr: T[], daySeed: number): T[] {
 export default async function Home() {
   const daySeed = Math.floor(Date.now() / (1000 * 60 * 60 * 24)); // changes once per day
 
-  const [allProperties, allForSlugs, glossaryTerms, blogPosts, allForPopularSearches] = await Promise.all([
+  const [allProperties, allForSlugs, glossaryTerms, blogPosts, allForPopularSearches, initialQaItems] = await Promise.all([
     loadAllProperties(),
     loadAllPropertiesForSlugIndex(),
     getGlossaryTerms(),
     getBlogPosts(),
     loadAllPropertiesIncludingArchived(),
+    getRecentActivity(15),
   ]);
 
   const slugIdx = buildPropertySlugIndex(allForSlugs);
@@ -128,7 +130,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <HomeQaTicker />
+      <HomeQaTicker initialItems={initialQaItems} />
 
       {/* Random selection from catalog */}
       {randomProperties.length > 0 && (
