@@ -43,6 +43,9 @@ export function generatePropertiesFile(properties: Property[]): string {
     if (prop.displayLocation != null && prop.displayLocation !== "") {
       content += `${indent}${indent}displayLocation: ${JSON.stringify(prop.displayLocation)},\n`;
     }
+    if (prop.youtubeVideoUrl != null && prop.youtubeVideoUrl !== "") {
+      content += `${indent}${indent}youtubeVideoUrl: ${JSON.stringify(prop.youtubeVideoUrl)},\n`;
+    }
     content += `${indent}${indent}bedrooms: ${prop.bedrooms || 1},\n`;
     if (prop.bathrooms) {
       content += `${indent}${indent}bathrooms: ${prop.bathrooms},\n`;

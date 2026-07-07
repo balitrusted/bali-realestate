@@ -304,6 +304,8 @@ function parsePropertyObject(objStr: string): Property | null {
     // Extract displayLocation (lat,lon for map)
     const displayLocationMatch = objStr.match(/displayLocation:\s*"([^"]*)"/);
     if (displayLocationMatch) obj.displayLocation = displayLocationMatch[1];
+    const youtubeVideoUrlMatch = objStr.match(/youtubeVideoUrl:\s*"([^"]*)"/);
+    if (youtubeVideoUrlMatch) obj.youtubeVideoUrl = youtubeVideoUrlMatch[1];
     
     // Extract bedrooms
     const bedroomsMatch = objStr.match(/bedrooms:\s*(\d+)/);

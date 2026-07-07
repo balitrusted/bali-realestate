@@ -12,6 +12,8 @@ import PropertyStructuredData from "@/components/PropertyStructuredData";
 import PropertyCardActions from "@/components/PropertyCardActions";
 import PropertyDetailSimilar from "@/components/PropertyDetailSimilar";
 import PropertyDetailLeadButtons from "@/components/PropertyDetailLeadButtons";
+import PropertyYouTubeVideo from "@/components/PropertyYouTubeVideo";
+import { parseYouTubeVideoId } from "@/lib/youtube";
 import PriceText from "@/components/PriceText";
 import { subAreaNames, areas, SUBAREA_UNSPECIFIED_LABEL } from "@/types/areas";
 import { resolveAreaLabel } from "@/lib/mainAreaRegistry";
@@ -104,6 +106,7 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
   })();
   const subAreaMoreHref = subAreaCatalogHref(property);
   const subAreaMoreLabel = subAreaBrowseLinkLabel(property);
+  const youtubeVideoId = parseYouTubeVideoId(property.youtubeVideoUrl);
 
   const propertyHeader = (
     <>
@@ -199,12 +202,18 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
           <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:gap-8 mb-8">
             <div className="order-1 lg:order-none lg:col-start-2 lg:row-start-1">{propertyHeader}</div>
 
-            <div className="order-2 lg:order-none lg:col-start-1 lg:row-start-1 lg:row-span-2">
+            <div className="order-2 lg:order-none lg:col-start-1 lg:row-start-1 lg:row-span-2 space-y-4">
               <PropertyImages
                 images={property.images || []}
                 title={getPropertyDisplayTitle(property)}
                 property={property}
               />
+              {youtubeVideoId ? (
+                <PropertyYouTubeVideo
+                  videoId={youtubeVideoId}
+                  title={`${headingTitle} video tour`}
+                />
+              ) : null}
             </div>
 
             <div className="order-3 lg:order-none lg:col-start-2 lg:row-start-2 flex flex-col">

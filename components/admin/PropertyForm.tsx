@@ -163,6 +163,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
       : (areas[(property?.mainArea || "ubud") as keyof typeof areas]?.subAreas?.[0] as SubArea | undefined),
     exactLocation: property?.exactLocation ?? "",
     displayLocation: property?.displayLocation ?? "",
+    youtubeVideoUrl: property?.youtubeVideoUrl ?? "",
     bedrooms: landOnly ? (property?.bedrooms ?? 0) : property?.bedrooms || 1,
     floors: landOnly ? undefined : property?.floors ?? undefined,
     bathrooms: landOnly ? (property?.bathrooms ?? 1) : property?.bathrooms || 1,
@@ -208,6 +209,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
       subArea: formData.subArea ?? null,
       exactLocation: formData.exactLocation.trim() || undefined,
       displayLocation: formData.displayLocation.trim() || undefined,
+      youtubeVideoUrl: formData.youtubeVideoUrl.trim() || undefined,
       bedrooms: landOnly ? 0 : formData.bedrooms,
       floors: landOnly ? undefined : (formData.floors && formData.floors > 0 ? formData.floors : undefined),
       bathrooms: landOnly ? undefined : formData.bathrooms,
@@ -584,6 +586,21 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
           />
           <p className="text-xs text-gray-500 mt-1">Coordinates for map. Leave empty if not set yet.</p>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            YouTube overview video (optional)
+          </label>
+          <input
+            type="url"
+            value={formData.youtubeVideoUrl}
+            onChange={(e) => setFormData({ ...formData, youtubeVideoUrl: e.target.value })}
+            placeholder="https://www.youtube.com/watch?v=..."
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Paste a YouTube link. Shown on the public listing as an embedded video tour. Leave empty to hide.
+          </p>
         </div>
       </div>
 

@@ -51,6 +51,8 @@ export interface Property {
   exactLocation?: string;
   /** Latitude,longitude for map (e.g. "-8.5068,115.2624"). Optional. */
   displayLocation?: string;
+  /** Public YouTube overview video — watch, embed, shorts, or youtu.be URL. */
+  youtubeVideoUrl?: string;
   bedrooms: number;
   /** Number of above-ground levels (e.g. 1, 2). Optional for legacy listings. */
   floors?: number;
