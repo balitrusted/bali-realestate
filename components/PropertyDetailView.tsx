@@ -212,6 +212,7 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
                 <PropertyYouTubeVideo
                   videoId={youtubeVideoId}
                   title={`${headingTitle} video tour`}
+                  origin={baseUrl}
                 />
               ) : null}
             </div>
