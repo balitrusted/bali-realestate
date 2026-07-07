@@ -21,10 +21,16 @@ export default async function QaHubPage() {
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
           <header className="mb-10">
+            <nav className="text-sm text-gray-600 mb-6" aria-hidden="true">
+              <span className="invisible">Q&amp;A / All</span>
+            </nav>
             <h1 className="text-4xl font-bold text-gray-900 mb-4">Q&amp;A</h1>
-            <p className="text-lg text-gray-600 mb-6">
+            <p className="text-lg text-gray-600 mb-2">
               Questions from people planning long-term stays, villa rentals, and moves to Bali.
               Answers from Balitrusted and the community.
+            </p>
+            <p className="text-sm text-gray-500 mb-6">
+              Showing <span className="font-medium text-gray-700">all</span> questions.
             </p>
             <QaAskForm className="mb-6" />
             <div className="flex flex-wrap gap-2">

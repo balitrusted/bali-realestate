@@ -56,16 +56,42 @@ function CategoryPage({ category }: { category: QaCategory }) {
     <div className="bg-white min-h-screen">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
-          <nav className="text-sm text-gray-600 mb-6">
-            <Link href="/qa" className="hover:text-gray-900">
-              Q&amp;A
-            </Link>
-            <span className="mx-2">/</span>
-            <span className="text-gray-900">{qaCategoryLabel(category)}</span>
-          </nav>
-          <h1 className="text-3xl font-bold text-gray-900 mb-3">{qaCategoryLabel(category)}</h1>
-          <p className="text-gray-600 mb-6">{qaCategoryDescription(category)}</p>
-          <QaAskForm defaultCategory={category} className="mb-8" />
+          <header className="mb-10">
+            <nav className="text-sm text-gray-600 mb-6">
+              <Link href="/qa" className="hover:text-gray-900">
+                Q&amp;A
+              </Link>
+              <span className="mx-2">/</span>
+              <span className="text-gray-900">{qaCategoryLabel(category)}</span>
+            </nav>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">Q&amp;A</h1>
+            <p className="text-lg text-gray-600 mb-2">{qaCategoryDescription(category)}</p>
+            <p className="text-sm text-gray-500 mb-6">
+              Showing <span className="font-medium text-gray-700">{qaCategoryLabel(category)}</span> questions.
+            </p>
+            <QaAskForm defaultCategory={category} className="mb-6" />
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href="/qa"
+                className="px-4 py-2 rounded-md text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+              >
+                All
+              </Link>
+              {QA_CATEGORY_ORDER.map((cat) => (
+                <Link
+                  key={cat}
+                  href={`/qa/${cat}`}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    cat === category
+                      ? "bg-gray-900 text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                >
+                  {qaCategoryLabel(cat)}
+                </Link>
+              ))}
+            </div>
+          </header>
           <CategoryQuestionList category={category} />
         </div>
       </div>
