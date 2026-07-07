@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { youtubeEmbedUrl, youtubeThumbnailUrl } from "@/lib/youtube";
+import { youtubeEmbedUrl, youtubeThumbnailUrl, youtubeWatchUrl } from "@/lib/youtube";
 
 interface PropertyYouTubeVideoProps {
   videoId: string;
@@ -9,27 +9,33 @@ interface PropertyYouTubeVideoProps {
 }
 
 export default function PropertyYouTubeVideo({ videoId, title }: PropertyYouTubeVideoProps) {
-  const [playing, setPlaying] = useState(false);
-  const embedSrc = `${youtubeEmbedUrl(videoId)}&autoplay=1`;
+  const [embedSrc, setEmbedSrc] = useState<string | null>(null);
+  const watchUrl = youtubeWatchUrl(videoId);
+
+  const startEmbed = () => {
+    setEmbedSrc(
+      youtubeEmbedUrl(videoId, {
+        origin: window.location.origin,
+      })
+    );
+  };
 
   return (
     <section aria-label="Property video tour">
       <h2 className="text-lg font-semibold text-gray-900 mb-3">Video tour</h2>
       <div className="relative w-full overflow-hidden rounded-lg border border-gray-200 bg-black aspect-video">
-        {playing ? (
+        {embedSrc ? (
           <iframe
             src={embedSrc}
             title={title}
             className="absolute inset-0 h-full w-full"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
-            loading="lazy"
-            referrerPolicy="strict-origin-when-cross-origin"
           />
         ) : (
           <button
             type="button"
-            onClick={() => setPlaying(true)}
+            onClick={startEmbed}
             className="group absolute inset-0 h-full w-full"
             aria-label={`Play video: ${title}`}
           >
@@ -49,6 +55,31 @@ export default function PropertyYouTubeVideo({ videoId, title }: PropertyYouTube
           </button>
         )}
       </div>
+      <p className="mt-2 text-sm text-gray-600">
+        {embedSrc ? (
+          <>
+            If the player does not load,{" "}
+            <a
+              href={watchUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-900 underline underline-offset-2 hover:text-gray-700"
+            >
+              watch on YouTube
+            </a>
+            .
+          </>
+        ) : (
+          <a
+            href={watchUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-900 underline underline-offset-2 hover:text-gray-700"
+          >
+            Open on YouTube
+          </a>
+        )}
+      </p>
     </section>
   );
 }

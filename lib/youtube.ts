@@ -30,8 +30,25 @@ export function parseYouTubeVideoId(raw: string | undefined | null): string | nu
   return null;
 }
 
-export function youtubeEmbedUrl(videoId: string): string {
-  return `https://www.youtube-nocookie.com/embed/${videoId}?rel=0`;
+export type YouTubeEmbedOptions = {
+  /** Site origin (e.g. https://balitrusted.com) — required for reliable third-party embeds. */
+  origin?: string;
+  autoplay?: boolean;
+};
+
+export function youtubeEmbedUrl(videoId: string, options: YouTubeEmbedOptions = {}): string {
+  const params = new URLSearchParams({
+    rel: "0",
+    modestbranding: "1",
+    playsinline: "1",
+  });
+  if (options.origin) params.set("origin", options.origin);
+  if (options.autoplay) params.set("autoplay", "1");
+  return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+}
+
+export function youtubeWatchUrl(videoId: string): string {
+  return `https://www.youtube.com/watch?v=${videoId}`;
 }
 
 export function youtubeThumbnailUrl(videoId: string): string {
