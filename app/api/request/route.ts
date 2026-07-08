@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { sendToAdmin } from "@/lib/email";
 import { MutationHttpError } from "@/lib/blobJsonOptimisticWrite";
+import { formatAttributionSummary, normalizeRequestAttribution } from "@/lib/attribution";
 import {
   getRequests,
   addRequest,
@@ -133,6 +134,7 @@ export async function POST(request: NextRequest) {
       propertyTitle,
       propertyUrl,
       desiredStart,
+      attribution,
     } = body;
 
     const isCatalogFeedback = requestType === "catalog-feedback";
@@ -182,6 +184,7 @@ export async function POST(request: NextRequest) {
       propertyTitle: typeof propertyTitle === "string" && propertyTitle.trim() ? propertyTitle.trim() : undefined,
       propertyUrl: typeof propertyUrl === "string" && propertyUrl.trim() ? propertyUrl.trim() : undefined,
       desiredStart: typeof desiredStart === "string" && desiredStart.trim() ? desiredStart.trim() : undefined,
+      attribution: normalizeRequestAttribution(attribution),
       createdAt: new Date().toISOString(),
     };
 
@@ -221,6 +224,14 @@ export async function POST(request: NextRequest) {
       lines.push(`<p><strong>Property link:</strong> <a href="${u}">${u}</a></p>`);
     }
     if (siteRequest.desiredStart) lines.push(`<p><strong>Preferred start:</strong> ${siteRequest.desiredStart}</p>`);
+    const attributionSummary = formatAttributionSummary(siteRequest.attribution);
+    if (attributionSummary) {
+      lines.push(`<p><strong>Traffic:</strong> ${attributionSummary}</p>`);
+    }
+    if (siteRequest.attribution?.referrer) {
+      const ref = siteRequest.attribution.referrer.replace(/"/g, "&quot;");
+      lines.push(`<p><strong>Referrer:</strong> <a href="${ref}">${ref}</a></p>`);
+    }
     if (siteRequest.message) lines.push(`<p><strong>Message:</strong></p><p>${siteRequest.message.replace(/\n/g, "<br>")}</p>`);
     lines.push(`<p><em>Balitrusted</em></p>`);
 

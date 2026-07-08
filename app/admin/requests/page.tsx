@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import type { SiteRequest, RequestStatus } from "@/lib/requestsData";
+import { formatAttributionSummary } from "@/lib/attribution";
 
 const REQUEST_TYPE_LABELS: Record<string, string> = {
   "client-rent": "Client – find property",
@@ -170,6 +171,11 @@ function RequestCard({
       {r.desiredStart && <p className="text-sm text-gray-600">Preferred start: {r.desiredStart}</p>}
       {r.area && <p className="text-sm text-gray-600">Area: {r.area}</p>}
       {r.propertyType && <p className="text-sm text-gray-600">Type: {r.propertyType}</p>}
+      {formatAttributionSummary(r.attribution) ? (
+        <p className="text-sm text-gray-600">
+          Traffic: {formatAttributionSummary(r.attribution)}
+        </p>
+      ) : null}
       {r.message && (
         <p className="text-sm text-gray-700 mt-2 border-t border-gray-100 pt-2 whitespace-pre-wrap">
           {r.message}

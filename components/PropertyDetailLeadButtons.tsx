@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { trackLead } from "@/lib/analytics";
+import { getRequestAttributionForSubmit } from "@/lib/attributionClient";
 
 type LeadKind = "book" | "info" | "buy";
 
@@ -68,10 +70,12 @@ function LeadModal({
           propertyId,
           propertyTitle,
           propertyUrl: propertyPageUrl,
+          attribution: getRequestAttributionForSubmit(),
         }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Could not send");
+      trackLead(requestType);
       setSent(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { trackLead } from "@/lib/analytics";
+import { getRequestAttributionForSubmit } from "@/lib/attributionClient";
 import { PropertyType, MainArea } from "@/types/property";
 import { areas } from "@/types/areas";
 
@@ -79,10 +81,14 @@ export default function CatalogFeedbackForm({ total }: CatalogFeedbackFormProps)
       const res = await fetch("/api/request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify({
+          ...body,
+          attribution: getRequestAttributionForSubmit(),
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to send");
+      trackLead("catalog-feedback");
       setSent(true);
       setShowComment(false);
     } catch (e) {

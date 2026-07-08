@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { PriceInput } from "@/components/admin/PriceInput";
 import { RequestFormCurrencySelect } from "@/components/RequestFormCurrencySelect";
+import { trackLead } from "@/lib/analytics";
+import { getRequestAttributionForSubmit } from "@/lib/attributionClient";
 import { getMergedAreaInfos } from "@/lib/mainAreaRegistry";
 import { DEFAULT_CURRENCY, type SupportedCurrency } from "@/lib/currency";
 
@@ -305,6 +307,7 @@ function RequestForm() {
           ...formPayload,
           budget: budgetAmount != null ? String(budgetAmount) : "",
           preferredContact: preferred,
+          attribution: getRequestAttributionForSubmit(),
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -312,6 +315,7 @@ function RequestForm() {
         setSubmitError(data.error || "Failed to send. Please try again.");
         return;
       }
+      if (requestType) trackLead(requestType);
       setSubmitSuccess(true);
       setPhase("pick-role");
       setRole(null);

@@ -14,7 +14,8 @@ export default function GoogleAnalytics() {
       <Script id="google-analytics" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
+          window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+          function gtag(){window.gtag.apply(window, arguments);}
           gtag('js', new Date());
           gtag('config', '${GA_MEASUREMENT_ID}');
         `}
