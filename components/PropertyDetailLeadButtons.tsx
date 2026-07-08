@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { trackLead } from "@/lib/analytics";
 import { getRequestAttributionForSubmit } from "@/lib/attributionClient";
+import { isValidEnglishIsoDate } from "@/lib/englishDateInput";
+import EnglishDateInput from "@/components/EnglishDateInput";
 
 type LeadKind = "book" | "info" | "buy";
 
@@ -54,6 +56,9 @@ function LeadModal({
       if (!name.trim()) throw new Error("Name is required");
       if (!email && !whatsapp) {
         throw new Error(contactMethod === "whatsapp" ? "Enter your WhatsApp number" : "Enter your email");
+      }
+      if (kind === "book" && desiredStart.trim() && !isValidEnglishIsoDate(desiredStart.trim())) {
+        throw new Error("Enter a valid date (YYYY-MM-DD)");
       }
 
       const res = await fetch("/api/request", {
@@ -186,10 +191,9 @@ function LeadModal({
           {kind === "book" && (
             <div>
               <label className="mb-1 block text-sm font-medium text-stone-700">Preferred start date</label>
-              <input
-                type="date"
+              <EnglishDateInput
                 value={desiredStart}
-                onChange={(e) => setDesiredStart(e.target.value)}
+                onChange={setDesiredStart}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600"
               />
             </div>

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import EnglishDateInput from "@/components/EnglishDateInput";
+import { isValidEnglishIsoDate } from "@/lib/englishDateInput";
 
 interface NotifyWhenAvailableFormProps {
   propertyId: string;
@@ -20,6 +22,9 @@ export default function NotifyWhenAvailableForm({ propertyId, propertyTitle }: N
     setError("");
     setSending(true);
     try {
+      if (dateFrom.trim() && !isValidEnglishIsoDate(dateFrom.trim())) {
+        throw new Error("Enter a valid date (YYYY-MM-DD)");
+      }
       const res = await fetch("/api/notify-requests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -84,11 +89,10 @@ export default function NotifyWhenAvailableForm({ propertyId, propertyTitle }: N
         </div>
         <div>
           <label htmlFor="notify-date" className="block text-sm font-medium text-gray-700 mb-1">Needed from (optional)</label>
-          <input
+          <EnglishDateInput
             id="notify-date"
-            type="date"
             value={dateFrom}
-            onChange={(e) => setDateFrom(e.target.value)}
+            onChange={setDateFrom}
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
           />
         </div>

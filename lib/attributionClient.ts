@@ -4,6 +4,25 @@ import type { RequestAttribution } from "@/lib/attribution";
 
 const STORAGE_KEY = "balitrusted-request-attribution-v1";
 
+function normalizeHostname(hostname: string): string {
+  return hostname.replace(/^www\./, "").toLowerCase();
+}
+
+function isSameSiteReferrer(referrer: string): boolean {
+  if (!referrer || typeof window === "undefined") return false;
+  try {
+    const refHost = normalizeHostname(new URL(referrer).hostname);
+    const siteHost = normalizeHostname(window.location.hostname);
+    return refHost === siteHost;
+  } catch {
+    return false;
+  }
+}
+
+function effectiveReferrer(referrer: string): string {
+  return isSameSiteReferrer(referrer) ? "" : referrer;
+}
+
 function normalizeSource(source: string | null, referrer: string): string {
   if (source) return source;
   if (!referrer) return "direct";
@@ -35,7 +54,7 @@ export function captureFirstTouchAttribution(): void {
   try {
     if (window.sessionStorage.getItem(STORAGE_KEY)) return;
     const url = new URL(window.location.href);
-    const referrer = document.referrer || "";
+    const referrer = effectiveReferrer(document.referrer || "");
     const attribution: RequestAttribution = {
       source: normalizeSource(url.searchParams.get("utm_source"), referrer),
       medium: normalizeMedium(url.searchParams.get("utm_medium"), referrer),

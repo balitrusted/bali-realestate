@@ -39,6 +39,7 @@ export function formatAttributionSummary(attr?: RequestAttribution): string | nu
   const parts: string[] = [];
   if (traffic) parts.push(traffic);
   if (attr.campaign) parts.push(`campaign: ${attr.campaign}`);
+  if (attr.term) parts.push(`keyword: ${attr.term}`);
   if (attr.landingPage) parts.push(`landing: ${attr.landingPage}`);
   if (attr.conversionPage) parts.push(`converted on: ${attr.conversionPage}`);
   return parts.length > 0 ? parts.join(" · ") : null;
