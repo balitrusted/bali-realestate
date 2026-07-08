@@ -75,8 +75,8 @@ function LeadModal({
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Could not send");
-      trackLead(requestType);
       setSent(true);
+      trackLead(requestType);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {

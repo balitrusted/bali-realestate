@@ -315,7 +315,6 @@ function RequestForm() {
         setSubmitError(data.error || "Failed to send. Please try again.");
         return;
       }
-      if (requestType) trackLead(requestType);
       setSubmitSuccess(true);
       setPhase("pick-role");
       setRole(null);
@@ -336,6 +335,7 @@ function RequestForm() {
         message: "",
       });
       setPrefillApplied(false);
+      if (requestType) trackLead(requestType);
     } catch {
       setSubmitError("Network error. Please try again.");
     } finally {
