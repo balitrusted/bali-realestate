@@ -79,6 +79,12 @@ export default function AdminQaPage() {
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Q&amp;A</h1>
         <div className="flex flex-wrap gap-2">
+          <Link
+            href="/admin/qa/schedule"
+            className="px-4 py-2 border border-emerald-700 text-emerald-900 rounded-md hover:bg-emerald-50 text-sm"
+          >
+            Content pipeline
+          </Link>
           <button
             type="button"
             onClick={handleSeed}

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { markNotifyRequestsSeen } from "@/lib/adminBadgeState";
 import { markNotifyRequestRead } from "@/lib/notifyRequestsData";
+import { qaScheduleDayKey } from "@/lib/qaScheduleReminder";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +34,18 @@ export async function POST(request: Request) {
         secure: process.env.NODE_ENV === "production",
         path: "/",
         maxAge: 60 * 60 * 24 * 365,
+      });
+      return response;
+    }
+    if (section === "qa-schedule") {
+      const todayKey = qaScheduleDayKey();
+      const response = NextResponse.json({ ok: true });
+      response.cookies.set("admin-qa-schedule-seen-day", todayKey, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 14,
       });
       return response;
     }

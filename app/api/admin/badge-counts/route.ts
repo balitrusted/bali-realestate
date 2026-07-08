@@ -4,6 +4,7 @@ import { getRequests } from "@/lib/requestsData";
 import { getNotifyUnreadCount } from "@/lib/adminBadgeState";
 import { getAllComments } from "@/lib/commentsPersistence";
 import { countPendingQaModeration } from "@/lib/qaPersistence";
+import { getQaScheduleReminderCount } from "@/lib/qaScheduleReminder";
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +36,10 @@ export async function GET() {
 
     let qaPending = 0;
     try {
-      qaPending = await countPendingQaModeration();
+      const moderation = await countPendingQaModeration();
+      const scheduleSeenDay = cookieStore.get("admin-qa-schedule-seen-day")?.value;
+      const scheduleReminder = getQaScheduleReminderCount(scheduleSeenDay);
+      qaPending = moderation + scheduleReminder;
     } catch {
       /* ignore */
     }

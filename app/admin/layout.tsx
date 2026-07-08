@@ -57,6 +57,19 @@ export default function AdminLayout({
 
   useEffect(() => {
     if (pathname === "/admin/login" || authenticated !== true) return;
+    if (pathname === "/admin/qa/schedule" || pathname.startsWith("/admin/qa/schedule/")) {
+      fetch("/api/admin/badge-seen", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ section: "qa-schedule" }),
+      })
+        .then(() => window.dispatchEvent(new Event("admin-badges-refresh")))
+        .catch(() => {});
+    }
+  }, [pathname, authenticated]);
+
+  useEffect(() => {
+    if (pathname === "/admin/login" || authenticated !== true) return;
     const load = async () => {
       try {
         const res = await fetch("/api/admin/badge-counts", { cache: "no-store" });
