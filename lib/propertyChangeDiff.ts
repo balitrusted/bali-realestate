@@ -20,7 +20,6 @@ const TRACKED_TOP_LEVEL_FIELDS = [
   "bedrooms",
   "floors",
   "bathrooms",
-  "price",
   "duration",
   "features",
   "images",
@@ -42,6 +41,11 @@ const FIELD_LABELS: Record<string, string> = {
   bedrooms: "Bedrooms",
   floors: "Floors",
   bathrooms: "Bathrooms",
+  "price.currency": "Price currency",
+  "price.min": "Price (legacy min)",
+  "price.monthly": "Monthly rent",
+  "price.yearly": "Yearly rent",
+  "price.forSale": "Sale price",
   price: "Price",
   duration: "Lease duration",
   features: "Features",
@@ -92,6 +96,12 @@ export function formatPropertyFieldValue(field: string, value: unknown): string 
     return entries.length > 0 ? entries.join("; ") : "—";
   }
 
+  if (field.startsWith("price.")) {
+    const priceKey = field.slice("price.".length);
+    if (priceKey === "currency") return String(value);
+    return formatMoney(value, "IDR");
+  }
+
   if (field === "price" && value && typeof value === "object") {
     const price = value as Property["price"];
     const parts: string[] = [];
@@ -122,6 +132,27 @@ export function formatPropertyFieldValue(field: string, value: unknown): string 
   return String(value);
 }
 
+const PRICE_SUBFIELDS = ["currency", "min", "monthly", "yearly", "forSale"] as const;
+
+function diffPriceFields(before: Property, after: Property): Record<string, PropertyFieldChange> {
+  const changes: Record<string, PropertyFieldChange> = {};
+  for (const key of PRICE_SUBFIELDS) {
+    const fromValue = before.price?.[key];
+    const toValue = after.price?.[key];
+    if (!valuesEqual(fromValue, toValue)) {
+      changes[`price.${key}`] = {
+        from: stableValue(fromValue),
+        to: stableValue(toValue),
+      };
+    }
+  }
+  return changes;
+}
+
+export function isPriceHistoryField(field: string): boolean {
+  return field === "price" || field.startsWith("price.");
+}
+
 export function diffPropertyFields(
   before: Property,
   after: Property
@@ -144,6 +175,8 @@ export function diffPropertyFields(
       };
     }
   }
+
+  Object.assign(changes, diffPriceFields(before, after));
 
   return changes;
 }

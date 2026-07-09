@@ -184,7 +184,7 @@ export default function AdminArchivePage() {
                     {restoringId === property.id ? "Restoring..." : "Restore"}
                   </button>
                   <Link
-                    href={`/admin/properties/edit/${property.id}`}
+                    href={`/admin/properties/edit/${property.id}?from=archive`}
                     className="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors text-sm text-center whitespace-nowrap"
                   >
                     Edit

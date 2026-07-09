@@ -5,6 +5,7 @@ import type { PropertyEvent } from "@/lib/propertyEvents";
 import {
   formatPropertyFieldLabel,
   formatPropertyFieldValue,
+  isPriceHistoryField,
 } from "@/lib/propertyChangeDiff";
 import { formatLocaleDate } from "@/lib/formatDate";
 
@@ -25,10 +26,38 @@ function formatEventDate(iso: string): string {
   })}`;
 }
 
+type PriceHistoryEntry = {
+  id: string;
+  createdAt: string;
+  changes: Array<{ field: string; from: string; to: string }>;
+};
+
+function buildPriceHistory(events: PropertyEvent[]): PriceHistoryEntry[] {
+  return events.flatMap((event) => {
+    if (event.eventType !== "updated" || !event.changedFields) return [];
+    const priceChanges = Object.entries(event.changedFields).filter(([field]) =>
+      isPriceHistoryField(field)
+    );
+    if (priceChanges.length === 0) return [];
+    return [
+      {
+        id: event.id,
+        createdAt: event.createdAt,
+        changes: priceChanges.map(([field, change]) => ({
+          field,
+          from: formatPropertyFieldValue(field, change.from),
+          to: formatPropertyFieldValue(field, change.to),
+        })),
+      },
+    ];
+  });
+}
+
 export default function PropertyHistoryPanel({ propertyId }: { propertyId: string }) {
   const [events, setEvents] = useState<PropertyEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const priceHistory = buildPriceHistory(events);
 
   useEffect(() => {
     let cancelled = false;
@@ -68,6 +97,38 @@ export default function PropertyHistoryPanel({ propertyId }: { propertyId: strin
       <p className="mt-1 text-sm text-gray-600">
         Full change log for this listing, including archive and restore events.
       </p>
+
+      {!loading && !error ? (
+        <div className="mt-5 rounded-md border border-amber-100 bg-amber-50/60 p-4">
+          <h3 className="text-sm font-semibold text-gray-900">Price history</h3>
+          <p className="mt-1 text-xs text-gray-600">
+            Recorded automatically when rent or sale prices change in admin.
+          </p>
+          {priceHistory.length === 0 ? (
+            <p className="mt-3 text-sm text-gray-500">No price changes recorded yet.</p>
+          ) : (
+            <ol className="mt-3 space-y-3">
+              {priceHistory.map((entry) => (
+                <li key={entry.id} className="rounded-md border border-amber-100 bg-white p-3">
+                  <p className="text-xs font-medium text-gray-500">{formatEventDate(entry.createdAt)}</p>
+                  <ul className="mt-2 space-y-1">
+                    {entry.changes.map((change) => (
+                      <li key={`${entry.id}-${change.field}`} className="text-sm text-gray-700">
+                        <span className="font-medium text-gray-900">
+                          {formatPropertyFieldLabel(change.field)}:
+                        </span>{" "}
+                        <span className="text-gray-600">{change.from}</span>
+                        {" → "}
+                        <span className="text-gray-900">{change.to}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ol>
+          )}
+        </div>
+      ) : null}
 
       {loading ? (
         <p className="mt-4 text-sm text-gray-500">Loading history…</p>

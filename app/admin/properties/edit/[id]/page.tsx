@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import PropertyForm from "@/components/admin/PropertyForm";
 import PropertyHistoryPanel from "@/components/admin/PropertyHistoryPanel";
 import { Property } from "@/types/property";
@@ -9,7 +9,9 @@ import { Property } from "@/types/property";
 export default function EditPropertyPage() {
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const id = params.id as string;
+  const fromArchive = searchParams.get("from") === "archive";
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -44,7 +46,15 @@ export default function EditPropertyPage() {
 
     if (response.ok) {
       const targetId = property?.id ?? id;
-      router.push(targetId ? `/admin/properties?scrollTo=${encodeURIComponent(targetId)}` : "/admin/properties");
+      const restoredFromArchive =
+        (fromArchive || property?.archived === true) && updatedProperty.archived === false;
+      if ((fromArchive || property?.archived === true) && !restoredFromArchive) {
+        router.push("/admin/properties/archive");
+      } else {
+        router.push(
+          targetId ? `/admin/properties?scrollTo=${encodeURIComponent(targetId)}` : "/admin/properties"
+        );
+      }
     } else {
       let detail = `HTTP ${response.status}`;
       try {
