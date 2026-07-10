@@ -423,6 +423,23 @@ export async function updateAnswerStatus(
   return updated;
 }
 
+export async function updateAnswerContent(
+  answerId: string,
+  content: string
+): Promise<QaAnswer | null> {
+  const trimmed = content.trim();
+  if (!trimmed) return null;
+  const existing = await getAnswerById(answerId);
+  if (!existing) return null;
+  const updated: QaAnswer = {
+    ...existing,
+    content: trimmed,
+    updatedAt: new Date().toISOString(),
+  };
+  await persistAnswer(updated);
+  return updated;
+}
+
 async function uniqueSlug(base: string): Promise<string> {
   const all = await getAllQuestionsRaw();
   const taken = new Set(all.map((q) => q.slug));

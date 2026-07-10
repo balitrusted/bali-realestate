@@ -11,6 +11,7 @@ import {
   persistQuestion,
   seedQaToSupabase,
   syncQuestionAnswerCount,
+  updateAnswerContent,
   updateAnswerStatus,
 } from "@/lib/qaPersistence";
 
@@ -82,6 +83,19 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "answerId required" }, { status: 400 });
       }
       const answer = await updateAnswerStatus(answerId, "rejected");
+      if (!answer) {
+        return NextResponse.json({ error: "Answer not found" }, { status: 404 });
+      }
+      return NextResponse.json({ answer });
+    }
+
+    if (body.action === "updateAnswer") {
+      const answerId = String(body.answerId || "").trim();
+      const content = String(body.content || "").trim();
+      if (!answerId || !content) {
+        return NextResponse.json({ error: "answerId and content required" }, { status: 400 });
+      }
+      const answer = await updateAnswerContent(answerId, content);
       if (!answer) {
         return NextResponse.json({ error: "Answer not found" }, { status: 404 });
       }

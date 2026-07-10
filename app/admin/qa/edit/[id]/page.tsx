@@ -20,6 +20,9 @@ export default function AdminQaEditPage() {
   const [savingAnswer, setSavingAnswer] = useState(false);
   const [loading, setLoading] = useState(true);
   const [moderatingId, setModeratingId] = useState<string | null>(null);
+  const [editingAnswerId, setEditingAnswerId] = useState<string | null>(null);
+  const [editingAnswerText, setEditingAnswerText] = useState("");
+  const [savingEditId, setSavingEditId] = useState<string | null>(null);
 
   const loadAnswers = useCallback(async () => {
     if (!id) return;
@@ -106,6 +109,46 @@ export default function AdminQaEditPage() {
     }
   };
 
+  const startEditingAnswer = (answer: QaAnswer) => {
+    setEditingAnswerId(answer.id);
+    setEditingAnswerText(answer.content);
+  };
+
+  const cancelEditingAnswer = () => {
+    setEditingAnswerId(null);
+    setEditingAnswerText("");
+  };
+
+  const saveEditedAnswer = async () => {
+    if (!editingAnswerId || !editingAnswerText.trim()) return;
+    setSavingEditId(editingAnswerId);
+    try {
+      const res = await fetch("/api/admin/qa", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "updateAnswer",
+          answerId: editingAnswerId,
+          content: editingAnswerText.trim(),
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setAnswers((prev) =>
+          prev.map((a) => (a.id === editingAnswerId ? data.answer : a))
+        );
+        cancelEditingAnswer();
+      } else {
+        const d = await res.json().catch(() => ({}));
+        alert(d.error || "Failed to update answer");
+      }
+    } catch {
+      alert("Failed to update answer");
+    } finally {
+      setSavingEditId(null);
+    }
+  };
+
   if (loading) return <p>Loading…</p>;
   if (!question) return <p>Question not found.</p>;
 
@@ -171,8 +214,46 @@ export default function AdminQaEditPage() {
         ) : (
           <ul className="space-y-3 mb-6">
             {officialAnswers.map((a) => (
-              <li key={a.id} className="p-4 bg-emerald-50/80 border border-emerald-100 rounded-lg text-sm text-gray-800 whitespace-pre-line">
-                {a.content}
+              <li key={a.id} className="p-4 bg-emerald-50/80 border border-emerald-100 rounded-lg text-sm">
+                {editingAnswerId === a.id ? (
+                  <div className="space-y-3">
+                    <textarea
+                      value={editingAnswerText}
+                      onChange={(e) => setEditingAnswerText(e.target.value)}
+                      rows={6}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-800"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={saveEditedAnswer}
+                        disabled={savingEditId === a.id || !editingAnswerText.trim()}
+                        className="px-3 py-1.5 text-xs bg-gray-900 text-white rounded-md hover:bg-gray-800 disabled:opacity-50"
+                      >
+                        {savingEditId === a.id ? "Saving…" : "Save changes"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={cancelEditingAnswer}
+                        disabled={savingEditId === a.id}
+                        className="px-3 py-1.5 text-xs border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-gray-800 whitespace-pre-line">{a.content}</p>
+                    <button
+                      type="button"
+                      onClick={() => startEditingAnswer(a)}
+                      className="mt-3 px-3 py-1.5 text-xs border border-emerald-200 text-emerald-900 rounded-md hover:bg-emerald-100/60"
+                    >
+                      Edit
+                    </button>
+                  </>
+                )}
               </li>
             ))}
           </ul>
