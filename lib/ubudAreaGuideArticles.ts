@@ -8,6 +8,7 @@ import {
   penestananGalleryIntro,
 } from "@/lib/penestananGallery";
 import { penestananGuidePois } from "@/lib/penestananGuidePois";
+import { masGuidePois } from "@/lib/masGuidePois";
 import {
   AREA_GUIDE_GALLERY_END_SLOT,
   AREA_GUIDE_MAP_SLOT,
@@ -437,8 +438,22 @@ ${AREA_GUIDE_MAP_SLOT}`,
       "long-term rental Mas",
       "4 bedroom villa Mas",
     ],
+    updatedAt: "2026-07-12T12:00:00.000Z",
+    areaMap: {
+      boundaryUrl: "/mas-photos/mas-boundary.geojson",
+      title: "Mas on the map",
+      caption:
+        "Administrative boundary of Desa Mas (OpenStreetMap). North pins overlap the A.A. Gede Rai corridor shared with Lodtunduh in daily life.",
+      pois: masGuidePois,
+      listingSubArea: "mas",
+    },
     intro:
       "Mas is known for <strong>wood carving and workshops</strong>, but for long-term renters it is increasingly a <strong>green, developing residential corridor</strong> south-east of central Ubud. Many people describe it as one of the <strong>greenest pockets in Ubud that is still actively building</strong> - new villas, wider plots, and rice-field edges rather than lane-on-lane density. <strong>2-3-4 bedroom villas</strong> are what the market optimizes for here, and supply keeps growing.",
+    geography:
+      `<p>Mas is <strong>not one uniform pocket</strong> on the map. Official Desa Mas is large; daily life splits into a <strong>north corridor</strong> and a <strong>deeper south</strong>.</p>
+<p><strong>North Mas</strong> follows <strong>Jl. A.A. Gede Rai</strong> - the same spine many renters call “Lodtunduh” for search and errands. Titi Batu, Usha, Pelangi School, and the Ambarawati crossroads sit inside official Mas on most maps. Our <a href="/guides/ubud/lodtunduh-area-guide-ubud">Lodtunduh area guide</a> covers that corridor in detail; the map below shows the full desa boundary with pins on both north and south anchors.</p>
+<p><strong>Central and south Mas</strong> is the craft-village and residential story: <strong>Jl. Raya Mas</strong> showrooms, quieter villa lanes behind, rice edges, and family-sized homes further from central Ubud. Compare with <a href="/guides/ubud/peliatan-area-guide-ubud">Peliatan</a> (Pepito errands) and nearby <strong>Pejeng</strong> (similar green scale, different logistics).</p>
+${AREA_GUIDE_MAP_SLOT}`,
     atmosphere:
       "Mas feels like village life with momentum: craft showrooms on the main road, quieter residential lanes behind, and steady new construction aimed at families who want gardens and multiple bedrooms. It is less “scene” than Penestanan and more everyday-livable. Nearby <strong>Pejeng</strong> is also green and spacious, but Mas often wins on <strong>family logistics</strong> (school runs toward Peliatan/Lodtunduh) and the volume of newer family-sized villas.",
     noise:
