@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import TawkToChat from "@/components/TawkToChat";
 import AttributionCapture from "@/components/AttributionCapture";
 import { SavedProvider } from "@/components/SavedProvider";
 import { CurrencyProvider } from "@/components/CurrencyProvider";
@@ -50,6 +51,7 @@ export default function RootLayout({
       </head>
       <body className={`${fontSans.variable} font-sans antialiased`}>
         <GoogleAnalytics />
+        <TawkToChat />
         <AttributionCapture />
         <SavedProvider>
           <CurrencyProvider>
