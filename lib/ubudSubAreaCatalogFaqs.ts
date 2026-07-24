@@ -117,6 +117,24 @@ const BY_SUB_AREA: Record<SubArea, Faq[]> = {
       a: `Yes - see our Mas area guide (${guidePath("mas")}) for daily rhythm and rental notes.`,
     },
   ],
+  pejeng: [
+    {
+      q: "Why rent a villa in Pejeng, Ubud?",
+      a: "Pejeng is one of the greenest, most spacious east-Ubud pockets - rice fields, temple landscape, and more room between homes than denser hill villages.",
+    },
+    {
+      q: "Is Pejeng convenient for daily errands?",
+      a: "Less walkable than central Ubud - most groceries mean Pepito Andong or Delta Dewata by scooter or car. Choose it when privacy and nature matter more than café density.",
+    },
+    {
+      q: "Pejeng vs Mas?",
+      a: "Both are green and spacious east/south-east of town. Mas often has denser family villa supply and stronger school-run logistics; Pejeng leans more open landscape and privacy.",
+    },
+    {
+      q: "Is there a Pejeng area guide?",
+      a: `Yes - see our Pejeng area guide (${guidePath("pejeng")}) for atmosphere, roads, and rental notes.`,
+    },
+  ],
   peliatan: [
     {
       q: "Is Peliatan close to central Ubud?",

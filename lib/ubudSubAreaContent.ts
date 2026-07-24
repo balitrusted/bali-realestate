@@ -33,6 +33,8 @@ export const ubudSubAreaIntro: Record<SubArea, string> = {
     "Lodtunduh sits just south of central Ubud on Jl. A.A. Gede Rai. The north is urban and close to town; the far south opens into rice and trees.",
   mas:
     "Mas is famous for wood carving and craft workshops, with a relaxed village feel between rice plots and small roads. It is a strong match for quiet long-term living while staying within easy reach of central Ubud.",
+  pejeng:
+    "Pejeng is one of the greenest, most spacious pockets east of Ubud - rice fields, temples, and open landscapes. Choose it for privacy and nature when you are fine scooter-commuting for most errands.",
   peliatan:
     "Peliatan is one of the closest neighborhoods to central Ubud - an old, traditional pocket with developing villa lanes. From many villas you can walk to Pepito Market Peliatan; Yoga Barn and central Ubud are often 5-8 minutes by scooter (up to ~10 depending on the lane).",
   penestanan:
@@ -57,6 +59,7 @@ export const ubudSubAreaSeoTitle: Record<SubArea, string> = {
   kemenuh: "Villas for Rent in Kemenuh, Ubud | Family-Friendly | Balitrusted",
   lodtunduh: "Villas for Rent in Lodtunduh, Ubud | South Ubud | Balitrusted",
   mas: "Villas for Rent in Mas, Ubud | Craft Village Calm | Balitrusted",
+  pejeng: "Villas for Rent in Pejeng, Ubud | Green East Ubud | Balitrusted",
   peliatan: "Villas for Rent in Peliatan, Ubud | Near Center & Pepito | Balitrusted",
   penestanan: "Villas for Rent in Penestanan, Ubud | Walkable Hill | Balitrusted",
   petulu: "Villas for Rent in Petulu, Ubud | Quiet Residential | Balitrusted",
@@ -80,6 +83,8 @@ export const ubudSubAreaSeoKeywords: Record<SubArea, string> = {
     "Lodtunduh Ubud, villa rent Lodtunduh, south Ubud rental, long-term rental Lodtunduh",
   mas:
     "Mas Ubud, villa rent Mas, family villa Mas, long-term rental Ubud, wood carving village",
+  pejeng:
+    "Pejeng Ubud, villa rent Pejeng, east Ubud, rice field villa, long-term rental Pejeng",
   peliatan:
     "Peliatan Ubud, villa rent Peliatan, Pepito Peliatan, Yoga Barn, Ubud center, long-term rental, Empathy School",
   penestanan:
@@ -124,6 +129,15 @@ export function ubudSubAreaFooterParagraphs(subArea: SubArea): string[] {
     return [
       `${label} combines craft heritage with residential calm - many visitors know it for artisans and galleries, while long-term renters appreciate the green edges and straightforward access toward Ubud center. Villas here range from compact one-bedroom setups to larger two- and three-bedroom homes, depending on what owners bring to market.`,
       `On this page you can browse properties we currently list in ${label} - for rent (monthly or yearly where offered) and for purchase when owners publish a sale price. We aim for clear photos and honest feature tags; still, visit in person when you can, and confirm utilities, access roads, and contract terms with qualified advisers before you commit.`,
+      sharedClosing(label),
+    ];
+  }
+
+  if (subArea === "pejeng") {
+    return [
+      `${label} is one of east Ubud’s greenest, most open pockets - rice fields, temple landscape, and more space between homes than denser hill villages. Long-term renters often choose it for privacy and calm when daily life can run on a scooter.`,
+      `Errands usually mean Pepito Andong or Delta Dewata by scooter or car; schools are typically a 20-30 minute ride depending on your pin. Compare with nearby Mas if you want greener living with denser family villa supply and stronger school-run logistics.`,
+      `On this page you can browse villas we list in ${label} - for rent on monthly or yearly terms where published.`,
       sharedClosing(label),
     ];
   }

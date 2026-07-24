@@ -452,10 +452,10 @@ ${AREA_GUIDE_MAP_SLOT}`,
     geography:
       `<p>Mas is <strong>not one uniform pocket</strong> on the map. Official Desa Mas is large; daily life splits into a <strong>north corridor</strong> and a <strong>deeper south</strong>.</p>
 <p><strong>North Mas</strong> follows <strong>Jl. A.A. Gede Rai</strong> - the same spine many renters call “Lodtunduh” for search and errands. Titi Batu, Usha, Pelangi School, and the Ambarawati crossroads sit inside official Mas on most maps. Our <a href="/guides/ubud/lodtunduh-area-guide-ubud">Lodtunduh area guide</a> covers that corridor in detail; the map below shows the full desa boundary with pins on both north and south anchors.</p>
-<p><strong>Central and south Mas</strong> is the craft-village and residential story: <strong>Jl. Raya Mas</strong> showrooms, quieter villa lanes behind, rice edges, and family-sized homes further from central Ubud. Compare with <a href="/guides/ubud/peliatan-area-guide-ubud">Peliatan</a> (Pepito errands) and nearby <strong>Pejeng</strong> (similar green scale, different logistics).</p>
+<p><strong>Central and south Mas</strong> is the craft-village and residential story: <strong>Jl. Raya Mas</strong> showrooms, quieter villa lanes behind, rice edges, and family-sized homes further from central Ubud. Compare with <a href="/guides/ubud/peliatan-area-guide-ubud">Peliatan</a> (Pepito errands) and nearby <a href="/guides/ubud/pejeng-area-guide-ubud">Pejeng</a> (similar green scale, different logistics).</p>
 ${AREA_GUIDE_MAP_SLOT}`,
     atmosphere:
-      "Mas feels like village life with momentum: craft showrooms on the main road, quieter residential lanes behind, and steady new construction aimed at families who want gardens and multiple bedrooms. It is less “scene” than Penestanan and more everyday-livable. Nearby <strong>Pejeng</strong> is also green and spacious, but Mas often wins on <strong>family logistics</strong> (school runs toward Peliatan/Lodtunduh) and the volume of newer family-sized villas.",
+      "Mas feels like village life with momentum: craft showrooms on the main road, quieter residential lanes behind, and steady new construction aimed at families who want gardens and multiple bedrooms. It is less “scene” than Penestanan and more everyday-livable. Nearby <a href=\"/guides/ubud/pejeng-area-guide-ubud\">Pejeng</a> is also green and spacious, but Mas often wins on <strong>family logistics</strong> (school runs toward Peliatan/Lodtunduh) and the volume of newer family-sized villas.",
     noise:
       "Often more residential and less scene-heavy than central hills, but roosters, ceremonies, and construction still exist. Calm usually comes from layout and distance from busy roads - not from the area name alone.",
     roads:
@@ -504,6 +504,69 @@ ${AREA_GUIDE_MAP_SLOT}`,
       {
         q: "Do you need a scooter to live in Mas?",
         a: "For most people, yes - for groceries (e.g. Pepito Market Peliatan), school runs, and evenings out. Some lanes are walkable for short trips only.",
+      },
+    ],
+  },
+  {
+    subArea: "pejeng",
+    excerpt:
+      "Pejeng is one of the greenest, most spacious pockets east of Ubud - rice fields, temples, and open landscapes. Ideal for calm long-term living when you are fine scooter-commuting for errands.",
+    seoTitle: "Pejeng Ubud Area Guide: Green East Ubud & Villa Rentals | Balitrusted",
+    seoDescription:
+      "Pejeng Ubud: green east pocket with rice fields and temple landscape. Long-term guide - privacy, roads, shops, prices, and villas in Pejeng.",
+    seoKeywords: [
+      "Pejeng Ubud",
+      "Pejeng villa rent",
+      "east Ubud",
+      "long-term rental Pejeng",
+      "rice field villa Ubud",
+    ],
+    intro:
+      "Pejeng sits <strong>east of central Ubud</strong> as one of the <strong>greenest and most spacious</strong> residential pockets nearby - rice fields, temples, and open landscapes rather than dense café hills. It suits long-term renters who want <strong>space and privacy</strong> and accept that most daily errands run by scooter or car.",
+    atmosphere:
+      "Pejeng feels open and rural-Ubud: more plot between homes, stronger nature connection, and a slower village rhythm. It is less “scene” than Penestanan and often quieter than central corridors - choose it for calm, not for walk-to-every-café convenience.",
+    noise:
+      "Usually calmer than tourist strips, but roosters, ceremonies, and construction still happen. Quiet comes from your exact lane and neighbors - not from the area name alone.",
+    roads:
+      "Scooter or car is essential. Groceries commonly mean <strong>Pepito Andong</strong> or <strong>Delta Dewata</strong>; local warungs cover basics. Test your lane after rain and at night before you commit.",
+    internet:
+      "Remote work is villa-specific - speed-test Wi‑Fi, prefer enclosed living in heavy rain, and ask about backup power.",
+    prices:
+      "Inventory is growing as east Ubud develops; pricing depends on bedrooms, finish, outlook, and road access. Compare with nearby <a href=\"/guides/ubud/mas-area-guide-ubud\">Mas</a> for family villa supply. Browse <a href=\"/properties/rent/ubud/pejeng\">Pejeng villas for rent</a>.",
+    pros: [
+      "Among the greenest, most spacious pockets east of Ubud",
+      "Strong privacy and nature connection - rice fields and temple landscape",
+      "Calmer than central Ubud and café-dense hills",
+      "Practical scooter access to Pepito Andong and Delta Dewata",
+    ],
+    cons: [
+      "Not walkable for most daily errands",
+      "Schools and services often mean a 20-30 minute ride",
+      "Lane quality and night lighting vary villa to villa",
+      "Less dense villa inventory than Mas in some bedroom sizes",
+    ],
+    whoFor: [
+      "Renters who prioritize space, privacy, and nature over café density",
+      "Families or couples comparing Pejeng vs Mas for greener east-Ubud living",
+      "Remote workers with a solid villa setup who do not need walkable coworking",
+      "Long-stay guests comfortable with scooter logistics",
+    ],
+    faqs: [
+      {
+        q: "Where is Pejeng in Ubud?",
+        a: "East of central Ubud - one of the greener, more spacious residential pockets with rice fields, temples, and open landscapes.",
+      },
+      {
+        q: "Is Pejeng good for long-term living?",
+        a: "Yes, if you want calm and nature and accept scooter or car for groceries and school runs. It is not ideal if you want everything walkable.",
+      },
+      {
+        q: "Pejeng vs Mas?",
+        a: "Both are green and spacious. Mas often wins on denser family villa supply and school-run logistics; Pejeng leans more open landscape and privacy.",
+      },
+      {
+        q: "Where do people shop from Pejeng?",
+        a: "Commonly Pepito Andong or Delta Dewata by scooter or car, plus local village shops for basics.",
       },
     ],
   },
@@ -1177,6 +1240,7 @@ export const UBUD_AREA_GUIDE_HUB_LINKS_HTML = `<h2 class="heading">Area guides w
 <li><p><a href="/guides/ubud/lodtunduh-area-guide-ubud"><strong>Lodtunduh</strong></a> - south Ubud, Titi Batu corridor, Canggu road access, urban north vs green south</p></li>
 <li><p><a href="/guides/ubud/penestanan-area-guide-ubud"><strong>Penestanan</strong></a> - walkable, creative, social-by-Ubud-standards living</p></li>
 <li><p><a href="/guides/ubud/mas-area-guide-ubud"><strong>Mas</strong></a> - green, developing, family-friendly 2-4 bed villas</p></li>
+<li><p><a href="/guides/ubud/pejeng-area-guide-ubud"><strong>Pejeng</strong></a> - green east Ubud, rice fields, spacious privacy</p></li>
 <li><p><a href="/guides/ubud/peliatan-area-guide-ubud"><strong>Peliatan</strong></a> - nearest to central Ubud, Pepito, Yoga Barn access</p></li>
 <li><p><a href="/guides/ubud/gentong-area-guide-ubud"><strong>Gentong</strong></a> - green value, yearly 2-bed deals, scooter lanes</p></li>
 <li><p><a href="/guides/ubud/petulu-area-guide-ubud"><strong>Petulu</strong></a> - heron village, Pepito Andong-close, west to Jalan Cinta</p></li>
@@ -1188,7 +1252,7 @@ export const UBUD_AREA_GUIDE_HUB_LINKS_HTML = `<h2 class="heading">Area guides w
 <li><p><a href="/guides/ubud/kemenuh-area-guide-ubud"><strong>Kemenuh</strong></a> - practical residential countryside</p></li>
 <li><p><a href="/guides/ubud/sukawati-area-guide-ubud"><strong>Sukawati</strong></a> - local markets, value, and space east of Ubud</p></li>
 </ul>
-<p>Areas such as <strong>Pejeng</strong>, <strong>Nyuh Kuning</strong>, <strong>Andong</strong>, and <strong>central Ubud</strong> are covered in the sections below. We add catalog-linked guides when we list villas in those pockets.</p>`;
+<p>Areas such as <strong>Nyuh Kuning</strong>, <strong>Andong</strong>, and <strong>central Ubud</strong> are covered in the sections below. We add catalog-linked guides when we list villas in those pockets.</p>`;
 
 export function enrichArticlesWithUbudAreaGuides(articles: Article[]): Article[] {
   const byId = new Map(articles.map((a) => [a.id, a]));

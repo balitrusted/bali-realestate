@@ -10,6 +10,7 @@ export type SubArea =
   | 'kemenuh'
   | 'lodtunduh'
   | 'mas'
+  | 'pejeng'
   | 'peliatan'
   | 'penestanan'
   | 'petulu'
@@ -35,7 +36,7 @@ export const areas: Record<MainArea, AreaInfo> = {
     name: 'Ubud',
     nameEn: 'Ubud',
     description: 'Ubud is the cultural heart of Bali, known for its lush rice terraces, yoga studios, and peaceful atmosphere. Perfect for long-term living, remote work, and families seeking a quiet lifestyle.',
-    subAreas: ['gentong', 'kedewatan', 'keliki', 'kemenuh', 'lodtunduh', 'mas', 'peliatan', 'penestanan', 'petulu', 'sayan', 'singakerta', 'sukawati', 'tegallalang'],
+    subAreas: ['gentong', 'kedewatan', 'keliki', 'kemenuh', 'lodtunduh', 'mas', 'pejeng', 'peliatan', 'penestanan', 'petulu', 'sayan', 'singakerta', 'sukawati', 'tegallalang'],
     seoTitle: 'Ubud and Surroundings - Long-term Villa Rentals and Sales',
     seoDescription: 'Find villas for rent and sale in Ubud and surrounding areas. Quiet neighborhoods, family-friendly options, and properties perfect for long-term living.',
   },
@@ -90,6 +91,7 @@ export const subAreaNames: Record<SubArea, string> = {
   kemenuh: 'Kemenuh',
   lodtunduh: 'Lodtunduh',
   mas: 'Mas',
+  pejeng: 'Pejeng',
   peliatan: 'Peliatan',
   penestanan: 'Penestanan',
   petulu: 'Petulu',
@@ -101,7 +103,7 @@ export const subAreaNames: Record<SubArea, string> = {
 
 /** Sub-areas belong only to Ubud. Other main areas (Canggu, Sanur, Seminyak, Tanah Lot) have no sub-areas. */
 const UBUD_SUB_AREAS: SubArea[] = [
-  'gentong', 'kedewatan', 'keliki', 'kemenuh', 'lodtunduh', 'mas', 'peliatan',
+  'gentong', 'kedewatan', 'keliki', 'kemenuh', 'lodtunduh', 'mas', 'pejeng', 'peliatan',
   'penestanan', 'petulu', 'sayan', 'singakerta', 'sukawati', 'tegallalang',
 ];
 
