@@ -32,12 +32,23 @@ function PostMeta({
   );
 }
 
+function PostThumb({ href, src, alt }: { href: string; src: string; alt: string }) {
+  return (
+    <Link
+      href={href}
+      className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-stone-100 sm:h-20 sm:w-20"
+    >
+      <Image src={src} alt={alt} fill className="object-cover" sizes="80px" />
+    </Link>
+  );
+}
+
 export default async function BlogPage() {
   const posts = await getBlogPosts();
   const rows = [...posts].sort((a, b) => +new Date(b.updatedAt) - +new Date(a.updatedAt));
   const featured = rows[0] ?? null;
   const rest = rows.slice(1);
-  const featuredHeroImage = featured ? resolveBlogHeroImage(featured) : null;
+  const featuredThumb = featured ? resolveBlogHeroImage(featured) : null;
 
   const byLocation = new Map<string, typeof rows>();
   for (const p of rows) {
@@ -72,41 +83,35 @@ export default async function BlogPage() {
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr),280px]">
             <div className="space-y-8">
               {featured ? (
-                <article className="overflow-hidden rounded-3xl border border-stone-200/90 bg-white shadow-md shadow-stone-200/40">
-                  {featuredHeroImage ? (
-                    <Link href={`/blog/${featured.slug}`} className="relative block aspect-[16/9] w-full bg-stone-100">
-                      <Image
-                        src={featuredHeroImage}
-                        alt={featured.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 1024px) 100vw, 900px"
-                      />
+                <article className="rounded-3xl border border-stone-200/90 bg-white p-6 shadow-md shadow-stone-200/40 md:p-8">
+                  <div className="flex gap-4">
+                    {featuredThumb ? (
+                      <PostThumb href={`/blog/${featured.slug}`} src={featuredThumb} alt={featured.title} />
+                    ) : null}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-semibold uppercase tracking-widest text-emerald-800">{featured.location}</p>
+                      <h2 className="mt-2 text-2xl font-bold tracking-tight text-stone-900 md:text-3xl">
+                        <Link href={`/blog/${featured.slug}`} className="hover:text-emerald-900">
+                          {featured.title}
+                        </Link>
+                      </h2>
+                    </div>
+                  </div>
+                  <p className="mt-4 text-base leading-relaxed text-stone-700">{blogPreview(featured, 360)}</p>
+                  <div className="mt-4">
+                    <PostMeta
+                      publishedAt={featured.publishedAt}
+                      updatedAt={featured.updatedAt}
+                      readingMinutes={blogReadingMinutes(featured.content)}
+                    />
+                  </div>
+                  <div className="mt-6">
+                    <Link
+                      href={`/blog/${featured.slug}`}
+                      className="inline-flex items-center justify-center rounded-xl bg-stone-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-900"
+                    >
+                      Read more
                     </Link>
-                  ) : null}
-                  <div className="p-6 md:p-8">
-                    <p className="text-xs font-semibold uppercase tracking-widest text-emerald-800">{featured.location}</p>
-                    <h2 className="mt-3 text-2xl font-bold tracking-tight text-stone-900 md:text-3xl">
-                      <Link href={`/blog/${featured.slug}`} className="hover:text-emerald-900">
-                        {featured.title}
-                      </Link>
-                    </h2>
-                    <p className="mt-4 text-base leading-relaxed text-stone-700">{blogPreview(featured, 360)}</p>
-                    <div className="mt-4">
-                      <PostMeta
-                        publishedAt={featured.publishedAt}
-                        updatedAt={featured.updatedAt}
-                        readingMinutes={blogReadingMinutes(featured.content)}
-                      />
-                    </div>
-                    <div className="mt-6">
-                      <Link
-                        href={`/blog/${featured.slug}`}
-                        className="inline-flex items-center justify-center rounded-xl bg-stone-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-900"
-                      >
-                        Read more
-                      </Link>
-                    </div>
                   </div>
                 </article>
               ) : null}
@@ -116,49 +121,38 @@ export default async function BlogPage() {
                   <h2 className="mb-4 text-xl font-semibold text-stone-900">More posts</h2>
                   <ul className="space-y-4">
                     {rest.map((post) => {
-                      const heroImage = resolveBlogHeroImage(post);
+                      const thumb = resolveBlogHeroImage(post);
                       return (
-                      <li key={post.id}>
-                        <article className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-sm transition hover:border-emerald-200">
-                          <div className="flex gap-4">
-                            {heroImage ? (
-                              <Link
-                                href={`/blog/${post.slug}`}
-                                className="relative h-20 w-28 shrink-0 overflow-hidden rounded-xl bg-stone-100 sm:h-24 sm:w-36"
-                              >
-                                <Image
-                                  src={heroImage}
-                                  alt={post.title}
-                                  fill
-                                  className="object-cover"
-                                  sizes="(max-width: 640px) 112px, 144px"
-                                />
-                              </Link>
-                            ) : null}
-                            <div className="min-w-0 flex-1">
-                              <h3 className="text-lg font-semibold text-stone-900">
-                                <Link href={`/blog/${post.slug}`} className="hover:text-emerald-900">
-                                  {post.title}
-                                </Link>
-                              </h3>
-                              <p className="mt-2 text-sm leading-relaxed text-stone-600">{blogPreview(post, 220)}</p>
-                              <div className="mt-3">
-                                <PostMeta
-                                  publishedAt={post.publishedAt}
-                                  updatedAt={post.updatedAt}
-                                  readingMinutes={blogReadingMinutes(post.content)}
-                                />
+                        <li key={post.id}>
+                          <article className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-sm transition hover:border-emerald-200">
+                            <div className="flex gap-4">
+                              {thumb ? (
+                                <PostThumb href={`/blog/${post.slug}`} src={thumb} alt={post.title} />
+                              ) : null}
+                              <div className="min-w-0 flex-1">
+                                <h3 className="text-lg font-semibold text-stone-900">
+                                  <Link href={`/blog/${post.slug}`} className="hover:text-emerald-900">
+                                    {post.title}
+                                  </Link>
+                                </h3>
+                                <p className="mt-2 text-sm leading-relaxed text-stone-600">{blogPreview(post, 220)}</p>
+                                <div className="mt-3">
+                                  <PostMeta
+                                    publishedAt={post.publishedAt}
+                                    updatedAt={post.updatedAt}
+                                    readingMinutes={blogReadingMinutes(post.content)}
+                                  />
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div className="mt-4">
-                            <Link href={`/blog/${post.slug}`} className="text-sm font-medium text-emerald-800 hover:text-emerald-900">
-                              Read more →
-                            </Link>
-                          </div>
-                        </article>
-                      </li>
-                    );
+                            <div className="mt-4">
+                              <Link href={`/blog/${post.slug}`} className="text-sm font-medium text-emerald-800 hover:text-emerald-900">
+                                Read more →
+                              </Link>
+                            </div>
+                          </article>
+                        </li>
+                      );
                     })}
                   </ul>
                 </section>
