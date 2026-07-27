@@ -111,18 +111,36 @@ export default async function BlogPage() {
                     {rest.map((post) => (
                       <li key={post.id}>
                         <article className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-sm transition hover:border-emerald-200">
-                          <h3 className="text-lg font-semibold text-stone-900">
-                            <Link href={`/blog/${post.slug}`} className="hover:text-emerald-900">
-                              {post.title}
-                            </Link>
-                          </h3>
-                          <p className="mt-2 text-sm leading-relaxed text-stone-600">{blogPreview(post, 220)}</p>
-                          <div className="mt-3">
-                            <PostMeta
-                              publishedAt={post.publishedAt}
-                              updatedAt={post.updatedAt}
-                              readingMinutes={blogReadingMinutes(post.content)}
-                            />
+                          <div className="flex gap-4">
+                            {post.featuredImage ? (
+                              <Link
+                                href={`/blog/${post.slug}`}
+                                className="relative hidden h-24 w-36 shrink-0 overflow-hidden rounded-xl bg-stone-100 sm:block"
+                              >
+                                <Image
+                                  src={post.featuredImage}
+                                  alt={post.title}
+                                  fill
+                                  className="object-cover"
+                                  sizes="144px"
+                                />
+                              </Link>
+                            ) : null}
+                            <div className="min-w-0 flex-1">
+                              <h3 className="text-lg font-semibold text-stone-900">
+                                <Link href={`/blog/${post.slug}`} className="hover:text-emerald-900">
+                                  {post.title}
+                                </Link>
+                              </h3>
+                              <p className="mt-2 text-sm leading-relaxed text-stone-600">{blogPreview(post, 220)}</p>
+                              <div className="mt-3">
+                                <PostMeta
+                                  publishedAt={post.publishedAt}
+                                  updatedAt={post.updatedAt}
+                                  readingMinutes={blogReadingMinutes(post.content)}
+                                />
+                              </div>
+                            </div>
                           </div>
                           <div className="mt-4">
                             <Link href={`/blog/${post.slug}`} className="text-sm font-medium text-emerald-800 hover:text-emerald-900">
