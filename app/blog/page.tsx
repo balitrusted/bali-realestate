@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatLocaleDate } from "@/lib/formatDate";
 import { getBlogPosts } from "@/lib/blogData";
-import { blogPreview, blogReadingMinutes } from "@/lib/blogHub";
+import { blogPreview, blogReadingMinutes, resolveBlogHeroImage } from "@/lib/blogHub";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -37,6 +37,7 @@ export default async function BlogPage() {
   const rows = [...posts].sort((a, b) => +new Date(b.updatedAt) - +new Date(a.updatedAt));
   const featured = rows[0] ?? null;
   const rest = rows.slice(1);
+  const featuredHeroImage = featured ? resolveBlogHeroImage(featured) : null;
 
   const byLocation = new Map<string, typeof rows>();
   for (const p of rows) {
@@ -72,9 +73,15 @@ export default async function BlogPage() {
             <div className="space-y-8">
               {featured ? (
                 <article className="overflow-hidden rounded-3xl border border-stone-200/90 bg-white shadow-md shadow-stone-200/40">
-                  {featured.featuredImage ? (
+                  {featuredHeroImage ? (
                     <Link href={`/blog/${featured.slug}`} className="relative block aspect-[16/9] w-full bg-stone-100">
-                      <Image src={featured.featuredImage} alt={featured.title} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 900px" />
+                      <Image
+                        src={featuredHeroImage}
+                        alt={featured.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 1024px) 100vw, 900px"
+                      />
                     </Link>
                   ) : null}
                   <div className="p-6 md:p-8">
@@ -108,21 +115,23 @@ export default async function BlogPage() {
                 <section>
                   <h2 className="mb-4 text-xl font-semibold text-stone-900">More posts</h2>
                   <ul className="space-y-4">
-                    {rest.map((post) => (
+                    {rest.map((post) => {
+                      const heroImage = resolveBlogHeroImage(post);
+                      return (
                       <li key={post.id}>
                         <article className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-sm transition hover:border-emerald-200">
                           <div className="flex gap-4">
-                            {post.featuredImage ? (
+                            {heroImage ? (
                               <Link
                                 href={`/blog/${post.slug}`}
-                                className="relative hidden h-24 w-36 shrink-0 overflow-hidden rounded-xl bg-stone-100 sm:block"
+                                className="relative h-20 w-28 shrink-0 overflow-hidden rounded-xl bg-stone-100 sm:h-24 sm:w-36"
                               >
                                 <Image
-                                  src={post.featuredImage}
+                                  src={heroImage}
                                   alt={post.title}
                                   fill
                                   className="object-cover"
-                                  sizes="144px"
+                                  sizes="(max-width: 640px) 112px, 144px"
                                 />
                               </Link>
                             ) : null}
@@ -149,7 +158,8 @@ export default async function BlogPage() {
                           </div>
                         </article>
                       </li>
-                    ))}
+                    );
+                    })}
                   </ul>
                 </section>
               ) : null}

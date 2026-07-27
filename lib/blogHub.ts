@@ -23,3 +23,11 @@ export function blogPreview(post: BlogPost, maxLen = 170): string {
   if (base.length <= maxLen) return base;
   return `${base.slice(0, maxLen).trim()}…`;
 }
+
+/** Featured image field or first `<img src>` in HTML body. */
+export function resolveBlogHeroImage(post: BlogPost): string | null {
+  const featured = post.featuredImage?.trim();
+  if (featured) return featured;
+  const m = post.content.match(/<img[^>]+(?:src|data-src)=["']([^"']+)["']/i);
+  return m?.[1]?.trim() || null;
+}
