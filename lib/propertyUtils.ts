@@ -1,10 +1,15 @@
 import { Property } from "@/types/property";
 import { subAreaNames } from "@/types/areas";
 
-/** Land-only listing (not combined with rent/sale/business on the same card). */
+/** Land-only listing (not combined with rent/sale/business/hotels on the same card). */
 export function isPureLandListing(property: Pick<Property, "types">): boolean {
   const t = property.types ?? [];
-  return t.includes("land") && !t.includes("rent") && !t.includes("sale") && !t.includes("business");
+  return t.includes("land") && !t.includes("rent") && !t.includes("sale") && !t.includes("business") && !t.includes("hotels");
+}
+
+/** Retreat hotel / venue listing (primary category). */
+export function isHotelListing(property: Pick<Property, "types">): boolean {
+  return (property.types ?? []).includes("hotels");
 }
 
 /** Replacement character (U+FFFD) appears when CSV was read with wrong encoding. */
@@ -54,6 +59,16 @@ export function getPropertyDisplayTitle(property: Property): string {
   const beds = property.bedrooms ?? 0;
   const bedLabel = beds === 1 ? "1 bed" : `${beds} bed`;
   const areaName = property.subArea ? (subAreaNames[property.subArea] || property.subArea) : "";
+
+  if (isHotelListing(property)) {
+    const custom = property.title?.trim();
+    if (custom) return custom;
+    if (property.villaNumber?.trim?.()) {
+      const num = fixVillaNumberDisplay(property.villaNumber).trim().replace(/^#/, "");
+      return areaName ? `Retreat #${num} · ${areaName}` : `Retreat #${num}`;
+    }
+    return areaName ? `Retreat venue · ${areaName}` : "Retreat venue";
+  }
 
   if (property.villaNumber?.trim?.()) {
     const num = fixVillaNumberDisplay(property.villaNumber).trim().replace(/^#/, "");

@@ -122,7 +122,7 @@ export default async function TypeSegmentCatalog({ catalogType, segmentSlug, par
       <div className="container mx-auto px-4 py-8">
         <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <CatalogBreadcrumb
-            type={catalogType as "rent" | "sale" | "villas" | "land" | "business"}
+            type={catalogType as "rent" | "sale" | "villas" | "land" | "business" | "hotels"}
             className="mb-0"
           />
           <CatalogMapLink filters={mapFilters} />
@@ -141,7 +141,7 @@ export default async function TypeSegmentCatalog({ catalogType, segmentSlug, par
                 <div className="space-y-6">
                   <PropertyFilters
                     defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
-                    baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
+                    baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : catalogType === "hotels" ? "hotels" : "villas"}
                     matchingCount={total}
                     allowedMainAreas={allowedMainAreas}
                     allowedSubAreas={allowedSubAreas}
@@ -164,7 +164,7 @@ export default async function TypeSegmentCatalog({ catalogType, segmentSlug, par
                   />
                   <PropertyFilters
                     defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
-                    baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
+                    baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : catalogType === "hotels" ? "hotels" : "villas"}
                     matchingCount={total}
                     allowedMainAreas={allowedMainAreas}
                     allowedSubAreas={allowedSubAreas}

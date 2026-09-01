@@ -28,8 +28,9 @@ export function getPropertyImageSlug(
   const types = property.types || ["rent"];
   const isLand = types.includes("land");
   const isBusiness = types.includes("business");
+  const isHotel = types.includes("hotels");
   const objectType =
-    isLand ? "land" : isBusiness ? "business" : "villa";
+    isHotel ? "hotel" : isLand ? "land" : isBusiness ? "business" : "villa";
   const num = fixVillaNumberDisplay(property.villaNumber);
   const numberPart = slugPart(num || "0");
   const mainArea = (property.mainArea || "ubud").toLowerCase().replace(/\s+/g, "-");
@@ -62,8 +63,9 @@ export function getPropertyImageAlt(
   const types = property.types || ["rent"];
   const isLand = types.includes("land");
   const isBusiness = types.includes("business");
+  const isHotel = types.includes("hotels");
   const objectTypeLabel =
-    isLand ? "Land" : isBusiness ? "Business" : "Villa";
+    isHotel ? "Retreat hotel" : isLand ? "Land" : isBusiness ? "Business" : "Villa";
   const num = fixVillaNumberDisplay(property.villaNumber) || "—";
   const mainAreaId = property.mainArea || "ubud";
   const areaName = areas[mainAreaId]?.nameEn || mainAreaId;
@@ -72,7 +74,7 @@ export function getPropertyImageAlt(
     : "";
 
   const parts: string[] = [objectTypeLabel];
-  if (!isLand && !isBusiness && property.bedrooms != null) {
+  if (!isLand && !isBusiness && !isHotel && property.bedrooms != null) {
     parts.push(
       property.bedrooms === 1 ? "1 bed" : `${property.bedrooms} beds`
     );

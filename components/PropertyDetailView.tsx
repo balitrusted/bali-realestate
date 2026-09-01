@@ -23,6 +23,7 @@ import {
   fixDescriptionDisplay,
   fixVillaNumberDisplay,
   isPureLandListing,
+  isHotelListing,
 } from "@/lib/propertyUtils";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { formatLocaleDate } from "@/lib/formatDate";
@@ -82,13 +83,33 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
   const hasSale = types.includes("sale");
   const hasLand = types.includes("land");
   const hasBusiness = types.includes("business");
-  const showAvailability = hasRent && !hasLand && !hasBusiness;
+  const hasHotels = types.includes("hotels");
+  const showAvailability = (hasRent || hasHotels) && !hasLand && !hasBusiness;
   const availableFrom = normalizeAvailableFrom(property.availableFrom ?? undefined);
-  const dealLabel = hasRent ? "Rent" : hasSale ? "Buy" : hasLand ? "Land" : hasBusiness ? "Business" : "Listing";
+  const dealLabel = hasHotels
+    ? "Retreat"
+    : hasRent
+      ? "Rent"
+      : hasSale
+        ? "Buy"
+        : hasLand
+          ? "Land"
+          : hasBusiness
+            ? "Business"
+            : "Listing";
   const headingTitle = (() => {
     if (isPureLandListing(property) && property.villaNumber?.trim?.()) {
       const num = fixVillaNumberDisplay(property.villaNumber).trim().replace(/^#/, "");
       return `Land #${num}`;
+    }
+    if (isHotelListing(property)) {
+      const explicitTitle = property.title?.trim();
+      if (explicitTitle) return `${explicitTitle} · ${dealLabel}`;
+      if (property.villaNumber?.trim?.()) {
+        const num = fixVillaNumberDisplay(property.villaNumber).trim().replace(/^#/, "");
+        return `Retreat #${num} · ${dealLabel}`;
+      }
+      return `Retreat venue · ${dealLabel}`;
     }
     const beds = property.bedrooms ?? 0;
     const bedLabel = beds === 1 ? "1 bed" : `${beds} bed`;

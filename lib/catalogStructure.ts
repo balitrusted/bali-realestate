@@ -32,6 +32,7 @@ const DEFAULT_STRUCTURE: CatalogStructure = {
     { slug: "villas", labelEn: "Villas (Rent or Buy)" },
     { slug: "land", labelEn: "Land" },
     { slug: "business", labelEn: "Business" },
+    { slug: "hotels", labelEn: "Retreat Hotels" },
   ],
   areas: (Object.keys(areas) as MainArea[]).map((id) => ({
     slug: id,

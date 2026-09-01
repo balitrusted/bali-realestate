@@ -4,7 +4,8 @@
     { "slug": "sale", "labelEn": "Buy" },
     { "slug": "villas", "labelEn": "Villas (Rent or Buy)" },
     { "slug": "land", "labelEn": "Land" },
-    { "slug": "business", "labelEn": "Business" }
+    { "slug": "business", "labelEn": "Business" },
+    { "slug": "hotels", "labelEn": "Retreat Hotels" }
   ],
   "areas": [
     { "slug": "ubud", "nameEn": "Ubud" },

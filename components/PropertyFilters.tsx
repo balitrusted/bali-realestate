@@ -32,7 +32,7 @@ function parseTypeFromPropertiesPath(pathname: string): PropertyType | undefined
   const m = pathname.match(/^\/properties\/([^/]+)(?:\/|$)/);
   const t = m?.[1];
   if (!t || t === "villas") return undefined;
-  if (t === "rent" || t === "sale" || t === "land" || t === "business") return t;
+  if (t === "rent" || t === "sale" || t === "land" || t === "business" || t === "hotels") return t;
   return undefined;
 }
 
@@ -60,7 +60,7 @@ function persistWizardSkipped(next: WizardSkipState) {
 type WizardStepIdOrDone = WizardStepId | "done";
 
 function parseMainAreaFromPropertiesPath(pathname: string): MainArea | undefined {
-  const m = pathname.match(/^\/properties\/(?:villas|rent|sale|land|business)\/([^/]+)(?:\/|$)/);
+  const m = pathname.match(/^\/properties\/(?:villas|rent|sale|land|business|hotels)\/([^/]+)(?:\/|$)/);
   const slug = m?.[1];
   if (!slug || !isValidMainAreaSlug(slug)) return undefined;
   return slug as MainArea;
@@ -88,7 +88,7 @@ function inferWizardSkippedFromFilters(
     area: false,
     bedrooms: false,
   };
-  if (pathType === "rent" || pathType === "sale" || pathType === "land" || pathType === "business") {
+  if (pathType === "rent" || pathType === "sale" || pathType === "land" || pathType === "business" || pathType === "hotels") {
     inferred.action = true;
     inferred.subject = true;
   }
@@ -324,7 +324,7 @@ interface PropertyFiltersProps {
   allowedSubAreas?: SubArea[];
   allowedBedroomCounts?: number[];
   availableAmenityKeys?: string[];
-  baseVariant?: "villas" | "land" | "business";
+  baseVariant?: "villas" | "land" | "business" | "hotels";
   matchingCount: number;
   pathSubArea?: SubArea;
 }
@@ -486,6 +486,10 @@ export default function PropertyFilters({
       router.push("/properties/business", { scroll: true });
       return;
     }
+    if (baseVariant === "hotels") {
+      router.push("/properties/hotels", { scroll: true });
+      return;
+    }
     router.push("/properties/villas", { scroll: true });
   }, [router, baseVariant]);
 
@@ -541,7 +545,7 @@ export default function PropertyFilters({
     (newFilters: PropertyFiltersState) => {
       const currentPath = window.location.pathname;
       const matchSegment = currentPath.match(/\/properties\/([^/]+)\/([^/]+)(?:\/([^/]+))?/);
-      const matchTypeOnly = currentPath.match(/^\/properties\/(rent|sale|land|business|villas)$/);
+      const matchTypeOnly = currentPath.match(/^\/properties\/(rent|sale|land|business|hotels|villas)$/);
       const isTypeOnlyPath = !!matchTypeOnly;
       const pathType = matchSegment?.[1] ?? matchTypeOnly?.[1];
       const pathAreaRaw = matchSegment?.[2];
@@ -1022,28 +1026,32 @@ export default function PropertyFilters({
   };
 
   type Action = "Rent" | "Buy";
-  type Subject = "Villas" | "Land" | "Business";
+  type Subject = "Villas" | "Land" | "Business" | "Retreat Hotels";
   const actionByType: Record<PropertyType, Action> = {
     rent: "Rent",
     sale: "Buy",
     land: "Buy",
     business: "Buy",
+    hotels: "Rent",
   };
   const subjectByType: Record<PropertyType, Subject> = {
     rent: "Villas",
     sale: "Villas",
     land: "Land",
     business: "Business",
+    hotels: "Retreat Hotels",
   };
   function typeFromActionSubject(action: Action, subject: Subject): PropertyType {
+    if (action === "Rent" && subject === "Retreat Hotels") return "hotels";
     if (action === "Rent") return "rent";
     if (subject === "Villas") return "sale";
     if (subject === "Land") return "land";
-    return "business";
+    if (subject === "Business") return "business";
+    return "hotels";
   }
   const action = filters.type ? actionByType[filters.type] : undefined;
   const subject = filters.type ? subjectByType[filters.type] : undefined;
-  const subjectOptions: Subject[] = action === "Rent" ? ["Villas"] : ["Villas", "Land", "Business"];
+  const subjectOptions: Subject[] = action === "Rent" ? ["Villas", "Retreat Hotels"] : ["Villas", "Land", "Business"];
 
   const handleActionChange = (newAction: Action) => {
     setWizardSkipped((s) => ({ ...s, action: false, payment: false, subject: false }));
@@ -1198,6 +1206,12 @@ export default function PropertyFilters({
       chips.push({
         id: "t-bus",
         label: "Business",
+        remove: () => removeWizardChip("action", { ...filters, type: undefined, minDuration: undefined }),
+      });
+    else if (filters.type === "hotels")
+      chips.push({
+        id: "t-hotels",
+        label: "Retreat Hotels",
         remove: () => removeWizardChip("action", { ...filters, type: undefined, minDuration: undefined }),
       });
 

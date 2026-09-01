@@ -6,7 +6,7 @@ import PriceText from "@/components/PriceText";
 import { Property } from "@/types/property";
 import { featureIsYes } from "@/lib/featureState";
 import { areas, subAreaNames } from "@/types/areas";
-import { fixDescriptionDisplay, getPropertyDisplayTitle, isPureLandListing } from "@/lib/propertyUtils";
+import { fixDescriptionDisplay, getPropertyDisplayTitle, isPureLandListing, isHotelListing } from "@/lib/propertyUtils";
 import { getPropertyImageAlt } from "@/lib/imageSeo";
 
 interface PropertyCardProps {
@@ -242,9 +242,11 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
   const cardTitle =
     isPureLandListing(property) && property.villaNumber?.trim()
       ? `Land #${property.villaNumber.trim().replace(/^#/, "")}`
-      : property.villaNumber && property.bedrooms
-        ? `Villa #${property.villaNumber} · ${property.bedrooms} ${property.bedrooms === 1 ? "bed" : "beds"}`
-        : displayTitle;
+      : isHotelListing(property)
+        ? displayTitle
+        : property.villaNumber && property.bedrooms
+          ? `Villa #${property.villaNumber} · ${property.bedrooms} ${property.bedrooms === 1 ? "bed" : "beds"}`
+          : displayTitle;
 
   const locationLabel = [
     property.mainArea ? (areas[property.mainArea]?.nameEn || property.mainArea) : null,

@@ -7,7 +7,7 @@ import { SEO_BEDROOM_COUNTS, bedroomSegmentSlug } from "@/lib/catalogBedrooms";
 const UBUD_SUB_SLUGS = new Set(Object.keys(subAreaNames));
 
 /** First segment under `/properties` that is a catalog hub, not a listing slug. */
-const CATALOG_ROOT = new Set(["rent", "sale", "villas", "land", "business"]);
+const CATALOG_ROOT = new Set(["rent", "sale", "villas", "land", "business", "hotels"]);
 
 /** Single-segment routes under `/properties/...` that are not listing slug rewrites. */
 const PROPERTIES_RESERVED_SEGMENTS = new Set(["p", "map", "archive"]);
@@ -58,7 +58,7 @@ export function middleware(request: NextRequest) {
   }
 
   /** Canonical Ubud sub-area URLs: /properties/{type}/ubud/{subArea} instead of ?subArea= */
-  const ubudArea = pathname.match(/^\/properties\/(villas|rent|sale|land|business)\/ubud$/);
+  const ubudArea = pathname.match(/^\/properties\/(villas|rent|sale|land|business|hotels)\/ubud$/);
   if (ubudArea) {
     const raw = request.nextUrl.searchParams.get("subArea");
     if (raw && !raw.includes(",")) {

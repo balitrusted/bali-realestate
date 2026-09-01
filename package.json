@@ -15,7 +15,9 @@
     "backfill:notify-requests:prod": "npx tsx scripts/backfill-notify-requests-from-prod-to-supabase.ts",
     "backfill:properties": "npx tsx scripts/backfill-properties-catalog-to-supabase.ts",
     "backfill:properties:prod": "npx tsx scripts/backfill-properties-catalog-from-prod-to-supabase.ts",
-    "seed:qa": "npx tsx scripts/seed-qa-to-supabase.ts"
+    "seed:qa": "npx tsx scripts/seed-qa-to-supabase.ts",
+    "fix:qa-uniqueness": "npx tsx scripts/fix-qa-uniqueness.ts",
+    "migrate:property-141-hotels": "npx tsx scripts/migrate-property-141-to-hotels.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

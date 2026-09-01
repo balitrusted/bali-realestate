@@ -6,7 +6,7 @@ import type { MainArea, PropertyType } from "@/types/property";
 import { areas, subAreaNames } from "@/types/areas";
 
 const MAIN_AREAS: MainArea[] = ["ubud", "canggu", "sanur", "seminyak", "tanah-lot"];
-const PATH_TYPE_SLUGS = ["rent", "sale", "land", "business", "villas"] as const;
+const PATH_TYPE_SLUGS = ["rent", "sale", "land", "business", "hotels", "villas"] as const;
 type PathType = PropertyType | "villas" | null;
 
 function parsePath(pathname: string): { pathType: PathType; pathArea: MainArea | null } {
@@ -26,6 +26,7 @@ const TYPE_LABEL: Record<Exclude<PathType, null>, string> = {
   sale: "for sale",
   land: "land",
   business: "business",
+  hotels: "retreat hotels",
 };
 
 const AMENITY_FILTERS: { key: string; label: string }[] = [

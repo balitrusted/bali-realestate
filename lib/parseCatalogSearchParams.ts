@@ -49,7 +49,7 @@ export function parseCatalogSearchParams(
   const filters: CatalogFilters = {};
   if (query.type && typeof query.type === "string") {
     const t = query.type;
-    if (t === "villas" || t === "rent" || t === "sale" || t === "land" || t === "business") {
+    if (t === "villas" || t === "rent" || t === "sale" || t === "land" || t === "business" || t === "hotels") {
       filters.type = t as CatalogFilters["type"];
     }
   }

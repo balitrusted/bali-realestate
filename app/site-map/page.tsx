@@ -13,6 +13,7 @@ const propertyTypes = [
   { value: "sale", label: "Buy" },
   { value: "land", label: "Land" },
   { value: "business", label: "Business" },
+  { value: "hotels", label: "Retreat Hotels" },
 ];
 
 const guideCategories = [

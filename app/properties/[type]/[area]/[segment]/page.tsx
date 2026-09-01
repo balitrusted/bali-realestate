@@ -45,7 +45,7 @@ import { getMoneyPageContent, shouldIndexSegmentPage } from "@/lib/moneyPages";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const VALID_TYPE_SLUGS = ["rent", "sale", "villas", "land", "business"] as const;
+const VALID_TYPE_SLUGS = ["rent", "sale", "villas", "land", "business", "hotels"] as const;
 
 export async function generateMetadata({
   params,
@@ -247,7 +247,7 @@ export default async function PropertiesSegmentPage({
         <link rel="canonical" href={`${baseUrl}${basePath}`} />
         <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <CatalogBreadcrumb
-            type={catalogType as "rent" | "sale" | "villas" | "land" | "business"}
+            type={catalogType as "rent" | "sale" | "villas" | "land" | "business" | "hotels"}
             area={mainArea}
             segmentLabel={segmentLabel ?? undefined}
             className="mb-0"
@@ -312,7 +312,7 @@ export default async function PropertiesSegmentPage({
                   allowedSubAreas={allowedSubAreas}
                   allowedBedroomCounts={allowedBedroomCounts}
                   availableAmenityKeys={availableAmenityFilterKeys}
-                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
+                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : catalogType === "hotels" ? "hotels" : "villas"}
                   matchingCount={total}
                 />
                 <div className="text-center">
@@ -353,7 +353,7 @@ export default async function PropertiesSegmentPage({
                   allowedSubAreas={allowedSubAreas}
                   allowedBedroomCounts={allowedBedroomCounts}
                   availableAmenityKeys={availableAmenityFilterKeys}
-                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
+                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : catalogType === "hotels" ? "hotels" : "villas"}
                   matchingCount={total}
                 />
                 {activeItems.length > 0 && (

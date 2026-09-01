@@ -35,7 +35,7 @@ import { normalizeAvailableFrom } from "@/lib/availability";
 function isLandOnlyListing(types: PropertyType[]): boolean {
   return (
     types.includes("land") &&
-    !types.some((t) => t === "rent" || t === "sale" || t === "business")
+    !types.some((t) => t === "rent" || t === "sale" || t === "business" || t === "hotels")
   );
 }
 
@@ -481,6 +481,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
               { value: 'sale', label: 'Villas for Sale' },
               { value: 'land', label: 'Land' },
               { value: 'business', label: 'Business' },
+              { value: 'hotels', label: 'Retreat Hotels' },
             ].map(type => (
               <label key={type.value} className="flex items-center">
                 <input

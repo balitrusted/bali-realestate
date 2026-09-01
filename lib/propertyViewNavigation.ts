@@ -29,11 +29,14 @@ export function sanitizeReturnTo(raw: string | string[] | undefined): string | n
 }
 
 function isVillaLike(p: Property): boolean {
-  return p.types.some((t) => t === "rent" || t === "sale");
+  return p.types.some((t) => t === "rent" || t === "sale") && !p.types.includes("hotels");
 }
 
-/** When ?returnTo= is missing: broad hubs — villas, land, business (no area; area only if user came via ?returnTo= with area). */
+/** When ?returnTo= is missing: broad hubs — villas, land, business, hotels (no area; area only if user came via ?returnTo= with area). */
 export function defaultListingPathForProperty(p: Property): string {
+  if (p.types.includes("hotels")) {
+    return "/properties/hotels";
+  }
   if (p.types.includes("land") && !isVillaLike(p)) {
     return "/properties/land";
   }
@@ -52,6 +55,7 @@ const TYPE_LABEL: Record<string, string> = {
   villas: "villas",
   land: "land",
   business: "business",
+  hotels: "retreat hotels",
 };
 
 /**
@@ -75,7 +79,7 @@ export function getPropertyBackNavigation(
     if (pathOnly === "/saved") {
       return { href: returnTo, label: "Back to saved" };
     }
-    const m = returnTo.match(/^\/properties\/(rent|sale|villas|land|business)(?:\/([^/?]+))?/);
+    const m = returnTo.match(/^\/properties\/(rent|sale|villas|land|business|hotels)(?:\/([^/?]+))?/);
     if (m) {
       const slug = m[1];
       const areaSlug = m[2];

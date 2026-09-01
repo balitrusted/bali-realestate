@@ -38,7 +38,7 @@ import { PropertyType, MainArea, SubArea } from "@/types/property";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const VALID_TYPE_SLUGS = ["rent", "sale", "villas", "land", "business"] as const;
+const VALID_TYPE_SLUGS = ["rent", "sale", "villas", "land", "business", "hotels"] as const;
 export type CatalogTypeSlug = (typeof VALID_TYPE_SLUGS)[number];
 
 // (No wizard UI on this page; only filters + results.)
@@ -152,7 +152,7 @@ export default async function PropertiesByTypePage({
       <div className="container mx-auto px-4 py-8">
         <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <CatalogBreadcrumb
-            type={catalogType as "rent" | "sale" | "villas" | "land" | "business"}
+            type={catalogType as "rent" | "sale" | "villas" | "land" | "business" | "hotels"}
             className="mb-0"
           />
           <CatalogMapLink filters={filters} />
@@ -173,7 +173,7 @@ export default async function PropertiesByTypePage({
               <div className="space-y-6">
                 <PropertyFilters
                   defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
-                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
+                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : catalogType === "hotels" ? "hotels" : "villas"}
                   matchingCount={total}
                   allowedMainAreas={allowedMainAreas}
                   allowedSubAreas={allowedSubAreas}
@@ -210,7 +210,7 @@ export default async function PropertiesByTypePage({
                 />
                 <PropertyFilters
                   defaultType={catalogType === "villas" ? undefined : (catalogType as PropertyType)}
-                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
+                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : catalogType === "hotels" ? "hotels" : "villas"}
                   matchingCount={total}
                   allowedMainAreas={allowedMainAreas}
                   allowedSubAreas={allowedSubAreas}

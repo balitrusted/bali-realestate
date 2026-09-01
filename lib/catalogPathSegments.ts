@@ -7,7 +7,7 @@ export function parsePropertiesPathSegments(pathname: string): {
   typeLevelSegment?: string;
   deepSegment?: string;
 } {
-  const m = pathname.match(/^\/properties\/(?:villas|rent|sale|land|business)(?:\/([^/]+))?(?:\/([^/]+))?/);
+  const m = pathname.match(/^\/properties\/(?:villas|rent|sale|land|business|hotels)(?:\/([^/]+))?(?:\/([^/]+))?/);
   const first = m?.[1];
   const second = m?.[2];
   if (!first) return {};

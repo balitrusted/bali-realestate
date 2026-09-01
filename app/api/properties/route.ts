@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { Property, PropertyType } from "@/types/property";
 
-const ALL_PROPERTY_TYPES: PropertyType[] = ["rent", "sale", "land", "business"];
+const ALL_PROPERTY_TYPES: PropertyType[] = ["rent", "sale", "land", "business", "hotels"];
 
 /** Dedupe, keep only valid flags; default rent when empty. */
 function normalizeTypesInput(input: unknown): PropertyType[] {

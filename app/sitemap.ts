@@ -14,7 +14,7 @@ import { getAllMainAreaSlugs } from '@/lib/mainAreaRegistry'
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
 
 type CatalogTypeSlug = PropertyType | 'villas'
-const propertyTypes: CatalogTypeSlug[] = ['rent', 'sale', 'villas', 'land', 'business']
+const propertyTypes: CatalogTypeSlug[] = ['rent', 'sale', 'villas', 'land', 'business', 'hotels']
 const mainAreas = getAllMainAreaSlugs()
 const guideCategories = ['rent', 'buy', 'land', 'legal', 'ubud', 'areas', 'risks']
 

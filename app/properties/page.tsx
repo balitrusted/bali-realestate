@@ -24,9 +24,9 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: "Bali Property Catalogue — Rent or Buy | Villas, Land & More | Balitrusted",
+  title: "Bali Property Catalogue — Rent or Buy | Villas, Land, Retreat Hotels & More | Balitrusted",
   description:
-    "Browse the full Balitrusted Bali property catalogue: rent or buy villas, explore land and business listings. Curated, regularly updated listings across Ubud, Canggu, Seminyak, Sanur and beyond.",
+    "Browse the full Balitrusted Bali property catalogue: rent or buy villas, explore land, retreat hotels for group programs, and business listings. Curated listings across Ubud, Canggu, Seminyak, Sanur and beyond.",
 };
 
 export default async function PropertiesCatalogPage({
@@ -142,7 +142,7 @@ export default async function PropertiesCatalogPage({
           <h2 className="text-xl font-semibold text-gray-900 leading-snug mb-3">
             Start by choosing a property type
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <Link
               href="/properties/villas"
               className="group rounded-2xl bg-white border border-gray-200 px-4 py-5 text-gray-900 hover:border-emerald-300 hover:shadow-sm transition-shadow"
@@ -163,6 +163,13 @@ export default async function PropertiesCatalogPage({
             >
               <div className="text-base font-semibold mb-1">Business</div>
               <div className="text-sm text-gray-500 group-hover:text-gray-700">Commercial opportunities</div>
+            </Link>
+            <Link
+              href="/properties/hotels"
+              className="group rounded-2xl bg-white border border-gray-200 px-4 py-5 text-gray-900 hover:border-emerald-300 hover:shadow-sm transition-shadow"
+            >
+              <div className="text-base font-semibold mb-1">Retreat Hotels</div>
+              <div className="text-sm text-gray-500 group-hover:text-gray-700">Spaces for retreats & group stays</div>
             </Link>
           </div>
         </div>
@@ -240,11 +247,11 @@ export default async function PropertiesCatalogPage({
           <p>
             If you plan to <strong>rent or buy property in Bali</strong>, this hub is our complete{" "}
             <strong>Bali property catalogue</strong> in one place. You will see curated villas, land,
-            and business-related listings from across the island—not an endless directory, but a
+            retreat hotels, and business-related listings from across the island—not an endless directory, but a
             focused set we maintain with clear photos, pricing context, and realistic expectations.
           </p>
           <p>
-            Start with the property-type cards above for a quicker path into villas, land, or
+            Start with the property-type cards above for a quicker path into villas, land, retreat hotels, or
             business opportunities. If you prefer to stay on this page, use the filters to match
             location, number of bedrooms, rental terms, and features such as a private pool,
             enclosed living, or nature views. Whether you are comparing long-term rentals in Ubud or

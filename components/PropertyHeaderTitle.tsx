@@ -7,7 +7,7 @@ import { areas } from "@/types/areas";
 
 // Action: what we do. Subject: the thing. URL type = action + subject.
 type Action = "Rent" | "Buy" | "Rent or Buy";
-type Subject = "Villas" | "Land" | "Business";
+type Subject = "Villas" | "Land" | "Business" | "Retreat Hotels";
 export type HeaderTitleType = PropertyType | "villas";
 
 const actionByType: Record<HeaderTitleType, Action> = {
@@ -15,6 +15,7 @@ const actionByType: Record<HeaderTitleType, Action> = {
   sale: "Buy",
   land: "Buy",
   business: "Buy",
+  hotels: "Rent",
   villas: "Rent or Buy",
 };
 
@@ -23,18 +24,21 @@ const subjectByType: Record<HeaderTitleType, Subject> = {
   sale: "Villas",
   land: "Land",
   business: "Business",
+  hotels: "Retreat Hotels",
   villas: "Villas",
 };
 
 function typeFromActionSubject(action: Action, subject: Subject): PropertyType | "villas" {
   if (action === "Rent or Buy") return "villas";
+  if (action === "Rent" && subject === "Retreat Hotels") return "hotels";
   if (action === "Rent") return "rent";
   if (subject === "Villas") return "sale";
   if (subject === "Land") return "land";
-  return "business";
+  if (subject === "Business") return "business";
+  return "hotels";
 }
 
-const SUBJECTS_FOR_RENT: Subject[] = ["Villas"];
+const SUBJECTS_FOR_RENT: Subject[] = ["Villas", "Retreat Hotels"];
 const SUBJECTS_FOR_BUY: Subject[] = ["Villas", "Land", "Business"];
 
 interface PropertyHeaderTitleProps {

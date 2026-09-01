@@ -50,7 +50,7 @@ import TypeSegmentCatalog, { typeSegmentMetadata } from "@/app/properties/[type]
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const VALID_TYPE_SLUGS = ["rent", "sale", "villas", "land", "business"] as const;
+const VALID_TYPE_SLUGS = ["rent", "sale", "villas", "land", "business", "hotels"] as const;
 
 const propertyTypeNames: Record<string, string> = {
   rent: "Rent",
@@ -218,7 +218,7 @@ export default async function PropertiesByTypeAndAreaPage({
       : null;
 
   const heroBlurb =
-    catalogType === "land" || catalogType === "business"
+    catalogType === "land" || catalogType === "business" || catalogType === "hotels"
       ? buildIntro(catalogType, mainArea)
       : areaInfo?.description ?? resolveAreaSeoDescription(area);
 
@@ -255,7 +255,7 @@ export default async function PropertiesByTypeAndAreaPage({
         )}
         <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <CatalogBreadcrumb
-            type={catalogType as "rent" | "sale" | "villas" | "land" | "business"}
+            type={catalogType as "rent" | "sale" | "villas" | "land" | "business" | "hotels"}
             area={mainArea}
             className="mb-0"
           />
@@ -334,7 +334,7 @@ export default async function PropertiesByTypeAndAreaPage({
                   allowedSubAreas={allowedSubAreas}
                   allowedBedroomCounts={allowedBedroomCounts}
                   availableAmenityKeys={availableAmenityFilterKeys}
-                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
+                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : catalogType === "hotels" ? "hotels" : "villas"}
                   matchingCount={total}
                 />
                 <div id="catalog-listings-anchor" className="scroll-mt-8 h-px w-full" aria-hidden />
@@ -372,7 +372,7 @@ export default async function PropertiesByTypeAndAreaPage({
                   allowedSubAreas={allowedSubAreas}
                   allowedBedroomCounts={allowedBedroomCounts}
                   availableAmenityKeys={availableAmenityFilterKeys}
-                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : "villas"}
+                  baseVariant={catalogType === "land" ? "land" : catalogType === "business" ? "business" : catalogType === "hotels" ? "hotels" : "villas"}
                   matchingCount={total}
                 />
                 {activeItems.length > 0 && (

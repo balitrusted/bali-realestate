@@ -7,9 +7,9 @@ import { areas } from "@/types/areas";
 import { ALLOWED_BEDROOM_COUNTS } from "@/lib/catalogBedrooms";
 import { getAllMainAreaSlugs } from "@/lib/mainAreaRegistry";
 
-type Subject = "villas" | "land" | "business";
-const VALID_TYPES: PropertyType[] = ["rent", "sale", "land", "business"];
-const PATH_TYPE_SLUGS = ["rent", "sale", "land", "business", "villas"] as const;
+type Subject = "villas" | "land" | "business" | "hotels";
+const VALID_TYPES: PropertyType[] = ["rent", "sale", "land", "business", "hotels"];
+const PATH_TYPE_SLUGS = ["rent", "sale", "land", "business", "hotels", "villas"] as const;
 const MAIN_AREAS = getAllMainAreaSlugs() as MainArea[];
 const AMENITY_OPTIONS: { key: string; label: string }[] = [
   { key: "hasPool", label: "Pool" },

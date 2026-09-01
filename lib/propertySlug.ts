@@ -4,10 +4,11 @@ import type { Property } from "@/types/property";
 export type PropertySlugSegment = string;
 
 function isVillaLike(p: Property): boolean {
-  return p.types.some((t) => t === "rent" || t === "sale");
+  return p.types.some((t) => t === "rent" || t === "sale") && !p.types.includes("hotels");
 }
 
-function kindPrefix(p: Property): "villa" | "land" | "business" {
+function kindPrefix(p: Property): "villa" | "land" | "business" | "hotel" {
+  if (p.types.includes("hotels")) return "hotel";
   const v = isVillaLike(p);
   if (p.types.includes("land") && !v) return "land";
   if (p.types.includes("business") && !v) return "business";
@@ -46,6 +47,9 @@ export function buildPropertySlugBase(p: Property): PropertySlugSegment {
   }
   if (prefix === "land") {
     return `land-${refToken(p)}-${area}`;
+  }
+  if (prefix === "hotel") {
+    return `hotel-${refToken(p)}-${area}`;
   }
   return `business-${refToken(p)}-${area}`;
 }

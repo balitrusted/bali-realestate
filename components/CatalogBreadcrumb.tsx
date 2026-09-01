@@ -4,7 +4,7 @@ import Link from "next/link";
 import { MainArea } from "@/types/property";
 import { areas } from "@/types/areas";
 
-type CatalogTypeSlug = "rent" | "sale" | "villas" | "land" | "business";
+type CatalogTypeSlug = "rent" | "sale" | "villas" | "land" | "business" | "hotels";
 
 export type CatalogBreadcrumbProps = {
   type?: CatalogTypeSlug | null;
@@ -40,6 +40,8 @@ export default function CatalogBreadcrumb({
     items.push(area ? { label: "Land", href: "/properties/land" } : { label: "Land" });
   } else if (type === "business") {
     items.push(area ? { label: "Business", href: "/properties/business" } : { label: "Business" });
+  } else if (type === "hotels") {
+    items.push(area ? { label: "Retreat Hotels", href: "/properties/hotels" } : { label: "Retreat Hotels" });
   }
 
   if (area) {

@@ -7,7 +7,7 @@ import { getRequestAttributionForSubmit } from "@/lib/attributionClient";
 import { PropertyType, MainArea } from "@/types/property";
 import { areas } from "@/types/areas";
 
-const VALID_TYPES: PropertyType[] = ["rent", "sale", "land", "business"];
+const VALID_TYPES: PropertyType[] = ["rent", "sale", "land", "business", "hotels"];
 const MAIN_AREAS: MainArea[] = ["ubud", "canggu", "sanur", "seminyak", "tanah-lot"];
 
 const AMENITY_KEYS = [

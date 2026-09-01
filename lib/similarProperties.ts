@@ -1,7 +1,8 @@
 import { Property } from "@/types/property";
 import { featureIsYes } from "@/lib/featureState";
 
-function catalogKind(p: Property): "villa" | "land" | "business" {
+function catalogKind(p: Property): "villa" | "land" | "business" | "hotel" {
+  if (p.types.includes("hotels")) return "hotel";
   const villaLike = p.types.some((t) => t === "rent" || t === "sale");
   if (p.types.includes("land") && !villaLike) return "land";
   if (p.types.includes("business") && !villaLike) return "business";

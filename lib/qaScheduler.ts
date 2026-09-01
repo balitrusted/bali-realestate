@@ -1,4 +1,5 @@
 import {
+  collectUsedAuthorNames,
   defaultBodyForBankItem,
   getQaBankItem,
   getQaBankItems,
@@ -57,18 +58,21 @@ async function uniqueSlug(base: string, taken: Set<string>): Promise<string> {
 async function buildTakenBankKeys(): Promise<{
   skipped: Set<string>;
   accepted: Set<string>;
-  acceptedAuthors: Set<string>;
+  usedAuthors: Set<string>;
 }> {
   const entries = await getBankQueueEntries();
   const skipped = new Set<string>();
   const accepted = new Set<string>();
-  const acceptedAuthors = new Set<string>();
+  const questions = await getAllQuestions();
+  const usedAuthors = collectUsedAuthorNames(
+    questions.map((q) => q.authorDisplayName)
+  );
+
   for (const entry of entries) {
     if (entry.status === "skipped") skipped.add(entry.bankKey);
     if (entry.status === "accepted") accepted.add(entry.bankKey);
   }
 
-  const questions = await getAllQuestions();
   const takenSlugs = new Set(questions.map((q) => q.slug));
   for (const item of getQaBankItems()) {
     if (takenSlugs.has(item.bankKey)) accepted.add(item.bankKey);
@@ -76,19 +80,12 @@ async function buildTakenBankKeys(): Promise<{
     if (alt) accepted.add(item.bankKey);
   }
 
-  for (const entry of entries) {
-    if (entry.status === "accepted" && entry.questionId) {
-      const q = questions.find((x) => x.id === entry.questionId);
-      if (q) acceptedAuthors.add(q.authorDisplayName);
-    }
-  }
-
-  return { skipped, accepted, acceptedAuthors };
+  return { skipped, accepted, usedAuthors };
 }
 
 export async function getScheduleOverview(): Promise<QaScheduleOverview> {
   const [questions, queue] = await Promise.all([getAllQuestions(), getBankQueueEntries()]);
-  const { skipped, accepted, acceptedAuthors } = await buildTakenBankKeys();
+  const { skipped, accepted, usedAuthors } = await buildTakenBankKeys();
 
   const publishedThisWeek = questions.filter(
     (q) => q.status === "published" && isPublishedThisWeek(q.publishedAt)
@@ -125,7 +122,7 @@ export async function getScheduleOverview(): Promise<QaScheduleOverview> {
   const proposal: QaBankProposal | null = nextItem
     ? {
         ...nextItem,
-        suggestedAuthor: pickVirtualAuthor(acceptedAuthors),
+        suggestedAuthor: pickVirtualAuthor(usedAuthors, nextItem.bankKey),
         suggestedBody: defaultBodyForBankItem(nextItem),
       }
     : null;
@@ -151,7 +148,7 @@ export async function acceptBankProposal(bankKey: string): Promise<{
   const item = getQaBankItem(bankKey);
   if (!item) throw new Error("Question not found in bank");
 
-  const { skipped, accepted, acceptedAuthors } = await buildTakenBankKeys();
+  const { skipped, accepted, usedAuthors } = await buildTakenBankKeys();
   if (skipped.has(bankKey)) throw new Error("This question was skipped");
   if (accepted.has(bankKey)) throw new Error("This question is already in the pipeline");
 
@@ -159,7 +156,7 @@ export async function acceptBankProposal(bankKey: string): Promise<{
   const takenSlugs = new Set(questions.map((q) => q.slug));
   const slug = await uniqueSlug(item.bankKey, takenSlugs);
   const now = new Date().toISOString();
-  const author = pickVirtualAuthor(acceptedAuthors);
+  const author = pickVirtualAuthor(usedAuthors, bankKey);
   const body = defaultBodyForBankItem(item);
 
   const question: QaQuestion = {

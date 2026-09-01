@@ -11,6 +11,7 @@ const typeLabels: Record<string, string> = {
   /** Used in generic titles like "Land for Sale in Ubud" when segment filters apply */
   land: "Sale",
   business: "Sale",
+  hotels: "Rent",
   villas: "Rent or Buy",
 };
 
@@ -19,6 +20,7 @@ const subjectByType: Record<string, string> = {
   sale: "Villas",
   land: "Land",
   business: "Business",
+  hotels: "Retreat Hotels",
   villas: "Villas",
 };
 
@@ -48,6 +50,12 @@ export function buildTitle(
   if (type === "business" && !segment) {
     if (area) return `Buy a Business in ${areaName(area)} | Commercial Property | Balitrusted`;
     return "Buy a Business in Bali | Commercial & Hospitality | Balitrusted";
+  }
+  if (type === "hotels" && !segment) {
+    if (area) {
+      return `Retreat Hotels & Spaces in ${areaName(area)} | Hotels for Retreats | Balitrusted`;
+    }
+    return "Retreat Hotels & Spaces in Bali | Hotels for Retreats in Ubud | Balitrusted";
   }
   const subject = subjectByType[type] ?? "Villas";
   const verb = typeLabels[type] ?? "Rent";
@@ -107,6 +115,10 @@ export function buildH1(
   if (type === "business" && !segment) {
     if (area) return `Buy a business in ${areaName(area)}`;
     return "Buy a business in Bali";
+  }
+  if (type === "hotels" && !segment) {
+    if (area) return `Retreat hotels & spaces in ${areaName(area)}`;
+    return "Retreat hotels & spaces in Bali";
   }
   const subject = subjectByType[type] ?? "Villas";
   const verb = typeLabels[type] ?? "Rent";
@@ -174,6 +186,9 @@ export function buildIntro(
   if (type === "business" && !area && !segment) {
     return "Here you can explore business and commercial listings we currently track in Bali—hospitality-ready villas, guesthouses, and similar opportunities. More filters will follow; for now, review what is live below.";
   }
+  if (type === "hotels" && !area && !segment) {
+    return "Browse retreat hotels and venue spaces in Bali for yoga retreats, workshops, and group programs. Filter by area and amenities, then contact us for availability, capacity, and pricing for your dates.";
+  }
   const loc = area ? areaName(area) : "Bali";
   const subject = (subjectByType[type] ?? "villas").toLowerCase();
   if (type === "land" && area && !segment) {
@@ -181,6 +196,9 @@ export function buildIntro(
   }
   if (type === "business" && area && !segment) {
     return `Looking to buy a business in ${loc} or pick up commercial-ready property? Browse what we list here, then validate permits, leases, and local regulations with professionals who know the area.`;
+  }
+  if (type === "hotels" && area && !segment) {
+    return `Retreat hotels and venue spaces in ${loc} for facilitators searching space for retreats in Bali or a hotel for retreats in ${loc}. Compare capacity, yoga shalas, and group-stay options below.`;
   }
   if (area && !segment) {
     return `Find ${subject} for ${typeLabels[type]?.toLowerCase() ?? type} in ${loc}. Use filters to narrow your search.`;
@@ -241,6 +259,16 @@ export function buildDescription(
     }
     return "Buy a business in Bali: commercial property and hospitality listings in one place. Shortlist guesthouses, permitted villas, and operator-ready assets—then validate every claim with local legal and tax professionals.";
   }
+  if (type === "hotels" && !segment) {
+    if (area) {
+      const areaDesc = area ? resolveAreaSeoDescription(String(area)) : "";
+      return (
+        areaDesc ||
+        `Find space for retreats in ${areaName(area)}: retreat hotels, venue complexes, and group-stay properties for facilitators and organizers. Compare yoga shalas, pools, room counts, and access before you book dates.`
+      );
+    }
+    return "Space for retreats in Bali: retreat hotels, venue complexes, and group accommodation for yoga retreats, workshops, and wellness programs. Search hotels for retreats in Ubud and beyond—capacity, shalas, pools, and quiet settings for your group.";
+  }
   const subject = (subjectByType[type] ?? "villas").toLowerCase();
   const loc = area ? areaName(area) : "Bali";
   const areaDesc = area ? resolveAreaSeoDescription(String(area)) : "";
@@ -289,6 +317,7 @@ const seoTextByType: Record<string, string> = {
   villas: `Looking for a villa in Bali — to rent or to buy? This hub lists all villas available for both long-term rental and purchase across the island. You can choose monthly or yearly rent where offered, or explore purchase options. Filter by area (Ubud, Canggu, Sanur, Seminyak, Tanah Lot), bedrooms, and amenities such as pool, bathtub or enclosed kitchen. Whether you plan to rent for a few months or invest, our catalogue helps you find the right villa.`,
   land: `Buy land in Bali through this growing catalogue of plots we list as available for purchase or structured acquisition. Compare how land for lease in Bali differs from fee-simple expectations elsewhere, and study land leasehold versus land freehold language with your notary—not with blog posts alone. Locations span Ubud hills to coastal zones; always verify zoning, access, and certificates on file before you commit.`,
   business: `Buy a business in Bali starts with separating glossy photos from permits, leases, and operating reality. This section lists commercial and hospitality-oriented assets we track—guesthouses, larger pool villas with stay permits where stated, and similar concepts. Match each opportunity to how you want to run operations, then validate every claim with local legal and tax advisers.`,
+  hotels: `Looking for space for retreats in Bali or a hotel for retreats in Ubud? This section lists retreat-oriented venues we track—properties with room blocks, yoga shalas, pools, and quiet settings suited to facilitators, coaches, and retreat organizers. Compare capacity, location, and on-site amenities, then reach out for availability and pricing for your program dates. Whether you run yoga retreats, breathwork intensives, or corporate offsites, start here before you commit to a venue contract.`,
 };
 
 /**
@@ -331,6 +360,13 @@ export function buildTypeHubFooterParagraphs(type: CatalogTypeForSeo): string[] 
       "Whether you search buy a business in Bali or commercial property for sale in Bali, diligence is the same: verify licenses, lease terms, transfer taxes, and seller claims with local legal and accounting advisers before you sign.",
     ];
   }
+  if (type === "hotels") {
+    return [
+      "If you search space for retreats in Bali or hotel for retreats in Ubud, you are usually planning a group program—not a single holiday rental. This hub lists retreat-oriented venues we currently track: properties with multiple rooms or villas, yoga shalas, pools, and quiet settings that suit facilitators, coaches, and wellness organizers.",
+      "Compare location (Ubud hills vs closer to town), total guest capacity, shala size, parking, Wi-Fi for hybrid sessions, and how far you are from airports and clinics. Photos help, but always confirm blackout dates, minimum stays, catering options, and noise rules before you sign a venue contract.",
+      "We add venues as we verify details. If you are scouting a retreat hotel in Bali for an upcoming program, shortlist here first—then use Request to ask about availability, pricing, and whether the space fits your group size and schedule.",
+    ];
+  }
   return null;
 }
 
@@ -341,13 +377,20 @@ export function buildTypeAreaFooterParagraphs(
   type: CatalogTypeForSeo,
   area: MainArea
 ): string[] | null {
-  if (type !== "land" && type !== "business") return null;
+  if (type !== "land" && type !== "business" && type !== "hotels") return null;
   const loc = areaName(area);
   if (type === "land") {
     return [
       `${loc} attracts land buyers for different reasons—views, access, quiet, or proximity to tourism corridors. When you buy land in ${loc}, treat every listing as a starting point: confirm boundaries, access rights, and whether the seller frames the plot as land leasehold, land freehold for an eligible party, or another structure. Buyers comparing land for lease in Bali with an outright purchase should model total cost over the years they plan to hold, not only headline price.`,
       `Zoning and local rules can limit height, footprint, or use even when a plot looks ideal in photos. If you are researching land leasehold extensions or how land freehold certificates might relate to your nationality and entity setup, do that work with a notary and land specialist before you commit a deposit—online copy cannot replace a file review.`,
       `We refresh this catalogue as plots change. If you are early in your search for land in ${loc} or want help interpreting how land for lease in Bali compares to fee-simple-style expectations from other countries, use our guides or reach out via Request once you have a shortlist.`,
+    ];
+  }
+  if (type === "hotels") {
+    return [
+      `Retreat organizers comparing space for retreats in ${loc} should weigh guest capacity, shala layout, road access for transfers, and how quiet the site stays during peak season. A hotel for retreats in ${loc} is not only bedrooms—it is the flow between sessions, meals, and rest.`,
+      `Verify Wi-Fi for hybrid calls, pool and shala rules, generator backup if power cuts matter, and whether the owner allows your program format (silence days, music, late check-out). Contract terms for group blocks differ from single-villa rentals.`,
+      `We update listings as venues change. If you need a tighter shortlist of retreat hotels in ${loc} or help checking availability for fixed dates, note your group size and program length in Request.`,
     ];
   }
   return [
@@ -372,6 +415,9 @@ export function buildSeoText(
   }
   if (type === "business" && area && !segment) {
     return `Commercial listings in ${areaName(area)} for operators exploring buy a business in Bali and related commercial property searches—verify licensing and leases locally before you commit.`;
+  }
+  if (type === "hotels" && area && !segment) {
+    return `Retreat venues in ${areaName(area)} for organizers searching space for retreats in Bali or a hotel for retreats in ${areaName(area)}—compare capacity, shalas, and group-stay options before you book dates.`;
   }
   const subject = (subjectByType[type] ?? "villas").toLowerCase();
   const loc = area ? areaName(area) : "Bali";

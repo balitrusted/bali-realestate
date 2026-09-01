@@ -1,4 +1,9 @@
 {
-  "entries": [],
+  "entries": [
+    {
+      "fromPath": "/properties/villa-141-2bed-ubud",
+      "toPath": "/properties/hotel-141-ubud"
+    }
+  ],
   "_comment": "Add { fromPath, toPath } when a slug changes (301). Example: { \"fromPath\": \"/properties/old-slug\", \"toPath\": \"/properties/new-slug\" }"
 }

@@ -1,6 +1,6 @@
 import type { FeatureTriState, PropertyFeatureKey } from "@/lib/featureState";
 
-export type PropertyType = 'rent' | 'sale' | 'land' | 'business';
+export type PropertyType = 'rent' | 'sale' | 'land' | 'business' | 'hotels';
 
 export type { FeatureTriState, PropertyFeatureKey };
 
