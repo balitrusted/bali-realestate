@@ -1,8 +1,21 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { isValidAdminSession } from "@/lib/auth";
 import { Property, PropertyType } from "@/types/property";
 
 const ALL_PROPERTY_TYPES: PropertyType[] = ["rent", "sale", "land", "business", "hotels"];
+
+type PropertyCreateInput = Omit<Partial<Property>, "price"> & {
+  price?: Property["price"];
+  type?: PropertyType;
+  priceCurrency?: Property["price"]["currency"];
+  priceMin?: number;
+  priceForSale?: number;
+};
+
+type PropertyUpdateInput = Partial<Property> &
+  Pick<Property, "id"> &
+  Pick<PropertyCreateInput, "priceCurrency" | "priceMin" | "priceForSale">;
 
 /** Dedupe, keep only valid flags; default rent when empty. */
 function normalizeTypesInput(input: unknown): PropertyType[] {
@@ -92,7 +105,7 @@ function findVillaNumberConflict(
 
 function updateSingleProperty(
   properties: Property[],
-  property: any
+  property: PropertyUpdateInput
 ): Property[] {
   const index = properties.findIndex((p) => p.id === property.id);
   if (index === -1) {
@@ -195,7 +208,7 @@ function updateSingleProperty(
     bedrooms: nextBedrooms,
     floors: nextFloors,
     bathrooms: nextBathrooms,
-    price: property.price,
+    price: property.price ?? properties[index].price,
     features: normalizePropertyFeatures(
       property.features ?? properties[index].features
     ),
@@ -345,7 +358,7 @@ function getPropertiesForRequest(
 // Check authentication
 async function checkAuth() {
   const cookieStore = await cookies();
-  return cookieStore.get("admin-auth")?.value === "true";
+  return isValidAdminSession(cookieStore.get("admin-auth")?.value);
 }
 
 // GET - Get all properties (optional ?archived=true for archive list only)
@@ -370,7 +383,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const property: any = await request.json();
+    const property = (await request.json()) as PropertyCreateInput;
 
     return await runExclusiveCatalogWrite(async () => {
       let newProperty!: Property;
@@ -460,10 +473,10 @@ export async function POST(request: Request) {
             ...(property.subArea != null && { subArea: property.subArea }),
             exactLocation: property.exactLocation?.trim() || undefined,
             displayLocation: property.displayLocation?.trim() || undefined,
-            bedrooms: landOnly ? 0 : property.bedrooms,
+            bedrooms: landOnly ? 0 : (property.bedrooms ?? 0),
             floors: landOnly ? undefined : (property.floors ?? undefined),
             bathrooms: landOnly ? undefined : property.bathrooms,
-            price: property.price,
+            price: property.price ?? { currency: "IDR", min: 0 },
             duration: property.duration,
             features: normalizePropertyFeatures(property.features),
             images: Array.isArray(property.images) ? property.images : [],

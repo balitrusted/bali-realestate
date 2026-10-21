@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { isValidAdminSession } from "@/lib/auth";
 import { getPropertyEvents } from "@/lib/propertyEvents";
 
 async function checkAuth() {
   const cookieStore = await cookies();
-  return cookieStore.get("admin-auth")?.value === "true";
+  return isValidAdminSession(cookieStore.get("admin-auth")?.value);
 }
 
 export async function GET(request: Request) {

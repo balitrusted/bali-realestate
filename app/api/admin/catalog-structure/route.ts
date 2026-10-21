@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { isValidAdminSession } from "@/lib/auth";
 import {
   loadCatalogStructure,
   saveCatalogStructure,
@@ -8,7 +9,7 @@ import {
 
 async function isAdmin(): Promise<boolean> {
   const cookieStore = await cookies();
-  return cookieStore.get("admin-auth")?.value === "true";
+  return isValidAdminSession(cookieStore.get("admin-auth")?.value);
 }
 
 export async function GET() {

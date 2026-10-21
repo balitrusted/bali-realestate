@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { isValidAdminSession } from "@/lib/auth";
 import { writeFile } from "fs/promises";
 import { join } from "path";
 import { Article } from "@/types/article";
@@ -16,10 +17,13 @@ import {
 
 const DATA_FILE = join(process.cwd(), "data", "articles.ts");
 
+type ArticleCreateInput = Pick<Article, "title" | "category"> & Partial<Article>;
+type ArticleUpdateInput = Pick<Article, "id"> & Partial<Article>;
+
 // Check authentication
 async function checkAuth() {
   const cookieStore = await cookies();
-  return cookieStore.get("admin-auth")?.value === "true";
+  return isValidAdminSession(cookieStore.get("admin-auth")?.value);
 }
 
 // Generate articles file content
@@ -129,7 +133,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const articleData: any = await request.json();
+    const articleData = (await request.json()) as ArticleCreateInput;
 
     let newArticle!: Article;
     await writeBlobJsonArrayWithRetry({
@@ -199,7 +203,7 @@ export async function PUT(request: Request) {
   }
 
   try {
-    const articleData: any = await request.json();
+    const articleData = (await request.json()) as ArticleUpdateInput;
 
     let updatedArticle!: Article;
     await writeBlobJsonArrayWithRetry({

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { isValidAdminSession } from "@/lib/auth";
 import { sendToAdmin } from "@/lib/email";
 import { MutationHttpError } from "@/lib/blobJsonOptimisticWrite";
 import { formatAttributionSummary, normalizeRequestAttribution } from "@/lib/attribution";
@@ -27,7 +28,7 @@ const REQUEST_TYPE_LABELS: Record<string, string> = {
 
 async function checkAuth(): Promise<boolean> {
   const cookieStore = await cookies();
-  return cookieStore.get("admin-auth")?.value === "true";
+  return isValidAdminSession(cookieStore.get("admin-auth")?.value);
 }
 
 /** GET – list requests (admin only) */

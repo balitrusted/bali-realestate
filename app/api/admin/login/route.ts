@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { checkAuth } from "@/lib/auth";
+import { ADMIN_SESSION_TTL_SECONDS, checkAuth, createAdminSessionToken } from "@/lib/auth";
+import {
+  checkAdminLoginRateLimit,
+  clearAdminLoginFailures,
+  recordAdminLoginFailure,
+} from "@/lib/adminLoginRateLimit";
 
 // Ensure this route runs as serverless on Vercel (avoids 405 for POST)
 export const dynamic = "force-dynamic";
@@ -12,6 +17,14 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const rateLimit = checkAdminLoginRateLimit(request);
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: "Too many login attempts. Try again later." },
+      { status: 429, headers: { "Retry-After": String(rateLimit.retryAfterSeconds) } }
+    );
+  }
+
   try {
     let body: { password?: string };
     try {
@@ -22,9 +35,16 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+    if (!process.env.ADMIN_PASSWORD?.trim()) {
+      return NextResponse.json(
+        { error: "Admin authentication is not configured" },
+        { status: 503 }
+      );
+    }
     const { password } = body;
 
     if (!password) {
+      recordAdminLoginFailure(request);
       return NextResponse.json(
         { error: "Password is required" },
         { status: 400 }
@@ -34,18 +54,23 @@ export async function POST(request: Request) {
     const isValid = checkAuth(password);
 
     if (isValid) {
-      // Set a simple session cookie
+      const token = createAdminSessionToken();
+      if (!token) {
+        return NextResponse.json({ error: "Admin authentication is not configured" }, { status: 503 });
+      }
+      clearAdminLoginFailures(request);
       const response = NextResponse.json({ success: true });
-      response.cookies.set("admin-auth", "true", {
+      response.cookies.set("admin-auth", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        maxAge: 60 * 60 * 24 * 7, // 7 days
+        sameSite: "strict",
+        maxAge: ADMIN_SESSION_TTL_SECONDS,
         path: "/",
       });
       return response;
     }
 
+    recordAdminLoginFailure(request);
     return NextResponse.json(
       { error: "Invalid password" },
       { status: 401 }

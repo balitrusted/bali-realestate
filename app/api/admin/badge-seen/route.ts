@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { isValidAdminSession } from "@/lib/auth";
 import { markNotifyRequestsSeen } from "@/lib/adminBadgeState";
 import { markNotifyRequestRead } from "@/lib/notifyRequestsData";
 import { qaScheduleDayKey } from "@/lib/qaScheduleReminder";
@@ -8,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 async function checkAuth(): Promise<boolean> {
   const cookieStore = await cookies();
-  return cookieStore.get("admin-auth")?.value === "true";
+  return isValidAdminSession(cookieStore.get("admin-auth")?.value);
 }
 
 /** Mark a section as “seen” (e.g. notify list opened) so nav badge can clear. */

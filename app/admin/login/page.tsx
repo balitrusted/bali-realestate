@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function AdminLogin() {
@@ -8,6 +8,20 @@ export default function AdminLogin() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/admin/check", { cache: "no-store", signal: controller.signal })
+      .then((response) => response.json())
+      .then((data: { authenticated?: boolean }) => {
+        if (data.authenticated) {
+          router.replace("/admin/properties");
+          router.refresh();
+        }
+      })
+      .catch(() => {});
+    return () => controller.abort();
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,16 +49,15 @@ export default function AdminLogin() {
       }
 
       if (response.ok && data.success) {
-        // Wait a bit for cookie to be set
-        await new Promise(resolve => setTimeout(resolve, 200));
-        // Force navigation
-        window.location.href = "/admin/properties";
+        router.replace("/admin/properties");
+        router.refresh();
       } else {
         setError(data.error || (response.ok ? "Incorrect password." : `Server error (${response.status}). Try again.`));
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Login error:", err);
-      setError(`Error: ${err.message || "Network error. Please check console."}`);
+      const message = err instanceof Error ? err.message : "Network error. Please check console.";
+      setError(`Error: ${message}`);
     } finally {
       setLoading(false);
     }

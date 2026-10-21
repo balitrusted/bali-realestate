@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { isValidAdminSession } from "@/lib/auth";
 import { writeFile } from "fs/promises";
 import { join } from "path";
 import type { BlogPost } from "@/types/blog";
@@ -19,7 +20,7 @@ const DATA_FILE = join(process.cwd(), "data", "blog", "index.ts");
 
 async function checkAuth() {
   const cookieStore = await cookies();
-  return cookieStore.get("admin-auth")?.value === "true";
+  return isValidAdminSession(cookieStore.get("admin-auth")?.value);
 }
 
 async function persistPosts(posts: BlogPost[]) {

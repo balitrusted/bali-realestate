@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { cookies } from "next/headers";
+import { isValidAdminSession } from "@/lib/auth";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import PropertiesMapClient, { type PropertyMapPin } from "@/components/PropertiesMapClient";
 import {
@@ -76,7 +77,7 @@ export default async function PropertiesMapPage({
 
   const listHref = buildListHrefFromFilters(filters);
   const cookieStore = await cookies();
-  const showStaffMapNote = cookieStore.get("admin-auth")?.value === "true";
+  const showStaffMapNote = isValidAdminSession(cookieStore.get("admin-auth")?.value);
 
   return (
     <div className="bg-white min-h-screen">

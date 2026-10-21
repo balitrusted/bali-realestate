@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { isValidAdminSession } from "@/lib/auth";
 import { getRequests } from "@/lib/requestsData";
 import { getNotifyUnreadCount } from "@/lib/adminBadgeState";
 import { getAllComments } from "@/lib/commentsPersistence";
@@ -20,7 +21,7 @@ function getCommentStatus(comment: {
 
 export async function GET() {
   const cookieStore = await cookies();
-  if (cookieStore.get("admin-auth")?.value !== "true") {
+  if (!isValidAdminSession(cookieStore.get("admin-auth")?.value)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

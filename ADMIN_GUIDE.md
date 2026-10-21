@@ -11,8 +11,9 @@
    Go to http://localhost:3000/admin/login
 
 3. **Login**:
-   - Default password: `admin123`
-   - Change it in `.env` file: `ADMIN_PASSWORD=your-secure-password`
+   - Enter the password configured as `ADMIN_PASSWORD` in your local `.env.local` file.
+   - There is no default password. Login is unavailable until `ADMIN_PASSWORD` is configured.
+   - For production, set `ADMIN_PASSWORD` in the Vercel project's Environment Variables.
 
 ## 📋 Features
 
@@ -78,13 +79,18 @@
 
 ## 🔒 Security
 
-- **Change default password** in production!
-- Create `.env.local` file:
+- There is no default admin password. Keep `ADMIN_PASSWORD` long, unique, and private.
+- Create or update `.env.local` for local development. This file is ignored by Git; never commit it:
   ```
-  ADMIN_PASSWORD=your-secure-password-here
+   ADMIN_PASSWORD="your-long-unique-password"
   ```
-- The admin panel uses simple cookie-based authentication
-- For production, consider using NextAuth.js or Clerk
+- Optionally set a separate random key for signing sessions:
+   ```
+   ADMIN_SESSION_SECRET="a-long-random-secret"
+   ```
+   If it is omitted, `ADMIN_PASSWORD` is used to sign sessions.
+- Successful login creates an HttpOnly, signed admin session that expires after 12 hours. Log out from the admin panel to clear it. Changing `ADMIN_SESSION_SECRET` invalidates existing sessions; if no separate session secret is set, changing `ADMIN_PASSWORD` does.
+- After five failed login attempts, further attempts from the same server-observed client address are temporarily blocked for 15 minutes. This in-memory limit is per server instance; use Vercel Firewall/rate limiting for broader protection against distributed traffic.
 
 ## 📸 Adding Images
 

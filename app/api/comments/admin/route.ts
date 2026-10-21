@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { isValidAdminSession } from "@/lib/auth";
 import { MutationHttpError } from "@/lib/blobJsonOptimisticWrite";
 import { getAllComments, mutateCommentsWithRetry } from "@/lib/commentsPersistence";
 
 // Check authentication
 async function checkAuth() {
   const cookieStore = await cookies();
-  return cookieStore.get("admin-auth")?.value === "true";
+  return isValidAdminSession(cookieStore.get("admin-auth")?.value);
 }
 
 function normalizeModerationStatus(input: {

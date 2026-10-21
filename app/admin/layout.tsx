@@ -23,7 +23,6 @@ export default function AdminLayout({
   useEffect(() => {
     // Skip auth check for login page
     if (pathname === "/admin/login") {
-      setAuthenticated(true);
       return;
     }
 
@@ -188,9 +187,6 @@ export default function AdminLayout({
               </Link>
               <button
                 onClick={async () => {
-                  // Clear cookie
-                  document.cookie = "admin-auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                  // Also call logout API if needed
                   await fetch("/api/admin/logout", { method: "POST" }).catch(() => {});
                   router.push("/admin/login");
                   router.refresh();

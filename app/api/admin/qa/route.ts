@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { isValidAdminSession } from "@/lib/auth";
 import type { QaAnswer, QaAuthorKind, QaCategory, QaQuestion } from "@/types/qa";
 import { slugifyQaTitle } from "@/lib/qaHub";
 import {
@@ -19,7 +20,7 @@ const CATEGORIES: QaCategory[] = ["rent", "buy", "services", "living"];
 
 async function checkAuth() {
   const cookieStore = await cookies();
-  return cookieStore.get("admin-auth")?.value === "true";
+  return isValidAdminSession(cookieStore.get("admin-auth")?.value);
 }
 
 function parseCategory(raw: unknown): QaCategory {

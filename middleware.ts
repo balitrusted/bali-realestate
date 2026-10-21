@@ -17,8 +17,74 @@ function normalizePathname(pathname: string): string {
   return pathname;
 }
 
-export function middleware(request: NextRequest) {
+function decodeBase64Url(value: string): ArrayBuffer {
+  const base64 = value.replace(/-/g, "+").replace(/_/g, "/");
+  const binary = atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, "="));
+  return Uint8Array.from(binary, (character) => character.charCodeAt(0)).buffer;
+}
+
+async function hasValidAdminSession(token?: string): Promise<boolean> {
+  const secret = process.env.ADMIN_SESSION_SECRET?.trim() || process.env.ADMIN_PASSWORD?.trim();
+  if (!secret || !token) return false;
+
+  const parts = token.split(".");
+  if (parts.length !== 2) return false;
+  const [encodedPayload, encodedSignature] = parts;
+
+  try {
+    const key = await crypto.subtle.importKey(
+      "raw",
+      new TextEncoder().encode(secret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["verify"]
+    );
+    const signatureValid = await crypto.subtle.verify(
+      "HMAC",
+      key,
+      decodeBase64Url(encodedSignature),
+      new TextEncoder().encode(encodedPayload)
+    );
+    if (!signatureValid) return false;
+
+    const payload = JSON.parse(new TextDecoder().decode(decodeBase64Url(encodedPayload)));
+    const now = Date.now();
+    const sessionTtlMs = 12 * 60 * 60 * 1000;
+    return (
+      payload?.role === "admin" &&
+      payload?.version === 1 &&
+      Number.isFinite(payload?.issuedAt) &&
+      Number.isFinite(payload?.expiresAt) &&
+      payload.issuedAt <= now + 60_000 &&
+      payload.expiresAt > now &&
+      payload.expiresAt <= payload.issuedAt + sessionTtlMs
+    );
+  } catch {
+    return false;
+  }
+}
+
+export async function middleware(request: NextRequest) {
   const pathname = normalizePathname(request.nextUrl.pathname);
+
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+    const token = request.cookies.get("admin-auth")?.value;
+    const validSession = await hasValidAdminSession(token);
+
+    if (pathname === "/admin/login" && validSession) {
+      const adminUrl = request.nextUrl.clone();
+      adminUrl.pathname = "/admin/properties";
+      adminUrl.search = "";
+      return NextResponse.redirect(adminUrl);
+    }
+
+    if (pathname !== "/admin/login" && !validSession) {
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = "/admin/login";
+      loginUrl.search = "";
+      return NextResponse.redirect(loginUrl);
+    }
+  }
 
   /** Canonical bedroom SEO URLs (rent/Ubud): /properties/rent/ubud/1-bedroom-villa */
   const ubudRent = pathname === "/properties/rent/ubud";
@@ -101,5 +167,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/properties/:path*"],
+  matcher: ["/properties/:path*", "/admin", "/admin/:path*"],
 };
