@@ -125,6 +125,17 @@ export async function addNotifyRequest(request: NotifyRequest): Promise<void> {
   reportMetric("write_ok", { mode: "supabase", target: "supabase", elapsedMs: Date.now() - startedAt });
 }
 
+export async function removeNotifyRequest(id: string): Promise<void> {
+  if (!isSupabaseConfigured()) {
+    throw new Error("[supabase] not configured");
+  }
+  const supabase = getSupabaseServerClient();
+  const { error } = await supabase.from("notify_requests").delete().eq("id", id);
+  if (error) {
+    throw new Error(`[supabase] notify_requests unsubscribe failed: ${error.message}`);
+  }
+}
+
 export function isNotifyRequestUnread(r: NotifyRequest): boolean {
   return !r.readAt;
 }

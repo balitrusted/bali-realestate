@@ -4,6 +4,7 @@ import PropertyCard from "@/components/PropertyCard";
 import PropertyFilters from "@/components/PropertyFilters";
 import Pagination from "@/components/Pagination";
 import CatalogListingDivider from "@/components/CatalogListingDivider";
+import ArchivedListingsDivider from "@/components/ArchivedListingsDivider";
 import TopPageNumbers from "@/components/TopPageNumbers";
 import CatalogStructuredData from "@/components/CatalogStructuredData";
 import {
@@ -368,10 +369,7 @@ export default async function PropertiesSegmentPage({
                   </div>
                 )}
                 {archivedItems.length > 0 && (
-                  <div className="mt-8 mb-6 rounded-lg border border-rose-200 bg-rose-50/60 px-4 py-3 text-sm text-rose-800">
-                    <span className="font-semibold">{activeItems.length > 0 ? "Archived villas" : "Only archived villas matched"}</span>{" "}
-                    <span className="text-rose-700">(currently not available) can still be opened and requested.</span>
-                  </div>
+                  <ArchivedListingsDivider hasAvailableListings={activeItems.length > 0} />
                 )}
                 {archivedItems.length > 0 && (
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

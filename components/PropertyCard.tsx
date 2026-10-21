@@ -333,11 +333,6 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
               </div>
             </div>
           )}
-          {property.archived && (
-            <div className="absolute left-3 top-3 z-10 rounded-md border border-rose-200 bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-700">
-              Not available
-            </div>
-          )}
           <PropertyCardActions propertyId={String(property.id)} />
         </div>
       ) : (
@@ -358,6 +353,12 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
               {displayTitle}
             </PropertyViewLink>
           </h3>
+        )}
+
+        {isArchived && (
+          <span className="mb-3 inline-flex w-fit rounded-full border border-rose-300 bg-rose-100 px-2.5 py-1 text-xs font-semibold text-rose-800">
+            Unavailable
+          </span>
         )}
         
         {teaser && (

@@ -61,7 +61,7 @@ export default function Header() {
               Blog
             </Link>
             <Link href="/qa" className="text-gray-700 hover:text-gray-900">
-              Q&A
+              Q&amp;A
             </Link>
             <Link href="/about" className="text-gray-700 hover:text-gray-900">
               About

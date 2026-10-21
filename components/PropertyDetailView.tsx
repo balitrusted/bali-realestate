@@ -84,7 +84,7 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
   const hasLand = types.includes("land");
   const hasBusiness = types.includes("business");
   const hasHotels = types.includes("hotels");
-  const showAvailability = (hasRent || hasHotels) && !hasLand && !hasBusiness;
+  const showAvailability = (hasRent || hasHotels) && !hasLand && !hasBusiness && !property.archived;
   const availableFrom = normalizeAvailableFrom(property.availableFrom ?? undefined);
   const dealLabel = hasHotels
     ? "Retreat"
@@ -140,6 +140,22 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
             <div className="mt-1 text-sm text-gray-500">
               <PropertyLocationLinks property={property} />
             </div>
+            {property.archived && (
+              <div className="mt-3 flex items-center gap-2 rounded-md border-l-4 border-rose-600 bg-rose-50 px-3 py-2">
+                <span className="inline-flex shrink-0 rounded-full bg-rose-700 px-3 py-1 text-xs font-semibold text-white">
+                  Unavailable
+                </span>
+                <span className="min-w-0 text-xs leading-snug text-rose-900">
+                  <Link
+                    href="#notify-when-available"
+                    className="font-normal text-rose-900 underline decoration-rose-300 decoration-1 underline-offset-2 hover:text-rose-700"
+                  >
+                    Notify me if this listing returns
+                  </Link>
+                  .
+                </span>
+              </div>
+            )}
           </div>
           <PropertyCardActions propertyId={String(property.id)} layout="inline" />
         </div>
@@ -195,14 +211,6 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
       <PropertyStructuredData property={property} baseUrl={baseUrl} propertyUrl={propertyUrl} />
       <div className="bg-white min-h-screen">
         <div className="container mx-auto px-4 py-8">
-          {property.archived && (
-            <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex flex-wrap items-center gap-3">
-              <span className="font-medium text-amber-800">This villa is currently not available.</span>
-              <span className="text-amber-700 text-sm">
-                It may become available again later. Use the form below to get notified.
-              </span>
-            </div>
-          )}
           <nav
             className="mb-6 flex flex-col gap-2 border-b border-stone-200 pb-4 sm:flex-row sm:items-center sm:justify-between sm:gap-3"
             aria-label="Listing navigation"
