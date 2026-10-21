@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { loadAllProperties, loadAllPropertiesForSlugIndex } from "@/lib/propertiesCatalog";
+import { cookies } from "next/headers";
+import { isValidAdminSession } from "@/lib/auth";
+import { loadAllPropertiesIncludingArchived } from "@/lib/propertiesCatalog";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { rankPropertiesForSearch } from "@/lib/propertySearch";
 import PropertyCard from "@/components/PropertyCard";
@@ -38,10 +40,11 @@ export default async function SearchPage({
   const raw = sp.q;
   const q = (Array.isArray(raw) ? raw[0] : raw)?.trim() ?? "";
 
-  const all = await loadAllProperties();
-  const allForSlugs = await loadAllPropertiesForSlugIndex();
-  const slugIdx = buildPropertySlugIndex(allForSlugs);
-  const ranked = q ? rankPropertiesForSearch(all, q, 50) : [];
+  const cookieStore = await cookies();
+  const isAdmin = isValidAdminSession(cookieStore.get("admin-auth")?.value);
+  const all = await loadAllPropertiesIncludingArchived();
+  const slugIdx = buildPropertySlugIndex(all);
+  const ranked = q ? rankPropertiesForSearch(all, q, 50, { includeInternalName: isAdmin }) : [];
 
   return (
     <div className="bg-white min-h-screen">
@@ -66,7 +69,14 @@ export default async function SearchPage({
             {ranked.length > 0 && (
               <div className="grid gap-6 sm:grid-cols-2">
                 {ranked.map((property) => (
-                  <PropertyCard key={property.id} property={property} detailSlug={slugIdx.segmentFor(property)} />
+                  <div key={property.id}>
+                    <PropertyCard property={property} detailSlug={slugIdx.segmentFor(property)} />
+                    {isAdmin && property.internalName?.trim() ? (
+                      <p className="mt-2 px-1 text-xs text-gray-500">
+                        Internal name: <span className="font-medium text-gray-700">{property.internalName}</span>
+                      </p>
+                    ) : null}
+                  </div>
                 ))}
               </div>
             )}

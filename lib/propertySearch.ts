@@ -61,21 +61,37 @@ function subAreasMatchingQuery(query: string): SubArea[] {
   return [...new Set(out)];
 }
 
-function buildHaystack(p: Property): string {
+function buildHaystack(p: Property, includeInternalName: boolean): string {
   const title = getPropertyDisplayTitle(p);
   const raw = p.title?.trim() ?? "";
   const desc = fixDescriptionDisplay(p.description).slice(0, 4000);
   const sub = p.subArea ? subAreaNames[p.subArea] ?? p.subArea : "";
   const main = p.mainArea ? areas[p.mainArea as keyof typeof areas]?.nameEn ?? p.mainArea : "";
   const vn = p.villaNumber?.trim() ?? "";
-  const parts = [title, raw, desc, main, sub, vn, p.id, p.mainArea, p.subArea ?? ""].filter(Boolean);
+  const parts = [
+    title,
+    raw,
+    desc,
+    main,
+    sub,
+    vn,
+    p.id,
+    p.mainArea,
+    p.subArea ?? "",
+    ...(includeInternalName ? [p.internalName?.trim() ?? ""] : []),
+  ].filter(Boolean);
   return normalizeText(parts.join(" \n "));
 }
 
 /**
  * Score properties for a free-text query. No network — use from API or RSC.
  */
-export function rankPropertiesForSearch(properties: Property[], query: string, limit: number): Property[] {
+export function rankPropertiesForSearch(
+  properties: Property[],
+  query: string,
+  limit: number,
+  options: { includeInternalName?: boolean } = {}
+): Property[] {
   const q = query.trim();
   if (!q) return [];
 
@@ -87,7 +103,7 @@ export function rankPropertiesForSearch(properties: Property[], query: string, l
 
   const scored = properties.map((p) => {
     let score = 0;
-    const hay = buildHaystack(p);
+    const hay = buildHaystack(p, options.includeInternalName === true);
 
     if (hay.includes(hayNorm)) score += 120;
 
@@ -125,11 +141,13 @@ export type PropertySearchApiHit = {
   meta: string;
   thumbUrl: string | null;
   href: string;
+  internalName?: string;
 };
 
 export function propertiesToSearchHits(
   list: Property[],
-  segmentFor: (p: Property) => string
+  segmentFor: (p: Property) => string,
+  options: { includeInternalName?: boolean } = {}
 ): PropertySearchApiHit[] {
   return list.map((p) => {
     const main = p.mainArea ? areas[p.mainArea as keyof typeof areas]?.nameEn ?? p.mainArea : "";
@@ -144,6 +162,9 @@ export function propertiesToSearchHits(
       meta: metaParts.join(" · "),
       thumbUrl: thumb,
       href: `/properties/${segmentFor(p)}`,
+      ...(options.includeInternalName && p.internalName?.trim()
+        ? { internalName: p.internalName.trim() }
+        : {}),
     };
   });
 }

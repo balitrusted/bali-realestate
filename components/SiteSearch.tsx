@@ -8,6 +8,7 @@ type SearchHit = {
   id: string;
   title: string;
   meta: string;
+  internalName?: string;
   thumbUrl: string | null;
   href: string;
 };
@@ -195,6 +196,11 @@ export default function SiteSearch({ className = "" }: { className?: string }) {
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-sm font-medium text-gray-900">{h.title}</div>
                   <div className="truncate text-xs text-gray-500">{h.meta}</div>
+                  {h.internalName ? (
+                    <div className="truncate text-xs font-medium text-emerald-800">
+                      Internal: {h.internalName}
+                    </div>
+                  ) : null}
                 </div>
               </Link>
             ))}

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { loadAllProperties } from "@/lib/propertiesCatalog";
+import { cookies } from "next/headers";
+import { isValidAdminSession } from "@/lib/auth";
+import { loadAllPropertiesIncludingArchived } from "@/lib/propertiesCatalog";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { propertiesToSearchHits, rankPropertiesForSearch } from "@/lib/propertySearch";
 
@@ -14,10 +16,14 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ query: "", results: [] });
   }
 
-  const all = await loadAllProperties();
-  const ranked = rankPropertiesForSearch(all, q, limit);
+  const cookieStore = await cookies();
+  const isAdmin = isValidAdminSession(cookieStore.get("admin-auth")?.value);
+  const all = await loadAllPropertiesIncludingArchived();
+  const ranked = rankPropertiesForSearch(all, q, limit, { includeInternalName: isAdmin });
   const slugIdx = buildPropertySlugIndex(all);
-  const results = propertiesToSearchHits(ranked, (p) => slugIdx.segmentFor(p));
+  const results = propertiesToSearchHits(ranked, (p) => slugIdx.segmentFor(p), {
+    includeInternalName: isAdmin,
+  });
 
-  return NextResponse.json({ query: q, results });
+  return NextResponse.json({ query: q, results, adminSearch: isAdmin });
 }
