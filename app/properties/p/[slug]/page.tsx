@@ -1,9 +1,12 @@
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
+import { isValidAdminSession } from "@/lib/auth";
 import { loadAllPropertiesForSlugIndex } from "@/lib/propertiesCatalog";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { sanitizeReturnTo } from "@/lib/propertyViewNavigation";
 import PropertyDetailView from "@/components/PropertyDetailView";
 import { buildPropertyPageMetadata } from "@/lib/propertyMetadata";
+import { toPublicProperty } from "@/lib/publicProperty";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -35,5 +38,21 @@ export default async function PropertyBySlugPage({
     notFound();
   }
   const returnToFromQuery = sanitizeReturnTo(sp.returnTo);
-  return <PropertyDetailView property={property} all={all} returnToFromQuery={returnToFromQuery} />;
+  const cookieStore = await cookies();
+  const isAdmin = isValidAdminSession(cookieStore.get("admin-auth")?.value);
+  return (
+    <PropertyDetailView
+      property={toPublicProperty(property)}
+      all={all.map(toPublicProperty)}
+      returnToFromQuery={returnToFromQuery}
+      adminLocationLinks={
+        isAdmin
+          ? {
+              exactLocation: property.exactLocation,
+              approximateLocationUrl: property.approximateLocationUrl,
+            }
+          : undefined
+      }
+    />
+  );
 }

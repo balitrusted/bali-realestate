@@ -301,6 +301,8 @@ function parsePropertyObject(objStr: string): Property | null {
     // Extract exactLocation (admin-only link, e.g. Google Maps)
     const exactLocationMatch = objStr.match(/exactLocation:\s*"([^"]*)"/);
     if (exactLocationMatch) obj.exactLocation = exactLocationMatch[1];
+    const approximateLocationUrlMatch = objStr.match(/approximateLocationUrl:\s*"([^"]*)"/);
+    if (approximateLocationUrlMatch) obj.approximateLocationUrl = approximateLocationUrlMatch[1];
     // Extract displayLocation (lat,lon for map)
     const displayLocationMatch = objStr.match(/displayLocation:\s*"([^"]*)"/);
     if (displayLocationMatch) obj.displayLocation = displayLocationMatch[1];

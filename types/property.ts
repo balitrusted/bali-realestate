@@ -48,8 +48,10 @@ export interface Property {
   mainArea: MainArea; // Main area (ubud, canggu, sanur)
   /** Sub-area/neighborhood. Optional when main area has no sub-areas (e.g. Seminyak). */
   subArea?: SubArea;
-  /** Google Maps or other link — admin only, not shown on site. */
+  /** Google Maps or other link shared as the exact location when provided. */
   exactLocation?: string;
+  /** Shareable link to an approximate location; separate from map coordinates. */
+  approximateLocationUrl?: string;
   /** Latitude,longitude for map (e.g. "-8.5068,115.2624"). Optional. */
   displayLocation?: string;
   /** Public YouTube overview video — watch, embed, shorts, or youtu.be URL. */

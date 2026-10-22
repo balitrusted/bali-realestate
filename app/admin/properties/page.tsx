@@ -24,6 +24,7 @@ import { Property } from "@/types/property";
 import { propertyHasUnknownAmenities } from "@/lib/featureState";
 import PropertyImageWithFallback from "@/components/PropertyImageWithFallback";
 import PropertyArchiveModal from "@/components/admin/PropertyArchiveModal";
+import PropertyLocationCopyButtons from "@/components/PropertyLocationCopyButtons";
 import { getPropertyDisplayTitle, fixDescriptionDisplay } from "@/lib/propertyUtils";
 import { formatLocaleDate } from "@/lib/formatDate";
 import { normalizeAvailableFrom } from "@/lib/availability";
@@ -159,6 +160,11 @@ function SortablePropertyItem({
           </span>
           <span className="text-xs">Order: {property.order ?? 999}</span>
         </div>
+        <PropertyLocationCopyButtons
+          exactLocation={property.exactLocation}
+          approximateLocationUrl={property.approximateLocationUrl}
+          className="mt-2"
+        />
       </div>
 
       <div className="flex flex-col gap-2 shrink-0">

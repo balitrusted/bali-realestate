@@ -53,6 +53,7 @@ import {
 } from "@/lib/availability";
 import { diffPropertyFields } from "@/lib/propertyChangeDiff";
 import { safeAppendPropertyEvent } from "@/lib/propertyEvents";
+import { toPublicProperty } from "@/lib/publicProperty";
 
 /** Admin and catalog must never serve stale JSON from edge/browser caches. */
 export const dynamic = "force-dynamic";
@@ -322,7 +323,8 @@ function buildListsWithSlugs(fullList: Property[]): {
 
 function getPropertiesForRequest(
   fullList: Property[],
-  searchParams: URLSearchParams
+  searchParams: URLSearchParams,
+  isAdmin: boolean
 ): { properties: Array<Property & { publicSlug: string }> } {
   const archiveFilter = searchParams.get("archived");
   const idsParam = searchParams.get("ids");
@@ -348,7 +350,9 @@ function getPropertiesForRequest(
   const allForSlugs = fullList.filter((p) => p && p.id && hasValidPrice(p));
   const slugIdx = buildPropertySlugIndex(allForSlugs);
   const withSlugs = sorted.map((p) => ({
-    ...propertyWithNormalizedAvailability(p),
+    ...(isAdmin
+      ? propertyWithNormalizedAvailability(p)
+      : toPublicProperty(propertyWithNormalizedAvailability(p))),
     publicSlug: slugIdx.segmentFor(p),
   }));
 
@@ -365,8 +369,9 @@ async function checkAuth() {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
+    const isAdmin = await checkAuth();
     const fullList = await loadFullPropertyList();
-    return apiJson(getPropertiesForRequest(fullList, searchParams));
+    return apiJson(getPropertiesForRequest(fullList, searchParams, isAdmin));
   } catch (error) {
     console.error("Error reading properties:", error);
     return apiJson(
@@ -472,6 +477,7 @@ export async function POST(request: Request) {
             mainArea: mainArea,
             ...(property.subArea != null && { subArea: property.subArea }),
             exactLocation: property.exactLocation?.trim() || undefined,
+            approximateLocationUrl: property.approximateLocationUrl?.trim() || undefined,
             displayLocation: property.displayLocation?.trim() || undefined,
             bedrooms: landOnly ? 0 : (property.bedrooms ?? 0),
             floors: landOnly ? undefined : (property.floors ?? undefined),

@@ -31,6 +31,7 @@ import { PriceInput } from "@/components/admin/PriceInput";
 import AdminDateInput from "@/components/admin/AdminDateInput";
 import { ALLOWED_BEDROOM_COUNTS } from "@/lib/catalogBedrooms";
 import { normalizeAvailableFrom } from "@/lib/availability";
+import PropertyLocationCopyButtons from "@/components/PropertyLocationCopyButtons";
 
 function isLandOnlyListing(types: PropertyType[]): boolean {
   return (
@@ -162,6 +163,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
       ? property.subArea
       : (areas[(property?.mainArea || "ubud") as keyof typeof areas]?.subAreas?.[0] as SubArea | undefined),
     exactLocation: property?.exactLocation ?? "",
+    approximateLocationUrl: property?.approximateLocationUrl ?? "",
     displayLocation: property?.displayLocation ?? "",
     youtubeVideoUrl: property?.youtubeVideoUrl ?? "",
     bedrooms: landOnly ? (property?.bedrooms ?? 0) : property?.bedrooms || 1,
@@ -208,6 +210,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
       mainArea: formData.mainArea,
       subArea: formData.subArea ?? null,
       exactLocation: formData.exactLocation.trim() || undefined,
+      approximateLocationUrl: formData.approximateLocationUrl.trim() || undefined,
       displayLocation: formData.displayLocation.trim() || undefined,
       youtubeVideoUrl: formData.youtubeVideoUrl.trim() || undefined,
       bedrooms: landOnly ? 0 : formData.bedrooms,
@@ -564,7 +567,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
 
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">
-            Exact location (admin only)
+            Exact location link
           </label>
           <input
             type="url"
@@ -573,7 +576,32 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
             placeholder="e.g. Google Maps link"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500 bg-gray-50"
           />
-          <p className="text-xs text-gray-500 mt-1">Link for your reference only. Not shown on the site.</p>
+          <PropertyLocationCopyButtons
+            exactLocation={formData.exactLocation}
+            className="mt-2"
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Shared with clients as the exact location when this link is set.
+          </p>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-900 mb-2">
+            Approximate location link
+          </label>
+          <input
+            type="url"
+            value={formData.approximateLocationUrl}
+            onChange={(e) => setFormData({ ...formData, approximateLocationUrl: e.target.value })}
+            placeholder="e.g. Google Maps link"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+          />
+          <PropertyLocationCopyButtons
+            approximateLocationUrl={formData.approximateLocationUrl}
+            className="mt-2"
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Optional shareable link, separate from the coordinates used by the map below.
+          </p>
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">

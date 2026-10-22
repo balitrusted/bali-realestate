@@ -8,6 +8,7 @@ import PropertyLocationLinks from "@/components/PropertyLocationLinks";
 import PropertyImages from "@/components/PropertyImages";
 import NotifyWhenAvailableForm from "@/components/NotifyWhenAvailableForm";
 import PropertyLocationMap from "@/components/PropertyLocationMap";
+import PropertyLocationCopyButtons from "@/components/PropertyLocationCopyButtons";
 import PropertyStructuredData from "@/components/PropertyStructuredData";
 import PropertyCardActions from "@/components/PropertyCardActions";
 import PropertyDetailSimilar from "@/components/PropertyDetailSimilar";
@@ -33,9 +34,11 @@ type Props = {
   property: Property;
   all: Property[];
   returnToFromQuery: string | null;
+  /** Private links; passed only for a signed-in admin. */
+  adminLocationLinks?: { exactLocation?: string; approximateLocationUrl?: string };
 };
 
-export default function PropertyDetailView({ property, all, returnToFromQuery }: Props) {
+export default function PropertyDetailView({ property, all, returnToFromQuery, adminLocationLinks }: Props) {
   const slugIndex = buildPropertySlugIndex(all);
   const canonicalPath = slugIndex.pathFor(property);
   const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000").replace(/\/$/, "");
@@ -229,7 +232,18 @@ export default function PropertyDetailView({ property, all, returnToFromQuery }:
           </nav>
 
           <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 lg:gap-8 mb-8">
-            <div className="order-1 lg:order-none lg:col-start-2 lg:row-start-1">{propertyHeader}</div>
+            <div className="order-1 lg:order-none lg:col-start-2 lg:row-start-1">
+              {adminLocationLinks ? (
+                <div className="mb-3 flex items-center gap-2 rounded-md border border-dashed border-stone-300 bg-stone-50 px-3 py-2">
+                  <span className="text-xs font-medium text-stone-500">Admin:</span>
+                  <PropertyLocationCopyButtons
+                    exactLocation={adminLocationLinks.exactLocation}
+                    approximateLocationUrl={adminLocationLinks.approximateLocationUrl}
+                  />
+                </div>
+              ) : null}
+              {propertyHeader}
+            </div>
 
             <div className="order-2 lg:order-none lg:col-start-1 lg:row-start-1 lg:row-span-2 space-y-4">
               <PropertyImages

@@ -40,6 +40,9 @@ export function generatePropertiesFile(properties: Property[]): string {
     if (prop.exactLocation != null && prop.exactLocation !== "") {
       content += `${indent}${indent}exactLocation: ${JSON.stringify(prop.exactLocation)},\n`;
     }
+    if (prop.approximateLocationUrl != null && prop.approximateLocationUrl !== "") {
+      content += `${indent}${indent}approximateLocationUrl: ${JSON.stringify(prop.approximateLocationUrl)},\n`;
+    }
     if (prop.displayLocation != null && prop.displayLocation !== "") {
       content += `${indent}${indent}displayLocation: ${JSON.stringify(prop.displayLocation)},\n`;
     }
