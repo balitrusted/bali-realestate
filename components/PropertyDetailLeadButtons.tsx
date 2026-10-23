@@ -5,6 +5,7 @@ import { trackLead } from "@/lib/analytics";
 import { getRequestAttributionForSubmit } from "@/lib/attributionClient";
 import { isValidEnglishIsoDate } from "@/lib/englishDateInput";
 import EnglishDateInput from "@/components/EnglishDateInput";
+import PhoneInput from "@/components/PhoneInput";
 
 type LeadKind = "book" | "info" | "buy";
 
@@ -36,6 +37,8 @@ function LeadModal({
 }) {
   const [contactMethod, setContactMethod] = useState<"whatsapp" | "email">("whatsapp");
   const [contactValue, setContactValue] = useState("");
+  const [waNumber, setWaNumber] = useState("");
+  const [waPartial, setWaPartial] = useState(false);
   const [name, setName] = useState("");
   const [desiredStart, setDesiredStart] = useState("");
   const [comment, setComment] = useState("");
@@ -52,11 +55,16 @@ function LeadModal({
     setSending(true);
     try {
       const email = contactMethod === "email" ? contactValue.trim() : "";
-      const whatsapp = contactMethod === "whatsapp" ? contactValue.trim() : "";
+      const whatsapp = contactMethod === "whatsapp" ? waNumber : "";
       if (!name.trim()) throw new Error("Name is required");
-      if (!email && !whatsapp) {
-        throw new Error(contactMethod === "whatsapp" ? "Enter your WhatsApp number" : "Enter your email");
+      if (contactMethod === "whatsapp" && !waNumber) {
+        throw new Error(
+          waPartial
+            ? "Enter a complete, valid WhatsApp number for the selected country"
+            : "Enter your WhatsApp number with country code"
+        );
       }
+      if (contactMethod === "email" && !email) throw new Error("Enter your email");
       if (kind === "book" && desiredStart.trim() && !isValidEnglishIsoDate(desiredStart.trim())) {
         throw new Error("Enter a valid date (YYYY-MM-DD)");
       }
@@ -168,13 +176,13 @@ function LeadModal({
               </button>
             </div>
             {contactMethod === "whatsapp" ? (
-              <input
-                type="tel"
-                value={contactValue}
-                onChange={(e) => setContactValue(e.target.value)}
-                className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600"
-                placeholder="WhatsApp with country code"
-                autoComplete="tel"
+              <PhoneInput
+                initialValue={waNumber}
+                onChange={({ e164, hasInput }) => {
+                  setWaNumber(e164 ?? "");
+                  setWaPartial(hasInput && !e164);
+                }}
+                inputClassName="min-w-0 flex-1 rounded-lg border border-stone-300 px-3 py-2 text-sm focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600"
               />
             ) : (
               <input

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { isValidAdminSession } from "@/lib/auth";
 import { sendToAdmin } from "@/lib/email";
+import { normalizeInternationalPhone } from "@/lib/phone";
 import { MutationHttpError } from "@/lib/blobJsonOptimisticWrite";
 import { formatAttributionSummary, normalizeRequestAttribution } from "@/lib/attribution";
 import {
@@ -152,7 +153,14 @@ export async function POST(request: NextRequest) {
     }
 
     const emailTrim = typeof email === "string" ? email.trim() : "";
-    const whatsappTrim = typeof whatsapp === "string" ? whatsapp.trim() : "";
+    const whatsappRaw = typeof whatsapp === "string" ? whatsapp.trim() : "";
+    const whatsappTrim = whatsappRaw ? normalizeInternationalPhone(whatsappRaw) ?? "" : "";
+    if (whatsappRaw && !whatsappTrim) {
+      return NextResponse.json(
+        { error: "Enter a valid WhatsApp number with country code (e.g. +62...)" },
+        { status: 400 }
+      );
+    }
 
     if (isPropertyLead) {
       if (!emailTrim && !whatsappTrim) {

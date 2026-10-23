@@ -8,19 +8,11 @@ import { trackLead } from "@/lib/analytics";
 import { getRequestAttributionForSubmit } from "@/lib/attributionClient";
 import { getMergedAreaInfos } from "@/lib/mainAreaRegistry";
 import { DEFAULT_CURRENCY, type SupportedCurrency } from "@/lib/currency";
+import PhoneInput from "@/components/PhoneInput";
 
 type RequestType = "client-rent" | "client-other" | "owner" | "specialist";
 type Role = "client" | "owner" | "specialist";
 type Phase = "pick-role" | "pick-client-intent" | "form";
-
-function formatWhatsApp(value: string) {
-  let cleaned = value.replace(/[^\d+]/g, "");
-  if (!cleaned.startsWith("+")) {
-    cleaned = "+" + cleaned.replace(/\+/g, "");
-  }
-  if (cleaned.length > 16) cleaned = cleaned.substring(0, 16);
-  return cleaned;
-}
 
 function ownerStepIds(propertyType: string): string[] {
   const head = ["name", "contact", "propertyType"] as const;
@@ -107,6 +99,7 @@ function RequestForm() {
   const [requestType, setRequestType] = useState<RequestType | null>(null);
   const [stepId, setStepId] = useState<string>("name");
   const [prefillApplied, setPrefillApplied] = useState(false);
+  const [waPartial, setWaPartial] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -244,6 +237,7 @@ function RequestForm() {
       case "contact": {
         const em = formData.email.trim();
         const wa = formData.whatsapp.trim();
+        if (waPartial) return "Please enter a complete, valid WhatsApp number for the selected country.";
         if (!em && !wa) return "Enter your email or WhatsApp (at least one).";
         if (em && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) return "Please enter a valid email.";
         return null;
@@ -269,8 +263,9 @@ function RequestForm() {
     }
   };
 
-  const handleWhatsAppChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, whatsapp: formatWhatsApp(e.target.value) });
+  const handleWhatsAppChange = ({ e164, hasInput }: { e164: string | null; hasInput: boolean }) => {
+    setWaPartial(hasInput && !e164);
+    setFormData((prev) => (prev.whatsapp === (e164 ?? "") ? prev : { ...prev, whatsapp: e164 ?? "" }));
   };
 
   const toggleDuration = (value: string) => {
@@ -335,6 +330,7 @@ function RequestForm() {
         message: "",
       });
       setPrefillApplied(false);
+      setWaPartial(false);
       if (requestType) trackLead(requestType);
     } catch {
       setSubmitError("Network error. Please try again.");
@@ -562,7 +558,7 @@ function RequestForm() {
                   {stepId === "contact" && (
                     <div>
                       <h2 className="mb-1 text-xl font-semibold text-gray-900">How do we reach you?</h2>
-                      <p className="mb-4 text-sm text-gray-500">Add email and/or WhatsApp — at least one is required.</p>
+                      <p className="mb-4 text-sm text-gray-500">Add email and/or WhatsApp — at least one is required. Choose your country code from the list.</p>
                       <div className="space-y-4">
                         <input
                           type="email"
@@ -572,13 +568,10 @@ function RequestForm() {
                           className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20"
                           placeholder="Email"
                         />
-                        <input
-                          type="tel"
-                          autoComplete="tel"
-                          value={formData.whatsapp}
+                        <PhoneInput
+                          initialValue={formData.whatsapp}
                           onChange={handleWhatsAppChange}
-                          placeholder="WhatsApp (+country code)"
-                          className="w-full rounded-lg border border-gray-300 px-4 py-3 text-base focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20"
+                          inputClassName="min-w-0 flex-1 rounded-lg border border-gray-300 px-4 py-3 text-base focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20"
                         />
                         {formData.email.trim() && formData.whatsapp.trim() && (
                           <fieldset className="rounded-lg border border-gray-100 bg-gray-50/80 p-3">
