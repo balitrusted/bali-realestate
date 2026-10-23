@@ -20,6 +20,12 @@ type Props = {
   archived: boolean;
 };
 
+function todayIso(): string {
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
 function LeadModal({
   kind,
   title,
@@ -40,7 +46,7 @@ function LeadModal({
   const [waNumber, setWaNumber] = useState("");
   const [waPartial, setWaPartial] = useState(false);
   const [name, setName] = useState("");
-  const [desiredStart, setDesiredStart] = useState("");
+  const [desiredStart, setDesiredStart] = useState(todayIso);
   const [comment, setComment] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
@@ -202,6 +208,7 @@ function LeadModal({
               <EnglishDateInput
                 value={desiredStart}
                 onChange={setDesiredStart}
+                min={todayIso()}
                 className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm focus:border-emerald-600 focus:outline-none focus:ring-1 focus:ring-emerald-600"
               />
             </div>
