@@ -155,7 +155,7 @@ function LeadModal({
               <button
                 type="button"
                 onClick={() => setContactMethod("whatsapp")}
-                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${
                   contactMethod === "whatsapp"
                     ? "bg-stone-900 text-white"
                     : "bg-stone-100 text-stone-600 hover:bg-stone-200"
@@ -166,7 +166,7 @@ function LeadModal({
               <button
                 type="button"
                 onClick={() => setContactMethod("email")}
-                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                className={`rounded-lg px-3 py-1 text-xs font-medium transition-colors ${
                   contactMethod === "email"
                     ? "bg-stone-900 text-white"
                     : "bg-stone-100 text-stone-600 hover:bg-stone-200"
