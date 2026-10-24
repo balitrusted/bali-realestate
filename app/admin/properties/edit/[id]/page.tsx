@@ -33,13 +33,14 @@ export default function EditPropertyPage() {
       });
   }, [id]);
 
-  const handleSave = async (updatedProperty: any) => {
+  const handleSave = async (updatedProperty: any, options?: { notifySubscribers: boolean }) => {
     const response = await fetch("/api/properties", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       cache: "no-store",
       body: JSON.stringify({
         action: "update",
+        notifySubscribers: options?.notifySubscribers !== false,
         property: { ...updatedProperty, id: property?.id ?? id },
       }),
     });

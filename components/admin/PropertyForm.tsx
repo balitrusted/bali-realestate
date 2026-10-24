@@ -42,7 +42,7 @@ function isLandOnlyListing(types: PropertyType[]): boolean {
 
 interface PropertyFormProps {
   property?: Property;
-  onSave: (property: any) => Promise<void>;
+  onSave: (property: any, options?: { notifySubscribers: boolean }) => Promise<void>;
 }
 
 function SortableImageItem({ url, onDelete }: { url: string; onDelete: () => void }) {
@@ -150,6 +150,7 @@ function SortableImageItem({ url, onDelete }: { url: string; onDelete: () => voi
 }
 
 export default function PropertyForm({ property, onSave }: PropertyFormProps) {
+  const [notifySubscribers, setNotifySubscribers] = useState(true);
   const initialTypes = property?.types || (["rent"] as PropertyType[]);
   const landOnly = isLandOnlyListing(initialTypes);
   const [formData, setFormData] = useState({
@@ -234,7 +235,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
 
     try {
       setSaving(true);
-      await onSave(propertyData);
+      await onSave(propertyData, { notifySubscribers });
     } finally {
       setSaving(false);
     }
@@ -979,6 +980,17 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
       </div>
 
       {/* Submit */}
+      {property && (
+        <label className="flex items-center gap-2 pt-4 text-sm text-gray-700">
+          <input
+            type="checkbox"
+            checked={notifySubscribers}
+            onChange={(e) => setNotifySubscribers(e.target.checked)}
+            className="h-4 w-4 rounded border-gray-300"
+          />
+          Email subscribers about price, availability and listing changes
+        </label>
+      )}
       <div className="flex gap-4 pt-4 border-t border-gray-200">
         <button
           type="submit"

@@ -586,7 +586,7 @@ export async function PUT(request: Request) {
 
       await flushPropertyEvents(pendingEvents);
 
-      if (alertBefore && alertAfter) {
+      if (alertBefore && alertAfter && body.notifySubscribers !== false) {
         await notifyVillaSubscribers({
           before: alertBefore,
           after: alertAfter,
