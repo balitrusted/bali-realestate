@@ -37,7 +37,7 @@ export default async function NotifyUnsubscribePage({ searchParams }: NotifyUnsu
           <>
             <h1 className="text-xl font-semibold text-gray-900">You are unsubscribed</h1>
             <p className="mt-2 text-sm leading-relaxed text-gray-600">
-              You will no longer receive availability updates for this listing.
+              You will no longer receive updates for this listing.
             </p>
             <Link href="/" className="mt-6 inline-block text-sm font-medium text-gray-800 underline underline-offset-2">
               Back to Balitrusted
@@ -55,10 +55,10 @@ export default async function NotifyUnsubscribePage({ searchParams }: NotifyUnsu
           </>
         ) : (
           <>
-            <p className="text-xs font-semibold uppercase text-rose-700">Availability updates</p>
+            <p className="text-xs font-semibold uppercase text-rose-700">Villa updates</p>
             <h1 className="mt-2 text-xl font-semibold text-gray-900">Unsubscribe from villa alerts?</h1>
             <p className="mt-2 text-sm leading-relaxed text-gray-600">
-              Confirm below to stop availability emails for the listing you subscribed to.
+              Confirm below to stop update emails for the listing you subscribed to.
             </p>
             <form action={confirmUnsubscribe} className="mt-6">
               <button

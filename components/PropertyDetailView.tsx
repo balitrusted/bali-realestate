@@ -7,6 +7,7 @@ import PropertyBackNav, { PropertyNavLink } from "@/components/PropertyBackNav";
 import PropertyLocationLinks from "@/components/PropertyLocationLinks";
 import PropertyImages from "@/components/PropertyImages";
 import NotifyWhenAvailableForm from "@/components/NotifyWhenAvailableForm";
+import VillaAlertsBell from "@/components/VillaAlertsBell";
 import PropertyLocationMap from "@/components/PropertyLocationMap";
 import PropertyLocationCopyButtons from "@/components/PropertyLocationCopyButtons";
 import PropertyStructuredData from "@/components/PropertyStructuredData";
@@ -164,7 +165,15 @@ export default function PropertyDetailView({ property, all, returnToFromQuery, a
         </div>
       </div>
 
-      <div className="mb-0 lg:mb-5">
+      <div className="relative mb-0 lg:mb-5">
+        {!property.archived && (
+          <div className="absolute right-0 top-0">
+            <VillaAlertsBell
+              propertyId={String(property.id)}
+              propertyTitle={getPropertyDisplayTitle(property)}
+            />
+          </div>
+        )}
         {forSale != null && isSale && (
           <p className="text-base font-semibold text-gray-900 sm:text-lg lg:text-xl">
             <PriceText amount={forSale} sourceCurrency={p.currency} />

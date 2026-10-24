@@ -53,6 +53,7 @@ import {
 } from "@/lib/availability";
 import { diffPropertyFields } from "@/lib/propertyChangeDiff";
 import { safeAppendPropertyEvent } from "@/lib/propertyEvents";
+import { notifyVillaSubscribers } from "@/lib/villaAlerts";
 import { toPublicProperty } from "@/lib/publicProperty";
 
 /** Admin and catalog must never serve stale JSON from edge/browser caches. */
@@ -531,6 +532,8 @@ export async function PUT(request: Request) {
     return await runExclusiveCatalogWrite(async () => {
       const { action, property, newOrder, historyComment } = body;
       const pendingEvents: PendingPropertyEvent[] = [];
+      let alertBefore: Property | undefined;
+      let alertAfter: Property | undefined;
 
       const finalList = await writeBlobJsonArrayWithRetry({
         read: loadFullPropertyList,
@@ -569,6 +572,8 @@ export async function PUT(request: Request) {
             const after = properties.find((p) => p.id === property.id);
             if (after) {
               pendingEvents.push(...collectUpdateEvents(before, after, archiveComment));
+              alertBefore = before;
+              alertAfter = after;
             }
             return properties;
           }
@@ -580,6 +585,15 @@ export async function PUT(request: Request) {
       });
 
       await flushPropertyEvents(pendingEvents);
+
+      if (alertBefore && alertAfter) {
+        await notifyVillaSubscribers({
+          before: alertBefore,
+          after: alertAfter,
+          allProperties: finalList,
+          siteBaseUrl: (process.env.NEXT_PUBLIC_BASE_URL || new URL(request.url).origin).replace(/\/$/, ""),
+        });
+      }
 
       return apiJson({
         success: true,

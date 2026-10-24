@@ -63,12 +63,12 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const propertyId = typeof body.propertyId === "string" ? body.propertyId.trim() : "";
-    const name = typeof body.name === "string" ? body.name.trim() : "";
+    const name = (typeof body.name === "string" ? body.name.trim() : "") || "Subscriber";
     const email = typeof body.email === "string" ? body.email.trim() : "";
     const dateFrom = typeof body.dateFrom === "string" ? body.dateFrom.trim() : "";
-    if (!propertyId || !name || !email) {
+    if (!propertyId || !email) {
       return NextResponse.json(
-        { error: "Name and email are required" },
+        { error: "Email is required" },
         { status: 400 }
       );
     }
@@ -83,6 +83,11 @@ export async function POST(request: Request) {
     const property = properties.find((candidate) => String(candidate.id) === propertyId);
     if (!property) {
       return NextResponse.json({ error: "Property not found" }, { status: 404 });
+    }
+
+    const existing = await getNotifyRequests();
+    if (existing.some((r) => r.propertyId === propertyId && r.email.toLowerCase() === email.toLowerCase())) {
+      return NextResponse.json({ success: true, alreadySubscribed: true, confirmationSent: true });
     }
 
     const propertyTitle = getPropertyDisplayTitle(property);
@@ -120,11 +125,11 @@ export async function POST(request: Request) {
     const confirmation = await sendEmail({
       to: email,
       subject: `Subscription confirmed: ${propertyTitle.replace(/[\r\n]/g, " ")}`,
-      text: `Hi ${name},\n\nYou are subscribed to availability updates for ${propertyTitle}.\nLocation: ${location}\n${priceLabel ? `Price: ${priceLabel}\n` : ""}${dateFrom ? `Needed from: ${dateFrom}\n` : ""}\nView the property: ${propertyUrl}\n\nTo stop these updates, visit: ${unsubscribeUrl}`,
+      text: `Hi ${name},\n\nYou are subscribed to updates for ${propertyTitle}: price changes, availability and listing changes.\nLocation: ${location}\n${priceLabel ? `Price: ${priceLabel}\n` : ""}${dateFrom ? `Needed from: ${dateFrom}\n` : ""}\nView the property: ${propertyUrl}\n\nTo stop these updates, visit: ${unsubscribeUrl}`,
       html: `
         <h1>Subscription confirmed</h1>
         <p>Hi ${safeName},</p>
-        <p>You are subscribed to availability updates for this property:</p>
+        <p>You are subscribed to updates for this property (price changes, availability and listing changes):</p>
         <ul>
           <li><strong>Property:</strong> <a href="${safePropertyUrl}">${safeTitle}</a></li>
           <li><strong>Location:</strong> ${safeLocation}</li>
@@ -132,7 +137,7 @@ export async function POST(request: Request) {
           ${priceLine}
           <li><strong>Needed from:</strong> ${safeDateFrom}</li>
         </ul>
-        <p>We will email you if this listing becomes available.</p>
+        <p>We will email you when the price changes, the villa becomes available again, or its details are updated.</p>
         <p><a href="${safePropertyUrl}">View property details</a></p>
         <hr />
         <p style="font-size:12px;color:#6b7280">No longer interested in updates for this property?</p>
