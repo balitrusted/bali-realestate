@@ -65,6 +65,7 @@ function escapeHtml(input: string): string {
 /** Ubud neighborhood slugs — map path keywords to catalog URLs */
 const UBUD_SUBAREA_SLUGS = [
   "gentong",
+  "gianyar",
   "kedewatan",
   "keliki",
   "kemenuh",

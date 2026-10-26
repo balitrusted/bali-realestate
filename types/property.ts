@@ -12,6 +12,7 @@ export type PropertyFeatures = Partial<Record<PropertyFeatureKey, FeatureValue>>
 
 export type SubArea =
   | 'gentong'
+  | 'gianyar'
   | 'kedewatan'
   | 'keliki'
   | 'kemenuh'

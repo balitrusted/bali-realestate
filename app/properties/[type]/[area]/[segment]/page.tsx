@@ -28,6 +28,7 @@ import {
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
 import { buildTitle, buildH1, buildDescription, buildIntro, buildSeoText } from "@/lib/seoTemplates";
 import { ubudAreaGuidePath, ubudSubAreaFooterParagraphs, ubudSubAreaSeoKeywords } from "@/lib/ubudSubAreaContent";
+import { UBUD_AREA_GUIDE_SUBAREAS_ORDER } from "@/lib/ubudAreaGuideArticles";
 import CatalogBreadcrumb from "@/components/CatalogBreadcrumb";
 import { subAreaNames } from "@/types/areas";
 import {
@@ -401,14 +402,16 @@ export default async function PropertiesSegmentPage({
                 {ubudSubAreaFooterParagraphs(subArea).map((para, i) => (
                   <p key={i}>{para}</p>
                 ))}
-                <p>
-                  <Link
-                    href={ubudAreaGuidePath(subArea)}
-                    className="font-medium text-emerald-800 underline hover:text-emerald-900"
-                  >
-                    {subAreaNames[subArea]} area guide (Knowledge base) →
-                  </Link>
-                </p>
+                {UBUD_AREA_GUIDE_SUBAREAS_ORDER.includes(subArea) && (
+                  <p>
+                    <Link
+                      href={ubudAreaGuidePath(subArea)}
+                      className="font-medium text-emerald-800 underline hover:text-emerald-900"
+                    >
+                      {subAreaNames[subArea]} area guide (Knowledge base) →
+                    </Link>
+                  </p>
+                )}
               </div>
             ) : (
               <div className="space-y-4">

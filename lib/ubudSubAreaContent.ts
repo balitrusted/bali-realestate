@@ -23,6 +23,8 @@ export function ubudAreaGuidePath(subArea: SubArea): string {
 export const ubudSubAreaIntro: Record<SubArea, string> = {
   gentong:
     "Gentong sits slightly off Ubud’s busiest strips - think quieter residential lanes, easy runs into central Ubud, and a mix of newer builds and established homes. Good if you want calm without feeling remote.",
+  gianyar:
+    "Gianyar is the regency town east of Ubud - everyday local Bali with markets, warungs, and services, plus quiet village and rice-field pockets around it. A practical, good-value base if you do not need to be within walking distance of Ubud’s cafés.",
   kedewatan:
     "Kedewatan is west Ubud’s established valley corridor - breezy ridge villas, historic hotels, Pepito Kedewatan, and practical access toward Kintamani. Popular when views and space matter more than walkable café density.",
   keliki:
@@ -54,6 +56,7 @@ export const ubudSubAreaIntro: Record<SubArea, string> = {
 /** SEO title for catalog sub-area pages (/properties/rent/ubud/{subArea}). */
 export const ubudSubAreaSeoTitle: Record<SubArea, string> = {
   gentong: "Villas for Rent in Gentong, Ubud | Green Value | Balitrusted",
+  gianyar: "Villas for Rent in Gianyar, Ubud | Local Life & Value | Balitrusted",
   kedewatan: "Villas for Rent in Kedewatan, Ubud | Valley Views | Balitrusted",
   keliki: "Villas for Rent in Keliki, Ubud | Village Pace | Balitrusted",
   kemenuh: "Villas for Rent in Kemenuh, Ubud | Family-Friendly | Balitrusted",
@@ -73,6 +76,8 @@ export const ubudSubAreaSeoTitle: Record<SubArea, string> = {
 export const ubudSubAreaSeoKeywords: Record<SubArea, string> = {
   gentong:
     "Gentong Ubud, villa rent Gentong, yearly rental Ubud, long-term rental Gentong, Ubud neighborhoods",
+  gianyar:
+    "Gianyar Ubud, villa rent Gianyar, east Ubud living, long-term rental Gianyar, Gianyar regency",
   kedewatan:
     "Kedewatan Ubud, villa Kedewatan, Kedewatan villa rent, Pepito Kedewatan, valley villa Ubud, long-term rental Kedewatan",
   keliki:

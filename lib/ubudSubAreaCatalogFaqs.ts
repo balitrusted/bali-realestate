@@ -27,6 +27,20 @@ const BY_SUB_AREA: Record<SubArea, Faq[]> = {
       a: `Yes - see our Gentong area guide (${guidePath("gentong")}) for roads, noise, and price context.`,
     },
   ],
+  gianyar: [
+    {
+      q: "Why rent a villa in Gianyar, near Ubud?",
+      a: "Gianyar is the regency town east of Ubud - everyday local Bali with markets and services, and often better value than central Ubud for yearly rentals.",
+    },
+    {
+      q: "Is Gianyar close to central Ubud?",
+      a: "Usually a short drive or scooter ride, but it is not walkable to Ubud’s cafés - check the exact pin and traffic for your daily routes.",
+    },
+    {
+      q: "Is Gianyar good for long-term living?",
+      a: "Yes if you value practical errands, local food, and space over a tourist scene. Ask us for the exact location of any villa before you decide.",
+    },
+  ],
   kedewatan: [
     {
       q: "Why rent a villa in Kedewatan, Ubud?",
