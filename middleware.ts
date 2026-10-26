@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { getPropertyManualRedirect } from "@/lib/propertyRedirects";
 import { subAreaNames } from "@/types/areas";
 import { SEO_BEDROOM_COUNTS, bedroomSegmentSlug } from "@/lib/catalogBedrooms";
+import { ADMIN_SESSION_TTL_MS } from "@/lib/adminSessionTtl";
 
 const UBUD_SUB_SLUGS = new Set(Object.keys(subAreaNames));
 
@@ -49,7 +50,7 @@ async function hasValidAdminSession(token?: string): Promise<boolean> {
 
     const payload = JSON.parse(new TextDecoder().decode(decodeBase64Url(encodedPayload)));
     const now = Date.now();
-    const sessionTtlMs = 12 * 60 * 60 * 1000;
+    const sessionTtlMs = ADMIN_SESSION_TTL_MS;
     return (
       payload?.role === "admin" &&
       payload?.version === 1 &&

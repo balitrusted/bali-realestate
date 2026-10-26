@@ -1,7 +1,8 @@
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 
-export const ADMIN_SESSION_TTL_SECONDS = 12 * 60 * 60;
-const ADMIN_SESSION_TTL_MS = ADMIN_SESSION_TTL_SECONDS * 1000;
+import { ADMIN_SESSION_TTL_MS, ADMIN_SESSION_TTL_SECONDS } from "@/lib/adminSessionTtl";
+
+export { ADMIN_SESSION_TTL_SECONDS };
 
 type AdminSessionPayload = {
   role: "admin";
