@@ -63,10 +63,11 @@ export default function PropertyStructuredData({ property, baseUrl, propertyUrl 
   const displayTitle = getPropertyDisplayTitle(property);
 
   const p = property.price;
-  const monthly = p.monthly ?? p.min;
-  const yearly = p.yearly;
-  const forSale = p.forSale;
   const isSale = property.types?.includes("sale");
+  const isSaleOnly = isSale && !property.types?.includes("rent");
+  const monthly = isSaleOnly ? undefined : p.monthly ?? p.min;
+  const yearly = isSaleOnly ? undefined : p.yearly;
+  const forSale = p.forSale ?? (isSaleOnly && p.min && p.min > 0 ? p.min : undefined);
   const extraOffer = offerMerchantFields(baseUrl);
 
   const toAbsoluteUrl = (u: string) => {
@@ -88,6 +89,7 @@ export default function PropertyStructuredData({ property, baseUrl, propertyUrl 
   if (featureIsYes(property.features.bathtub)) amenityFeature.push({ "@type": "LodgingAmenityFeature", name: "Bathtub" });
   if (featureIsYes(property.features.carPark)) amenityFeature.push({ "@type": "LodgingAmenityFeature", name: "Parking" });
   if (featureIsYes(property.features.washingMachine)) amenityFeature.push({ "@type": "LodgingAmenityFeature", name: "Washing machine" });
+  if (featureIsYes(property.features.television)) amenityFeature.push({ "@type": "LodgingAmenityFeature", name: "TV" });
   if (featureIsYes(property.features.natureView)) amenityFeature.push({ "@type": "LodgingAmenityFeature", name: "Nature view" });
 
   let accommodationOffers: Record<string, unknown> | undefined;

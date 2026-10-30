@@ -24,6 +24,7 @@ export const SEGMENT_TYPES = {
     "garage",
     "high-speed-wifi",
     "washing-machine",
+    "tv",
   ] as const,
 } as const;
 
@@ -39,6 +40,7 @@ const amenityToFeature: Record<string, keyof Property["features"]> = {
   garage: "garage",
   "high-speed-wifi": "highSpeedWifi",
   "washing-machine": "washingMachine",
+  tv: "television",
 };
 
 export type SegmentKind = "subArea" | "bedroom" | "payment" | "amenity" | null;
@@ -99,6 +101,7 @@ export interface CatalogFilters {
   hasPetFriendly?: boolean;
   hasPool?: boolean;
   hasWashingMachine?: boolean;
+  hasTelevision?: boolean;
   /** Payment flavor for rent: 12 = listings with yearly rent price; 1 = listings with monthly rent price. */
   minDuration?: number;
   maxPrice?: number;
@@ -221,6 +224,7 @@ export function filterProperties(
   if (filters.hasPetFriendly) result = result.filter((p) => featureIsYes(p.features.petFriendly));
   if (filters.hasPool) result = result.filter((p) => featureIsYes(p.features.pool));
   if (filters.hasWashingMachine) result = result.filter((p) => featureIsYes(p.features.washingMachine));
+  if (filters.hasTelevision) result = result.filter((p) => featureIsYes(p.features.television));
 
   return result.sort((a, b) => {
     const archivedDelta = Number(!!a.archived) - Number(!!b.archived);
@@ -241,6 +245,7 @@ const AMENITY_FILTER_KEYS: (keyof CatalogFilters)[] = [
   "hasPetFriendly",
   "hasPool",
   "hasWashingMachine",
+  "hasTelevision",
 ];
 
 /** Build filters used to decide which *main areas* appear (drops mainArea from the active filter set). */
@@ -280,6 +285,7 @@ const DEFAULT_FEATURE_KEY_TO_PROP: Record<string, keyof Property["features"]> = 
   hasPetFriendly: "petFriendly",
   hasPool: "pool",
   hasWashingMachine: "washingMachine",
+  hasTelevision: "television",
 };
 
 /** Main areas that have ≥1 listing after applying the rest of the filters (and optional path segment). */

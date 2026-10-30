@@ -65,6 +65,7 @@ export default async function PropertiesCatalogPage({
     if (truthy(query.hasPetFriendly)) filters.hasPetFriendly = true;
     if (truthy(query.hasPool)) filters.hasPool = true;
     if (truthy(query.hasWashingMachine)) filters.hasWashingMachine = true;
+    if (truthy(query.hasTelevision)) filters.hasTelevision = true;
     return filters;
   }
 
@@ -78,7 +79,7 @@ export default async function PropertiesCatalogPage({
     !query.minDuration &&
     !query.maxPrice &&
     query.both !== "1" &&
-    ["hasBathtub", "hasCarPark", "hasClosedKitchen", "hasDesk", "hasEnclosedLiving", "hasGarage", "hasHighSpeedWifi", "hasNatureView", "hasPetFriendly", "hasPool", "hasWashingMachine"].every((k) => query[k] !== "true");
+    ["hasBathtub", "hasCarPark", "hasClosedKitchen", "hasDesk", "hasEnclosedLiving", "hasGarage", "hasHighSpeedWifi", "hasNatureView", "hasPetFriendly", "hasPool", "hasWashingMachine", "hasTelevision"].every((k) => query[k] !== "true");
   if (onlySubjectVillas) {
     const page = String(query.page || "1");
     redirect(`/properties/villas${page !== "1" ? `?page=${page}` : ""}`);
@@ -92,7 +93,7 @@ export default async function PropertiesCatalogPage({
     !query.bedrooms &&
     !query.minDuration &&
     !query.maxPrice &&
-    ["hasBathtub", "hasCarPark", "hasClosedKitchen", "hasDesk", "hasEnclosedLiving", "hasGarage", "hasHighSpeedWifi", "hasNatureView", "hasPetFriendly", "hasPool", "hasWashingMachine"].every(
+    ["hasBathtub", "hasCarPark", "hasClosedKitchen", "hasDesk", "hasEnclosedLiving", "hasGarage", "hasHighSpeedWifi", "hasNatureView", "hasPetFriendly", "hasPool", "hasWashingMachine", "hasTelevision"].every(
       (k) => query[k] !== "true"
     );
   if (onlyBoth) {

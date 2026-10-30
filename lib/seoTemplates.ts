@@ -25,6 +25,8 @@ const subjectByType: Record<string, string> = {
 };
 
 const areaName = (a: MainArea) => resolveAreaLabel(String(a));
+const formatAmenityLabel = (segment: string) =>
+  segment === "tv" ? "TV" : segment.replace(/-/g, " ");
 
 const UBUD_RENT_BEDROOM_LABELS: Record<number, string> = {
   1: "1 Bedroom Villas for Rent in Ubud",
@@ -75,7 +77,7 @@ export function buildTitle(
     return `${subject} for ${verb} ${pay} in ${loc}${sub} | Balitrusted`;
   }
   if (segment?.kind === "amenity") {
-    const amenityLabel = (segment.value as string).replace(/-/g, " ");
+    const amenityLabel = formatAmenityLabel(segment.value as string);
     return `${subject} with ${amenityLabel} for ${verb} in ${loc}${sub} | Balitrusted`;
   }
   if (segment?.kind === "subArea") {
@@ -138,7 +140,7 @@ export function buildH1(
     return `${subject} for ${verb} ${pay} in ${loc}${sub}`;
   }
   if (segment?.kind === "amenity") {
-    const amenityLabel = (segment.value as string).replace(/-/g, " ");
+    const amenityLabel = formatAmenityLabel(segment.value as string);
     return `${subject} with ${amenityLabel} for ${verb} in ${loc}${sub}`;
   }
   if (segment?.kind === "subArea") {
@@ -217,7 +219,7 @@ export function buildIntro(
     return `${subject} for ${pay} payment in ${loc}.`;
   }
   if (segment?.kind === "amenity") {
-    const amenityLabel = (segment.value as string).replace(/-/g, " ");
+    const amenityLabel = formatAmenityLabel(segment.value as string);
     return `${subject} with ${amenityLabel} in ${loc}.`;
   }
   if (segment?.kind === "subArea" && area === "ubud") {
@@ -287,7 +289,7 @@ export function buildDescription(
     return `Browse ${subject} available for ${pay} payment in ${loc}. ${areaDesc || ""}`;
   }
   if (segment?.kind === "amenity") {
-    const amenityLabel = (segment.value as string).replace(/-/g, " ");
+    const amenityLabel = formatAmenityLabel(segment.value as string);
     return `Find ${subject} with ${amenityLabel} in ${loc}. ${areaDesc || ""}`;
   }
   if (segment?.kind === "subArea") {
@@ -431,7 +433,7 @@ export function buildSeoText(
     return `Browse ${subject} available for ${pay} payment in ${loc}. This selection includes properties that accept ${pay} rental terms. ${base}`;
   }
   if (segment?.kind === "amenity") {
-    const amenityLabel = (segment.value as string).replace(/-/g, " ");
+    const amenityLabel = formatAmenityLabel(segment.value as string);
     return `Find ${subject} with ${amenityLabel} in ${loc}. This page shows properties that feature ${amenityLabel}. ${base}`;
   }
   if (segment?.kind === "subArea") {

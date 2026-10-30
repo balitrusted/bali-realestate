@@ -90,6 +90,7 @@ function parseQueryFilters(
   if (truthy(query.hasPetFriendly)) filters.hasPetFriendly = true;
   if (truthy(query.hasPool)) filters.hasPool = true;
   if (truthy(query.hasWashingMachine)) filters.hasWashingMachine = true;
+  if (truthy(query.hasTelevision)) filters.hasTelevision = true;
   return filters;
 }
 
@@ -145,6 +146,7 @@ export default async function PropertiesByTypePage({
   if (filters.hasPetFriendly) searchParamsForPagination.hasPetFriendly = "true";
   if (filters.hasPool) searchParamsForPagination.hasPool = "true";
   if (filters.hasWashingMachine) searchParamsForPagination.hasWashingMachine = "true";
+  if (filters.hasTelevision) searchParamsForPagination.hasTelevision = "true";
 
   const hubFooterParagraphs = buildTypeHubFooterParagraphs(catalogType);
 

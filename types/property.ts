@@ -103,6 +103,7 @@ export interface PropertyFilters {
   hasNatureView?: boolean;
   hasPetFriendly?: boolean;
   hasPool?: boolean;
+  hasTelevision?: boolean;
   hasWashingMachine?: boolean;
   minDuration?: number;
   maxPrice?: number;

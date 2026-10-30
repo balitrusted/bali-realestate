@@ -226,6 +226,7 @@ type PropertyFiltersState = {
   hasPetFriendly: boolean;
   hasPool: boolean;
   hasWashingMachine: boolean;
+  hasTelevision: boolean;
   minDuration?: number;
   maxPrice?: number;
 };
@@ -271,6 +272,7 @@ function buildFiltersFromSearchParams(
     hasPetFriendly: pathSegment === "pet-friendly",
     hasPool: pathSegment === "pool",
     hasWashingMachine: pathSegment === "washing-machine",
+    hasTelevision: pathSegment === "tv",
   };
 
   return {
@@ -310,6 +312,8 @@ function buildFiltersFromSearchParams(
     hasPool: searchParams.get("hasPool") === "true" || pathAmenityFlags.hasPool,
     hasWashingMachine:
       searchParams.get("hasWashingMachine") === "true" || pathAmenityFlags.hasWashingMachine,
+    hasTelevision:
+      searchParams.get("hasTelevision") === "true" || pathAmenityFlags.hasTelevision,
     minDuration: searchParams.get("minDuration")
       ? Number(searchParams.get("minDuration"))
       : pathMinDuration,
@@ -566,6 +570,7 @@ export default function PropertyFilters({
         "hasPetFriendly",
         "hasPool",
         "hasWashingMachine",
+        "hasTelevision",
       ] as const;
       const amenitySegmentSlugs = [
         "pool",
@@ -579,6 +584,7 @@ export default function PropertyFilters({
         "garage",
         "high-speed-wifi",
         "washing-machine",
+        "tv",
       ] as const;
 
       const amenitySlugFromFilterKey = (key: (typeof amenityKeys)[number]): string | null => {
@@ -605,6 +611,8 @@ export default function PropertyFilters({
             return "pool";
           case "hasWashingMachine":
             return "washing-machine";
+          case "hasTelevision":
+            return "tv";
           default:
             return null;
         }
@@ -729,6 +737,7 @@ export default function PropertyFilters({
       if (newFilters.hasPetFriendly) queryParams.set("hasPetFriendly", "true");
       if (newFilters.hasPool) queryParams.set("hasPool", "true");
       if (newFilters.hasWashingMachine) queryParams.set("hasWashingMachine", "true");
+      if (newFilters.hasTelevision) queryParams.set("hasTelevision", "true");
       if (newFilters.minDuration) queryParams.set("minDuration", newFilters.minDuration.toString());
       if (newFilters.maxPrice) queryParams.set("maxPrice", newFilters.maxPrice.toString());
 
@@ -1144,6 +1153,7 @@ export default function PropertyFilters({
     { key: "hasPetFriendly", label: "Pet friendly" },
     { key: "hasPool", label: "Pool" },
     { key: "hasWashingMachine", label: "Washing machine" },
+    { key: "hasTelevision", label: "TV" },
   ];
   const visibleFeatureOptions =
     availableAmenityKeys !== undefined

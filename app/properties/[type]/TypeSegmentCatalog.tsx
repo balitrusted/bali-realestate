@@ -59,6 +59,7 @@ function parseQueryFilters(
   if (truthy(query.hasPetFriendly)) filters.hasPetFriendly = true;
   if (truthy(query.hasPool)) filters.hasPool = true;
   if (truthy(query.hasWashingMachine)) filters.hasWashingMachine = true;
+  if (truthy(query.hasTelevision)) filters.hasTelevision = true;
   return filters;
 }
 
@@ -115,6 +116,7 @@ export default async function TypeSegmentCatalog({ catalogType, segmentSlug, par
   if (rawFilters.hasPetFriendly) searchParamsForPagination.hasPetFriendly = "true";
   if (rawFilters.hasPool) searchParamsForPagination.hasPool = "true";
   if (rawFilters.hasWashingMachine) searchParamsForPagination.hasWashingMachine = "true";
+  if (rawFilters.hasTelevision) searchParamsForPagination.hasTelevision = "true";
 
   const mapFilters = mergeSegmentIntoCatalogFilters(rawFilters, parsed);
 

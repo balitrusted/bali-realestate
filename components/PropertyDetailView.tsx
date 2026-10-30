@@ -53,11 +53,18 @@ export default function PropertyDetailView({ property, all, returnToFromQuery, a
     detailSlug: slugIndex.segmentFor(p),
   }));
 
+  const types = property.types ?? [];
+  const hasRent = types.includes("rent");
+  const hasSale = types.includes("sale");
+  const hasLand = types.includes("land");
+  const hasBusiness = types.includes("business");
+  const hasHotels = types.includes("hotels");
+  const isSaleOnly = hasSale && !hasRent;
   const p = property.price;
-  const monthly = p.monthly ?? p.min;
-  const yearly = p.yearly;
-  const forSale = p.forSale;
-  const isSale = property.types?.includes("sale");
+  const monthly = isSaleOnly ? undefined : p.monthly ?? p.min;
+  const yearly = isSaleOnly ? undefined : p.yearly;
+  const forSale = p.forSale ?? (isSaleOnly && p.min && p.min > 0 ? p.min : undefined);
+  const isSale = hasSale;
   const hasDiscount = monthly != null && yearly != null && monthly > 0 && yearly < monthly * 12;
   const discountPercent = hasDiscount
     ? Math.round(((monthly * 12 - yearly) / (monthly * 12)) * 100)
@@ -75,6 +82,7 @@ export default function PropertyDetailView({ property, all, returnToFromQuery, a
   if (featureIsYes(property.features.petFriendly)) featuresList.push("pet friendly");
   if (featureIsYes(property.features.pool)) featuresList.push("pool");
   if (featureIsYes(property.features.washingMachine)) featuresList.push("washing machine");
+  if (featureIsYes(property.features.television)) featuresList.push("TV");
 
   const areaInfo = property.mainArea
     ? areas[property.mainArea as keyof typeof areas]
@@ -82,12 +90,6 @@ export default function PropertyDetailView({ property, all, returnToFromQuery, a
   const areaLabel = property.mainArea
     ? areaInfo?.nameEn ?? resolveAreaLabel(property.mainArea)
     : "Area";
-  const types = property.types ?? [];
-  const hasRent = types.includes("rent");
-  const hasSale = types.includes("sale");
-  const hasLand = types.includes("land");
-  const hasBusiness = types.includes("business");
-  const hasHotels = types.includes("hotels");
   const showAvailability = (hasRent || hasHotels) && !hasLand && !hasBusiness && !property.archived;
   const availableFrom = normalizeAvailableFrom(property.availableFrom ?? undefined);
   const dealLabel = hasHotels

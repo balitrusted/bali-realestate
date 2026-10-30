@@ -13,6 +13,7 @@ const AMENITY_SEGMENT_TO_FILTER: Record<string, keyof CatalogFilters> = {
   garage: "hasGarage",
   "high-speed-wifi": "hasHighSpeedWifi",
   "washing-machine": "hasWashingMachine",
+  tv: "hasTelevision",
 };
 
 /** Merge path segment (Ubud sub-path) into filters so map/list links match the current catalog view. */
@@ -80,6 +81,7 @@ export function parseCatalogSearchParams(
   if (truthy(query.hasPetFriendly)) filters.hasPetFriendly = true;
   if (truthy(query.hasPool)) filters.hasPool = true;
   if (truthy(query.hasWashingMachine)) filters.hasWashingMachine = true;
+  if (truthy(query.hasTelevision)) filters.hasTelevision = true;
   return filters;
 }
 
@@ -104,6 +106,7 @@ export function buildMapHrefFromFilters(filters: CatalogFilters): string {
     ["hasPetFriendly", "hasPetFriendly"],
     ["hasPool", "hasPool"],
     ["hasWashingMachine", "hasWashingMachine"],
+    ["hasTelevision", "hasTelevision"],
   ];
   for (const [k, param] of flags) {
     if (filters[k] === true) q.set(param, "true");
@@ -131,6 +134,7 @@ export function buildListHrefFromFilters(f: CatalogFilters): string {
     ["hasPetFriendly", "hasPetFriendly"],
     ["hasPool", "hasPool"],
     ["hasWashingMachine", "hasWashingMachine"],
+    ["hasTelevision", "hasTelevision"],
   ];
   for (const [k, param] of flagKeys) {
     if (f[k] === true) q.set(param, "true");

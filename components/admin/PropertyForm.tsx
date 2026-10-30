@@ -32,6 +32,7 @@ import AdminDateInput from "@/components/admin/AdminDateInput";
 import { ALLOWED_BEDROOM_COUNTS } from "@/lib/catalogBedrooms";
 import { normalizeAvailableFrom } from "@/lib/availability";
 import PropertyLocationCopyButtons from "@/components/PropertyLocationCopyButtons";
+import { parseLatLngFromMapUrl } from "@/lib/mapGeo";
 
 function isLandOnlyListing(types: PropertyType[]): boolean {
   return (
@@ -168,14 +169,26 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
     displayLocation: property?.displayLocation ?? "",
     youtubeVideoUrl: property?.youtubeVideoUrl ?? "",
     bedrooms: landOnly ? (property?.bedrooms ?? 0) : property?.bedrooms || 1,
-    floors: landOnly ? undefined : property?.floors ?? undefined,
+    floors: landOnly ? undefined : property?.floors ?? 1,
     bathrooms: landOnly ? (property?.bathrooms ?? 1) : property?.bathrooms || 1,
     priceMin: property?.price.min || 0,
-    priceMonthly: property?.price.monthly ?? property?.price.min ?? undefined,
-    priceYearly: property?.price.yearly ?? undefined,
-    priceForSale: property?.price.forSale ?? undefined,
+    priceMonthly:
+      initialTypes.includes("sale") && !initialTypes.includes("rent")
+        ? 0
+        : property?.price.monthly ?? property?.price.min ?? 0,
+    priceYearly: property?.price.yearly ?? 0,
+    priceForSale:
+      property?.price.forSale ??
+      (initialTypes.includes("sale") && !initialTypes.includes("rent") ? property?.price.min : undefined) ??
+      0,
     priceCurrency: property?.price.currency || "IDR",
-    durationMin: property?.duration?.min || 1,
+    durationMin:
+      property?.duration?.min ||
+      (initialTypes.includes("rent") &&
+      (property?.price.yearly ?? 0) > 0 &&
+      (property?.price.monthly ?? property?.price.min ?? 0) <= 0
+        ? 12
+        : 1),
     durationMax: property?.duration?.max || undefined,
     features: normalizePropertyFeatures(property?.features as Partial<Record<string, unknown>> | undefined),
     images: property?.images || [] as string[],
@@ -188,6 +201,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [showImageGallery, setShowImageGallery] = useState(false);
+  const [formError, setFormError] = useState("");
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -195,12 +209,19 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+  const saleOnly = formData.types.includes("sale") && !formData.types.includes("rent");
+  const hasRent = formData.types.includes("rent");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (saving || uploading) return;
 
     const landOnly = isLandOnlyListing(formData.types);
+    if (saleOnly && !(formData.priceForSale && formData.priceForSale > 0)) {
+      setFormError("Enter a sale price before saving this sale-only listing.");
+      return;
+    }
+    setFormError("");
 
     const propertyData = {
       ...formData,
@@ -219,13 +240,18 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
       bathrooms: landOnly ? undefined : formData.bathrooms,
       price: {
         currency: formData.priceCurrency,
-        min: formData.priceMonthly ?? formData.priceMin ?? 0,
-        monthly: formData.priceMonthly || undefined,
-        yearly: formData.priceYearly || undefined,
+        min: saleOnly ? 0 : formData.priceMonthly ?? formData.priceMin ?? 0,
+        monthly: saleOnly ? undefined : formData.priceMonthly || undefined,
+        yearly: saleOnly ? undefined : formData.priceYearly || undefined,
         forSale: formData.priceForSale || undefined,
       },
       duration: {
-        min: formData.durationMin,
+        min:
+          formData.types.includes("rent") &&
+          (formData.priceMonthly ?? formData.priceMin) === 0 &&
+          (formData.priceYearly ?? 0) > 0
+            ? 12
+            : formData.durationMin,
         max: formData.durationMax || undefined,
       },
       order: formData.order,
@@ -351,7 +377,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
           />
           <p className="text-xs text-gray-500 mt-1">Used in auto-title, e.g. Villa #50 · 2 bed · Lodtunduh</p>
         </div>
-        <div>
+        {property && <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">
             Title (optional)
           </label>
@@ -362,7 +388,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
             placeholder="Leave empty to auto-generate from villa number and parameters"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
           />
-        </div>
+        </div>}
         <div>
           <label className="block text-sm font-medium text-gray-900 mb-2">
             Internal name (only in admin)
@@ -377,7 +403,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
           <p className="text-xs text-gray-500 mt-1">For your reference in the admin panel only. Visitors never see this.</p>
         </div>
 
-        <div className="flex flex-col gap-2 pt-2 border-t border-gray-100 sm:flex-row sm:items-end sm:flex-wrap">
+        {property && <div className="flex flex-col gap-2 pt-2 border-t border-gray-100 sm:flex-row sm:items-end sm:flex-wrap">
           <div className="flex-1 min-w-[12rem]">
             <label className="block text-sm font-medium text-gray-900 mb-1">
               Sort order (catalog)
@@ -401,16 +427,16 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
               Lower numbers appear first. Leave empty for new listings — the server assigns the next position.
             </p>
           </div>
-        </div>
+        </div>}
 
-        <div className="pt-2 border-t border-gray-100">
+        {property && <div className="pt-2 border-t border-gray-100">
           <span className="block text-sm font-medium text-gray-900">Listing status</span>
           <p className="mt-1 text-sm text-gray-600">
             {formData.archived
               ? "Archived — hidden from the catalog. Restore from Admin → Archive."
               : "Active — visible in the catalog."}
           </p>
-        </div>
+        </div>}
 
         <div className="space-y-2 pt-2 border-t border-gray-100">
           <span className="block text-sm font-medium text-gray-900">Availability</span>
@@ -592,7 +618,15 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
           <input
             type="url"
             value={formData.approximateLocationUrl}
-            onChange={(e) => setFormData({ ...formData, approximateLocationUrl: e.target.value })}
+            onChange={(e) => {
+              const approximateLocationUrl = e.target.value;
+              const coordinates = parseLatLngFromMapUrl(approximateLocationUrl);
+              setFormData({
+                ...formData,
+                approximateLocationUrl,
+                ...(coordinates ? { displayLocation: coordinates } : {}),
+              });
+            }}
             placeholder="e.g. Google Maps link"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
           />
@@ -694,44 +728,52 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-gray-900">Price</h2>
         <p className="text-sm text-gray-600">
-          For rent: set monthly and optionally yearly (site will show discount %). For sale: use monthly or min as full price.
+          For rent, enter monthly and optionally yearly prices. For sale-only listings, enter the sale price.
         </p>
         <div className="grid md:grid-cols-2 gap-4">
-          <div>
+          {hasRent && <div>
             <label className="block text-sm font-medium text-gray-900 mb-2">
-              Price (monthly) *
+              Price (monthly)
             </label>
             <PriceInput
               value={formData.priceMonthly ?? formData.priceMin}
               onValueChange={(v) =>
-                setFormData({ ...formData, priceMonthly: v, priceMin: v ?? 0 })
+                setFormData({ ...formData, priceMonthly: v ?? 0, priceMin: v ?? 0 })
               }
               currency={formData.priceCurrency}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
             />
-          </div>
-          <div>
+          </div>}
+          {hasRent && <div>
             <label className="block text-sm font-medium text-gray-900 mb-2">
               Price (yearly)
             </label>
             <PriceInput
               value={formData.priceYearly}
-              onValueChange={(v) => setFormData({ ...formData, priceYearly: v })}
+              onValueChange={(v) =>
+                setFormData({
+                  ...formData,
+                  priceYearly: v ?? 0,
+                  ...(v && v > 0 && !(formData.priceMonthly ?? formData.priceMin)
+                    ? { durationMin: 12 }
+                    : {}),
+                })
+              }
               currency={formData.priceCurrency}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
               placeholder="Optional – shows discount %"
             />
-          </div>
+          </div>}
           <div>
             <label className="block text-sm font-medium text-gray-900 mb-2">
-              Price (for sale)
+              {saleOnly ? "Price (for sale) *" : "Price (for sale)"}
             </label>
             <PriceInput
               value={formData.priceForSale}
-              onValueChange={(v) => setFormData({ ...formData, priceForSale: v })}
+              onValueChange={(v) => setFormData({ ...formData, priceForSale: v ?? 0 })}
               currency={formData.priceCurrency}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
-              placeholder="For objects on sale"
+              placeholder="Enter sale price"
             />
           </div>
         </div>
@@ -753,7 +795,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
       </div>
 
       {/* Duration */}
-      <div className="space-y-4">
+      {hasRent && <div className="space-y-4">
         <h2 className="text-xl font-semibold text-gray-900">Rental Duration</h2>
         
         <div className="grid md:grid-cols-2 gap-4">
@@ -784,7 +826,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
             />
           </div>
         </div>
-      </div>
+      </div>}
 
       {/* Features — tri-state segmented controls (colour-coded) */}
       <div className="space-y-3">
@@ -825,6 +867,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
               { key: "petFriendly", label: "Pet friendly" },
               { key: "pool", label: "Pool" },
               { key: "washingMachine", label: "Washing machine" },
+              { key: "television", label: "TV" },
             ].map((feature) => {
               const current =
                 formData.features[feature.key as keyof typeof formData.features] ?? "unknown";
@@ -991,6 +1034,7 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
           Email subscribers about price, availability and listing changes
         </label>
       )}
+      {formError && <p role="alert" className="text-sm text-red-700">{formError}</p>}
       <div className="flex gap-4 pt-4 border-t border-gray-200">
         <button
           type="submit"

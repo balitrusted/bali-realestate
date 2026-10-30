@@ -266,6 +266,20 @@ const UBUD_RENT_MONEY_PAGES: Record<string, MoneyPageContent> = {
       },
     ],
   },
+  "rent:ubud:amenity:tv": {
+    intro:
+      "A TV can make a long-term villa feel more comfortable for relaxed evenings at home. This page groups Ubud rental listings where a TV is confirmed, so you can compare homes alongside practical details such as layout, neighborhood, and payment terms.",
+    faqs: [
+      {
+        q: "Does the TV listing include streaming services?",
+        a: "The TV feature confirms that a television is available; check directly whether streaming devices or subscriptions are included.",
+      },
+      {
+        q: "Can I combine the TV filter with other amenities?",
+        a: "Yes. Combine TV with other filters such as pool, enclosed living, or a washing machine.",
+      },
+    ],
+  },
 };
 
 export function getMoneyPageContent(
@@ -340,4 +354,3 @@ export function getMoneyAreaHubContent(
   if (type === "villas") return null;
   return SANUR_HUB_PAGES[`${type}:${area}`] ?? null;
 }
-

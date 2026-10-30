@@ -1,6 +1,11 @@
 import type { MainArea, Property, SubArea } from "@/types/property";
 import { areas, subAreaNames } from "@/types/areas";
 import { fixDescriptionDisplay, getPropertyDisplayTitle } from "@/lib/propertyUtils";
+import { normalizeAvailableFrom } from "@/lib/availability";
+
+export function isPropertyAvailableNow(property: Property): boolean {
+  return !property.archived && !normalizeAvailableFrom(property.availableFrom ?? undefined);
+}
 
 function normalizeText(s: string): string {
   return s
@@ -130,7 +135,12 @@ export function rankPropertiesForSearch(
 
   return scored
     .filter((x) => x.score > 0)
-    .sort((a, b) => b.score - a.score || a.p.id.localeCompare(b.p.id))
+    .sort(
+      (a, b) =>
+        Number(isPropertyAvailableNow(b.p)) - Number(isPropertyAvailableNow(a.p)) ||
+        b.score - a.score ||
+        a.p.id.localeCompare(b.p.id)
+    )
     .slice(0, limit)
     .map((x) => x.p);
 }
@@ -141,6 +151,7 @@ export type PropertySearchApiHit = {
   meta: string;
   thumbUrl: string | null;
   href: string;
+  available: boolean;
   internalName?: string;
 };
 
@@ -162,6 +173,7 @@ export function propertiesToSearchHits(
       meta: metaParts.join(" · "),
       thumbUrl: thumb,
       href: `/properties/${segmentFor(p)}`,
+      available: isPropertyAvailableNow(p),
       ...(options.includeInternalName && p.internalName?.trim()
         ? { internalName: p.internalName.trim() }
         : {}),

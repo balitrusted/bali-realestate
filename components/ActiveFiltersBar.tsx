@@ -41,6 +41,7 @@ const AMENITY_FILTERS: { key: string; label: string }[] = [
   { key: "hasGarage", label: "garage" },
   { key: "hasHighSpeedWifi", label: "high-speed WiFi" },
   { key: "hasWashingMachine", label: "washing machine" },
+  { key: "hasTelevision", label: "TV" },
 ];
 
 type Chip = {
@@ -262,4 +263,3 @@ export default function ActiveFiltersBar() {
     </div>
   );
 }
-

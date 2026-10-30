@@ -12,13 +12,13 @@ const MAIN_AREAS: MainArea[] = ["ubud", "canggu", "sanur", "seminyak", "tanah-lo
 
 const AMENITY_KEYS = [
   "hasPool", "hasBathtub", "hasClosedKitchen", "hasEnclosedLiving", "hasNatureView",
-  "hasCarPark", "hasDesk", "hasPetFriendly", "hasGarage", "hasHighSpeedWifi", "hasWashingMachine",
+  "hasCarPark", "hasDesk", "hasPetFriendly", "hasGarage", "hasHighSpeedWifi", "hasWashingMachine", "hasTelevision",
 ] as const;
 const AMENITY_LABELS: Record<string, string> = {
   hasPool: "Pool", hasBathtub: "Bathtub", hasClosedKitchen: "Enclosed kitchen",
   hasEnclosedLiving: "Enclosed living", hasNatureView: "Nature view", hasCarPark: "Car park",
   hasDesk: "Desk", hasPetFriendly: "Pet friendly", hasGarage: "Garage",
-  hasHighSpeedWifi: "High-speed WiFi", hasWashingMachine: "Washing machine",
+  hasHighSpeedWifi: "High-speed WiFi", hasWashingMachine: "Washing machine", hasTelevision: "TV",
 };
 
 function parsePath(pathname: string): { pathType: PropertyType | null; pathArea: MainArea | null } {

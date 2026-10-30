@@ -200,6 +200,13 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
       ]);
     }
 
+    if (featureIsYes(property.features.television)) {
+      return pick([
+        `A TV is included for relaxed evenings at home. A comfortable ${stayPhrase} option in ${loc}.`,
+        `Settle in with a TV for downtime after exploring Bali. A practical ${stayPhrase} in ${loc}.`,
+      ]);
+    }
+
     if (featureIsYes(property.features.desk)) {
       return pick([
         `Convenient setup for remote work with a dedicated desk. A good ${stayPhrase} choice in ${loc}.`,
@@ -211,10 +218,11 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
   };
 
   const p = property.price;
-  const monthly = p.monthly ?? p.min;
-  const yearly = p.yearly;
-  const forSale = p.forSale;
   const isSale = property.types?.includes("sale");
+  const isSaleOnly = isSale && !property.types?.includes("rent");
+  const monthly = isSaleOnly ? undefined : p.monthly ?? p.min;
+  const yearly = isSaleOnly ? undefined : p.yearly;
+  const forSale = p.forSale ?? (isSaleOnly && p.min && p.min > 0 ? p.min : undefined);
   const hasYearlyOnly = (yearly != null && yearly > 0) && (monthly == null || monthly === 0);
   const hasDiscount = monthly != null && yearly != null && monthly > 0 && yearly < monthly * 12;
   const discountPercent = hasDiscount
@@ -234,6 +242,7 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
   if (featureIsYes(property.features.petFriendly)) featuresList.push("pet friendly");
   if (featureIsYes(property.features.pool)) featuresList.push("pool");
   if (featureIsYes(property.features.washingMachine)) featuresList.push("washing machine");
+  if (featureIsYes(property.features.television)) featuresList.push("TV");
 
   const mainImage = property.images && property.images.length > 0 
     ? property.images[0] 

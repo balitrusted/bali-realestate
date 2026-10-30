@@ -12,6 +12,7 @@ export const PROPERTY_FEATURE_KEYS = [
   "natureView",
   "petFriendly",
   "pool",
+  "television",
   "washingMachine",
 ] as const;
 

@@ -11,6 +11,7 @@ type SearchHit = {
   internalName?: string;
   thumbUrl: string | null;
   href: string;
+  available: boolean;
 };
 
 function useDebouncedValue<T>(value: T, ms: number): T {
@@ -197,7 +198,7 @@ export default function SiteSearch({ className = "" }: { className?: string }) {
                   <div className="truncate text-sm font-medium text-gray-900">{h.title}</div>
                   <div className="truncate text-xs text-gray-500">{h.meta}</div>
                   {h.internalName ? (
-                    <div className="truncate text-xs font-medium text-emerald-800">
+                    <div className={`truncate text-xs font-medium ${h.available ? "text-emerald-800" : "text-red-700"}`}>
                       Internal: {h.internalName}
                     </div>
                   ) : null}

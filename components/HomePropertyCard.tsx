@@ -17,10 +17,11 @@ export default function HomePropertyCard({ property, detailSlug }: HomePropertyC
   const displayTitle = getPropertyDisplayTitle(property);
   const areaName = property.mainArea ? areas[property.mainArea]?.nameEn ?? property.mainArea : "—";
   const p = property.price;
-  const monthly = p?.monthly ?? p?.min;
-  const yearly = p?.yearly;
-  const forSale = p?.forSale;
   const isSale = property.types?.includes("sale");
+  const isSaleOnly = isSale && !property.types?.includes("rent");
+  const monthly = isSaleOnly ? undefined : p?.monthly ?? p?.min;
+  const yearly = isSaleOnly ? undefined : p?.yearly;
+  const forSale = p?.forSale ?? (isSaleOnly && p?.min && p.min > 0 ? p.min : undefined);
   return (
     <PropertyViewLink
       detailSlug={detailSlug}

@@ -38,6 +38,7 @@ export const POPULAR_SEARCH_DEFINITIONS: PopularSearchDefinition[] = [
   { label: "Nature view in Ubud", href: "/properties/rent/ubud/nature-view", group: "features", segment: { kind: "amenity", value: "nature-view" } },
   { label: "Villas with car park", href: "/properties/rent/ubud/car-park", group: "features", segment: { kind: "amenity", value: "car-park" } },
   { label: "Villas with washing machine", href: "/properties/rent/ubud/washing-machine", group: "features", segment: { kind: "amenity", value: "washing-machine" } },
+  { label: "Villas with TV", href: "/properties/rent/ubud/tv", group: "features", segment: { kind: "amenity", value: "tv" } },
 
   // D — Sub-areas (all Ubud neighborhoods)
   ...SEGMENT_TYPES.subArea.map((slug) => ({

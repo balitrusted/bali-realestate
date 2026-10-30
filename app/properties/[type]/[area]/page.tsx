@@ -135,6 +135,7 @@ function parseQueryFilters(
   if (truthy(query.hasPetFriendly)) filters.hasPetFriendly = true;
   if (truthy(query.hasPool)) filters.hasPool = true;
   if (truthy(query.hasWashingMachine)) filters.hasWashingMachine = true;
+  if (truthy(query.hasTelevision)) filters.hasTelevision = true;
   return filters;
 }
 
@@ -198,6 +199,7 @@ export default async function PropertiesByTypeAndAreaPage({
   if (queryParams.hasPetFriendly === "true") featureTexts.push("with pet friendly");
   if (queryParams.hasPool === "true") featureTexts.push("with pool");
   if (queryParams.hasWashingMachine === "true") featureTexts.push("with washing machine");
+  if (queryParams.hasTelevision === "true") featureTexts.push("with TV");
   const featureText = featureTexts.length > 0 ? ` ${featureTexts.join(", ")}` : "";
 
   const areaDisplayName = areaInfo?.nameEn ?? resolveAreaLabel(area);
@@ -242,6 +244,7 @@ export default async function PropertiesByTypeAndAreaPage({
   if (filters.hasPetFriendly) searchParamsForPagination.hasPetFriendly = "true";
   if (filters.hasPool) searchParamsForPagination.hasPool = "true";
   if (filters.hasWashingMachine) searchParamsForPagination.hasWashingMachine = "true";
+  if (filters.hasTelevision) searchParamsForPagination.hasTelevision = "true";
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://balitrusted.com";
 
