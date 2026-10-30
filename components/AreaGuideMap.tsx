@@ -5,6 +5,7 @@ import maplibregl, { type Map } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { GuideMapPoi } from "@/types/article";
 import { loadStyleForMap, type MapTilerStyleVariant } from "@/lib/mapStyleResolve";
+import { useTheme } from "@/components/ThemeProvider";
 
 type AreaGuideMapProps = {
   boundaryUrl: string;
@@ -61,6 +62,7 @@ export default function AreaGuideMap({
   pois = [],
 }: AreaGuideMapProps) {
   const [styleMode, setStyleMode] = useState<"streets" | "satellite">("streets");
+  const { resolvedTheme } = useTheme();
   const [loadError, setLoadError] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<Map | null>(null);
@@ -97,7 +99,7 @@ export default function AreaGuideMap({
       }
 
       const variant: MapTilerStyleVariant =
-        styleMode === "satellite" ? "satellite" : "streets";
+        styleMode === "satellite" ? "satellite" : resolvedTheme === "dark" ? "dark" : "streets";
       const style = await loadStyleForMap(mapTilerKey, variant);
       if (cancelled || containerRef.current !== container) return;
 
@@ -211,7 +213,7 @@ export default function AreaGuideMap({
       }
       mapRef.current = null;
     };
-  }, [boundaryUrl, styleMode, mapTilerKey, poiKey, pois]);
+  }, [boundaryUrl, styleMode, mapTilerKey, poiKey, pois, resolvedTheme]);
 
   if (loadError) {
     return (

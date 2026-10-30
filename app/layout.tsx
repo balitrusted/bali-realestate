@@ -7,6 +7,8 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import AttributionCapture from "@/components/AttributionCapture";
 import { SavedProvider } from "@/components/SavedProvider";
 import { CurrencyProvider } from "@/components/CurrencyProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import Script from "next/script";
 
 /* Typography: V1 = Inter (see docs/TYPOGRAPHY-VERSIONS.md to rollback). V2 = IBM Plex Sans. */
 const fontSans = IBM_Plex_Sans({
@@ -41,9 +43,17 @@ export default function RootLayout({
   const googleSiteVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`try {
+            var mode = localStorage.getItem("balitrusted-theme") || "auto";
+            var hour = new Date().getHours();
+            document.documentElement.dataset.theme =
+              mode === "dark" || (mode === "auto" && (hour >= 19 || hour < 7)) ? "dark" : "light";
+          } catch (_) { document.documentElement.dataset.theme = "light"; }`}
+        </Script>
         {googleSiteVerification ? (
           <meta name="google-site-verification" content={googleSiteVerification} />
         ) : null}
@@ -51,15 +61,17 @@ export default function RootLayout({
       <body className={`${fontSans.variable} font-sans antialiased`}>
         <GoogleAnalytics />
         <AttributionCapture />
-        <SavedProvider>
-          <CurrencyProvider>
-            <div className="flex min-h-screen flex-col">
-              <Header />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
-          </CurrencyProvider>
-        </SavedProvider>
+        <ThemeProvider>
+          <SavedProvider>
+            <CurrencyProvider>
+              <div className="flex min-h-screen flex-col">
+                <Header />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
+            </CurrencyProvider>
+          </SavedProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

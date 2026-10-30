@@ -7,6 +7,7 @@ import type { MainArea, SubArea } from "@/types/property";
 import { AREA_DISTANCE_REFS } from "@/lib/areaDistanceCenters";
 import { parseLatLng } from "@/lib/mapGeo";
 import { loadStyleForMap, type MapTilerStyleVariant } from "@/lib/mapStyleResolve";
+import { useTheme } from "@/components/ThemeProvider";
 
 type Props = {
   title: string;
@@ -75,6 +76,7 @@ function getRegionalEta(mainArea: MainArea, coords: [number, number] | null): st
 export default function PropertyLocationMap({ title, areaLabel, displayLocation, mainArea, subArea }: Props) {
   const coords = parseLatLng(displayLocation);
   const [styleMode, setStyleMode] = useState<"streets" | "outdoor" | "satellite">("streets");
+  const { resolvedTheme } = useTheme();
   const mapTilerKey = process.env.NEXT_PUBLIC_MAPTILER_KEY?.trim();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<Map | null>(null);
@@ -89,7 +91,13 @@ export default function PropertyLocationMap({ title, areaLabel, displayLocation,
     let cancelled = false;
     const [lat, lng] = coords;
     const variant: MapTilerStyleVariant =
-      styleMode === "outdoor" ? "outdoor" : styleMode === "satellite" ? "satellite" : "streets";
+      styleMode === "outdoor"
+        ? "outdoor"
+        : styleMode === "satellite"
+          ? "satellite"
+          : resolvedTheme === "dark"
+            ? "dark"
+            : "streets";
 
     if (mapInstanceRef.current) {
       try {
@@ -136,7 +144,7 @@ export default function PropertyLocationMap({ title, areaLabel, displayLocation,
       }
       mapInstanceRef.current = null;
     };
-  }, [coords, title, areaLabel, styleMode, mapTilerKey]);
+  }, [coords, title, areaLabel, styleMode, mapTilerKey, resolvedTheme]);
 
   if (!coords) {
     return (

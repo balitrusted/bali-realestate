@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import maplibregl, { type Map, type MapLayerMouseEvent } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { loadStyleForMap } from "@/lib/mapStyleResolve";
+import { useTheme } from "@/components/ThemeProvider";
 
 export type PropertyMapPin = {
   id: string;
@@ -45,6 +46,7 @@ function pinsToGeoJSON(pins: PropertyMapPin[]): GeoJSON.FeatureCollection {
 const BALI_CENTER: [number, number] = [115.216, -8.409];
 
 export default function PropertiesMapClient({ pins }: { pins: PropertyMapPin[] }) {
+  const { resolvedTheme } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
   const popupRef = useRef<maplibregl.Popup | null>(null);
@@ -58,7 +60,7 @@ export default function PropertiesMapClient({ pins }: { pins: PropertyMapPin[] }
     const data = pinsToGeoJSON(pins);
 
     const run = async () => {
-      const style = await loadStyleForMap(mapTilerKey, "streets");
+      const style = await loadStyleForMap(mapTilerKey, resolvedTheme === "dark" ? "dark" : "streets");
       if (cancelled || containerRef.current !== container) return;
 
       const map = new maplibregl.Map({
@@ -204,7 +206,7 @@ export default function PropertiesMapClient({ pins }: { pins: PropertyMapPin[] }
       }
       mapRef.current = null;
     };
-  }, [pins]);
+  }, [pins, resolvedTheme]);
 
   return (
     <div className="overflow-hidden rounded-xl border border-stone-200 shadow-sm">
