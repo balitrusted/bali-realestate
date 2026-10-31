@@ -129,7 +129,7 @@ export default async function PropertiesCatalogPage({
           <CatalogBreadcrumb className="mb-0" />
           <CatalogMapLink filters={effectiveFilters} />
         </div>
-        <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
+        <div className="catalog-intro-panel mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
           <h1 className="text-2xl md:text-4xl font-semibold tracking-tight text-gray-900 mb-2">
             All properties
           </h1>
@@ -140,35 +140,35 @@ export default async function PropertiesCatalogPage({
           </p>
         </div>
 
-        <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
+        <div className="catalog-intro-panel mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
           <h2 className="text-xl font-semibold text-gray-900 leading-snug mb-3">
             Start by choosing a property type
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <Link
               href="/properties/villas"
-              className="group rounded-2xl bg-white border border-gray-200 px-4 py-5 text-gray-900 hover:border-emerald-300 hover:shadow-sm transition-shadow"
+              className="catalog-type-card catalog-type-villas group rounded-2xl bg-white border border-gray-200 px-4 py-5 text-gray-900 hover:border-emerald-300 hover:shadow-sm transition-shadow"
             >
               <div className="text-base font-semibold mb-1">Villas</div>
               <div className="text-sm text-gray-500 group-hover:text-gray-700">Rent or buy</div>
             </Link>
             <Link
               href="/properties/land"
-              className="group rounded-2xl bg-white border border-gray-200 px-4 py-5 text-gray-900 hover:border-emerald-300 hover:shadow-sm transition-shadow"
+              className="catalog-type-card group rounded-2xl bg-white border border-gray-200 px-4 py-5 text-gray-900 hover:border-emerald-300 hover:shadow-sm transition-shadow"
             >
               <div className="text-base font-semibold mb-1">Land</div>
               <div className="text-sm text-gray-500 group-hover:text-gray-700">Plots & investment</div>
             </Link>
             <Link
               href="/properties/business"
-              className="group rounded-2xl bg-white border border-gray-200 px-4 py-5 text-gray-900 hover:border-emerald-300 hover:shadow-sm transition-shadow"
+              className="catalog-type-card group rounded-2xl bg-white border border-gray-200 px-4 py-5 text-gray-900 hover:border-emerald-300 hover:shadow-sm transition-shadow"
             >
               <div className="text-base font-semibold mb-1">Business</div>
               <div className="text-sm text-gray-500 group-hover:text-gray-700">Commercial opportunities</div>
             </Link>
             <Link
               href="/properties/hotels"
-              className="group rounded-2xl bg-white border border-gray-200 px-4 py-5 text-gray-900 hover:border-emerald-300 hover:shadow-sm transition-shadow"
+              className="catalog-type-card group rounded-2xl bg-white border border-gray-200 px-4 py-5 text-gray-900 hover:border-emerald-300 hover:shadow-sm transition-shadow"
             >
               <div className="text-base font-semibold mb-1">Retreat Hotels</div>
               <div className="text-sm text-gray-500 group-hover:text-gray-700">Spaces for retreats & group stays</div>

@@ -441,7 +441,7 @@ export default function PropertyCard({ property, detailSlug, viewReturnPath }: P
           <PropertyViewLink
             detailSlug={detailSlug}
             viewReturnPath={viewReturnPath}
-            className="block text-center px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
+            className="property-card-details-link block text-center px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
           >
             View Details
           </PropertyViewLink>

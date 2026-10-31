@@ -63,9 +63,9 @@ export default function CatalogBreadcrumb({
     <nav
       id="catalog-breadcrumb-anchor"
       aria-label="Breadcrumb"
-      className={[className ?? "mb-5", "scroll-mt-6"].join(" ")}
+      className={["catalog-breadcrumb", className ?? "mb-5", "scroll-mt-6"].join(" ")}
     >
-      <ol className="inline-flex flex-wrap items-center gap-1.5 rounded-2xl border border-gray-200 bg-white/90 px-3 py-2 shadow-sm">
+      <ol className="catalog-breadcrumb-trail inline-flex flex-wrap items-center gap-1.5 rounded-2xl border border-gray-200 bg-white/90 px-3 py-2 shadow-sm">
         {items.map((item, i) => {
           const isLast = i === items.length - 1;
           return (

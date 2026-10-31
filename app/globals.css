@@ -30,6 +30,28 @@ html[data-theme="dark"] body {
   color: var(--foreground);
 }
 
+html[data-theme="dark"] .catalog-intro-panel,
+html[data-theme="dark"] .catalog-popular-searches {
+  background-color: #1b2823;
+  background-image: none;
+  border-color: #35423e;
+}
+
+html[data-theme="dark"] .catalog-breadcrumb-trail {
+  background-color: #19221f;
+  border-color: #35423e;
+}
+
+html[data-theme="dark"] .catalog-map-link {
+  background-color: #1b3429;
+  border-color: #315740;
+  color: #a4e2bb;
+}
+
+html[data-theme="dark"] .catalog-map-link:hover {
+  background-color: #264b39;
+}
+
 html[data-theme="dark"] [class~="bg-white"] { background-color: #19221f; }
 html[data-theme="dark"] [class~="bg-gray-50"],
 html[data-theme="dark"] [class~="bg-stone-50"],
@@ -178,6 +200,72 @@ html[data-theme="dark"] [class*="hover:bg-emerald-50/"]:hover,
 html[data-theme="dark"] [class*="hover:bg-green-50/"]:hover { background-color: #1b3429; }
 html[data-theme="dark"] [class~="hover:text-gray-900"]:hover,
 html[data-theme="dark"] [class~="hover:text-stone-900"]:hover { color: #edf3f0; }
+
+html[data-theme="dark"] .catalog-type-card {
+  background-color: #253b31;
+  border-color: #3f624e;
+  color: #f0f7f3;
+}
+
+html[data-theme="dark"] .catalog-type-card:hover {
+  background-color: #2d4b3b;
+  border-color: #5b8b6a;
+}
+
+html[data-theme="dark"] .catalog-popular-search-chip {
+  background-color: #263a31;
+  border-color: #40594b;
+  color: #e6f0ea;
+}
+
+html[data-theme="dark"] .catalog-popular-search-chip:hover {
+  background-color: #304b3d;
+  border-color: #5b8b6a;
+}
+
+html[data-theme="dark"] .property-card-details-link {
+  background-color: #356b4d;
+  color: #ffffff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 25%);
+}
+
+html[data-theme="dark"] .property-card-details-link:hover {
+  background-color: #407d5b;
+}
+
+html[data-theme="dark"] .feature-panel {
+  background-color: #19221f;
+  border-color: #35423e;
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .feature-legend,
+html[data-theme="dark"] .feature-row {
+  background-color: #1b2823;
+  border-color: #35423e;
+}
+
+html[data-theme="dark"] .feature-seg-group {
+  background-color: #25312d;
+  --tw-ring-color: #3a4943;
+}
+
+html[data-theme="dark"] .feature-seg-idle {
+  color: #c4cfca;
+  border-color: #52635b;
+  background-color: #1b2823;
+}
+
+html[data-theme="dark"] .feature-seg-idle:hover {
+  color: #ffffff;
+  background-color: #35423e;
+}
+
+html[data-theme="dark"] .feature-seg-unknown {
+  background-color: #5a4a1f;
+  color: #ffe9a6;
+  --tw-ring-color: #b8933a;
+}
 
 html[data-theme="dark"] input,
 html[data-theme="dark"] select,

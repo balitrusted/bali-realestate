@@ -308,7 +308,7 @@ export default async function PropertiesByTypeAndAreaPage({
         )}
         
         {!areaInfo?.image && (
-          <div className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
+          <div className="catalog-intro-panel mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-emerald-50/40 p-5 md:p-7 shadow-sm">
             <h1 className="text-2xl md:text-4xl font-semibold tracking-tight text-gray-900 mb-2">
               {buildH1(catalogType, mainArea)}
             </h1>

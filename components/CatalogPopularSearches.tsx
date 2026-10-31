@@ -61,7 +61,7 @@ export default function CatalogPopularSearches({
   return (
     <section
       id={id}
-      className="mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-stone-50/80 p-5 md:p-7 shadow-sm scroll-mt-8"
+      className="catalog-popular-searches mb-3 rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-stone-50/80 p-5 md:p-7 shadow-sm scroll-mt-8"
       aria-labelledby={`${id}-heading`}
     >
       <h2 id={`${id}-heading`} className="text-xl font-semibold text-gray-900 leading-snug mb-1">
@@ -80,7 +80,7 @@ export default function CatalogPopularSearches({
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="inline-flex rounded-full border border-gray-200 bg-white px-3.5 py-2 text-sm font-medium text-gray-800 hover:border-emerald-300 hover:bg-emerald-50/50 transition-colors"
+                    className="catalog-popular-search-chip inline-flex rounded-full border border-gray-200 bg-white px-3.5 py-2 text-sm font-medium text-gray-800 hover:border-emerald-300 hover:bg-emerald-50/50 transition-colors"
                   >
                     {link.label}
                   </Link>

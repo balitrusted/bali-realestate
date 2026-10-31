@@ -16,7 +16,7 @@ export default function CatalogMapLink({
       href={buildMapHrefFromFilters(filters)}
       className={
         className ??
-        "inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50/80 px-3 py-2 text-sm font-medium text-emerald-900 hover:bg-emerald-100 transition-colors"
+        "catalog-map-link inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50/80 px-3 py-2 text-sm font-medium text-emerald-900 hover:bg-emerald-100 transition-colors"
       }
     >
       <span aria-hidden>📍</span>

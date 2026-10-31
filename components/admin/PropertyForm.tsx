@@ -839,8 +839,8 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
           </p>
         </div>
 
-        <div className="rounded-xl border border-stone-200 bg-stone-50/90 overflow-hidden shadow-inner">
-          <div className="flex flex-wrap gap-x-4 gap-y-1.5 px-3 py-2 border-b border-stone-200/90 bg-white/90 text-[11px] sm:text-xs text-stone-600">
+        <div className="feature-panel rounded-xl border border-stone-200 bg-stone-50/90 overflow-hidden shadow-inner">
+          <div className="feature-legend flex flex-wrap gap-x-4 gap-y-1.5 px-3 py-2 border-b border-stone-200/90 bg-white/90 text-[11px] sm:text-xs text-stone-600">
             <span className="inline-flex items-center gap-2 font-medium">
               <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-500 ring-2 ring-emerald-200" aria-hidden />
               Yes → on site
@@ -885,9 +885,9 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
                     ? "bg-emerald-600 text-white shadow-md shadow-emerald-900/15 ring-1 ring-emerald-700/30"
                     : v === "no"
                       ? "bg-slate-600 text-white shadow-md shadow-slate-900/15 ring-1 ring-slate-700/30"
-                      : "bg-amber-100 text-amber-950 shadow-sm ring-1 ring-amber-300/80";
+                      : "feature-seg-unknown bg-amber-100 text-amber-950 shadow-sm ring-1 ring-amber-300/80";
                 const idle =
-                  "text-stone-500 bg-white/0 hover:bg-white hover:text-stone-800 hover:shadow-sm border-stone-200/80";
+                  "feature-seg-idle text-stone-500 bg-white/0 hover:bg-white hover:text-stone-800 hover:shadow-sm border-stone-200/80";
                 return (
                   <button
                     key={v}
@@ -904,13 +904,13 @@ export default function PropertyForm({ property, onSave }: PropertyFormProps) {
               return (
                 <li
                   key={feature.key}
-                  className="flex flex-row flex-wrap items-center gap-x-2 gap-y-1 px-3 py-1.5 sm:px-3 sm:py-1.5 bg-white/70"
+                  className="feature-row flex flex-row flex-wrap items-center gap-x-2 gap-y-1 px-3 py-1.5 sm:px-3 sm:py-1.5 bg-white/70"
                 >
                   <span className="w-[8.25rem] sm:w-[9.25rem] shrink-0 text-xs sm:text-[13px] font-medium text-gray-900 leading-tight">
                     {feature.label}
                   </span>
                   <div
-                    className="inline-flex shrink-0 gap-0.5 rounded-md bg-stone-100/90 p-0.5 ring-1 ring-stone-200/80"
+                    className="feature-seg-group inline-flex shrink-0 gap-0.5 rounded-md bg-stone-100/90 p-0.5 ring-1 ring-stone-200/80"
                     role="group"
                     aria-label={`${feature.label} status`}
                   >
