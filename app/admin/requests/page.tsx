@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import type { SiteRequest, RequestStatus } from "@/lib/requestsData";
 import { formatAttributionSummary } from "@/lib/attribution";
+import { whatsappChatUrl } from "@/lib/phone";
 
 const REQUEST_TYPE_LABELS: Record<string, string> = {
   "client-rent": "Client – find property",
@@ -152,7 +153,24 @@ function RequestCard({
         ) : (
           <span className="text-gray-500">Email: —</span>
         )}
-        {r.whatsapp ? ` · ${r.whatsapp}` : null}
+        {r.whatsapp ? (
+          <>
+            {" · "}
+            {whatsappChatUrl(r.whatsapp) ? (
+              <a
+                href={whatsappChatUrl(r.whatsapp)!}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-emerald-800 hover:underline"
+                title="Open WhatsApp chat"
+              >
+                {r.whatsapp}
+              </a>
+            ) : (
+              r.whatsapp
+            )}
+          </>
+        ) : null}
       </p>
       {r.propertyId && <p className="text-sm text-gray-600">Property ID: {r.propertyId}</p>}
       {r.propertyTitle && <p className="text-sm text-gray-600">Listing: {r.propertyTitle}</p>}

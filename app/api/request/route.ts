@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { isValidAdminSession } from "@/lib/auth";
 import { sendToAdmin } from "@/lib/email";
-import { normalizeInternationalPhone } from "@/lib/phone";
+import { normalizeInternationalPhone, whatsappChatUrl } from "@/lib/phone";
 import { MutationHttpError } from "@/lib/blobJsonOptimisticWrite";
 import { formatAttributionSummary, normalizeRequestAttribution } from "@/lib/attribution";
 import {
@@ -210,7 +210,14 @@ export async function POST(request: NextRequest) {
     } else {
       lines.push(`<p><strong>Email:</strong> —</p>`);
     }
-    if (siteRequest.whatsapp) lines.push(`<p><strong>Phone / WhatsApp:</strong> ${siteRequest.whatsapp}</p>`);
+    if (siteRequest.whatsapp) {
+      const waUrl = whatsappChatUrl(siteRequest.whatsapp);
+      lines.push(
+        waUrl
+          ? `<p><strong>Phone / WhatsApp:</strong> <a href="${waUrl}">${siteRequest.whatsapp}</a> (tap to open WhatsApp chat)</p>`
+          : `<p><strong>Phone / WhatsApp:</strong> ${siteRequest.whatsapp}</p>`
+      );
+    }
     if (preferredContact) {
       lines.push(
         `<p><strong>Preferred contact:</strong> ${preferredContact === "whatsapp" ? "WhatsApp / phone" : "Email"}</p>`

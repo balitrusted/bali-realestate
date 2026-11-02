@@ -36,6 +36,12 @@ export function toValidE164(country: CountryCode, nationalNumber: string): strin
   return parsed?.isValid() ? parsed.number : null;
 }
 
+/** Returns a wa.me chat link for a valid international number, or null (e.g. for legacy free-text values). */
+export function whatsappChatUrl(value: string | null | undefined): string | null {
+  const e164 = value ? normalizeInternationalPhone(value) : null;
+  return e164 ? `https://wa.me/${e164.slice(1)}` : null;
+}
+
 /** Server-side check for a full international number that must start with "+". */
 export function normalizeInternationalPhone(value: string): string | null {
   const trimmed = value.trim();
