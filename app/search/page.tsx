@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { isValidAdminSession } from "@/lib/auth";
 import { loadAllPropertiesIncludingArchived } from "@/lib/propertiesCatalog";
 import { buildPropertySlugIndex } from "@/lib/propertySlug";
-import { isPropertyAvailableNow, rankPropertiesForSearch } from "@/lib/propertySearch";
+import { getPropertyAvailabilityState, internalNameColorClass, rankPropertiesForSearch } from "@/lib/propertySearch";
 import PropertyCard from "@/components/PropertyCard";
 import SearchQueryTracker from "@/components/SearchQueryTracker";
 import SiteSearch from "@/components/SiteSearch";
@@ -72,8 +72,8 @@ export default async function SearchPage({
                   <div key={property.id}>
                     <PropertyCard property={property} detailSlug={slugIdx.segmentFor(property)} />
                     {isAdmin && property.internalName?.trim() ? (
-                      <p className="mt-2 px-1 text-xs text-gray-500">
-                        Internal name: <span className={`font-medium ${isPropertyAvailableNow(property) ? "text-gray-700" : "text-red-700"}`}>{property.internalName}</span>
+                      <p className="mt-2 px-1 text-xs">
+                        <span className={`internal-name font-medium ${internalNameColorClass(getPropertyAvailabilityState(property))}`}>{property.internalName}</span>
                       </p>
                     ) : null}
                   </div>

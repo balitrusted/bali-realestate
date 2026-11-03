@@ -12,6 +12,7 @@ type SearchHit = {
   thumbUrl: string | null;
   href: string;
   available: boolean;
+  availability?: "available" | "upcoming" | "archived";
 };
 
 function useDebouncedValue<T>(value: T, ms: number): T {
@@ -198,8 +199,16 @@ export default function SiteSearch({ className = "" }: { className?: string }) {
                   <div className="truncate text-sm font-medium text-gray-900">{h.title}</div>
                   <div className="truncate text-xs text-gray-500">{h.meta}</div>
                   {h.internalName ? (
-                    <div className={`truncate text-xs font-medium ${h.available ? "text-emerald-800" : "text-red-700"}`}>
-                      Internal: {h.internalName}
+                    <div
+                      className={`internal-name truncate text-xs font-medium ${
+                        h.availability === "archived" || (!h.availability && !h.available)
+                          ? "internal-name-archived text-red-700"
+                          : h.availability === "upcoming"
+                            ? "internal-name-upcoming text-orange-600"
+                            : "text-emerald-800"
+                      }`}
+                    >
+                      {h.internalName}
                     </div>
                   ) : null}
                 </div>

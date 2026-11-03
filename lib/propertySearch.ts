@@ -7,6 +7,21 @@ export function isPropertyAvailableNow(property: Property): boolean {
   return !property.archived && !normalizeAvailableFrom(property.availableFrom ?? undefined);
 }
 
+export type PropertyAvailabilityState = "available" | "upcoming" | "archived";
+
+/** Archived listings are unavailable; non-archived ones with a future availability date are "upcoming". */
+export function getPropertyAvailabilityState(property: Property): PropertyAvailabilityState {
+  if (property.archived) return "archived";
+  return normalizeAvailableFrom(property.availableFrom ?? undefined) ? "upcoming" : "available";
+}
+
+/** Tailwind text color for the admin-only internal name, by availability. */
+export function internalNameColorClass(state: PropertyAvailabilityState): string {
+  if (state === "archived") return "text-red-700";
+  if (state === "upcoming") return "text-orange-600";
+  return "text-gray-700";
+}
+
 function normalizeText(s: string): string {
   return s
     .toLowerCase()
@@ -152,6 +167,7 @@ export type PropertySearchApiHit = {
   thumbUrl: string | null;
   href: string;
   available: boolean;
+  availability: PropertyAvailabilityState;
   internalName?: string;
 };
 
@@ -174,6 +190,7 @@ export function propertiesToSearchHits(
       thumbUrl: thumb,
       href: `/properties/${segmentFor(p)}`,
       available: isPropertyAvailableNow(p),
+      availability: getPropertyAvailabilityState(p),
       ...(options.includeInternalName && p.internalName?.trim()
         ? { internalName: p.internalName.trim() }
         : {}),
