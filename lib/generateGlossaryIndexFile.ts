@@ -22,6 +22,9 @@ export function generateGlossaryIndexFile(terms: GlossaryTerm[]): string {
     if (t.seoDescription) c += `${ind}${ind}seoDescription: ${JSON.stringify(t.seoDescription)},\n`;
     if (t.relatedGuideUrl) c += `${ind}${ind}relatedGuideUrl: ${JSON.stringify(t.relatedGuideUrl)},\n`;
     if (t.relatedBlogUrl) c += `${ind}${ind}relatedBlogUrl: ${JSON.stringify(t.relatedBlogUrl)},\n`;
+    if (t.image) c += `${ind}${ind}image: ${JSON.stringify(t.image)},\n`;
+    if (t.imageAlt) c += `${ind}${ind}imageAlt: ${JSON.stringify(t.imageAlt)},\n`;
+    if (t.imageCaption) c += `${ind}${ind}imageCaption: ${JSON.stringify(t.imageCaption)},\n`;
     c += `${ind}}${i < terms.length - 1 ? "," : ""}\n`;
   });
   c += `];\n`;

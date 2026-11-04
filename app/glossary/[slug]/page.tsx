@@ -44,6 +44,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title,
       description,
       type: "article",
+      ...(term.image ? { images: [{ url: term.image, alt: term.imageAlt || term.title }] } : {}),
       url: canonical,
     },
   };
@@ -75,6 +76,15 @@ export default async function GlossaryTermPage({ params }: { params: Promise<{ s
               </p>
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">{term.title}</h1>
               <p className="text-gray-600 leading-relaxed mb-8">{term.summary}</p>
+              {term.image && (
+                <div className="prose prose-article max-w-none mb-8">
+                  <figure className="article-media">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={term.image} alt={term.imageAlt || term.title} loading="eager" />
+                    {term.imageCaption && <figcaption>{term.imageCaption}</figcaption>}
+                  </figure>
+                </div>
+              )}
               <ArticleContent content={term.content} />
               {(term.relatedGuideUrl || term.relatedBlogUrl) && (
                 <div className="mt-8 rounded-xl border border-gray-200 bg-gray-50/80 px-4 py-3 text-sm text-gray-800">

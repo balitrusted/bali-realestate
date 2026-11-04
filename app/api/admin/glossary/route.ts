@@ -102,6 +102,9 @@ export async function POST(request: Request) {
           seoDescription: body.seoDescription ? String(body.seoDescription).trim() : undefined,
           relatedGuideUrl: body.relatedGuideUrl ? String(body.relatedGuideUrl).trim() : undefined,
           relatedBlogUrl: body.relatedBlogUrl ? String(body.relatedBlogUrl).trim() : undefined,
+          image: body.image ? String(body.image).trim() : undefined,
+          imageAlt: body.imageAlt ? String(body.imageAlt).trim() : undefined,
+          imageCaption: body.imageCaption ? String(body.imageCaption).trim() : undefined,
         };
 
         return [...existing, newTerm];
@@ -186,6 +189,20 @@ export async function PUT(request: Request) {
                 ? String(body.relatedBlogUrl).trim()
                 : undefined
               : prev.relatedBlogUrl,
+          image:
+            body.image !== undefined ? (body.image ? String(body.image).trim() : undefined) : prev.image,
+          imageAlt:
+            body.imageAlt !== undefined
+              ? body.imageAlt
+                ? String(body.imageAlt).trim()
+                : undefined
+              : prev.imageAlt,
+          imageCaption:
+            body.imageCaption !== undefined
+              ? body.imageCaption
+                ? String(body.imageCaption).trim()
+                : undefined
+              : prev.imageCaption,
         };
 
         const next = [...existing];

@@ -16,4 +16,10 @@ export interface GlossaryTerm {
   seoDescription?: string;
   relatedGuideUrl?: string;
   relatedBlogUrl?: string;
+  /** Illustration URL (Vercel Blob or /uploads/...). */
+  image?: string;
+  /** Alt text for SEO and screen readers (not shown on the page). */
+  imageAlt?: string;
+  /** Visible caption under the image. */
+  imageCaption?: string;
 }

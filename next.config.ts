@@ -5,6 +5,13 @@ const nextConfig: NextConfig = {
   rewrites: async () => [
     { source: "/uploads/properties/:path*", destination: "/api/serve-image/properties/:path*" },
   ],
+  redirects: async () => [
+    {
+      source: "/glossary/ac-split-system-concealed-bali-villas",
+      destination: "/glossary/ac",
+      permanent: true,
+    },
+  ],
   // Minimal output for Vercel (helps stay under 250 MB limit)
   output: "standalone",
   // Reduce serverless function size (Vercel 250 MB limit)

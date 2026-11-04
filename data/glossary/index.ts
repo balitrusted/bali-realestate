@@ -1158,18 +1158,19 @@ export const glossaryTerms: GlossaryTerm[] = [
   },
   {
     id: "glossary-ac-split-system-bali",
-    slug: "ac-split-system-concealed-bali-villas",
-    title: "AC split system",
+    slug: "ac",
+    title: "AC",
     category: "other",
     summary:
-      "Indoor unit plus outdoor compressor—the Bali premium look often hides units behind timber lattice or in bulkheads for silent comfort.",
-    content: `<p>An <strong>AC split system</strong> pairs an indoor evaporator with an outdoor compressor. It is the default cooling technology for most villas.</p>
-<p>In higher-end projects, “concealed” splits hide the indoor unit behind carved timber screens or ceiling bulkheads so climate control does not fight the tropical interior aesthetic. Maintenance access still has to be practical for technicians.</p>`,
+      "AC (air conditioning) is a cooling system used to keep indoor spaces comfortable in Bali’s tropical climate. It removes heat from the room and releases it outside, helping maintain a cooler indoor temperature.",
+    content: `<p><strong>AC</strong> (air conditioning) is a cooling system used to keep indoor spaces comfortable in Bali’s tropical climate. It removes heat from the room and releases it outside, helping maintain a cooler indoor temperature.</p>
+<p>Most villas use split AC systems, with an indoor unit mounted on a wall or ceiling and an outdoor unit containing the compressor. Each unit typically cools a specific room, such as a bedroom or living area.</p>
+<p>When renting a villa, check which rooms have AC, whether it is included in the rental price, and how electricity costs are handled.</p>`,
     published: true,
     createdAt: "2026-04-18T12:00:00.000Z",
-    updatedAt: "2026-04-18T12:00:00.000Z",
-    seoTitle: "Split AC systems in Bali villas — glossary | Balitrusted",
-    seoDescription: "How split AC works and why concealed installs are popular in Bali design.",
+    updatedAt: "2026-11-04T07:00:00.000Z",
+    seoTitle: "AC in Bali villas — glossary | Balitrusted",
+    seoDescription: "What AC means in Bali villas, how split systems work, and what to check about AC and electricity costs when renting.",
     relatedGuideUrl: "/guides/rent",
   },
   {
