@@ -16,6 +16,16 @@ const nextConfig: NextConfig = {
       destination: "/glossary/alang-alang-roof-bali",
       permanent: true,
     },
+    {
+      source: "/glossary/alfamart-gift-dan-loyalty",
+      destination: "/glossary/alfamart-bali",
+      permanent: true,
+    },
+    {
+      source: "/glossary/indomaret-poinku-loyalty-app",
+      destination: "/glossary/indomaret-bali",
+      permanent: true,
+    },
   ],
   // Minimal output for Vercel (helps stay under 250 MB limit)
   output: "standalone",

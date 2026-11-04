@@ -509,7 +509,7 @@ export const glossaryGeminiMay2026Batch: GlossaryTerm[] = [
       "Indomaret and Alfamart corners—pulsa top-ups, snacks, bill payments when apps fail.",
     content: `<p>Chain <strong>minimarkets</strong> blanket Bali—<strong>Indomaret</strong> and <strong>Alfamart</strong> compete block to block.</p>
 <p>Beyond snacks, they cash out digital wallets, sell SIM reloads, and sometimes accept electricity payments—lifelines when banking apps glitch.</p>
-<p>Loyalty apps differ; compare <a href="/glossary/indomaret-poinku-loyalty-app">Indomaret Poinku</a> vs <a href="/glossary/alfamart-gift-dan-loyalty">Alfamart Gift Dan</a> if you optimize cents.</p>`,
+<p>Loyalty apps differ; see our entries on <a href="/glossary/indomaret-bali">Indomaret</a>, <a href="/glossary/alfamart-bali">Alfamart</a>, and <a href="/glossary/circle-k-bali">Circle K</a>.</p>`,
     published: true,
     createdAt: ISO,
     updatedAt: ISO,

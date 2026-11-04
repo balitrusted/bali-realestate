@@ -2094,34 +2094,62 @@ export const glossaryTerms: GlossaryTerm[] = [
   },
   {
     id: "glossary-indomaret-poinku",
-    slug: "indomaret-poinku-loyalty-app",
-    title: "Indomaret Poinku",
-    category: "finance",
+    slug: "indomaret-bali",
+    title: "Indomaret",
+    category: "living",
     summary:
-      "A loyalty app for Indomaret offering points, discounts, and member-only promos.",
-    content: `<p><strong>Poinku</strong> is Indomaret’s rewards ecosystem. Frequent users collect points and access app-specific offers not always available in walk-in pricing.</p>
-<p>For long-stay budgeting, loyalty stacks from convenience chains can make recurring household purchases cheaper over time.</p>`,
+      "One of Indonesia’s largest convenience store chains, offering everyday groceries, snacks, drinks, household essentials, and basic payment services. Known for its extensive nationwide network and convenient neighborhood locations.",
+    content: `<p><strong>Indomaret</strong> is a major Indonesian retail chain operated by PT Indomarco Prismatama. Established in 1988, it has grown into one of the country’s most recognizable convenience store brands, with locations across Indonesia, including Bali.</p>
+<p>Indomaret stores typically offer a practical selection of everyday products, such as packaged food, bottled water, snacks, toiletries, household items, and ready-to-drink beverages. Many locations also provide services such as mobile credit top-ups, bill payments, and digital transactions.</p>
+<p>The chain is popular for its accessibility and convenience. Stores are commonly found in residential neighborhoods, along main roads, and near commercial areas, making them a familiar part of everyday life in Indonesia.</p>
+<p>Its main competitor is <strong><a href="/glossary/alfamart-bali">Alfamart</a></strong>, another major Indonesian convenience store chain. The two brands often operate near each other and offer similar products and services. Other convenience store chains include Alfamidi, <a href="/glossary/circle-k-bali">Circle K</a>, and Lawson.</p>
+<p>For residents and long-term visitors in Bali, Indomaret is a convenient option for quick grocery purchases and everyday essentials. Larger supermarkets and traditional markets generally offer a wider selection of fresh produce and specialty products.</p>`,
     published: true,
     createdAt: "2026-04-25T10:00:00.000Z",
-    updatedAt: "2026-04-25T10:00:00.000Z",
-    seoTitle: "Indomaret Poinku — glossary | Balitrusted",
-    seoDescription: "How Indomaret Poinku works for recurring purchases in Indonesia.",
+    updatedAt: "2026-11-04T12:40:00.000Z",
+    seoTitle: "Indomaret in Bali — convenience store chain | Balitrusted glossary",
+    seoDescription:
+      "What Indomaret is, what it sells, and how this Indonesian convenience store chain helps residents and long-term visitors in Bali.",
     relatedGuideUrl: "/guides/rent",
   },
   {
     id: "glossary-alfamart-gift-dan",
-    slug: "alfamart-gift-dan-loyalty",
-    title: "Alfamart Gift Dan",
-    category: "finance",
+    slug: "alfamart-bali",
+    title: "Alfamart",
+    category: "living",
     summary:
-      "Alfamart’s digital loyalty and promo system for points and periodic discount campaigns.",
-    content: `<p><strong>Gift Dan</strong> is tied to Alfamart’s customer rewards model, allowing users to gather points and track promotional windows.</p>
-<p>Residents often compare Indomaret vs Alfamart offers weekly to optimize recurring grocery spend.</p>`,
+      "A major Indonesian convenience store chain offering everyday groceries, snacks, drinks, household essentials, and various payment services. Known for its widespread presence across Indonesia and convenient neighborhood locations.",
+    content: `<p><strong>Alfamart</strong> is one of Indonesia’s largest convenience store chains, operated by PT Sumber Alfaria Trijaya Tbk. Its stores can be found throughout the country, from major cities and residential neighborhoods to smaller towns and tourist areas.</p>
+<p>The chain is popular for its accessibility and convenience. Most stores offer a practical selection of everyday essentials, including packaged food, bottled water, snacks, toiletries, household products, and ready-to-drink beverages. Many locations also provide digital payment services, mobile credit top-ups, and other basic transactions.</p>
+<p>Alfamart is particularly recognizable for its red-and-yellow branding and its frequent presence near residential areas, making it a convenient option for everyday shopping.</p>
+<p>Its main competitor is <strong><a href="/glossary/indomaret-bali">Indomaret</a></strong>, another major Indonesian convenience store chain. The two brands often operate in close proximity and offer similar products and services. Other convenience store chains include Alfamidi, <a href="/glossary/circle-k-bali">Circle K</a>, and Lawson.</p>
+<p>For residents and long-term visitors in Bali, Alfamart is a convenient option for quick grocery purchases and everyday essentials, although larger supermarkets and local markets generally offer a wider selection of fresh produce and other goods.</p>`,
     published: true,
     createdAt: "2026-04-25T10:00:00.000Z",
-    updatedAt: "2026-04-25T10:00:00.000Z",
-    seoTitle: "Alfamart Gift Dan loyalty — glossary | Balitrusted",
-    seoDescription: "A practical note on Alfamart loyalty usage for long-stay budgeting.",
+    updatedAt: "2026-11-04T12:30:00.000Z",
+    seoTitle: "Alfamart in Bali — convenience store chain | Balitrusted glossary",
+    seoDescription:
+      "What Alfamart is, what it sells, and how this Indonesian convenience store chain helps residents and long-term visitors in Bali.",
+    relatedGuideUrl: "/guides/rent",
+  },
+  {
+    id: "glossary-circle-k",
+    slug: "circle-k-bali",
+    title: "Circle K",
+    category: "living",
+    summary:
+      "An international convenience store chain with a strong presence in Bali, known for ready-to-eat food, snacks, coffee, cold drinks, and convenient locations. Many stores offer extended or 24-hour service, making them a popular option for quick purchases and late-night stops.",
+    content: `<p><strong>Circle K</strong> is an international convenience store brand originally founded in the United States. It entered Indonesia in 1986, opening its first store in Jakarta, and expanded to Bali in 1996. Today, Circle K Indonesia operates across several major cities, including Bali, Jakarta, Bandung, Yogyakarta, Surabaya, Batam, and Makassar.</p>
+<p>Unlike larger minimarket chains that focus primarily on household groceries, Circle K emphasizes convenience and products for immediate consumption. Its stores typically offer packaged snacks, bottled drinks, coffee, sandwiches, ready-to-eat meals, and other everyday essentials. Selected locations also feature seating areas, making them a convenient stop for a quick meal or drink.</p>
+<p>Circle K is particularly popular in Bali's tourist areas, where its familiar international branding, accessible locations, and extended opening hours appeal to both visitors and residents. Some stores operate 24 hours, although opening times vary by location.</p>
+<p>Its main competitors include <strong><a href="/glossary/alfamart-bali">Alfamart</a></strong> and <strong><a href="/glossary/indomaret-bali">Indomaret</a></strong>, which have a broader focus on everyday groceries and household essentials. Other convenience store brands in Indonesia include Alfamidi and Lawson.</p>
+<p>For residents and long-term visitors in Bali, Circle K is a practical option for buying drinks, snacks, quick meals, and everyday essentials, especially when larger supermarkets are closed.</p>`,
+    published: true,
+    createdAt: "2026-11-04T12:40:00.000Z",
+    updatedAt: "2026-11-04T12:40:00.000Z",
+    seoTitle: "Circle K in Bali — convenience store chain | Balitrusted glossary",
+    seoDescription:
+      "What Circle K is, what it sells, and why this international convenience store chain is popular with residents and visitors in Bali.",
     relatedGuideUrl: "/guides/rent",
   },
   {
