@@ -972,7 +972,7 @@ export const glossaryGeminiMay2026Batch: GlossaryTerm[] = [
     category: "living",
     summary:
       "Tiny chorus frogs in thatch—eat insects, sing at night, harmless to humans.",
-    content: `<p><strong>Tree frogs</strong> colonize dense planting and sometimes <a href="/glossary/alang-alang-thatched-roof-bali">Alang-alang</a> bundles—night soundtracks swing with rainfall.</p>
+    content: `<p><strong>Tree frogs</strong> colonize dense planting and sometimes <a href="/glossary/alang-alang-roof-bali">Alang-alang</a> bundles—night soundtracks swing with rainfall.</p>
 <p>They help control mosquitoes psychologically more than metrics prove, but guests adore the ambience.</p>`,
     published: true,
     createdAt: ISO,

@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
       destination: "/glossary/ac",
       permanent: true,
     },
+    {
+      source: "/glossary/alang-alang-thatched-roof-bali",
+      destination: "/glossary/alang-alang-roof-bali",
+      permanent: true,
+    },
   ],
   // Minimal output for Vercel (helps stay under 250 MB limit)
   output: "standalone",

@@ -768,21 +768,22 @@ export const glossaryTerms: GlossaryTerm[] = [
   },
   {
     id: "glossary-alang-alang-thatched-roof",
-    slug: "alang-alang-thatched-roof-bali",
+    slug: "alang-alang-roof-bali",
     title: "Alang-alang",
     category: "other",
     summary:
-      "A traditional Balinese thatched roof made from dried cogon grass, prized for ventilation and tropical character but needing periodic replacement.",
-    content: `<p><strong>Alang-alang</strong> is a traditional thatched roof made from dried <strong>cogon grass</strong>. It is one of the most recognizable “tropical Bali” design signatures because it breathes well and softens sound compared with hard roofing.</p>
-<p>For the general English concept, see <a href="/glossary/thatched-roof-bali">thatched roof</a>.</p>
-<p>The tradeoff is maintenance: expect refresh every roughly <strong>5–7 years</strong> in hard service, sooner after storms if bundles slip. Budget like a roof replacement line item, not a surprise.</p>
-<p>When a listing highlights alang-alang, ask whether it is decorative only or the primary weatherproof roof, and what the owner’s maintenance plan looks like in practice.</p>`,
+      "A traditional Indonesian thatched roof made from dried alang-alang grass, valued for its natural appearance, thermal insulation, and distinctive tropical character.",
+    content: `<p><strong>Alang-alang</strong> is a traditional thatching material made from dried <em>Imperata cylindrica</em>, a tropical grass commonly found across Indonesia. In Bali, alang-alang roofs are a distinctive feature of traditional architecture and tropical-style villas.</p>
+<p>The grass is bundled and layered to create a natural roof covering that helps keep interiors cooler by providing shade and insulation. Its texture and warm, earthy appearance are often used to create a relaxed tropical atmosphere.</p>
+<p>For the general English term, see <strong><a href="/glossary/thatched-roof-bali">thatched roof</a></strong>.</p>
+<p>Alang-alang roofs require periodic maintenance and eventual replacement as the grass deteriorates due to weather exposure. Their lifespan depends on the quality of the material, roof construction, climate, and maintenance.</p>
+<p>When a villa listing highlights an alang-alang roof, check whether it serves as the primary weatherproof covering or is purely decorative. It is also worth asking about the roof’s age, maintenance history, and expected replacement costs.</p>`,
     published: true,
     createdAt: "2026-04-17T10:00:00.000Z",
-    updatedAt: "2026-04-17T10:00:00.000Z",
-    seoTitle: "Alang-alang thatched roof in Bali villas | Balitrusted glossary",
+    updatedAt: "2026-11-04T11:00:00.000Z",
+    seoTitle: "Alang-alang roof in Bali villas | Balitrusted glossary",
     seoDescription:
-      "What alang-alang roofing is, why it feels so tropical, and what maintenance expectations look like for Bali villas.",
+      "What alang-alang roofing is, how it insulates and ages, and what to check about maintenance and replacement in Bali villa listings.",
     relatedGuideUrl: "/guides/rent",
   },
   {
@@ -793,7 +794,7 @@ export const glossaryTerms: GlossaryTerm[] = [
     summary:
       "Plant-based roofing—grass, palm, or similar—that gives a soft silhouette and natural insulation but needs periodic renewal in wet tropical climates.",
     content: `<p>A <strong>thatched roof</strong> uses bundled dried vegetation to shed rain while staying visually warm and acoustically softer than sheet metal.</p>
-<p>In Bali villa design, the signature material is usually <a href="/glossary/alang-alang-thatched-roof-bali"><strong>Alang-alang</strong></a>—cogon-grass thatch. That entry covers maintenance cycles and what to verify in listings.</p>`,
+<p>In Bali villa design, the signature material is usually <a href="/glossary/alang-alang-roof-bali"><strong>Alang-alang</strong></a>—cogon-grass thatch. That entry covers maintenance cycles and what to verify in listings.</p>`,
     published: true,
     createdAt: "2026-05-02T12:00:00.000Z",
     updatedAt: "2026-05-02T12:00:00.000Z",
