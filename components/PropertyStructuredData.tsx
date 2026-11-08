@@ -67,7 +67,7 @@ export default function PropertyStructuredData({ property, baseUrl, propertyUrl 
   const isSaleOnly = isSale && !property.types?.includes("rent");
   const monthly = isSaleOnly ? undefined : p.monthly ?? p.min;
   const yearly = isSaleOnly ? undefined : p.yearly;
-  const forSale = p.forSale ?? (isSaleOnly && p.min && p.min > 0 ? p.min : undefined);
+  const forSale = p.forSale ?? (p.min && p.min > 0 ? p.min : undefined);
   const extraOffer = offerMerchantFields(baseUrl);
 
   const toAbsoluteUrl = (u: string) => {

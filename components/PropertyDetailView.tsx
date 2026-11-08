@@ -63,7 +63,7 @@ export default function PropertyDetailView({ property, all, returnToFromQuery, a
   const p = property.price;
   const monthly = isSaleOnly ? undefined : p.monthly ?? p.min;
   const yearly = isSaleOnly ? undefined : p.yearly;
-  const forSale = p.forSale ?? (isSaleOnly && p.min && p.min > 0 ? p.min : undefined);
+  const forSale = p.forSale ?? (p.min && p.min > 0 ? p.min : undefined);
   const isSale = hasSale;
   const hasDiscount = monthly != null && yearly != null && monthly > 0 && yearly < monthly * 12;
   const discountPercent = hasDiscount
