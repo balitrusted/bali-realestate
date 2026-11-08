@@ -202,8 +202,18 @@ export default async function GuidesPage() {
 
         {ubudAreaGuideCount > 0 ? (
           <section className="mb-12 md:mb-16" aria-labelledby="ubud-neighborhoods-heading">
-            <div className="rounded-3xl border border-emerald-200/70 bg-gradient-to-br from-emerald-50/80 via-white to-white p-5 shadow-sm md:p-7">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="relative overflow-hidden rounded-3xl border border-emerald-200/70 bg-gradient-to-br from-emerald-50/80 via-white to-white p-5 shadow-sm md:p-7">
+              {/* Background illustration */}
+              <div className="absolute top-0 right-0 w-48 h-48 opacity-15 pointer-events-none">
+                <Image
+                  src="/illustrations/ubud-sketch.png"
+                  alt=""
+                  fill
+                  className="object-cover object-top"
+                  sizes="192px"
+                />
+              </div>
+              <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0">
                   <p className="text-xs font-semibold uppercase tracking-widest text-emerald-800">Ubud</p>
                   <h2 id="ubud-neighborhoods-heading" className="mt-1 text-xl font-semibold text-stone-900 md:text-2xl">
@@ -221,7 +231,7 @@ export default async function GuidesPage() {
                   All Ubud articles →
                 </Link>
               </div>
-              <nav className="mt-5" aria-label="Ubud neighborhood guides">
+              <nav className="mt-5 relative z-10" aria-label="Ubud neighborhood guides">
                 <ul className="flex flex-wrap gap-2">
                   {ubudAreaGuideLinks.map(({ subArea, name, href }) => (
                     <li key={subArea}>
@@ -235,7 +245,7 @@ export default async function GuidesPage() {
                   ))}
                 </ul>
               </nav>
-              <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+              <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm relative z-10">
                 <Link href={ubudOverviewHref} className="font-medium text-emerald-800 hover:text-emerald-900">
                   Ubud areas overview →
                 </Link>
@@ -262,29 +272,42 @@ export default async function GuidesPage() {
                 <Link
                   key={cat.slug}
                   href={`/guides/${cat.slug}`}
-                  className={`group flex min-h-[9.5rem] flex-col rounded-2xl border bg-white p-5 shadow-sm transition hover:border-emerald-200 hover:shadow-md md:min-h-[10.5rem] md:p-6 ${
+                  className={`group relative overflow-hidden flex min-h-[9.5rem] flex-col rounded-2xl border bg-white p-5 shadow-sm transition hover:border-emerald-200 hover:shadow-md md:min-h-[10.5rem] md:p-6 ${
                     isUbud
                       ? "border-emerald-200/90 bg-gradient-to-br from-emerald-50/50 to-white ring-1 ring-emerald-100"
                       : "border-stone-200/90 hover:bg-white"
                   }`}
                 >
-                  <span
-                    className={`text-lg font-semibold tracking-tight group-hover:text-emerald-900 md:text-xl ${
-                      isUbud ? "text-emerald-950" : "text-stone-900"
-                    }`}
-                  >
-                    {cat.title}
-                  </span>
-                  <span className="mt-2 flex-1 text-sm leading-relaxed text-stone-600 md:text-[0.95rem]">
-                    {cat.description}
-                  </span>
-                  <span className="mt-4 text-sm font-semibold text-emerald-800">
-                    {n === 0 ? "Open section" : `${n} ${n === 1 ? "article" : "articles"}`}
-                    <span aria-hidden className="text-emerald-600">
-                      {" "}
-                      →
+                  {cat.illustration ? (
+                    <div className="absolute top-0 right-0 w-24 h-24 opacity-20 pointer-events-none">
+                      <Image
+                        src={cat.illustration}
+                        alt=""
+                        fill
+                        className="object-cover object-top"
+                        sizes="96px"
+                      />
+                    </div>
+                  ) : null}
+                  <div className="relative z-10">
+                    <span
+                      className={`text-lg font-semibold tracking-tight group-hover:text-emerald-900 md:text-xl ${
+                        isUbud ? "text-emerald-950" : "text-stone-900"
+                      }`}
+                    >
+                      {cat.title}
                     </span>
-                  </span>
+                    <span className="mt-2 flex-1 text-sm leading-relaxed text-stone-600 md:text-[0.95rem] block">
+                      {cat.description}
+                    </span>
+                    <span className="mt-4 text-sm font-semibold text-emerald-800 block">
+                      {n === 0 ? "Open section" : `${n} ${n === 1 ? "article" : "articles"}`}
+                      <span aria-hidden className="text-emerald-600">
+                        {" "}
+                        →
+                      </span>
+                    </span>
+                  </div>
                 </Link>
               );
             })}
