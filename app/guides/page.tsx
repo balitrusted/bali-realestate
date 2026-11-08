@@ -209,7 +209,7 @@ export default async function GuidesPage() {
                   src="/illustrations/ubud-sketch.png"
                   alt=""
                   fill
-                  className="object-cover object-top"
+                  className="object-cover object-top scale-x-[-1]"
                   sizes="192px"
                 />
               </div>
