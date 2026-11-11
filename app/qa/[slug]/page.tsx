@@ -130,6 +130,7 @@ async function QuestionPage({ slug }: { slug: string }) {
       author: {
         "@type": "Person",
         name: data.authorDisplayName,
+        url: `${baseUrl}/qa/${data.slug}`,
       },
       answerCount: data.answers.length,
       ...(officialAnswer
@@ -141,8 +142,10 @@ async function QuestionPage({ slug }: { slug: string }) {
               author: {
                 "@type": "Organization",
                 name: officialAnswer.authorDisplayName,
+                url: `${baseUrl}/qa/${data.slug}`,
               },
               upvoteCount: officialAnswer.upvotes,
+              url: `${baseUrl}/qa/${data.slug}#answer-${officialAnswer.id}`,
             },
           }
         : {}),
@@ -152,8 +155,13 @@ async function QuestionPage({ slug }: { slug: string }) {
           "@type": "Answer",
           text: a.content,
           dateCreated: a.createdAt,
-          author: { "@type": "Person", name: a.authorDisplayName },
+          author: {
+            "@type": "Person",
+            name: a.authorDisplayName,
+            url: `${baseUrl}/qa/${data.slug}`,
+          },
           upvoteCount: a.upvotes,
+          url: `${baseUrl}/qa/${data.slug}#answer-${a.id}`,
         })),
     },
   };
